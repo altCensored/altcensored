@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{#
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@altcensored">
+<meta name="twitter:title" content="{{ channel['ytc_title'] ~ ' Channel ' ~ '(' ~ channel['limited'] ~' Limited Videos' ~ ')' }}">
+<meta name="twitter:description" content="{{ channel['ytc_description'] | safe | nl2br | truncate (140) }}">
+
+
+<meta property="og:site_name" content="{{ config['MYSERVER_NAME'] }}">
+<meta property="og:url" content="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}">
+<meta property="og:title" content="{{ channel['ytc_title'] }}">
+<meta property="og:image" content="{{ channel['ytc_thumbnailurl'] | replace('88','176')  }}">
+<meta property="og:type" content="article">
+
+<meta name="altcen_title" content="{% block title %}{{ channel['ytc_title'] | striptags | truncate(length=56,killwords=False,end='',leeway=0) }}{% endblock %}">
+<meta name="altcen_meta_description" content="{% block description %}Limited Censored YouTube Video Channel {{ channel['ytc_title'] }}: {{ channel['ytc_description'] }} (Created on {{ channel['ytc_publishedat'].strftime('%b %e, %G') }}){% endblock %}">
+#}
+{% endblock %}
+
+{% block header %}
+<div class="h-box">
+  <div class="pure-g">
+    <div class="pure-u-1-4"></div>
+    <div class="pure-u-1 pure-u-md-1-2">
+        <div class="pure-g">
+            <div class="pure-u-1-3">
+                <a href="{{ url_for('channel.new') }}" style="text-align:center;" class="pure-menu-heading">
+                    New
+                </a>
+            </div>
+            <div class="pure-u-1-3">
+                <a href="{{ url_for('channel.popular') }}" style="text-align:center;" class="pure-menu-heading">
+                    Popular
+                </a>
+            </div>
+            <div class="pure-u-1-3">
+                <a href="{{ url_for('channel.index') }}" style="text-align:center;" class="pure-menu-heading">
+                    Channels
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="pure-u-1-4"></div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="pure-g">
+  <div class="pure-u-1 pure-u-md-1-2">
+    <div class="h-box">
+      <div class="pure-g">
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+
+  
+  <div class="pure-u-1">
+
+
+  <div class="pure-g h-box">
+     <div class="pure-u-1-2">
+
+          <div class="pure-u-1 pure-md-1-3">
+          </div>
+
+          <div class="pure-u-1 pure-md-1-3">
+          </div>
+
+          <div class="pure-u-1 pure-md-1-3">
+          </div>
+  
+      </div>
+
+     <div class="pure-u-1-2">
+      <div class="pure-g" style="text-align:right">
+        {% if order == 'newest' %}
+          <div class="pure-u-1 pure-md-1-3">
+          <b>newest</a></b>
+          </div>
+          <div class="pure-u-1 pure-md-1-3">
+          <b><a href="{{ url_for('category.item_old', cat_id=category['cat_id']) }}">oldest</a></b>
+          </div>
+          <div class="pure-u-1 pure-md-1-3">
+          <b><a href="{{ url_for('category.item_popular', cat_id=category['cat_id']) }}">popular</a></b>
+          </div>
+        {% elif order == 'popular' %}
+          <div class="pure-u-1 pure-md-1-3">
+          <b><a href="{{ url_for('category.item', cat_id=category['cat_id']) }}">newest</a></b>
+          </div>
+          <div class="pure-u-1 pure-md-1-3">
+          <b><a href="{{ url_for('category.item_old', cat_id=category['cat_id']) }}">oldest</a></b>
+          </div>
+          <div class="pure-u-1 pure-md-1-3">
+          <b>popular</a></b>
+          </div>
+        {% else %}
+          <div class="pure-u-1 pure-md-1-3">
+          <b><a href="{{ url_for('category.item', cat_id=category['cat_id']) }}">newest</a></b>
+          </div>
+          <div class="pure-u-1 pure-md-1-3">
+          <b>oldest</a></b>
+          </div>
+          <div class="pure-u-1 pure-md-1-3">
+          <b><a href="{{ url_for('category.item_popular', cat_id=category['cat_id']) }}">popular</a></b>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    </div>
+
+
+<div class="h-box">
+ <hr>
+</div>
+</div>
+
+
+{% for video in videos %}
+  <div class="pure-u-1 pure-u-md-1-4">
+    <div class="h-box">
+
+      <a style="width:100%;" href="{{ url_for('video.watch', v=video['extractor_data']) }}">
+        <div class="thumbnail">
+
+
+          <img class="thumbnail" src="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['title'] | ia_fname ~ '-' ~ video['extractor_data'] ~ '.jpg' }}" onerror="this.onerror=null;this.src='https://{{ config['MYSERVER_NAME'] }}/image_error.gif';">     
+
+          {% if video['duration']  is not none %}
+            <p class="length">{{ video['duration'] | hourminsec }}</p>
+            {% else %}
+          {% endif %}
+        </div>
+          </a>
+            <p><a class="action" href="{{ url_for('video.watch', v=video['extractor_data']) }}">{{ video['title'] }}</a></p>
+            <p>
+            <b><a style="width:100%;" href="{{ url_for('channel.item', ytc_id=video['ytc_id']) }}">{{ video['ytc_title'] }}</a></b>
+            </p>
+            <h5 class = "pure-g">
+            <div class="pure-u-2-3">
+            Published {{ video['published'].strftime('%b %e, %G') }}
+            </div>
+            <div class="pure-u-1-3" style="text-align:right">
+           {{ video['yt_views']|viewdisplay }} Views 
+          </div>
+      </div>
+    </div>
+  
+  {% endfor %}
+
+</div>
+
+{% from "_helpers.html" import render_pagination %}
+<br>
+<div class="pure-g">
+      <div class="pure-u-1 pure-u-md-4-4">
+         <div class="h-box">
+          {{ render_pagination(pagination) }}
+         </div>
+      </div>
+
+
+{% endblock %}

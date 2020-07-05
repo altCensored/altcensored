@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+
+  {% if video is defined or channel is defined %}
+    <title>{% block title %}{% endblock %} - altCensored</title>
+    <meta name="description" content="{% block description %}{% endblock %}">
+    <link rel="image_src" href="{% block imagesrc %}{% endblock %}">
+  {% else %}
+    <title>Limited State YouTube Videos Censored Banned | altCensored.com</title>
+    <meta name="description" content="altCensored.com features {{ videocount }} Censored Limited State Videos that YouTube Hides">
+    <link rel="image_src" href="https://{{ config['MYSERVER_NAME'] }}/logo_clip.gif">
+  {% endif %}
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <link rel="apple-touch-icon" type="image/x-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+  <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
+  <link rel="mask-icon" href="{{ url_for('static', filename='safari-pinned-tab.svg') }}" color="#575757">
+  <meta name="msapplication-TileColor" content="#575757">
+  <meta name="theme-color" content="#575757">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pure-min.css') }}">  
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/grids-responsive-min.css') }}"> 
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/lighttheme.css') }}">
+
+  <link disabled id="dark-reader" rel="stylesheet" href="{{ url_for('static', filename='css/dark.css') }}">
+
+{#
+  <link href="https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/video-js.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/ionicons.min.css') }}">
+#}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/ionicons.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/flag-icon.min.css') }}">  
+
+{% block head %}
+{% endblock %}
+</head>
+
+<body>
+  <div class="pure-g">
+    <div class="pure-u-1 pure-u-md-2-24"></div>
+      <div class="pure-u-1 pure-u-md-20-24">
+        <div class="pure-g navbar h-box">
+          <div class="pure-u-1 pure-u-md-4-24">
+            <a href="{{ url_for('video.index') }}" class="index-link pure-menu-item">altCensored</a>
+          </div>
+          <div class="pure-u-1 pure-u-md-12-24 searchbar">
+            <form class="pure-form" action="{{ url_for('video.search') }}" method="get">
+              <fieldset>
+                <input type="search" style="width:100%;" name="q" placeholder="{{ gettext('search') }}" results=5 
+                id=mySearch required value="">
+              </fieldset>
+            </form>
+          </div>
+          <div class="pure-u-1 pure-u-md-8-24 user-field">
+            <div class="pure-u-1-2">
+              <a href="javascript:void(0)" onclick="dark_toggle();return false;">
+                <i id="dark-reader-icon" class="icon ion-ios-moon"></i>
+              </a>
+            </div>
+            <div class="pure-u-1-2">
+              <a href="{{ url_for('settings.index') }}" class="pure-menu-heading">
+                <i class="icon ion-ios-cog"></i>
+              </a>
+            </div>
+            <div class="pure-u-1-2">
+              <a href="{{ url_for('language.index') }}" class="pure-menu-heading">
+                <i class="icon ion-ios-book"></i>
+              </a>
+            </div>
+            <div class="pure-u-1-2">
+              <a href="{{ url_for('about.index') }}" class="pure-menu-heading">
+               {{ gettext('About') }}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    <div class="pure-u-1 pure-u-md-2-24"></div>
+  </div>        
+
+<section>
+  <header>
+    {% block header %}{% endblock %}
+  </header>
+  {% for message in get_flashed_messages() %}
+    <div>{{ message }}
+    </div>
+  {% endfor %}
+  <content>
+    {% block content %}{% endblock %} 
+  </content>
+  <footer>
+    {% block footer %}{% endblock %}
+  </footer>
+
+  <footer>
+
+  <div class="pure-g">
+    <div class="pure-u-1 pure-u-md-2-24"></div>
+      <div class="pure-u-1 pure-u-md-20-24">
+        <div class="footer">
+          <div class="pure-g">
+            <div class="pure-u-1 pure-u-md-1-2">
+              <b>ETH</b>: 0x8a4173A910C13F5dF67CBeD2d9066805ed582cc8
+            </div>
+            <div class="pure-u-1 pure-u-md-1-2">
+              <b>BTC</b>: 3PRivnBUoVLXHeBQTSP4FNPw5R8b9Gztd7
+            </div>
+          </div>
+          <p>
+            <a href = "https://liberapay.com/altCensored.com"
+            target="_blank"><b>Liberapay</a></b>
+              |  
+            <a href = "https://www.patreon.com/altCensored"
+            target="_blank"><b>Patreon</a></b>
+        </div>
+      </div>
+    <div class="pure-u-1 pure-u-md-2-24"></div>
+  </div>
+
+  </footer>
+
+</section>
+
+<script nonce="{{ csp_nonce() }}" type="text/javascript">
+ if (localStorage.getItem("darkreader") == "enabled") {
+     document.getElementById("dark-reader").disabled = false;
+ } else {
+     document.getElementById("dark-reader").disabled = true;
+ }
+</script>
+
+<script nonce="{{ csp_nonce() }}" type="text/javascript">
+function dark_toggle() {
+    var el1 = document.getElementById("dark-reader");
+    var icon = document.getElementById("dark-reader-icon");
+    if(el1.disabled) {
+        el1.disabled = false;
+        icon.setAttribute("class", "ion-ios-sunny");
+        localStorage.setItem("darkreader", "enabled");
+    } else {
+        el1.disabled = true;
+        icon.setAttribute("class", "ion-ios-moon");
+        localStorage.setItem("darkreader", "disabled");
+    }
+}
+</script>
+
+<script nonce="{{ csp_nonce() }}" type="text/javascript">
+window.addEventListener('DOMContentLoaded', (event) => {
+    let params = new URLSearchParams(document.location.search.substring(1));
+    let qstring = params.get("q"); // is the string "Jonathan"
+    document.getElementById("mySearch").value = qstring;
+});
+</script>
+
+</body>
+</html>

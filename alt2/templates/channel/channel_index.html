@@ -1,0 +1,315 @@
+{% extends 'base.html' %}
+{% block header %}
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@altcensored">
+<meta name="twitter:creator" content="@altcensored">
+
+<meta property="og:site_name" content="{{ config['MYSERVER_NAME'] }}">
+<meta property="og:description" content="'we show what they hide'">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://{{ config['MYSERVER_NAME'] }}/logo_clip.gif">
+<meta property="og:image:url" content="https://{{ config['MYSERVER_NAME'] }}/logo_clip.gif">
+<meta property="og:image:secure_url" content="https://{{ config['MYSERVER_NAME'] }}/logo_clip.gif">
+
+
+{% if order == 'deleted' %}
+<meta property="og:url" content="https://{{ config['MYSERVER_NAME'] }}/channel/deleted">
+<meta property="og:title" content="{{ videocount | viewdisplay }}+ Censored YouTube Videos; {{ channelcount | viewdisplay }} Deleted Channels">
+
+{% else %}
+<meta property="og:url" content="https://{{ config['MYSERVER_NAME'] }}/channel">
+<meta property="og:title" content="{{ videocount | viewdisplay }}+ Censored YouTube Videos; {{ channelcount | viewdisplay }}+ Channels">
+
+{% endif %}
+
+{% endblock %}
+{% block content %}
+
+<div class="pure-g">
+  <div class="pure-u-1 pure-u-md-2-24"></div>
+    <div class="pure-u-1 pure-u-md-20-24">
+      <div class="pure-g h-box">
+
+        <div class="pure-u-1-4"></div>
+          <div class="pure-u-1 pure-u-md-1-2">
+            <div class="pure-g">
+              <div class="pure-u-1-3">
+                <a href="{{ url_for('video.index') }}" style="text-align:center;" class="pure-menu-heading">
+                    {{ gettext('Video') }}
+                </a>
+              </div>          
+              <div class="pure-u-1-3">
+                <b>
+                  <a style="text-align:center;" class="pure-menu-heading">
+                    {{ gettext('Channel') }}
+                  </a>
+                </b>
+              </div>       
+                <div class="pure-u-1-3">
+                  <a href="{{ url_for('category.index') }}" style="text-align:center;" class="pure-menu-heading">
+                    {{ gettext('Category') }}
+                  </a>
+                </div>  
+              </div>
+            </div>
+          <div class="pure-u-1-4"></div>
+        </div>
+      </div>
+      </div>
+
+  <div class="pure-g">
+    <div class="pure-u-1 pure-u-md-2-24"></div>
+      <div class="pure-u-1 pure-u-md-20-24">
+        <div class="pure-g h-box">
+          
+          <div class="pure-u-1-2">
+
+          <div class="pure-u-1 pure-md-1-4">
+            {% if order == 'deleted' %}
+              <div class="pure-u-1 pure-md-1-4">
+                <b>{{ gettext('deleted') }}</a></b>
+              </div>
+            {% else %}
+              <div class="pure-u-1 pure-md-1-4">
+              <b><a href="{{ url_for('channel.deleted') }}"><font color="red">{{ gettext('deleted') }}</a></b></font>
+              </div>
+            {% endif %}
+          </div>
+          <div class="pure-u-1 pure-md-1-4">
+            {% if order == 'limited' %}
+              <div class="pure-u-1 pure-md-1-4">
+                <b>{{ gettext('most limited') }}</a></b>
+              </div>
+            {% else %}
+              <div class="pure-u-1 pure-md-1-4">
+              <b><a href="{{ url_for('channel.limited') }}">{{ gettext('most limited') }}</a></b></font>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="pure-u-1 pure-md-1-4">
+            {% if order == 'archived' %}
+              <div class="pure-u-1 pure-md-1-4">
+                <b>{{ gettext('archived') }}</a></b>
+              </div>
+            {% else %}
+              <div class="pure-u-1 pure-md-1-4">
+              <b><a href="{{ url_for('channel.archived') }}">{{ gettext('archived') }}</a></b></font>
+              </div>
+            {% endif %}
+          </div>  
+
+          <div class="pure-u-1 pure-md-1-4">
+            {% if order == 'deleted' %}
+              <div class="pure-u-1 pure-md-1-4">
+              <font color="red">
+                <i class='ion-ios-albums'  style="font-size: 24px"></i>
+                <a href="{{ url_for('channel.deleted_feed') }}">
+                  <i class='ion-logo-rss' style="font-size: 21px"></i>
+                </a>                
+                <b>&nbsp;{{ channelcount | commafy }}</b>
+              </font>
+              </div>
+            {% else %}
+              <div class="pure-u-1 pure-md-1-4">
+                <i class='ion-ios-albums'  style="font-size: 24px"></i>
+                <a href="{{ url_for('channel.feed') }}">
+                  <i class='ion-logo-rss' style="font-size: 21px"></i>
+                </a>
+                <b>&nbsp;{{ channelcount | commafy }}</b>
+              </div>
+            {% endif %}
+          </div>
+        </div> 
+
+
+        <div class="pure-u-1-2">
+          <div class="pure-g" style="text-align:right">
+
+            {% if order == 'latest' %}
+              <div class="pure-u-1 pure-md-1-4">
+                <b>{{ gettext('latest') }}</a></b>
+              </div>
+              <div class="pure-u-1 pure-md-1-4">
+                <b><a href="{{ url_for('channel.new') }}">{{ gettext('newest') }}</a></b>
+              </div>              
+              <div class="pure-u-1 pure-md-1-4">
+                <b><a href="{{ url_for('channel.old') }}">{{ gettext('oldest') }}</a></b>
+              </div>
+              <div class="pure-u-1 pure-md-1-4">
+                <b><a href="{{ url_for('channel.popular') }}">{{ gettext('popular') }}</a></b>
+              </div>
+  
+
+            {% elif order == 'newest' %}
+              <div class="pure-u-1 pure-md-1-4">
+                <b><a href="{{ url_for('channel.index') }}">{{ gettext('latest') }}</a></b>
+              </div>
+              <div class="pure-u-1 pure-md-1-4">
+                <b>{{ gettext('newest') }}</a></b>
+              </div>              
+              <div class="pure-u-1 pure-md-1-4">
+                <b><a href="{{ url_for('channel.old') }}">{{ gettext('oldest') }}</a></b>
+              </div>
+              <div class="pure-u-1 pure-md-1-4">
+                <b><a href="{{ url_for('channel.popular') }}">{{ gettext('popular') }}</a></b>
+              </div>
+  
+
+            {% elif order == 'oldest' %}
+              <div class="pure-u-1 pure-md-1-4">
+                <b><a href="{{ url_for('channel.index') }}">{{ gettext('latest') }}</a></b>
+              </div>
+              <div class="pure-u-1 pure-md-1-4">
+                <b><a href="{{ url_for('channel.new') }}">{{ gettext('newest') }}</a></b>
+              </div>              
+              <div class="pure-u-1 pure-md-1-4">
+                <b>{{ gettext('oldest') }}</a></b>
+              </div>
+              <div class="pure-u-1 pure-md-1-4">
+                <b><a href="{{ url_for('channel.popular') }}">{{ gettext('popular') }}</a></b>
+              </div>
+ 
+
+            {% elif order == 'popular' %}
+              <div class="pure-u-1 pure-md-1-4">
+                <b><a href="{{ url_for('channel.index') }}">{{ gettext('latest') }}</a></b>
+              </div>
+              <div class="pure-u-1 pure-md-1-4">
+                <b><a href="{{ url_for('channel.new') }}">{{ gettext('newest') }}</a></b>
+              </div>              
+              <div class="pure-u-1 pure-md-1-4">
+                <b><a href="{{ url_for('channel.old') }}">{{ gettext('oldest') }}</a></b>
+              </div>
+              <div class="pure-u-1 pure-md-1-4">
+                <b>{{ gettext('popular') }}</a></b>
+              </div>
+
+
+            {% elif order == 'deleted' %}
+              <div class="pure-u-1 pure-md-1-4">
+                <b><a href="{{ url_for('channel.index') }}">{{ gettext('latest') }}</a></b>
+              </div>
+              <div class="pure-u-1 pure-md-1-4">
+                <b><a href="{{ url_for('channel.new') }}">{{ gettext('newest') }}</a></b>
+              </div>              
+              <div class="pure-u-1 pure-md-1-4">
+                <b><a href="{{ url_for('channel.old') }}">{{ gettext('oldest') }}</a></b>
+              </div>
+              <div class="pure-u-1 pure-md-1-4">
+                <b><a href="{{ url_for('channel.popular') }}">{{ gettext('popular') }}</a></b>
+              </div>
+
+            {% elif order == 'limited' %}
+              <div class="pure-u-1 pure-md-1-4">
+                <b><a href="{{ url_for('channel.index') }}">{{ gettext('latest') }}</a></b>
+              </div>
+              <div class="pure-u-1 pure-md-1-4">
+                <b><a href="{{ url_for('channel.new') }}">{{ gettext('newest') }}</a></b>
+              </div>              
+              <div class="pure-u-1 pure-md-1-4">
+                <b><a href="{{ url_for('channel.old') }}">{{ gettext('oldest') }}</a></b>
+              </div>
+              <div class="pure-u-1 pure-md-1-4">
+                <b><a href="{{ url_for('channel.popular') }}">{{ gettext('popular') }}</a></b>
+              </div>
+
+            {% elif order == 'archived' %}
+              <div class="pure-u-1 pure-md-1-4">
+                <b><a href="{{ url_for('channel.index') }}">{{ gettext('latest') }}</a></b>
+              </div>
+              <div class="pure-u-1 pure-md-1-4">
+                <b><a href="{{ url_for('channel.new') }}">{{ gettext('newest') }}</a></b>
+              </div>              
+              <div class="pure-u-1 pure-md-1-4">
+                <b><a href="{{ url_for('channel.old') }}">{{ gettext('oldest') }}</a></b>
+              </div>
+              <div class="pure-u-1 pure-md-1-4">
+                <b><a href="{{ url_for('channel.popular') }}">{{ gettext('popular') }}</a></b>
+              </div>
+
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+<div class="h-box">
+ <hr>
+</div>
+
+
+<div class="pure-g">
+  {% for channel in channels %}
+    <div class="pure-u-1 pure-u-md-1-4">
+      <div class="h-box">
+        <div class = "pure-g">
+          <div class="pure-u-1-2">
+            <a href="{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}">
+              <div class="thumbnail">
+                <left>
+                   <img style="width:97%"
+                   src="{{ channel['ytc_thumbnailurl'] | reverse | replace('88','671', 1) | reverse  }}" >
+                  </style>
+                </left>
+              </div>
+            </a>
+          </div>
+          <div class="pure-u-1-2" style="text-align:left">
+            <a href="{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}">
+            {{ gettext('Limited') }}: {{ channel['limited']|commafy }}
+            </a>
+            <br>
+            {{ gettext('Total') }}: {{ channel['total']|commafy }}
+            <br>
+            {{ gettext('Views') }}: {{ channel['ytc_viewcount'] | viewdisplay }}
+            <br>
+            {{ gettext('Subs') }}: {{ channel['ytc_subscribercount'] | viewdisplay }}
+            <br>
+            {% if channel['ytc_deleted'] %}
+             <img style="width:31%" 
+            class="thumbnail" src="https://{{ config['MYSERVER_NAME'] }}/x.gif">
+            </style>
+            {% else %}
+              {{ gettext('Monitor') }}:
+              {% if channel.allow %}{{ gettext('True') }}<br>
+              {% else %}{{ gettext('False') }}<br>
+              {% endif %}
+              {{ gettext('Archive') }}:
+              {% if channel.ytc_archive %}{{ gettext('True') }}<br>
+              {% else %}{{ gettext('False') }}<br>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+
+        <a href="{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}">
+          <b>{{ channel['ytc_title'] }}</b>
+        </a>     
+        <br>
+        <br>
+          {{ gettext('Created') }} {{ channel['ytc_publishedat'].strftime('%b %e, %G') }}
+          <br>
+           {% if channel['ytc_deleted'] %}
+             <font color="red">{{ gettext('Deleted') }} {{ channel['ytc_deleteddate'].strftime('%b %e, %G') }}</font>
+           {% else %}
+           {% endif %}
+
+          <br>
+          <br>
+    </div>
+<br>
+
+</div>
+{% endfor %}
+
+
+{% from "_helpers.html" import render_pagination %}
+
+  <div class="pure-u-1 pure-u-md-4-4">
+    <div class="h-box">
+      {{ render_pagination(pagination) }}
+    </div>
+  </div>
+
+{% endblock %}

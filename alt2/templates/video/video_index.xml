@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:media="http://search.yahoo.com/mrss/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>{{ config['MYSERVER_NAME_SHORT'] }}:Videos</title>
+        <link>https://{{ config['MYSERVER_NAME'] }}</link>
+        <atom:link href="https://{{ config['MYSERVER_NAME'] }}/feed" rel="self" type="application/rss+xml" />
+        <description>{{ videocount | viewdisplay }}+ Limited State/Deleted Videos; Latest</description>
+          <image>
+            <url>https://{{ config['MYSERVER_NAME'] }}/alt_favicon_140_140.jpg</url>
+            <title>{{ config['MYSERVER_NAME_SHORT'] }}:Videos</title>
+            <link>https://{{ config['MYSERVER_NAME'] }}</link>
+          </image>
+          {% for video in videos %}
+            <item>
+              <title>{{ video['title']  }}</title>
+              <media:title>{{ video['title']  }}</media:title>
+              <link>https://{{ config['MYSERVER_NAME'] }}{{ url_for('video.watch', v=video['extractor_data']) }}</link>
+              <guid>https://{{ config['MYSERVER_NAME'] }}{{ url_for('video.watch', v=video['extractor_data']) }}</guid>
+              <description>
+              	<![CDATA[<a href="https://{{ config['MYSERVER_NAME'] }}{{ url_for('video.watch', v=video['extractor_data']) }}">
+              	<img width="192" style="padding-right:3px;float:left;" src="https://archive.org/services/get-item-image.php?identifier=youtube-{{ video['extractor_data'] }}">
+              	</a>
+              	<p>
+              	{{ video['description'] | linkify | safe | nl2br }}]]>
+              </description>
+              <pubDate>{{ video['published'].strftime('%a, %d %b %Y %T') }} EST</pubDate>
+              <category>{{ video['ytc_title'] }}</category>
+              <enclosure type="application/x-bittorrent" length="0" url="{{ config.IARCHIVEURL ~ video['extractor_data'] ~ '/youtube-' ~ video['extractor_data'] ~ '_archive.torrent' }}">
+              </enclosure>
+              <media:thumbnail url="{{ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}">
+              </media:thumbnail>              
+            </item>
+          {% endfor %}
+    </channel>
+</rss> 

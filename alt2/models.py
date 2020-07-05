@@ -1,0 +1,244 @@
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, Interval
+from alt2.database import Base
+
+class Entity(Base):
+    __tablename__ = 'entity'
+    id = Column(Integer, primary_key=True, nullable=False)
+    type = Column(String, nullable=False)
+    prev = Column(DateTime, nullable=True)
+    extractor_key = Column(String, nullable=False)
+    extractor_data = Column(String, nullable=False)
+    allow = Column(Boolean, nullable=False, default=True)
+    title = Column(String, nullable=True)
+    views = Column(Integer, nullable=True)
+    likes = Column(Integer, nullable=True)
+    dislikes = Column(Integer, nullable=True)
+    yt_comments = Column(Integer, nullable=True)
+    yt_views = Column(Integer, nullable=True)
+    yt_dislikes = Column(Integer, nullable=True)
+    yt_likes = Column(Integer, nullable=True)
+    published = Column(DateTime, nullable=True)
+    description = Column(String, nullable=True)
+    tags = Column(String, nullable=True)
+    category = Column(String, nullable=True)
+    rating = Column(Integer, nullable=True)
+    thumbnail = Column(String, nullable=True)
+    alt_url1 = Column(String, nullable=True)
+    alt_url2 = Column(String, nullable=True)
+    duration = Column(String, nullable=True)
+    sync_ia = Column(Boolean, nullable=True)
+    exists_ia = Column(Boolean, nullable=True)
+    yt_deleted = Column(Boolean, nullable=True)
+    sync_iadate = Column(DateTime, nullable=True)
+    addeddate = Column(DateTime, nullable=False)    
+
+    def __init__(self, type=None, prev=None):
+        self.id = id
+        self.type = type
+        self.prev = prev
+        self.extractor_key = extractor_key
+        self.extractor_data = extractor_data
+        self.allow = allow
+        self.title = title
+        self.views = views
+        self.likes = likes
+        self.dislikes = dislikes
+        self.yt_comments = yt_comments
+        self.yt_views = yt_views
+        self.yt_dislikes = yt_dislikes
+        self.yt_likes = yt_likes
+        self.published = published
+        self.description = description
+        self.tags = tags
+        self.category = category
+        self.rating = rating
+        self.thumbnail = thumbnail
+        self.alt_url1 = alt_url1
+        self.alt_url2 = alt_url2
+        self.duration = duration
+        self.sync_ia = sync_ia
+        self.exists_ia = exists_ia
+        self.yt_deleted = yt_deleted
+        self.sync_iadate = sync_iadate
+        self.addeddate = addeddate
+
+    def __repr__(self):
+        return '<Entity %r>' % (self.id)
+
+class Source(Base):
+    __tablename__ = 'source'
+    id = Column(Integer, primary_key=True, nullable=False)
+    next = Column(String, nullable=True)
+    delta = Column(Interval, nullable=False)
+    url = Column(String, nullable=False)
+    extractor_match = Column(String, nullable=False)
+    source_name = Column(String, nullable=True)
+    ytc_etag = Column(String, nullable=True)
+    ytc_id = Column(String, nullable=True)
+    ytc_title = Column(String, nullable=True)
+    ytc_description = Column(String, nullable=True)
+    ytc_customurl = Column(String, nullable=True)
+    ytc_publishedat = Column(DateTime, nullable=True)
+    ytc_thumbnailurl = Column(String, nullable=True)
+    ytc_viewcount = Column(Integer, nullable=True)
+    ytc_subscribercount = Column(Integer, nullable=True)
+    ytc_videocount = Column(Integer, nullable=True)
+    ytc_archive = Column(Boolean, nullable=False, default=False)
+    ytc_deleted = Column(String, nullable=True)
+    ytc_deleteddate = Column(DateTime, nullable=True)
+    ytc_addeddate = Column(DateTime, nullable=True)
+
+    def __init__(self, next=None, delta=None):
+        self.id = id
+        self.next = next
+        self.delta = delta
+        self.url = url
+        self.extractor_match = extractor_match
+        self.source_name = source_name
+        self.ytc_etag   = ytc_etag
+        self.ytc_id = ytc_id
+        self.ytc_title = ytc_title
+        self.ytc_description = ytc_description
+        self.ytc_customurl = ytc_customurl
+        self.ytc_publishedat = ytc_publishedat
+        self.ytc_thumbnailurl = ytc_thumbnailurl
+        self.ytc_viewcount = ytc_viewcount
+        self.ytc_subscribercount = ytc_subscribercount
+        self.ytc_videocount = ytc_videocount
+        self.ytc_archive = ytc_archive
+        self.ytc_deleted = ytc_deleted
+        self.ytc_deleteddate = ytc_deleteddate
+        self.ytc_addeddate = ytc_addeddate
+
+    def __repr__(self):
+        return '<Source %r>' % (self.id)
+ 
+
+class Mv_Video(Base):
+    __tablename__ = 'mv_video'
+    id = Column(Integer, nullable=False, unique=True)
+    extractor_data = Column(String, primary_key=True, nullable=False)
+    rating = Column(Integer, nullable=True)
+    published = Column(DateTime, nullable=True)
+    title = Column(String, nullable=True)
+    thumbnail = Column(String, nullable=True)
+    yt_views = Column(Integer, nullable=True)
+    duration = Column(String, nullable=True)
+    ytc_title = Column(String, nullable=True)
+    ytc_id = Column(String, nullable=True)
+    description = Column(String, nullable=True)
+    category = Column(String, nullable=True)
+    tags = Column(String, nullable=True)
+    document = Column(String, nullable=True)
+
+
+    def __init__(self, extractor_data=None, allow=None):
+        self.id = id
+        self.extractor_data = extractor_data
+        self.rating = rating
+        self.published = published
+        self.title = title
+        self.thumbnail = thumbnail
+        self.yt_views = yt_views
+        self.duration = duration
+        self.ytc_title = ytc_title
+        self.ytc_id = ytc_id
+        self.description = description
+        self.category = category
+        self.tags = tags
+        self.document = document
+  
+    def __repr__(self):
+        return '<Mv_Video %r>' % (self.id)
+
+
+class Mv_Channel(Base):
+    __tablename__ = 'mv_channel'
+    id = Column(Integer, unique=True, nullable=False)
+    ytc_id = Column(String, primary_key=True, nullable=False)
+    ytc_title = Column(String, nullable=True)
+    ytc_publishedat = Column(DateTime, nullable=True)
+    ytc_thumbnailurl = Column(String, nullable=True)
+    ytc_viewcount = Column(Integer, nullable=True)
+    ytc_subscribercount = Column(Integer, nullable=True)
+    total = Column(Integer, nullable=True)
+    limited = Column(Integer, nullable=True)
+    ytc_description = Column(String, nullable=True)
+    ytc_deleted = Column(String, nullable=True)
+    ytc_archive = Column(String, nullable=True)
+    allow = Column(String, nullable=True)
+    ytc_deleteddate = Column(DateTime, nullable=True)
+    ytc_addeddate = Column(DateTime, nullable=True)
+
+    def __init__(self, ytc_id=None, ytc_title=None):
+        self.id = id
+        self.ytc_id = ytc_id        
+        self.ytc_title = ytc_title
+        self.ytc_publishedat = ytc_publishedat
+        self.ytc_thumbnailurl = ytc_thumbnailurl
+        self.ytc_viewcount = ytc_viewcount
+        self.ytc_subscribercount = ytc_subscribercount
+        self.total = total       
+        self.limited = limited
+        self.ytc_description = ytc_description
+        self.ytc_deleted = ytc_deleted
+        self.ytc_archive = ytc_archive
+        self.allow = allow
+        self.ytc_deleteddate = ytc_deleteddate        
+        self.ytc_addeddate = ytc_addeddate
+  
+    def __repr__(self):
+        return '<Mv_Channel %r>' % (self.ytc_id)
+
+
+class Category(Base):
+    __tablename__ = 'category'
+    cat_id = Column(Integer, primary_key=True, unique=True, nullable=False)
+    cat_name = Column(String, unique=True, nullable=False)
+    cat_image  = Column(String, nullable=False)
+
+    def __init__(self, next=None, delta=None):
+        self.cat_id = cat_id
+        self.cat_name = cat_name
+        self.cat_image = cat_image
+
+    def __repr__(self):
+        return '<Category %r>' % (self.cat_id)
+
+
+class Mv_Category(Base):
+    __tablename__ = 'mv_category'
+    cat_id = Column(Integer, primary_key=True, unique=True, nullable=False)
+    cat_name = Column(String, unique=True, nullable=False)
+    cat_image  = Column(String, nullable=False)
+    cat_count = Column(Integer, nullable=False)
+
+    def __init__(self, next=None, delta=None):
+        self.cat_id = cat_id
+        self.cat_name = cat_name
+        self.cat_image = cat_image
+        self.cat_count = cat_count
+
+    def __repr__(self):
+        return '<Mv_Category %r>' % (self.cat_id)
+
+
+class Language(Base):
+    __tablename__ = 'language'
+    lang_id = Column(Integer, primary_key=True, unique=True, nullable=False)
+    lang_name = Column(String, unique=True, nullable=False)
+    lang_image  = Column(String, nullable=False)
+    lang_tagstring  = Column(String, nullable=False)
+    lang_code  = Column(String, nullable=False)
+    lang_image_css  = Column(String, nullable=False)
+
+    def __init__(self, next=None, delta=None):
+        self.lang_id = lang_id
+        self.lang_name = lang_name
+        self.lang_image = lang_image
+        self.lang_tagstring = lang_tagstring
+        self.lang_code = lang_code        
+        self.lang_image_css = lang_image_css
+
+    def __repr__(self):
+        return '<Language %r>' % (self.lang_id)

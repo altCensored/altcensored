@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block head %}
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@altcensored">
+<meta name="twitter:creator" content="@altcensored">
+
+<meta property="og:description" content="'we show what they hide'">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://{{ config['MYSERVER_NAME'] }}/logo_clip.gif">
+<meta property="og:url" content="https://{{ config['MYSERVER_NAME'] }}">
+<meta property="og:title" content="{{ videocount | viewdisplay }}+ Limited State/Deleted Videos; {{ delchannelcount | viewdisplay }} Deleted Channels">
+
+{% endblock %}
+{% block content %}
+
+  <div class="pure-g">
+    <div class="pure-u-1 pure-u-md-2-24"></div>
+      <div class="pure-u-1 pure-u-md-20-24">
+        <div class="pure-g h-box">
+          <div class="pure-u-1-4"></div>
+            <div class="pure-u-1 pure-u-md-1-2">
+              <div class="pure-g">
+                <div class="pure-u-1-3">
+                  <a href="{{ url_for('video.index') }}" style="text-align:center;" class="pure-menu-heading">
+                  {{ gettext('Video') }}
+                  </a>
+                </div>          
+                <div class="pure-u-1-3">
+                  <a href="{{ url_for('channel.index') }}" style="text-align:center;" class="pure-menu-heading">
+                    {{ gettext('Channel') }}
+                  </a>
+                </div>       
+                <div class="pure-u-1-3">
+                  <a href="{{ url_for('category.index') }}" style="text-align:center;" class="pure-menu-heading">
+                    {{ gettext('Category') }}
+                  </a>
+                </div>  
+              </div>
+            </div>
+          <div class="pure-u-1-4"></div>
+        </div>
+      </div>
+    <div class="pure-u-1 pure-u-md-2-24"></div>
+  </div>
+</div>
+</div>
+
+<br>
+
+  <div class="pure-g">
+    <div class="pure-u-1 pure-u-md-2-24"></div>
+      <div class="pure-u-1 pure-u-md-20-24">
+        <div class="pure-g">
+
+            <div class="pure-u-1 pure-u-md-1-1">
+              <div class="h-box">
+
+                <p> 
+                  YouTube
+                  <u><b><a href = "https://youtube.googleblog.com/2017/08/an-update-on-our-commitment-to-fight.html" target="_blank">{{ gettext('limits') }}</u> </a></b>
+                   {{ gettext('access to videos that are neither') }}
+                  <u><b><a href = "https://www.justice.gov/criminal-ceos/citizens-guide-us-federal-law-obscenity" target="_blank">{{ gettext('illegal') }}</a></b></u>, {{ gettext('nor violate their own') }} 
+                  <u><b><a href = "https://www.youtube.com/static?template=terms" target="_blank"> {{ gettext('Terms and Conditions') }}</a></b></u> {{ gettext('or') }}
+                  <u><b><a href = "https://www.youtube.com/yt/about/policies/#community-guidelines" target="_blank">{{ gettext('Community Guidelines') }}</a></b></u>.
+                </p>
+                <p>
+                  <u><b><a href = "https://support.google.com/youtube/answer/7458465" target="_blank">{{ gettext('"Limited state" videos') }}</a></b></u> {{ gettext('are placed behind a warning message, cannot be shared, monetized or easily found, and have likes, comments, view counts and suggested videos disabled') }}.
+                </p>
+                <p>
+                  <b>altCensored.com</b> {{ gettext('is an unbiased community catalog of') }}
+                   <b><u><a href="{{ url_for('video.index') }}">{{ videocount }}</a></b></u> {{ gettext('such videos, including those removed by YouTube or self-censored. Of') }}
+                   <b><u><a href="{{ url_for('channel.index') }}">{{ channelcount }}</a></b></u> {{ gettext('monitored channels,') }} 
+                   <b><u><a href="{{ url_for('channel.deleted') }}"><font color="red">{{ delchannelcount }}</a></b></u></font> {{ gettext('have been deleted and') }}
+                   <b><u><a href="{{ url_for('channel.archived') }}">{{ archchancount }}</a></b></u> {{ gettext('are being archived in case of deletion') }}.
+                </p>
+                <p>
+                  {{ gettext('Download videos with "right mouse button click" inside the video window or use the "Download Torrent" link. Channel and Video RSS Feeds') }}
+                  ( 
+                  <i class='ion-logo-rss' style="font-size: 21px"></i>
+                  )
+                  {{ gettext(' contain torrent links to easily download multiple videos') }}.
+                </p>
+                <p>
+                  {{ gettext('Email new channel suggestions to') }} <b>altCensored@protonmail.com</b>.
+                </p>
+
+              </div>
+            </div>
+
+        </div>
+      </div>
+    <div class="pure-u-1 pure-u-md-2-24"></div>
+  </div>   
+
+{% endblock %}

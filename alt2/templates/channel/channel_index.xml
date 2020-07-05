@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:media="http://search.yahoo.com/mrss/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+      {% if order == 'deleted' %}
+        <title>{{ config['MYSERVER_NAME_SHORT'] }}:Channels:Deleted</title>
+        <link>https://{{ config['MYSERVER_NAME'] }}/channel/deleted</link>
+        <atom:link href="https://{{ config['MYSERVER_NAME'] }}/channel/deleted/feed" rel="self" type="application/rss+xml" />
+        <description>{{ channelcount | viewdisplay }} Deleted Channels</description>
+          <image>
+            <url>https://{{ config['MYSERVER_NAME'] }}/alt_favicon_140_140.jpg</url>
+            <title>{{ config['MYSERVER_NAME_SHORT'] }}:Channels</title>
+            <link>https://{{ config['MYSERVER_NAME'] }}</link>
+          </image>
+      {% else %}
+        <title>{{ config['MYSERVER_NAME_SHORT'] }}:Channels</title>
+        <link>https://{{ config['MYSERVER_NAME'] }}/channel</link>
+        <atom:link href="https://{{ config['MYSERVER_NAME'] }}/channel/feed" rel="self" type="application/rss+xml" />
+        <description>{{ channelcount | viewdisplay }} Monitored/Archived Channels</description>
+          <image>
+            <url>https://{{ config['MYSERVER_NAME'] }}/alt_favicon_140_140.jpg</url>
+            <title>{{ config['MYSERVER_NAME_SHORT'] }}:Channels</title>
+            <link>https://{{ config['MYSERVER_NAME'] }}</link>
+          </image>
+      {% endif %}
+          {% for channel in channels %}
+            <item>
+              <title>{{ channel['ytc_title']  }}</title>
+              <link>https://{{ config['MYSERVER_NAME'] }}{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}</link>
+              <guid>https://{{ config['MYSERVER_NAME'] }}{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}</guid>
+              <description>
+                <![CDATA[<a href="https://{{ config['MYSERVER_NAME'] }}{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}">
+                  <img 
+                   src="{{ channel['ytc_thumbnailurl'] | reverse | replace('88','671', 1) | reverse  }}" >
+                  </style>
+                </a>
+                <p>
+                <b>Limited: {{ channel['limited']|commafy }}</b>
+                <p>
+                {{ channel['ytc_description'] | linkify | safe | nl2br | truncate (1200) }} ]]>
+                </description>
+              {% if channel['ytc_deleted'] %}
+              <pubDate>{{ channel['ytc_deleteddate'].strftime('%a, %d %b %Y %T') }} EST</pubDate>
+              {% else %}
+              <pubDate>{{ channel['ytc_addeddate'].strftime('%a, %d %b %Y %T') }} EST</pubDate>
+              {% endif %}
+            </item>
+          {% endfor %}
+    </channel>
+</rss>

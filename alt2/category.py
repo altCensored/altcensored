@@ -1,5 +1,6 @@
 from flask import (
-    Blueprint, flash, redirect, render_template, request, url_for
+    Blueprint, flash, redirect, render_template, request, url_for,
+    session
     )
 from werkzeug.exceptions import abort
 from sqlalchemy import func
@@ -26,7 +27,8 @@ def index(page):
     languages = Language.query.limit(PER_PAGE).offset(offset)
 
     return render_template('category/category_index.html', 
-        pagination=pagination, videocount=videocount, categories=categories, categorycount=categorycount)
+        pagination=pagination, videocount=videocount, categories=categories, categorycount=categorycount,
+        locale=session['locale'])
 
 
 @bp.route('/<cat_id>', defaults={'page': 1})
@@ -42,7 +44,8 @@ def item(cat_id,page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)    
     return render_template('category/category_item.html', 
-        pagination=pagination, category=category, videos=videos, videocount=videocount, order=order)
+        pagination=pagination, category=category, videos=videos, videocount=videocount, order=order,
+        locale=session['locale'])
 
 
 @bp.route('/<cat_id>/new', defaults={'page': 1})
@@ -58,7 +61,8 @@ def item_new(cat_id,page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)    
     return render_template('category/category_item.html', 
-        pagination=pagination, category=category, videos=videos, videocount=videocount, order=order)
+        pagination=pagination, category=category, videos=videos, videocount=videocount, order=order,
+        locale=session['locale'])
 
 
 @bp.route('/<cat_id>/old', defaults={'page': 1})
@@ -74,7 +78,8 @@ def item_old(cat_id,page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)    
     return render_template('category/category_item.html', 
-        pagination=pagination, category=category, videos=videos, videocount=videocount, order=order)
+        pagination=pagination, category=category, videos=videos, videocount=videocount, order=order,
+        locale=session['locale'])
 
 
 @bp.route('/<cat_id>/popular', defaults={'page': 1})
@@ -90,7 +95,8 @@ def item_popular(cat_id,page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)    
     return render_template('category/category_item.html', 
-        pagination=pagination, category=category, videos=videos, videocount=videocount, order=order)
+        pagination=pagination, category=category, videos=videos, videocount=videocount, order=order,
+        locale=session['locale'])
 
 
 @bp.route('/<lang_code>', defaults={'page': 1})
@@ -121,4 +127,5 @@ def lang_item(lang_code,page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)    
     return render_template('category/category_item.html', 
-        pagination=pagination, language=language, videos=videos, videocount=videocount, order=order)
+        pagination=pagination, language=language, videos=videos, videocount=videocount, order=order,
+        locale=session['locale'])

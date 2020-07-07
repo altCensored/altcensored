@@ -8,13 +8,13 @@
   <meta name="referrer" content="no-referrer">
 
   {% if video is defined or channel is defined %}
-    <title>{% block title %}{% endblock %} - altCensored</title>
-    <meta name="description" content="{% block description %}{% endblock %}">
-    <link rel="image_src" href="{% block imagesrc %}{% endblock %}">
+  <title>{% block title %}{% endblock %} - altCensored</title>
+  <meta name="description" content="{% block description %}{% endblock %}">
+  <link rel="image_src" href="{% block imagesrc %}{% endblock %}">
   {% else %}
-    <title>Limited State YouTube Videos Censored Banned | altCensored.com</title>
-    <meta name="description" content="altCensored.com features {{ videocount }} Censored Limited State Videos that YouTube Hides">
-    <link rel="image_src" href="https://{{ config['MYSERVER_NAME'] }}/logo_clip.gif">
+  <title>Limited State YouTube Videos Censored Banned | altCensored.com</title>
+  <meta name="description" content="altCensored.com features {{ videocount }} Censored Limited State Videos that YouTube Hides">
+  <link rel="image_src" href="https://{{ config['MYSERVER_NAME'] }}/logo_clip.gif">
   {% endif %}
 
 
@@ -27,79 +27,83 @@
   <meta name="msapplication-TileColor" content="#575757">
   <meta name="theme-color" content="#575757">
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/pure-min.css') }}">  
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/grids-responsive-min.css') }}"> 
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pure-min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/grids-responsive-min.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}">
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/lighttheme.css') }}">
 
   <link disabled id="dark-reader" rel="stylesheet" href="{{ url_for('static', filename='css/dark.css') }}">
 
-{#
+  {#
   <link href="https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/video-js.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/ionicons.min.css') }}">
-#}
+  #}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/ionicons.min.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/flag-icon.min.css') }}">  
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/flag-icon.min.css') }}">
 
-{% block head %}
-{% endblock %}
+  {% block head %}
+  {% endblock %}
 </head>
 
-<body>
-  <div class="pure-g">
-    <div class="pure-u-1 pure-u-md-2-24"></div>
-      <div class="pure-u-1 pure-u-md-20-24">
-        <div class="pure-g navbar h-box">
-          <div class="pure-u-1 pure-u-md-4-24">
-            <a href="{{ url_for('video.index') }}" class="index-link pure-menu-item">altCensored</a>
-          </div>
-          <div class="pure-u-1 pure-u-md-12-24 searchbar">
-            <form class="pure-form" action="{{ url_for('video.search') }}" method="get">
-              <fieldset>
-                <input type="search" style="width:100%;" name="q" placeholder="{{ gettext('search') }}" results=5 
-                id=mySearch required value="">
-              </fieldset>
-            </form>
-          </div>
-          <div class="pure-u-1 pure-u-md-8-24 user-field">
-            <div class="pure-u-1-2">
-              <a href="javascript:void(0)" onclick="dark_toggle();return false;">
-                <i id="dark-reader-icon" class="icon ion-ios-moon"></i>
-              </a>
-            </div>
-            <div class="pure-u-1-2">
-              <a href="{{ url_for('settings.index') }}" class="pure-menu-heading">
-                <i class="icon ion-ios-cog"></i>
-              </a>
-            </div>
-            <div class="pure-u-1-2">
-              <a href="{{ url_for('language.index') }}" class="pure-menu-heading">
-                <i class="icon ion-ios-book"></i>
-              </a>
-            </div>
-            <div class="pure-u-1-2">
-              <a href="{{ url_for('about.index') }}" class="pure-menu-heading">
-               {{ gettext('About') }}
-              </a>
-            </div>
-          </div>
+<body class="language-{{locale}}">
+<div class="pure-g">
+  <div class="pure-u-1 pure-u-md-2-24"></div>
+  <div class="pure-u-1 pure-u-md-20-24">
+    <div class="pure-g navbar h-box">
+      <div class="pure-u-1 pure-u-md-4-24">
+        <a href="{{ url_for('video.index') }}" class="index-link pure-menu-item">
+          <span>alt</span>
+          <img src="{{ url_for('static', filename='logo.png') }}" />
+          <span class="censored-span">ensored</span>
+        </a>
+      </div>
+      <div class="pure-u-1 pure-u-md-12-24 searchbar">
+        <form class="pure-form" action="{{ url_for('video.search') }}" method="get">
+          <fieldset>
+            <input type="search" style="width:100%;" name="q" placeholder="{{ gettext('search') }}" results=5
+                   id=mySearch required value="">
+          </fieldset>
+        </form>
+      </div>
+      <div class="pure-u-1 pure-u-md-8-24 user-field">
+        <div class="pure-u-1-2">
+          <a href="javascript:void(0)" onclick="dark_toggle();return false;">
+            <i id="dark-reader-icon" class="icon ion-ios-moon"></i>
+          </a>
+        </div>
+        <div class="pure-u-1-2">
+          <a href="{{ url_for('settings.index') }}" class="pure-menu-heading localization-menu">
+            <img height="16px" src="{{ url_for('static', filename='flags/by_locale') }}/{{locale}}.svg" />
+          </a>
+        </div>
+        <div class="pure-u-1-2">
+          <a href="{{ url_for('language.index') }}" class="pure-menu-heading">
+            <i class="icon ion-ios-book"></i>
+          </a>
+        </div>
+        <div class="pure-u-1-2">
+          <a href="{{ url_for('about.index') }}" class="pure-menu-heading">
+            {{ gettext('About') }}
+          </a>
         </div>
       </div>
-    <div class="pure-u-1 pure-u-md-2-24"></div>
-  </div>        
+    </div>
+  </div>
+  <div class="pure-u-1 pure-u-md-2-24"></div>
+</div>
 
 <section>
   <header>
     {% block header %}{% endblock %}
   </header>
   {% for message in get_flashed_messages() %}
-    <div>{{ message }}
-    </div>
+  <div>{{ message }}
+  </div>
   {% endfor %}
   <content>
-    {% block content %}{% endblock %} 
+    {% block content %}{% endblock %}
   </content>
   <footer>
     {% block footer %}{% endblock %}
@@ -107,8 +111,8 @@
 
   <footer>
 
-  <div class="pure-g">
-    <div class="pure-u-1 pure-u-md-2-24"></div>
+    <div class="pure-g">
+      <div class="pure-u-1 pure-u-md-2-24"></div>
       <div class="pure-u-1 pure-u-md-20-24">
         <div class="footer">
           <div class="pure-g">
@@ -121,49 +125,52 @@
           </div>
           <p>
             <a href = "https://liberapay.com/altCensored.com"
-            target="_blank"><b>Liberapay</a></b>
-              |  
+               target="_blank"><b>Liberapay</a></b>
+            |
             <a href = "https://www.patreon.com/altCensored"
-            target="_blank"><b>Patreon</a></b>
+               target="_blank"><b>Patreon</a></b>
+            |
+            <a href = "https://gitlab.com/altCensored.com/altcensored"
+               target="_blank"><b>Released under the AGPLv3</a></b>
         </div>
       </div>
-    <div class="pure-u-1 pure-u-md-2-24"></div>
-  </div>
+      <div class="pure-u-1 pure-u-md-2-24"></div>
+    </div>
 
   </footer>
 
 </section>
 
 <script nonce="{{ csp_nonce() }}" type="text/javascript">
- if (localStorage.getItem("darkreader") == "enabled") {
-     document.getElementById("dark-reader").disabled = false;
- } else {
-     document.getElementById("dark-reader").disabled = true;
- }
+  if (localStorage.getItem("darkreader") == "enabled") {
+    document.getElementById("dark-reader").disabled = false;
+  } else {
+    document.getElementById("dark-reader").disabled = true;
+  }
 </script>
 
 <script nonce="{{ csp_nonce() }}" type="text/javascript">
-function dark_toggle() {
+  function dark_toggle() {
     var el1 = document.getElementById("dark-reader");
     var icon = document.getElementById("dark-reader-icon");
     if(el1.disabled) {
-        el1.disabled = false;
-        icon.setAttribute("class", "ion-ios-sunny");
-        localStorage.setItem("darkreader", "enabled");
+      el1.disabled = false;
+      icon.setAttribute("class", "ion-ios-sunny");
+      localStorage.setItem("darkreader", "enabled");
     } else {
-        el1.disabled = true;
-        icon.setAttribute("class", "ion-ios-moon");
-        localStorage.setItem("darkreader", "disabled");
+      el1.disabled = true;
+      icon.setAttribute("class", "ion-ios-moon");
+      localStorage.setItem("darkreader", "disabled");
     }
-}
+  }
 </script>
 
 <script nonce="{{ csp_nonce() }}" type="text/javascript">
-window.addEventListener('DOMContentLoaded', (event) => {
+  window.addEventListener('DOMContentLoaded', (event) => {
     let params = new URLSearchParams(document.location.search.substring(1));
     let qstring = params.get("q"); // is the string "Jonathan"
     document.getElementById("mySearch").value = qstring;
-});
+  });
 </script>
 
 </body>

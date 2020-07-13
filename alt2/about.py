@@ -1,5 +1,6 @@
 from flask import (
-    Blueprint, flash, redirect, render_template, request, url_for
+    Blueprint, flash, redirect, render_template, request, url_for,
+    session
     )
 from werkzeug.exceptions import abort
 from sqlalchemy import func
@@ -26,6 +27,6 @@ def index():
     archchancount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_archive).scalar()
     channels = Mv_Channel.query.all()
 
-    return render_template('about/about_index.html' , channels=channels, channelcount=channelcount, videocount=videocount, archchancount=archchancount, delchannelcount=delchannelcount)
+    return render_template('about/about_index.html' , channels=channels, channelcount=channelcount, videocount=videocount, archchancount=archchancount, delchannelcount=delchannelcount, locale=session['locale'])
 
 

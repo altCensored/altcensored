@@ -1,6 +1,6 @@
 from flask import (
     Blueprint, flash, redirect, render_template, request, url_for,
-    send_from_directory )
+    send_from_directory, session )
 from werkzeug.exceptions import abort
 from sqlalchemy import func, text, desc
 from .database import db_session
@@ -23,7 +23,8 @@ def index(page):
     pagination = Pagination(page, PER_PAGE, languagecount)
 
     return render_template('language/language_index.html', 
-        pagination=pagination, videocount=videocount, languages=languages, languagecount=languagecount)
+        pagination=pagination, videocount=videocount, languages=languages, languagecount=languagecount,
+        locale=session['locale'])
 
 
 @bp.route('/<lang_code>', defaults={'page': 1})
@@ -59,9 +60,9 @@ def item(lang_code,page):
 
     if videos is None:
         videos = Mv_Video.query.limit(24).all()
-        return render_template('language/language_index.html', videos=videos) 
+        return render_template('language/language_index.html', videos=videos, locale=session['locale'])
     else:
-        return render_template('language/language_item.html',videos=videos,pagination=pagination,order=order,channels=channels,videocount=videocount,channelcount=channelcount,language=language)
+        return render_template('language/language_item.html',videos=videos,pagination=pagination,order=order,channels=channels,videocount=videocount,channelcount=channelcount,language=language, locale=session['locale'])
 
 
 @bp.route('/<lang_code>/new', defaults={'page': 1})
@@ -97,9 +98,9 @@ def item_new(lang_code,page):
 
     if videos is None:
         videos = Mv_Video.query.limit(24).all()
-        return render_template('language/language_index.html', videos=videos) 
+        return render_template('language/language_index.html', videos=videos, locale=session['locale'])
     else:
-        return render_template('language/language_item.html',videos=videos,pagination=pagination,order=order,channels=channels,videocount=videocount,channelcount=channelcount,language=language)
+        return render_template('language/language_item.html',videos=videos,pagination=pagination,order=order,channels=channels,videocount=videocount,channelcount=channelcount,language=language, locale=session['locale'])
 
 
 @bp.route('/<lang_code>/old', defaults={'page': 1})
@@ -135,9 +136,9 @@ def item_old(lang_code,page):
 
     if videos is None:
         videos = Mv_Video.query.limit(24).all()
-        return render_template('language/language_index.html', videos=videos) 
+        return render_template('language/language_index.html', videos=videos, locale=session['locale'])
     else:
-        return render_template('language/language_item.html',videos=videos,pagination=pagination,order=order,channels=channels,videocount=videocount,channelcount=channelcount,language=language)
+        return render_template('language/language_item.html',videos=videos,pagination=pagination,order=order,channels=channels,videocount=videocount,channelcount=channelcount,language=language, locale=session['locale'])
 
 
 @bp.route('/<lang_code>/popular', defaults={'page': 1})
@@ -173,6 +174,6 @@ def item_popular(lang_code,page):
 
     if videos is None:
         videos = Mv_Video.query.limit(24).all()
-        return render_template('language/language_index.html', videos=videos) 
+        return render_template('language/language_index.html', videos=videos, locale=session['locale'])
     else:
-        return render_template('language/language_item.html',videos=videos,pagination=pagination,order=order,channels=channels,videocount=videocount,channelcount=channelcount,language=language)
+        return render_template('language/language_item.html',videos=videos,pagination=pagination,order=order,channels=channels,videocount=videocount,channelcount=channelcount,language=language, locale=session['locale'])

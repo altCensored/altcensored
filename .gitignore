@@ -1,0 +1,4 @@
+*.pyc
+.idea/
+altcen.db
+.env

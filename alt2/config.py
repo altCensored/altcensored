@@ -1,5 +1,7 @@
-SECRET_KEY="KEYFROM_PYFILE_CONFIG"
-SQLALCHEMY_DATABASE_URI="sqlite://///media/win/py/flask2/alt1/instance/altcen.db"
+import os
+
+SECRET_KEY=os.getenv('ALTC_SECRET_KEY')
+SQLALCHEMY_DATABASE_URI=os.getenv('ALTC_DATABASE_URL')
 MYSERVER_NAME_SHORT="altCensored"
 MYSERVER_NAME="altCensored.com"
 MYSERVER_URL="https://www.altCensored.com"

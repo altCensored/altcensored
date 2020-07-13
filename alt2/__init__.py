@@ -125,7 +125,6 @@ def create_app(test_config=None):
  
     @app.template_filter('ia_fname')
     def ia_fname(video_title):
-        
         video_title = video_title.replace(':',' -').replace("’",'_')
         video_title = unicodedata.normalize('NFD', video_title).encode('Windows-1252','ignore')
         video_title = re.sub('[^A-Za-z0-9-.+~=%@]+', '_', video_title.decode('Windows-1252') )

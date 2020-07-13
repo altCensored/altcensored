@@ -1,5 +1,6 @@
 from flask import (
-    Blueprint, flash, redirect, render_template, request, url_for, make_response
+    Blueprint, flash, redirect, render_template, request, url_for, make_response,
+    session
     )
 from werkzeug.exceptions import abort
 from sqlalchemy import func
@@ -22,9 +23,9 @@ def index(page):
     channels = Mv_Channel.query.limit(PER_PAGE).offset(offset)
     if not channels and page != 1:
         abort(404)
-    pagination = Pagination(page, PER_PAGE, channelcount)    
+    pagination = Pagination(page, PER_PAGE, channelcount)
     return render_template('channel/channel_index.html', 
-        pagination=pagination, channels=channels, channelcount=channelcount, videocount=videocount, order=order)
+        pagination=pagination, channels=channels, channelcount=channelcount, videocount=videocount, order=order, locale=session['locale'])
 
 
 @bp.route('/feed', defaults={'page': 1})
@@ -39,7 +40,7 @@ def feed(page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, channelcount)
 
-    template = render_template('channel/channel_index.xml', pagination=pagination, channels=channels, channelcount=channelcount, videocount=videocount, order=order)
+    template = render_template('channel/channel_index.xml', pagination=pagination, channels=channels, channelcount=channelcount, videocount=videocount, order=order, locale=session['locale'])
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
     return response
@@ -56,7 +57,7 @@ def new(page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, channelcount)    
     return render_template('channel/channel_index.html', 
-        pagination=pagination, channels=channels, channelcount=channelcount, videocount=videocount, order=order)
+        pagination=pagination, channels=channels, channelcount=channelcount, videocount=videocount, order=order, locale=session['locale'])
 
 
 @bp.route('/old', defaults={'page': 1})
@@ -71,7 +72,7 @@ def old(page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, channelcount)    
     return render_template('channel/channel_index.html', 
-        pagination=pagination, channels=channels, channelcount=channelcount, videocount=videocount, order=order)
+        pagination=pagination, channels=channels, channelcount=channelcount, videocount=videocount, order=order, locale=session['locale'])
 
 
 @bp.route('/popular', defaults={'page': 1})
@@ -86,7 +87,7 @@ def popular(page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, channelcount)    
     return render_template('channel/channel_index.html', 
-        pagination=pagination, channels=channels, channelcount=channelcount, videocount=videocount, order=order)
+        pagination=pagination, channels=channels, channelcount=channelcount, videocount=videocount, order=order, locale=session['locale'])
 
 
 @bp.route('/deleted', defaults={'page': 1})
@@ -101,7 +102,7 @@ def deleted(page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, channelcount)    
     return render_template('channel/channel_index.html', 
-        pagination=pagination, channels=channels, channelcount=channelcount, videocount=videocount, order=order)
+        pagination=pagination, channels=channels, channelcount=channelcount, videocount=videocount, order=order, locale=session['locale'])
 
 
 @bp.route('/deleted/feed', defaults={'page': 1})
@@ -116,7 +117,7 @@ def deleted_feed(page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, channelcount)
 
-    template = render_template('channel/channel_index.xml', pagination=pagination, channels=channels, channelcount=channelcount, videocount=videocount, order=order)
+    template = render_template('channel/channel_index.xml', pagination=pagination, channels=channels, channelcount=channelcount, videocount=videocount, order=order, locale=session['locale'])
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
     return response
@@ -134,7 +135,7 @@ def limited(page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, channelcount)    
     return render_template('channel/channel_index.html', 
-        pagination=pagination, channels=channels, channelcount=channelcount, videocount=videocount, order=order)
+        pagination=pagination, channels=channels, channelcount=channelcount, videocount=videocount, order=order, locale=session['locale'])
 
 
 @bp.route('/archived', defaults={'page': 1})
@@ -152,7 +153,7 @@ def archived(page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, channelcount)    
     return render_template('channel/channel_index.html', 
-        pagination=pagination, channels=channels, channelcount=channelcount, videocount=videocount, order=order)
+        pagination=pagination, channels=channels, channelcount=channelcount, videocount=videocount, order=order, locale=session['locale'])
 
 
 
@@ -168,7 +169,7 @@ def item(ytc_id,page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)    
     return render_template('channel/channel_item.html', 
-        pagination=pagination, channel=channel, videos=videos, videocount=videocount, order=order)
+        pagination=pagination, channel=channel, videos=videos, videocount=videocount, order=order, locale=session['locale'])
 
 
 @bp.route('/<ytc_id>/old', defaults={'page': 1})
@@ -183,7 +184,7 @@ def item_old(ytc_id,page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)    
     return render_template('channel/channel_item.html', 
-        pagination=pagination, channel=channel, videos=videos, videocount=videocount, order=order)
+        pagination=pagination, channel=channel, videos=videos, videocount=videocount, order=order, locale=session['locale'])
 
 
 @bp.route('/<ytc_id>/popular', defaults={'page': 1})
@@ -198,7 +199,7 @@ def item_popular(ytc_id,page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)    
     return render_template('channel/channel_item.html', 
-        pagination=pagination, channel=channel, videos=videos, videocount=videocount, order=order)
+        pagination=pagination, channel=channel, videos=videos, videocount=videocount, order=order, locale=session['locale'])
 
 
 @bp.route('/<ytc_id>/feed', defaults={'page': 1})
@@ -213,7 +214,7 @@ def item_feed(ytc_id,page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)
 
-    template = render_template('channel/channel_item.xml', pagination=pagination, channel=channel, videos=videos, videocount=videocount, order=order)
+    template = render_template('channel/channel_item.xml', pagination=pagination, channel=channel, videos=videos, videocount=videocount, order=order, locale=session['locale'])
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
     return response

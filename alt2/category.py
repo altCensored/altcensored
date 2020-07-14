@@ -8,6 +8,7 @@ from sqlalchemy import desc
 from .database import db_session
 from .models import Mv_Video, Mv_Category, Mv_Channel, Language
 from .pagination import Pagination
+from . import util
 
 bp = Blueprint('category', __name__, url_prefix='/category' )
 
@@ -28,7 +29,7 @@ def index(page):
 
     return render_template('category/category_index.html', 
         pagination=pagination, videocount=videocount, categories=categories, categorycount=categorycount,
-        locale=session['locale'])
+        locale=util.get_locale())
 
 
 @bp.route('/<cat_id>', defaults={'page': 1})
@@ -45,7 +46,7 @@ def item(cat_id,page):
     pagination = Pagination(page, PER_PAGE, videocount)    
     return render_template('category/category_item.html', 
         pagination=pagination, category=category, videos=videos, videocount=videocount, order=order,
-        locale=session['locale'])
+        locale=util.get_locale())
 
 
 @bp.route('/<cat_id>/new', defaults={'page': 1})
@@ -62,7 +63,7 @@ def item_new(cat_id,page):
     pagination = Pagination(page, PER_PAGE, videocount)    
     return render_template('category/category_item.html', 
         pagination=pagination, category=category, videos=videos, videocount=videocount, order=order,
-        locale=session['locale'])
+        locale=util.get_locale())
 
 
 @bp.route('/<cat_id>/old', defaults={'page': 1})
@@ -79,7 +80,7 @@ def item_old(cat_id,page):
     pagination = Pagination(page, PER_PAGE, videocount)    
     return render_template('category/category_item.html', 
         pagination=pagination, category=category, videos=videos, videocount=videocount, order=order,
-        locale=session['locale'])
+        locale=util.get_locale())
 
 
 @bp.route('/<cat_id>/popular', defaults={'page': 1})
@@ -96,7 +97,7 @@ def item_popular(cat_id,page):
     pagination = Pagination(page, PER_PAGE, videocount)    
     return render_template('category/category_item.html', 
         pagination=pagination, category=category, videos=videos, videocount=videocount, order=order,
-        locale=session['locale'])
+        locale=util.get_locale())
 
 
 @bp.route('/<lang_code>', defaults={'page': 1})
@@ -128,4 +129,4 @@ def lang_item(lang_code,page):
     pagination = Pagination(page, PER_PAGE, videocount)    
     return render_template('category/category_item.html', 
         pagination=pagination, language=language, videos=videos, videocount=videocount, order=order,
-        locale=session['locale'])
+        locale=util.get_locale())

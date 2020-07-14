@@ -9,6 +9,7 @@ from flask_babelplus import Babel, gettext, ngettext
 import bleach
 import unicodedata
 import math
+from . import util
 
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
@@ -41,37 +42,7 @@ def create_app(test_config=None):
 
     @babel.localeselector
     def get_locale():
-
-        if 'locale' in session:
-#            message='locale SET'
-#            flash(message)
-            return session['locale']
-        else:
-#            message='locale NONE'
-#            flash(message)
-#            return g.get('lang_code', app.config['BABEL_DEFAULT_LOCALE'])
-            session['locale'] = request.accept_languages.best_match(app.config['SUPPORTED_LANGUAGES'].keys())
-            return session['locale']
-#        try:
-#            locale = session['locale']
-#        except KeyError:
-#            pass
-#            locale = session['locale']
-#        locale = getattr(g, 'locale', None)
-#        if locale is not None:
-#            return locale
-#            message='init_py,locale not None'
-#            flash(message)
-        # otherwise try to guess the language from the user accept
-        # header the browser transmits.  We support de/fr/en in this
-        # example.  The best match wins.
-#        g.locale = request.accept_languages.best_match(app.config['SUPPORTED_LANGUAGES'].keys())
-#        locale = g.locale
-#        return locale
-#        return request.accept_languages.best_match(app.config['SUPPORTED_LANGUAGES'].keys())
-#        message='init_py,locale IS None'
-#        flash(message)
-#        return g.get('lang_code', app.config['BABEL_DEFAULT_LOCALE'])
+        return util.get_locale()
 
     @babel.timezoneselector
     def get_timezone():

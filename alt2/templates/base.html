@@ -18,6 +18,7 @@
   {% endif %}
 
 
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
   <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <link rel="apple-touch-icon" type="image/x-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
   <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
@@ -87,6 +88,11 @@
           <a href="{{ url_for('about.index') }}" class="pure-menu-heading">
             {{ gettext('About') }}
           </a>
+        </div>
+        <div class="pure-u-1-2">
+          <button class="pure-button" onclick="openLoginDialog()">
+            LOG IN
+          </button>
         </div>
       </div>
     </div>
@@ -163,6 +169,13 @@
       localStorage.setItem("darkreader", "disabled");
     }
   }
+
+  function openLoginDialog(){
+    var dialog = document.getElementById("login-dialog");
+    dialog.style.display = 'flex';
+  }
+
+
 </script>
 
 <script nonce="{{ csp_nonce() }}" type="text/javascript">
@@ -172,6 +185,24 @@
     document.getElementById("mySearch").value = qstring;
   });
 </script>
+
+<div id="login-dialog" class="login-dialog">
+  <div class="login-dialog-content">
+    <form>
+      <label>Email</label>
+      <input type="email" placeholder="Email" />
+
+      <label>Password</label>
+      <input type="password" placeholder="Password" />
+
+      <button type="submit" class="login-button">Log in</button>
+
+      <a class="forgot-password">Forgot password?</a>
+      <p class="no-account-section">No account? <a class="create-one">Create one</a></p>
+    </form>
+  </div>
+</div>
+
 
 </body>
 </html>

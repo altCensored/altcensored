@@ -90,7 +90,7 @@
           </a>
         </div>
         <div class="pure-u-1-2">
-          <button class="pure-button" onclick="openLoginDialog()">
+          <button class="altcen-button" onclick="openLoginDialog()">
             LOG IN
           </button>
         </div>
@@ -172,7 +172,7 @@
 
   function openLoginDialog(){
     var dialog = document.getElementById("login-dialog");
-    dialog.style.display = 'flex';
+    dialog.style.display = 'block';
   }
 
 
@@ -187,6 +187,7 @@
 </script>
 
 <div id="login-dialog" class="login-dialog">
+  <div class="login-dialog-backdrop"></div>
   <div class="login-dialog-content">
     <form>
       <label>Email</label>
@@ -195,10 +196,10 @@
       <label>Password</label>
       <input type="password" placeholder="Password" />
 
-      <button type="submit" class="login-button">Log in</button>
+      <button type="submit" class="altcen-button login-button">Log in</button>
 
-      <a class="forgot-password">Forgot password?</a>
-      <p class="no-account-section">No account? <a class="create-one">Create one</a></p>
+      <a href="#" class="forgot-password">Forgot password?</a>
+      <p class="no-account-section">No account? <a href="#" class="create-one">Create one</a></p>
     </form>
   </div>
 </div>

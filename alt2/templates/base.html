@@ -54,7 +54,7 @@
     <div class="pure-g navbar h-box">
       <div class="pure-u-1 pure-u-md-4-24">
         <a href="{{ url_for('video.index') }}" class="index-link pure-menu-item">
-          <span>alt</span>
+          <span class="alt-span">alt</span>
           <img src="{{ url_for('static', filename='logo.png') }}" />
           <span class="censored-span">ensored</span>
         </a>
@@ -75,7 +75,7 @@
         </div>
         <div class="pure-u-1-2">
           <a href="{{ url_for('settings.index') }}" class="pure-menu-heading localization-menu">
-            <img height="16px" src="{{ url_for('static', filename='flags/by_locale') }}/{{locale}}.svg" />
+            <img height="14px" src="{{ url_for('static', filename='flags/by_locale') }}/{{locale}}.svg" />
           </a>
         </div>
         <div class="pure-u-1-2">

@@ -20,4 +20,3 @@ def init_db(app):
     # you will have to import them first before calling init_db()
     import models
     Base.metadata.create_all(bind=engine)
-    

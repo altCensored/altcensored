@@ -135,15 +135,20 @@ img.thumbnail {
 
 .navbar .index-link {
   font-weight: bold;
-  color: #BF2026;
   position: relative;
   top: -8px;
 }
 
 .navbar .index-link > img {
   position: relative;
-  bottom: -7px;
-  height: 32px;
+  bottom: -6px;
+  height: 28px;
+}
+
+.navbar .index-link > .alt-span {
+  margin-right: -7px;
+  position: relative;
+  z-index: 1;
 }
 
 .navbar .index-link > .censored-span {
@@ -386,5 +391,5 @@ ul.share-buttons img{
 
 .localization-menu {
   position: relative;
-  top: 2px;
+  top: 1px;
 }

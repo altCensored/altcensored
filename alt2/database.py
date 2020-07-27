@@ -6,7 +6,6 @@ from . import config
 dbase = config.SQLALCHEMY_DATABASE_URI
 
 engine = create_engine(dbase)
-
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
                                          bind=engine))

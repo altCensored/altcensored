@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-06-24 11:50+0000\n"
+"POT-Creation-Date: 2020-07-27 20:42+0000\n"
 "PO-Revision-Date: 2020-06-24 15:39+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es\n"
@@ -18,13 +18,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.8.0\n"
 
-#: templates/base.html:61
+#: templates/base.html:65
 msgid "search"
 msgstr "buscar"
 
-#: templates/base.html:84
+#: templates/base.html:88
 msgid "About"
 msgstr "Sobre"
+
+#: templates/base.html:134
+msgid "Released under the"
+msgstr "Lanzado bajo el"
 
 #: templates/about/about_index.html:26
 #: templates/category/category_index.html:16
@@ -64,80 +68,118 @@ msgstr "Canal"
 msgid "Category"
 msgstr "Categoría"
 
-#: templates/about/about_index.html:61
+#: templates/about/about_index.html:62
 msgid "limits"
 msgstr "limita"
 
-#: templates/about/about_index.html:62
+#: templates/about/about_index.html:63
 msgid "access to videos that are neither"
 msgstr "el acceso a las videos que no son"
 
-#: templates/about/about_index.html:63
+#: templates/about/about_index.html:65
 msgid "illegal"
 msgstr "ilegal"
 
-#: templates/about/about_index.html:63
+#: templates/about/about_index.html:66
 msgid "nor violate their own"
 msgstr "ni violar la suya"
 
-#: templates/about/about_index.html:64
+#: templates/about/about_index.html:68
 msgid "Terms and Conditions"
 msgstr "Términos y Condiciones"
 
-#: templates/about/about_index.html:64
+#: templates/about/about_index.html:68
 msgid "or"
 msgstr "o"
 
-#: templates/about/about_index.html:65
+#: templates/about/about_index.html:70 templates/about/about_index.html:87
 msgid "Community Guidelines"
 msgstr "Principios de la Comunidad"
 
-#: templates/about/about_index.html:68
+#: templates/about/about_index.html:74
 msgid "\"Limited state\" videos"
 msgstr "Videos de \"estado limitado\""
 
-#: templates/about/about_index.html:68
+#: templates/about/about_index.html:75
 msgid ""
 "are placed behind a warning message, cannot be shared, monetized or "
 "easily found, and have likes, comments, view counts and suggested videos "
 "disabled"
 msgstr ""
-"se colocan detrás de un mensaje de advertencia, no se pueden compartir, monetizar o "
-"encontrar fácilmente, y likes, comentarios, recuentos de vistas y videos sugeridos estan dishabilitados"
+"se colocan detrás de un mensaje de advertencia, no se pueden compartir, "
+"monetizar o encontrar fácilmente, y likes, comentarios, recuentos de "
+"vistas y videos sugeridos estan dishabilitados"
 
-#: templates/about/about_index.html:71
+#: templates/about/about_index.html:81
+msgid "removes"
+msgstr "elimina"
+
+#: templates/about/about_index.html:82
+msgid "videos that violate their"
+msgstr "videos que violan sus"
+
+#: templates/about/about_index.html:84
+msgid "ever-changing"
+msgstr "siempre cambiante"
+
+#: templates/about/about_index.html:84
+msgid "and"
+msgstr "y"
+
+#: templates/about/about_index.html:86
+msgid "arbitrarily enforced"
+msgstr "aplicado arbitrariamente"
+
+#: templates/about/about_index.html:88
+msgid ""
+"while Creators increasingly \"self-censor\" trying to avoid channel "
+"strikes and terminations"
+msgstr "mientras que los creadores se autocensuran cada vez más tratando de evitar "
+"las penalizaciones y las terminaciones de los canales"
+
+
+#: templates/about/about_index.html:93
 msgid "is an unbiased community catalog of"
 msgstr "es un catálogo comunitario imparcial de"
 
-#: templates/about/about_index.html:72
-msgid "such videos, including those removed by YouTube or self-censored. Of"
-msgstr "tales videos, incluidos los eliminados por YouTube o autocensurados. De"
+#: templates/about/about_index.html:96
+msgid "limited state, removed, and self-censored YouTube videos across"
+msgstr "videos de YouTube de estado limitado, eliminados y autocensurados a través de"
 
-#: templates/about/about_index.html:73
-msgid "monitored channels,"
-msgstr "canales monitoreados,"
+#: templates/about/about_index.html:99
+msgid "monitored channels, of which"
+msgstr "canales vigilados, de los cuales"
 
-#: templates/about/about_index.html:74
+#: templates/about/about_index.html:102
 msgid "have been deleted and"
 msgstr "han sido eliminados y"
 
-#: templates/about/about_index.html:75
+#: templates/about/about_index.html:105
 msgid "are being archived in case of deletion"
 msgstr "se archivan en caso de eliminación"
 
-#: templates/about/about_index.html:78
+#: templates/about/about_index.html:109
+msgid "Find videos and channels using the search bar"
+msgstr "Encuentra videos y canales usando la barra de búsqueda"
+
+#: templates/about/about_index.html:110
 msgid ""
 "Download videos with \"right mouse button click\" inside the video window"
 " or use the \"Download Torrent\" link. Channel and Video RSS Feeds"
 msgstr ""
-"Descargue videos haciendo clic con el botón derecho del mouse dentro de la ventana de video"
-" o use el enlace \"Descargar Torrent\". Canal y Video RSS Feeds"
+"Descargue videos haciendo clic con el botón derecho del mouse dentro de "
+"la ventana de video o use el enlace \"Descargar Torrent\". Canal y Video "
+"RSS Feeds"
 
-#: templates/about/about_index.html:82
-msgid " contain torrent links to easily download multiple videos"
+#: templates/about/about_index.html:114
+msgid "contain torrent links to easily download multiple videos"
 msgstr "contienen enlaces de torrent para descargar fácilmente múltiples videos"
 
-#: templates/about/about_index.html:85
+#: templates/about/about_index.html:115
+msgid "Embed videos in any website exactly like YouTube"
+msgstr "Embed videos en cualquier sitio web exactamente como YouTube"
+
+#: templates/about/about_index.html:118
 msgid "Email new channel suggestions to"
 msgstr "Enviar sugerencias de canales nuevos a"
 
@@ -374,4 +416,7 @@ msgstr "Descargar Torrent"
 #: templates/video/video_item.html:134
 msgid "Published on"
 msgstr "Publicado en"
+
+
+
 

@@ -160,7 +160,7 @@ msgstr "sont archivés en cas de suppression"
 
 #: templates/about/about_index.html:109
 msgid "Find videos and channels using the search bar"
-msgstr "Trouver des vidéos et des chaînes en utilisant la barre de recherche".
+msgstr "Trouver des vidéos et des chaînes en utilisant la barre de recherche"
 
 #: templates/about/about_index.html:110
 msgid ""

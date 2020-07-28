@@ -168,7 +168,7 @@ msgid ""
 " or use the \"Download Torrent\" link. Channel and Video RSS Feeds"
 msgstr ""
 "Download video's met de rechtermuisknop in het videovenster"
-" of gebruik de "Download Torrent" link. Kanaal en video RSS-feeds"
+" of gebruik de "Torrent downloaden" link. Kanaal en video RSS-feeds"
 
 #: templates/about/about_index.html:114
 msgid "contain torrent links to easily download multiple videos"

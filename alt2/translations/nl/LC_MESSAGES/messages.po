@@ -1,4 +1,4 @@
-# French translations for PROJECT.
+# Dutch translations for PROJECT.
 # Copyright (C) 2020 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
@@ -8,11 +8,11 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2020-07-27 20:42+0000\n"
-"PO-Revision-Date: 2020-06-24 13:44+0000\n"
+"PO-Revision-Date: 2020-07-27 23:24+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language: fr\n"
-"Language-Team: fr <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"Language: nl\n"
+"Language-Team: nl <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,15 +20,15 @@ msgstr ""
 
 #: templates/base.html:65
 msgid "search"
-msgstr "recherchez"
+msgstr "zoek"
 
 #: templates/base.html:88
 msgid "About"
-msgstr "Nous"
+msgstr "Over"
 
 #: templates/base.html:134
 msgid "Released under the"
-msgstr "Libéré en vertu de la"
+msgstr "Vrijgegeven onder de"
 
 #: templates/about/about_index.html:26
 #: templates/category/category_index.html:16
@@ -40,7 +40,7 @@ msgstr "Libéré en vertu de la"
 #: templates/settings/settings_index.html:26
 #: templates/video/video_index.html:43 templates/video/video_search.html:40
 msgid "Video"
-msgstr "Vidéo"
+msgstr ""
 
 #: templates/about/about_index.html:31
 #: templates/category/category_index.html:21
@@ -53,7 +53,7 @@ msgstr "Vidéo"
 #: templates/settings/settings_index.html:31
 #: templates/video/video_index.html:49 templates/video/video_search.html:45
 msgid "Channel"
-msgstr "Chaîne"
+msgstr "Kanaal"
 
 #: templates/about/about_index.html:36
 #: templates/category/category_index.html:26
@@ -66,39 +66,39 @@ msgstr "Chaîne"
 #: templates/video/video_index.html:54 templates/video/video_item.html:97
 #: templates/video/video_search.html:50
 msgid "Category"
-msgstr "Catégorie"
+msgstr "Categorie"
 
 #: templates/about/about_index.html:62
 msgid "limits"
-msgstr "limite"
+msgstr "beperkt"
 
 #: templates/about/about_index.html:63
 msgid "access to videos that are neither"
-msgstr "l'accès aux vidéos qui ne sont ni"
+msgstr "de toegang tot video's die noch"
 
 #: templates/about/about_index.html:65
 msgid "illegal"
-msgstr "illégales"
+msgstr "illegaal zijn"
 
 #: templates/about/about_index.html:66
 msgid "nor violate their own"
-msgstr "ni enfreignent leurs propres"
+msgstr "noch in strijd met hun eigen"
 
 #: templates/about/about_index.html:68
 msgid "Terms and Conditions"
-msgstr "conditions générales"
+msgstr "Algemene Voorwaarden"
 
 #: templates/about/about_index.html:68
 msgid "or"
-msgstr "ou"
+msgstr "of"
 
 #: templates/about/about_index.html:70 templates/about/about_index.html:87
 msgid "Community Guidelines"
-msgstr "directives communautaires"
+msgstr "de communautaire richtlijnen"
 
 #: templates/about/about_index.html:74
 msgid "\"Limited state\" videos"
-msgstr "Les vidéos \"d'état limité\""
+msgstr "\"Beperkte staat\" video's"
 
 #: templates/about/about_index.html:75
 msgid ""
@@ -106,82 +106,81 @@ msgid ""
 "easily found, and have likes, comments, view counts and suggested videos "
 "disabled"
 msgstr ""
-"sont placées derrière un message d'avertissement, ne peuvent pas être "
-"partagées, monétisées ou facilement trouvées, et ont des likes, des "
-"commentaires, des décomptes de vues et des vidéos suggérées désactivés"
+"worden geplaatst achter een waarschuwingsbericht, kunnen niet worden gedeeld, te gelde gemaakt of"
+" gemakkelijk te vinden, en hebben graag, commentaar, bekijken telt en gesuggereerde video's uitgeschakeld"
 
 #: templates/about/about_index.html:81
 msgid "removes"
-msgstr "supprime"
+msgstr "verwijdert"
 
 #: templates/about/about_index.html:82
 msgid "videos that violate their"
-msgstr "des vidéos qui violent leur"
+msgstr "video's die hun"
 
 #: templates/about/about_index.html:84
 msgid "ever-changing"
-msgstr "en constante évolution"
+msgstr "steeds wisselende"
 
 #: templates/about/about_index.html:84
 msgid "and"
-msgstr "et"
+msgstr "en"
 
 #: templates/about/about_index.html:86
 msgid "arbitrarily enforced"
-msgstr "appliquée arbitrairement"
+msgstr "willekeurig afgedwongen"
 
 #: templates/about/about_index.html:88
 msgid ""
 "while Creators increasingly \"self-censor\" trying to avoid channel "
 "strikes and terminations"
 msgstr ""
-"alors que les créateurs s'autocensurent de plus en plus en essayant d'éviter le canal"
-"les sanctions et les résiliations"
+"terwijl de makers steeds meer zelfcensuur proberen te vermijden"
+" stakingen en beëindigingen"
 
 #: templates/about/about_index.html:93
 msgid "is an unbiased community catalog of"
-msgstr "est un catalogue communautaire impartial de"
+msgstr "is een onpartijdige gemeenschapscatalogus van"
 
 #: templates/about/about_index.html:96
 msgid "limited state, removed, and self-censored YouTube videos across"
-msgstr "Vidéos YouTube à état limité, supprimées et autocensurées"
+msgstr "beperkte staat, verwijderd, en zelfcensureerde YouTube-video's over"
+
 
 #: templates/about/about_index.html:99
 msgid "monitored channels, of which"
-msgstr "canaux surveillés, dont"
+msgstr "bewaakte kanalen, waarvan"
 
 #: templates/about/about_index.html:102
 msgid "have been deleted and"
-msgstr "ont été supprimés et"
+msgstr "zijn geschrapt en"
 
 #: templates/about/about_index.html:105
 msgid "are being archived in case of deletion"
-msgstr "sont archivés en cas de suppression"
+msgstr "worden gearchiveerd in geval van verwijdering"
 
 #: templates/about/about_index.html:109
 msgid "Find videos and channels using the search bar"
-msgstr "Trouver des vidéos et des chaînes en utilisant la barre de recherche"
+msgstr "Video's en kanalen vinden met behulp van de zoekbalk"
 
 #: templates/about/about_index.html:110
 msgid ""
 "Download videos with \"right mouse button click\" inside the video window"
 " or use the \"Download Torrent\" link. Channel and Video RSS Feeds"
 msgstr ""
-"Téléchargez des vidéos avec \"clic droit de la souris\" à l'intérieur de "
-"la fenêtre vidéo ou utilisez le lien \"Télécharger Torrent\". Fil RSS des"
-" Chaînes et des Vidéos"
+"Download video's met de rechtermuisknop in het videovenster"
+" of gebruik de "Torrent downloaden" link. Kanaal en video RSS-feeds"
 
 #: templates/about/about_index.html:114
 msgid "contain torrent links to easily download multiple videos"
-msgstr "contiennent des liens torrent pour télécharger facilement plusieurs vidéos"
+msgstr "bevatten torrentlinks om gemakkelijk meerdere video's te downloaden"
 
 #: templates/about/about_index.html:115
 msgid "Embed videos in any website exactly like YouTube"
-msgstr "Embed des vidéos dans n'importe quel site web, exactement comme sur YouTube"
+msgstr "Embed video's in elke website precies zoals YouTube"
 
 #: templates/about/about_index.html:118
 msgid "Email new channel suggestions to"
-msgstr "Envoyez vos suggestions de nouveaux canaux par courriel à"
+msgstr "E-mail nieuwe kanaalsuggesties naar"
 
 #: templates/category/category_item.html:77
 #: templates/category/category_item.html:91
@@ -203,7 +202,7 @@ msgstr "Envoyez vos suggestions de nouveaux canaux par courriel à"
 #: templates/video/video_search.html:149 templates/video/video_search.html:164
 #: templates/video/video_search.html:179 templates/video/video_search.html:209
 msgid "latest"
-msgstr "dernier"
+msgstr "recentste"
 
 #: templates/category/category_item.html:80
 #: templates/category/category_item.html:94
@@ -229,7 +228,7 @@ msgstr "dernier"
 #: templates/video/video_search.html:182 templates/video/video_search.html:197
 #: templates/video/video_search.html:212
 msgid "newest"
-msgstr "le plus récent"
+msgstr "nieuwste"
 
 #: templates/category/category_item.html:83
 #: templates/category/category_item.html:97
@@ -255,7 +254,7 @@ msgstr "le plus récent"
 #: templates/video/video_search.html:185 templates/video/video_search.html:200
 #: templates/video/video_search.html:215
 msgid "oldest"
-msgstr "le plus vieux"
+msgstr "oudste"
 
 #: templates/category/category_item.html:86
 #: templates/category/category_item.html:100
@@ -287,7 +286,7 @@ msgstr "populaire"
 #: templates/language/language_item.html:231
 #: templates/video/video_index.html:187 templates/video/video_search.html:254
 msgid "Published"
-msgstr "Publié"
+msgstr "Gepubliceerd"
 
 #: templates/category/category_item.html:164
 #: templates/channel/channel_item.html:216
@@ -295,42 +294,42 @@ msgstr "Publié"
 #: templates/video/video_index.html:190 templates/video/video_item.html:169
 #: templates/video/video_search.html:257
 msgid "views"
-msgstr "vues"
+msgstr "weergaven"
 
 #: templates/channel/channel_index.html:71
 #: templates/channel/channel_index.html:75
 msgid "deleted"
-msgstr "supprimé"
+msgstr "verwijderd"
 
 #: templates/channel/channel_index.html:82
 #: templates/channel/channel_index.html:86
 msgid "most limited"
-msgstr "le plus limité"
+msgstr "meest beperkt"
 
 #: templates/channel/channel_index.html:94
 #: templates/channel/channel_index.html:98
 msgid "archived"
-msgstr "archivé"
+msgstr "gearchiveerd"
 
 #: templates/channel/channel_index.html:260
 #: templates/channel/channel_item.html:82
 #: templates/language/language_item.html:86
 #: templates/video/video_search.html:86
 msgid "Limited"
-msgstr "Limité"
+msgstr "Beperkt"
 
 #: templates/channel/channel_index.html:263
 #: templates/language/language_item.html:88
 #: templates/video/video_search.html:89
 msgid "Total"
-msgstr ""
+msgstr "Totaal"
 
 #: templates/channel/channel_index.html:265
 #: templates/channel/channel_item.html:84
 #: templates/language/language_item.html:89 templates/video/video_item.html:95
 #: templates/video/video_search.html:91
 msgid "Views"
-msgstr "Vues"
+msgstr "Weergaven"
 
 #: templates/channel/channel_index.html:267
 #: templates/language/language_item.html:90
@@ -343,7 +342,7 @@ msgstr ""
 #: templates/language/language_item.html:98
 #: templates/video/video_search.html:100
 msgid "Monitor"
-msgstr "Moniteur"
+msgstr ""
 
 #: templates/channel/channel_index.html:275
 #: templates/channel/channel_index.html:279
@@ -353,7 +352,7 @@ msgstr "Moniteur"
 #: templates/language/language_item.html:103
 #: templates/video/video_search.html:101 templates/video/video_search.html:105
 msgid "True"
-msgstr "Vrai"
+msgstr "Waar"
 
 #: templates/channel/channel_index.html:276
 #: templates/channel/channel_index.html:280
@@ -363,62 +362,57 @@ msgstr "Vrai"
 #: templates/language/language_item.html:104
 #: templates/video/video_search.html:102 templates/video/video_search.html:106
 msgid "False"
-msgstr "Faux"
+msgstr "Vals"
 
 #: templates/channel/channel_index.html:278
 #: templates/channel/channel_item.html:92
 #: templates/language/language_item.html:102
 #: templates/video/video_search.html:104
 msgid "Archive"
-msgstr "Archiver"
+msgstr "Archief"
 
 #: templates/channel/channel_index.html:291
 #: templates/channel/channel_item.html:124
 #: templates/language/language_item.html:114
 #: templates/video/video_search.html:117
 msgid "Created"
-msgstr "Créé"
+msgstr "Gemaakt"
 
 #: templates/channel/channel_index.html:294
 #: templates/channel/channel_item.html:131
 #: templates/video/video_search.html:120
 msgid "Deleted"
-msgstr "Supprimé"
+msgstr "Verwijderd"
 
 #: templates/channel/channel_item.html:83
 msgid "Videos"
-msgstr "Vidéos"
+msgstr ""
 
 #: templates/channel/channel_item.html:85
 msgid "Subscribers"
-msgstr "Abonnés"
+msgstr "Abonnees"
 
 #: templates/channel/channel_item.html:98
 msgid "Stats"
-msgstr ""
+msgstr "Statistieken"
 
 #: templates/settings/settings_index.html:60
 msgid "Language"
-msgstr "Langue"
+msgstr "Taal"
 
 #: templates/settings/settings_index.html:69
 msgid "Save"
-msgstr "Sauvegarder"
+msgstr "Bespaar"
 
 #: templates/video/video_item.html:90
 msgid "View on"
-msgstr "Voir sur"
+msgstr "Aanzicht op"
 
 #: templates/video/video_item.html:92
 msgid "Download Torrent"
-msgstr "Télécharger Torrent"
+msgstr "Torrent downloaden"
 
 #: templates/video/video_item.html:134
 msgid "Published on"
-msgstr "Publié le"
-
-
-
-
-
+msgstr "Gepubliceerd op"
 

@@ -11,6 +11,6 @@ IPROXYBIG="https://altcensored.com/ip/320x180/"
 IPROXYTW="https://altcensored.com/ip/144x144/"
 IPROXYTWBIG="https://altcensored.com/ip/"
 
-SUPPORTED_LANGUAGES = {'en': 'English', 'de': 'Deutsch', 'es': 'Español', 'fr': 'Français', 'pt': 'Portuguese'}
+SUPPORTED_LANGUAGES = {'en': 'English', 'de': 'Deutsch', 'es': 'Español', 'fr': 'Français', 'pt': 'Portuguese', 'nl': 'Nederlandse'}
 BABEL_DEFAULT_LOCALE = 'en'
 BABEL_DEFAULT_TIMEZONE = 'UTC'

@@ -8,6 +8,7 @@
 
 <html>
 
+{% if ia_url  is not none %}
 
 <video preload="auto" playsinline outline="none" controls
 style="outline:none;
@@ -46,6 +47,43 @@ style="outline:none;
 
 </video>
 
+{% else %}
 
+<video preload="auto" playsinline outline="none" controls
+style="outline:none;
+    background-color:#000;
+    background-size:cover;
+    display: inline-block;
+    vertical-align: middle;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;"
 
+  poster="{{ ac_url }}.jpg">
 
+  <source
+    src="{{ ac_url }}.mkv"
+    type="video/mp4">
+  <source
+    src="{{ ac_url }}.mp4"
+    type="video/mp4">
+  <source
+    src="{{ ac_url }}.ogv"
+    type="video/ogg">
+  <source
+    src="{{ ac_url }}.webm"
+    type=type='video/webm'>   
+
+</video>
+
+{% endif %}

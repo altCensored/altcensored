@@ -1,6 +1,6 @@
 from flask import (
     Blueprint, flash, redirect, render_template, request, url_for,
-    send_from_directory, make_response, session )
+    send_from_directory, make_response, session, current_app )
 from werkzeug.exceptions import abort
 from sqlalchemy import func, text
 from internetarchive import get_item
@@ -12,9 +12,13 @@ from . import util
 bp = Blueprint('video', __name__ )
 
 PER_PAGE = 24
+#MYSERVER_URL = current_app.config['MYSERVER_URL']
+#languages = (current_app.config['SUPPORTED_LANGUAGES'].keys())
+#MYSERVER_URL="https://www.altCensored.com"
 
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
+
 def index(page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'latest'
@@ -119,17 +123,19 @@ def watch():
     try:
         item = get_item('youtube-' + video_id)
         fileitem = next(item for item in item.files if item["format"] == "JSON")
-#        fileitem = next(item for item in item.files)
         filenamelong = (fileitem['name'])
         filename = filenamelong[:-10]
         ia_url = "https://archive.org/download/youtube-" + video_id + "/" + filename
         ia_url_short = "https://archive.org/download/youtube-" + video_id + "/"
-#        ia_url = "https://archive.org/embed/youtube-" + video_id + "/" + filename
+        ac_url = None
+        if "access-restricted-item" in item.metadata: raise Exception
     except:
         ia_url =  None
+        MYSERVER_URL = current_app.config['MYSERVER_URL']
+        ac_url = MYSERVER_URL + "/videos/" + video_id
 
     return render_template('video/video_item.html', ia_url=ia_url, ia_url_short= ia_url_short,\
-        video_id=video_id, channel=channel, video=video, videos=videos, cat_id=cat_id, tags=tags, locale=util.get_locale())
+        video_id=video_id, channel=channel, video=video, videos=videos, cat_id=cat_id, tags=tags, locale=util.get_locale(), ac_url=ac_url)
 
 @bp.route('/embed/<video_id>')
 def embed(video_id):
@@ -148,11 +154,15 @@ def embed(video_id):
         filenamelong = (fileitem['name'])
         filename = filenamelong[:-10]
         ia_url = "https://archive.org/download/youtube-" + video_id + "/" + filename
-#        ia_url = "https://archive.org/embed/youtube-" + video_id + "/" + filename
+        ia_url_short = "https://archive.org/download/youtube-" + video_id + "/"
+        ac_url = None
+        if "access-restricted-item" in item.metadata: raise Exception
     except:
         ia_url =  None
+        MYSERVER_URL = current_app.config['MYSERVER_URL']
+        ac_url = MYSERVER_URL + "/videos/" + video_id
 
-    return render_template('video/video_embed.html', ia_url=ia_url, video_id=video_id, video=video, locale=util.get_locale())
+    return render_template('video/video_embed.html', ia_url=ia_url, video_id=video_id, video=video, locale=util.get_locale(), ac_url=ac_url)
 
 
 @bp.route("/search", defaults={'page': 1})

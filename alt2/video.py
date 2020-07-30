@@ -128,7 +128,8 @@ def watch():
         ia_url = "https://archive.org/download/youtube-" + video_id + "/" + filename
         ia_url_short = "https://archive.org/download/youtube-" + video_id + "/"
         ac_url = None
-        if "access-restricted-item" or "altcen_hosted" in item.metadata: raise Exception
+        if "access-restricted-item" in item.metadata: raise Exception
+        if "altcen_hosted" in item.metadata: raise Exception
     except:
         ia_url =  None
         MYSERVER_URL = current_app.config['MYSERVER_URL']
@@ -156,7 +157,8 @@ def embed(video_id):
         ia_url = "https://archive.org/download/youtube-" + video_id + "/" + filename
         ia_url_short = "https://archive.org/download/youtube-" + video_id + "/"
         ac_url = None
-        if "access-restricted-item" or "altcen_hosted" in item.metadata: raise Exception
+        if "access-restricted-item" in item.metadata: raise Exception
+        if "altcen_hosted" in item.metadata: raise Exception
     except:
         ia_url =  None
         MYSERVER_URL = current_app.config['MYSERVER_URL']

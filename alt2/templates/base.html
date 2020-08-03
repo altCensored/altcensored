@@ -30,7 +30,7 @@
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pure-min.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/grids-responsive-min.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}?v=2">
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/lighttheme.css') }}">
 
@@ -90,7 +90,7 @@
           </a>
         </div>
         <div class="pure-u-1-2">
-          <button class="altcen-button" onclick="openLoginDialog()">
+          <button class="altcen-button" id="login-button">
             LOG IN
           </button>
         </div>
@@ -170,11 +170,28 @@
     }
   }
 
-  function openLoginDialog(){
-    var dialog = document.getElementById("login-dialog");
-    dialog.style.display = 'block';
-  }
+  document.addEventListener('DOMContentLoaded', function(){
+    var loginDialog = document.getElementById("login-dialog");
+    var registerDialog = document.getElementById("register-dialog");
 
+    document.getElementById('login-button').addEventListener('click', function(event){
+      event.preventDefault();
+      loginDialog.style.display = 'block';
+      registerDialog.style.display = 'none';
+    });
+
+    document.getElementById('register-button').addEventListener('click', function(event){
+      event.preventDefault();
+      loginDialog.style.display = 'none';
+      registerDialog.style.display = 'block';
+    });
+
+    document.getElementById('back-to-login-button').addEventListener('click', function(event){
+      event.preventDefault();
+      loginDialog.style.display = 'block';
+      registerDialog.style.display = 'none';
+    })
+  })
 
 </script>
 
@@ -199,7 +216,23 @@
       <button type="submit" class="altcen-button login-button">Log in</button>
 
       <a href="#" class="forgot-password">Forgot password?</a>
-      <p class="no-account-section">No account? <a href="#" class="create-one">Create one</a></p>
+      <p class="no-account-section">No account? <a href="#" class="create-one" id="register-button">Create one</a></p>
+    </form>
+  </div>
+</div>
+
+<div id="register-dialog" class="register-dialog">
+  <div class="register-dialog-backdrop"></div>
+  <div class="register-dialog-content">
+    <form>
+      <label>Email</label>
+      <input type="email" placeholder="Email" />
+
+      <label>Password</label>
+      <input type="password" placeholder="Password" />
+
+      <button type="submit" class="altcen-button create-account-button">Create account</button>
+      <p class="no-account-section">Already have an account? <a href="#" class="create-one" id="back-to-login-button">Log in</a></p>
     </form>
   </div>
 </div>

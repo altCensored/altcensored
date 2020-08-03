@@ -190,7 +190,8 @@
       event.preventDefault();
       loginDialog.style.display = 'block';
       registerDialog.style.display = 'none';
-    })
+    });
+
   })
 
 </script>
@@ -203,10 +204,10 @@
   });
 </script>
 
-<div id="login-dialog" class="login-dialog">
-  <div class="login-dialog-backdrop"></div>
-  <div class="login-dialog-content">
-    <form>
+<div id="login-dialog" class="dialog">
+  <div class="dialog-backdrop"></div>
+  <div class="dialog-content">
+    <form action="{{ url_for('auth.login') }}">
       <label>Email</label>
       <input type="email" placeholder="Email" />
 
@@ -221,15 +222,18 @@
   </div>
 </div>
 
-<div id="register-dialog" class="register-dialog">
-  <div class="register-dialog-backdrop"></div>
-  <div class="register-dialog-content">
+<div id="register-dialog" class="dialog">
+  <div class="dialog-backdrop"></div>
+  <div class="dialog-content">
     <form>
       <label>Email</label>
       <input type="email" placeholder="Email" />
 
       <label>Password</label>
       <input type="password" placeholder="Password" />
+
+      <label>Confirm Password</label>
+      <input type="password" placeholder="Confirm Password" />
 
       <button type="submit" class="altcen-button create-account-button">Create account</button>
       <p class="no-account-section">Already have an account? <a href="#" class="create-one" id="back-to-login-button">Log in</a></p>

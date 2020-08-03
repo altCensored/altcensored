@@ -398,7 +398,7 @@ ul.share-buttons img{
   top: 1px;
 }
 
-.login-dialog, .register-dialog {
+.dialog {
   display: none;
   position: absolute;
   left: 0;
@@ -408,7 +408,7 @@ ul.share-buttons img{
   z-index: 99999;
 }
 
-.login-dialog-backdrop, .register-dialog-backdrop {
+.dialog-backdrop {
   background: rgba(0,0,0,0.4);
   position: absolute;
   left: 0;
@@ -417,7 +417,7 @@ ul.share-buttons img{
   bottom: 0;
 }
 
-.login-dialog .login-dialog-content, .register-dialog .register-dialog-content {
+.dialog .dialog-content {
   position: absolute;
   left: 0;
   top:0;
@@ -428,17 +428,13 @@ ul.share-buttons img{
   justify-content: center;
 }
 
-.login-dialog > .login-dialog-content > form, .register-dialog > .register-dialog-content > form {
+.dialog > .dialog-content > form {
   background: white;
   padding: 28px 30px;
   border-radius: 3px;
 }
 
-.register-dialog > .register-dialog-content > form {
-  width: 300px;
-}
-
-.login-dialog-content input, .register-dialog-content input {
+.dialog-content input {
   width: 100%;
   border-radius: 3px;
   border: 1.5px solid black;
@@ -463,7 +459,7 @@ ul.share-buttons img{
   color:#117EFF;
 }
 
-.login-dialog-content > form > label, .register-dialog-content > form > label {
+.dialog-content > form > label {
   display: block;
   margin-top: 7px;
   margin-bottom: 5px;

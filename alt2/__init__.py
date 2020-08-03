@@ -141,13 +141,14 @@ def create_app(test_config=None):
         db_session.remove()    
 
     # apply the blueprints to the app
-    from . import video, channel, about, category, language, settings
+    from . import video, channel, about, category, language, settings, auth
     app.register_blueprint(video.bp)
     app.register_blueprint(channel.bp)
     app.register_blueprint(about.bp)
     app.register_blueprint(category.bp)
     app.register_blueprint(language.bp)
     app.register_blueprint(settings.bp)
+    app.register_blueprint(auth.bp)
     # app.register_blueprint(auth.bp)
     # make url_for('index') == url_for('blog.index')
     # in another app, you might define a separate main index here with

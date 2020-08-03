@@ -90,9 +90,11 @@
           </a>
         </div>
         <div class="pure-u-1-2">
-          <button class="altcen-button" id="login-button">
-            LOG IN
-          </button>
+          {% if not session['logged_in'] %}
+          <button class="altcen-button" id="login-button">LOG IN</button>
+          {% else %}
+          <button class="altcen-button" id="logout-button">LOG OUT</button>
+          {% endif %}
         </div>
       </div>
     </div>
@@ -207,12 +209,12 @@
 <div id="login-dialog" class="dialog">
   <div class="dialog-backdrop"></div>
   <div class="dialog-content">
-    <form action="{{ url_for('auth.login') }}">
+    <form action="{{ url_for('auth.login') }}" method="post">
       <label>Email</label>
-      <input type="email" placeholder="Email" />
+      <input type="email" name="email" placeholder="Email" />
 
       <label>Password</label>
-      <input type="password" placeholder="Password" />
+      <input type="password" name="password" placeholder="Password" />
 
       <button type="submit" class="altcen-button login-button">Log in</button>
 
@@ -225,15 +227,15 @@
 <div id="register-dialog" class="dialog">
   <div class="dialog-backdrop"></div>
   <div class="dialog-content">
-    <form>
+    <form action="{{ url_for('auth.register') }}" method="post">
       <label>Email</label>
-      <input type="email" placeholder="Email" />
+      <input type="email" name="email" placeholder="Email" />
 
       <label>Password</label>
-      <input type="password" placeholder="Password" />
+      <input type="password" name="password" placeholder="Password" />
 
       <label>Confirm Password</label>
-      <input type="password" placeholder="Confirm Password" />
+      <input type="password" name="confirm_password" placeholder="Confirm Password" />
 
       <button type="submit" class="altcen-button create-account-button">Create account</button>
       <p class="no-account-section">Already have an account? <a href="#" class="create-one" id="back-to-login-button">Log in</a></p>

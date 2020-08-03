@@ -176,25 +176,47 @@
     var loginDialog = document.getElementById("login-dialog");
     var registerDialog = document.getElementById("register-dialog");
 
-    document.getElementById('login-button').addEventListener('click', function(event){
-      event.preventDefault();
-      loginDialog.style.display = 'block';
-      registerDialog.style.display = 'none';
-    });
+    var loginButton = document.getElementById('login-button');
+    var registerButton = document.getElementById('register-button');
+    var backToLoginButton = document.getElementById('back-to-login-button');
+    var logoutButton = document.getElementById('logout-button');
 
-    document.getElementById('register-button').addEventListener('click', function(event){
-      event.preventDefault();
-      loginDialog.style.display = 'none';
-      registerDialog.style.display = 'block';
-    });
+    if(loginButton){
+      loginButton.addEventListener('click', function(event){
+        event.preventDefault();
+        loginDialog.style.display = 'block';
+        registerDialog.style.display = 'none';
+      })
+    }
 
-    document.getElementById('back-to-login-button').addEventListener('click', function(event){
-      event.preventDefault();
-      loginDialog.style.display = 'block';
-      registerDialog.style.display = 'none';
-    });
+    if(registerButton) {
+      registerButton.addEventListener('click', function (event) {
+        event.preventDefault();
+        loginDialog.style.display = 'none';
+        registerDialog.style.display = 'block';
+      });
+    }
 
-  })
+    if(backToLoginButton){
+      backToLoginButton.addEventListener('click', function(event){
+        event.preventDefault();
+        loginDialog.style.display = 'block';
+        registerDialog.style.display = 'none';
+      });
+    }
+
+    if(logoutButton){
+      logoutButton.addEventListener('click', function(event){
+        event.preventDefault();
+        console.log("BAM");
+        fetch("/auth/logout", {
+          method: 'POST'
+        }).then(() => {
+          window.location.reload();
+        });
+      });
+    }
+  });
 
 </script>
 

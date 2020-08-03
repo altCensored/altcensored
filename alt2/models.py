@@ -1,6 +1,19 @@
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, Interval
 from alt2.database import Base
 
+
+class User(Base):
+    __tablename__ = 'public.user'
+    id = Column(Integer, primary_key=True, nullable=False)
+    email = Column(String, nullable=False)
+    password = Column(String, nullable=False)
+
+    def __init__(self):
+        self.id = id
+        self.email = email
+        self.password = password
+
+
 class Entity(Base):
     __tablename__ = 'entity'
     id = Column(Integer, primary_key=True, nullable=False)

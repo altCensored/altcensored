@@ -65,8 +65,8 @@ def register():
         return redirect('/')
 
 
-@bp.route('/logout', methods=['POST'])
+@bp.route('/logout')
 def logout():
     session['user'] = None
-    flash('Logout complete', 'info')
+    flash('Logout complete', 'success')
     return redirect('/')

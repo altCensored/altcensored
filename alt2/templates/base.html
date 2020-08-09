@@ -30,7 +30,7 @@
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pure-min.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/grids-responsive-min.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}?v=4">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}?v=5">
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/lighttheme.css') }}">
 
@@ -193,7 +193,7 @@
     if(loginButton){
       loginButton.addEventListener('click', function(event){
         event.preventDefault();
-        loginDialog.style.display = 'block';
+        loginDialog.style.display = 'flex';
         registerDialog.style.display = 'none';
       })
     }
@@ -202,14 +202,14 @@
       registerButton.addEventListener('click', function (event) {
         event.preventDefault();
         loginDialog.style.display = 'none';
-        registerDialog.style.display = 'block';
+        registerDialog.style.display = 'flex';
       });
     }
 
     if(backToLoginButton){
       backToLoginButton.addEventListener('click', function(event){
         event.preventDefault();
-        loginDialog.style.display = 'block';
+        loginDialog.style.display = 'flex';
         registerDialog.style.display = 'none';
       });
     }
@@ -217,15 +217,11 @@
     if(logoutButton){
       logoutButton.addEventListener('click', function(event){
         event.preventDefault();
-        console.log("BAM");
-        fetch("/auth/logout", {
-          method: 'POST'
-        }).then(() => {
-          window.location.reload();
-        });
+        window.location = '/auth/logout';
       });
     }
 
+    // The user can manually dismiss a flash message by clicking on the "x" on the right hand side.
     document.querySelectorAll('.flash-dismiss-button').forEach(function (btn) {
       btn.addEventListener('click', function (event) {
         event.preventDefault();
@@ -234,6 +230,22 @@
         target.parentNode.remove();
       });
     });
+
+    // Clicking on the backdrop of a dialog will close it.
+    document.querySelectorAll('.dialog-backdrop').forEach(function (backdrop){
+      backdrop.addEventListener('click', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        backdrop.parentNode.style.display = 'none';
+      })
+    });
+
+    // Automatically remove all flash messages after 5 seconds
+    setTimeout(function(){
+      document.querySelectorAll('.flash').forEach(function(element){
+        element.remove();
+      })
+    }, 5*1000);
   });
 
 </script>

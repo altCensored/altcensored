@@ -30,7 +30,7 @@
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pure-min.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/grids-responsive-min.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}?v=2">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}?v=4">
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/lighttheme.css') }}">
 
@@ -106,10 +106,19 @@
   <header>
     {% block header %}{% endblock %}
   </header>
-  {% for message in get_flashed_messages() %}
-  <div>{{ message }}
-  </div>
-  {% endfor %}
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-container">
+        {% for category, message in messages %}
+          <div class="flash flash-{{category}}">
+            <div class="flash-message">{{message}}</div>
+            <div class="flash-dismiss-button"></div>
+          </div>
+        {% endfor %}
+      </div>
+  {% endif %}
+  {% endwith %}
   <content>
     {% block content %}{% endblock %}
   </content>
@@ -216,6 +225,15 @@
         });
       });
     }
+
+    document.querySelectorAll('.flash-dismiss-button').forEach(function (btn) {
+      btn.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        const target = event.target;
+        target.parentNode.remove();
+      });
+    });
   });
 
 </script>

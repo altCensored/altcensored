@@ -6,12 +6,8 @@ class User(Base):
     __tablename__ = 'public.user'
     id = Column(Integer, primary_key=True, nullable=False)
     email = Column(String, nullable=False)
+    email_verified = Column(Boolean, nullable=False, default=False)
     password = Column(String, nullable=False)
-
-    def __init__(self):
-        self.id = id
-        self.email = email
-        self.password = password
 
 
 class Entity(Base):

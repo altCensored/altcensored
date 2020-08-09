@@ -1,33 +1,72 @@
-from flask import (Blueprint, redirect, request, current_app, session)
+from flask import (Blueprint, redirect, request, current_app, session, render_template, flash)
+from sqlalchemy.orm.exc import NoResultFound
 
 from .database import db_session
 from .models import User
+import bcrypt
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
+
+salt = bcrypt.gensalt()
+
+
+def find_user_by_email(email):
+    try:
+        return db_session.query(User).filter(User.email == email).one()
+    except NoResultFound:
+        return None
+
+
+def user_exists(email):
+    return find_user_by_email(email) is not None
+
+
+def user_and_password_is_valid(email, password):
+    user = find_user_by_email(email)
+    if not user:
+        print("Could not find user", email)
+        return False
+    return bcrypt.checkpw(password.encode('utf8'), user.password.encode('utf8'))
+
+
+def register_user(email, password):
+    print("REGISTER USER", email, password)
+    db_session.add(User(email=email, password=bcrypt.hashpw(password.encode('utf8'), salt).decode('utf8')))
+    db_session.commit()
+    print("Registration Complete")
 
 
 @bp.route('/login', methods=['POST'])
 def login():
     email = request.form['email']
     password = request.form['password']
-
-    try:
+    if user_and_password_is_valid(email, password):
         user = db_session.query(User).filter(User.email==email).one()
         session['logged_in'] = True
+        session['user'] = dict(id=user.id, email=user.email)
+        flash('You were successfully logged in', 'success')
         return redirect('/')
-    except:
-        return redirect('/?unable-to-login=true')
+    else:
+        flash('Email and password combination are invalid', 'error')
+        return redirect('/')
 
 
 @bp.route('/register', methods=['POST'])
 def register():
     email = request.form['email']
     password = request.form['password']
-    confirm_password = request.form['confirm_password']
-    return redirect('/')
+    if user_exists(email):
+        flash('User already exists', 'error')
+        return redirect('/')
+    else:
+        register_user(email, password)
+        flash('Registration complete', 'success')
+        return redirect('/')
 
 
 @bp.route('/logout', methods=['POST'])
 def logout():
     session['logged_in'] = False
+    del session['user']
+    flash('Logout complete', 'info')
     return redirect('/')

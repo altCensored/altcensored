@@ -18,7 +18,6 @@ PER_PAGE = 24
 
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
-
 def index(page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'latest'

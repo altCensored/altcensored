@@ -30,10 +30,11 @@ def user_and_password_is_valid(email, password):
 
 
 def register_user(email, password):
-    print("REGISTER USER", email, password)
-    db_session.add(User(email=email, password=bcrypt.hashpw(password.encode('utf8'), salt).decode('utf8')))
+    user = User(email=email, password=bcrypt.hashpw(password.encode('utf8'), salt).decode('utf8'))
+    db_session.add(user)
     db_session.commit()
-    print("Registration Complete")
+    db_session.refresh(user)
+    return user
 
 
 @bp.route('/login', methods=['POST'])
@@ -42,7 +43,6 @@ def login():
     password = request.form['password']
     if user_and_password_is_valid(email, password):
         user = db_session.query(User).filter(User.email==email).one()
-        session['logged_in'] = True
         session['user'] = dict(id=user.id, email=user.email)
         flash('You were successfully logged in', 'success')
         return redirect('/')
@@ -59,14 +59,14 @@ def register():
         flash('User already exists', 'error')
         return redirect('/')
     else:
-        register_user(email, password)
+        user = register_user(email, password)
+        session['user'] = dict(id=user.id, email=user.email)
         flash('Registration complete', 'success')
         return redirect('/')
 
 
 @bp.route('/logout', methods=['POST'])
 def logout():
-    session['logged_in'] = False
-    del session['user']
+    session['user'] = None
     flash('Logout complete', 'info')
     return redirect('/')

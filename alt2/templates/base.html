@@ -90,7 +90,7 @@
           </a>
         </div>
         <div class="pure-u-1-2">
-          {% if not session['logged_in'] %}
+          {% if not session['user'] %}
           <button class="altcen-button" id="login-button">LOG IN</button>
           {% else %}
           <button class="altcen-button" id="logout-button">LOG OUT</button>

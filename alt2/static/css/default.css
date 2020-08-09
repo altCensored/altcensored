@@ -551,3 +551,7 @@ ul.share-buttons img{
 .flash-dismiss-button:hover {
   border-radius: 5px;
 }
+
+.pure-menu-heading.selected {
+  font-weight: bold;
+}

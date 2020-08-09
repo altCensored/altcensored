@@ -399,6 +399,7 @@ ul.share-buttons img{
 }
 
 .dialog {
+
   display: none;
   position: absolute;
   left: 0;
@@ -424,6 +425,8 @@ ul.share-buttons img{
 }
 
 .dialog > .dialog-content > form {
+  box-sizing: border-box;
+  max-width: 365px;
   background: white;
   padding: 28px 30px;
   border-radius: 3px;
@@ -554,4 +557,16 @@ ul.share-buttons img{
 
 .pure-menu-heading.selected {
   font-weight: bold;
+}
+
+.dialog h1 {
+  white-space: nowrap;
+  font-size: 22px;
+  margin: 0 0 15px;
+  color: hsl(0,60%,50%);
+  font-weight: bold;
+}
+
+#forgot-password-dialog input {
+  margin-bottom: 20px;
 }

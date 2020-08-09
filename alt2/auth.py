@@ -70,3 +70,9 @@ def logout():
     session['user'] = None
     flash('Logout complete', 'success')
     return redirect('/')
+
+
+@bp.route('/forgot_password', methods=['POST'])
+def forgot_password():
+    flash('A reset link will be sent to your email address.', 'success')
+    return redirect('/')

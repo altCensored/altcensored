@@ -30,7 +30,7 @@
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pure-min.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/grids-responsive-min.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}?v=5">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}?v=6">
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/lighttheme.css') }}">
 
@@ -184,24 +184,31 @@
   document.addEventListener('DOMContentLoaded', function(){
     var loginDialog = document.getElementById("login-dialog");
     var registerDialog = document.getElementById("register-dialog");
+    var forgotPasswordDialog = document.getElementById("forgot-password-dialog");
 
     var loginButton = document.getElementById('login-button');
     var registerButton = document.getElementById('register-button');
     var backToLoginButton = document.getElementById('back-to-login-button');
     var logoutButton = document.getElementById('logout-button');
 
+    function hideDialogs(){
+      loginDialog.style.display = 'none';
+      registerDialog.style.display = 'none';
+      forgotPasswordDialog.style.display = 'none';
+    }
+
     if(loginButton){
       loginButton.addEventListener('click', function(event){
         event.preventDefault();
+        hideDialogs();
         loginDialog.style.display = 'flex';
-        registerDialog.style.display = 'none';
       })
     }
 
     if(registerButton) {
       registerButton.addEventListener('click', function (event) {
         event.preventDefault();
-        loginDialog.style.display = 'none';
+        hideDialogs();
         registerDialog.style.display = 'flex';
       });
     }
@@ -209,8 +216,8 @@
     if(backToLoginButton){
       backToLoginButton.addEventListener('click', function(event){
         event.preventDefault();
+        hideDialogs();
         loginDialog.style.display = 'flex';
-        registerDialog.style.display = 'none';
       });
     }
 
@@ -240,6 +247,23 @@
       })
     });
 
+    document.querySelectorAll('.forgot-password').forEach(function (button) {
+      button.addEventListener('click', function(event){
+        event.preventDefault();
+        event.stopPropagation();
+        hideDialogs();
+        forgotPasswordDialog.style.display = 'flex';
+      });
+    });
+
+    document.querySelectorAll('.cancel-button').forEach(function (button) {
+      button.addEventListener('click', function(event){
+        event.preventDefault();
+        event.stopPropagation();
+        hideDialogs();
+      });
+    });
+
     // Automatically remove all flash messages after 5 seconds
     setTimeout(function(){
       document.querySelectorAll('.flash').forEach(function(element){
@@ -263,14 +287,14 @@
   <div class="dialog-content">
     <form action="{{ url_for('auth.login') }}" method="post">
       <label>Email</label>
-      <input type="email" name="email" placeholder="Email" />
+      <input type="email" name="email" placeholder="Email" required />
 
       <label>Password</label>
-      <input type="password" name="password" placeholder="Password" />
+      <input type="password" name="password" placeholder="Password" required/>
 
       <button type="submit" class="altcen-button login-button">Log in</button>
 
-      <a href="#" class="forgot-password">Forgot password?</a>
+      <a href="#" id="forgot-password" class="forgot-password">Forgot password?</a>
       <p class="no-account-section">No account? <a href="#" class="create-one" id="register-button">Create one</a></p>
     </form>
   </div>
@@ -280,17 +304,27 @@
   <div class="dialog-backdrop"></div>
   <div class="dialog-content">
     <form action="{{ url_for('auth.register') }}" method="post">
+      <h1>Register a New Account</h1>
       <label>Email</label>
-      <input type="email" name="email" placeholder="Email" />
+      <input type="email" name="email" placeholder="Email" required />
 
       <label>Password</label>
-      <input type="password" name="password" placeholder="Password" />
-
-      <label>Confirm Password</label>
-      <input type="password" name="confirm_password" placeholder="Confirm Password" />
+      <input type="password" name="password" placeholder="Password" required />
 
       <button type="submit" class="altcen-button create-account-button">Create account</button>
       <p class="no-account-section">Already have an account? <a href="#" class="create-one" id="back-to-login-button">Log in</a></p>
+    </form>
+  </div>
+</div>
+
+<div id="forgot-password-dialog" class="dialog">
+  <div class="dialog-backdrop"></div>
+  <div class="dialog-content">
+    <form action="{{ url_for('auth.forgot_password')}}" method="post">
+      <h1>Reset Password</h1>
+      <input type="email" name="email" placeholder="Email" required />
+      <button type="submit" class="altcen-button password-reset-button">Reset password</button>
+      <button class="altcen-button cancel-button">Cancel</button>
     </form>
   </div>
 </div>

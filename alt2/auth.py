@@ -1,9 +1,10 @@
-from flask import (Blueprint, redirect, request, current_app, session, render_template, flash)
+from flask import (Blueprint, redirect, request, current_app, session, render_template, flash, url_for)
 from sqlalchemy.orm.exc import NoResultFound
 
 from .database import db_session
 from .models import User
 import bcrypt
+from .util import send_email, generate_confirmation_token
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -31,6 +32,12 @@ def user_and_password_is_valid(email, password):
 
 def register_user(email, password):
     user = User(email=email, password=bcrypt.hashpw(password.encode('utf8'), salt).decode('utf8'))
+
+    token = generate_confirmation_token(email)
+    confirm_url = url_for('subscription.index', token=token, _external=True)
+    html = render_template('subscription/activate.html', confirm_url=confirm_url)
+    send_email(email,html)
+
     db_session.add(user)
     db_session.commit()
     db_session.refresh(user)

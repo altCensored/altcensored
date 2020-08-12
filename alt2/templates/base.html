@@ -18,6 +18,7 @@
   {% endif %}
 
 
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
   <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <link rel="apple-touch-icon" type="image/x-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
   <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
@@ -29,7 +30,7 @@
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pure-min.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/grids-responsive-min.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}?v=6">
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/lighttheme.css') }}">
 
@@ -88,6 +89,13 @@
             {{ gettext('About') }}
           </a>
         </div>
+        <div class="pure-u-1-2">
+          {% if not session['user'] %}
+          <button class="altcen-button" id="login-button">LOG IN</button>
+          {% else %}
+          <button class="altcen-button" id="logout-button">LOG OUT</button>
+          {% endif %}
+        </div>
       </div>
     </div>
   </div>
@@ -98,10 +106,19 @@
   <header>
     {% block header %}{% endblock %}
   </header>
-  {% for message in get_flashed_messages() %}
-  <div>{{ message }}
-  </div>
-  {% endfor %}
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-container">
+        {% for category, message in messages %}
+          <div class="flash flash-{{category}}">
+            <div class="flash-message">{{message}}</div>
+            <div class="flash-dismiss-button"></div>
+          </div>
+        {% endfor %}
+      </div>
+  {% endif %}
+  {% endwith %}
   <content>
     {% block content %}{% endblock %}
   </content>
@@ -163,6 +180,98 @@
       localStorage.setItem("darkreader", "disabled");
     }
   }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    var loginDialog = document.getElementById("login-dialog");
+    var registerDialog = document.getElementById("register-dialog");
+    var forgotPasswordDialog = document.getElementById("forgot-password-dialog");
+
+    var loginButton = document.getElementById('login-button');
+    var registerButton = document.getElementById('register-button');
+    var backToLoginButton = document.getElementById('back-to-login-button');
+    var logoutButton = document.getElementById('logout-button');
+
+    function hideDialogs(){
+      loginDialog.style.display = 'none';
+      registerDialog.style.display = 'none';
+      forgotPasswordDialog.style.display = 'none';
+    }
+
+    if(loginButton){
+      loginButton.addEventListener('click', function(event){
+        event.preventDefault();
+        hideDialogs();
+        loginDialog.style.display = 'flex';
+      })
+    }
+
+    if(registerButton) {
+      registerButton.addEventListener('click', function (event) {
+        event.preventDefault();
+        hideDialogs();
+        registerDialog.style.display = 'flex';
+      });
+    }
+
+    if(backToLoginButton){
+      backToLoginButton.addEventListener('click', function(event){
+        event.preventDefault();
+        hideDialogs();
+        loginDialog.style.display = 'flex';
+      });
+    }
+
+    if(logoutButton){
+      logoutButton.addEventListener('click', function(event){
+        event.preventDefault();
+        window.location = '/auth/logout';
+      });
+    }
+
+    // The user can manually dismiss a flash message by clicking on the "x" on the right hand side.
+    document.querySelectorAll('.flash-dismiss-button').forEach(function (btn) {
+      btn.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        const target = event.target;
+        target.parentNode.remove();
+      });
+    });
+
+    // Clicking on the backdrop of a dialog will close it.
+    document.querySelectorAll('.dialog-backdrop').forEach(function (backdrop){
+      backdrop.addEventListener('click', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        backdrop.parentNode.style.display = 'none';
+      })
+    });
+
+    document.querySelectorAll('.forgot-password').forEach(function (button) {
+      button.addEventListener('click', function(event){
+        event.preventDefault();
+        event.stopPropagation();
+        hideDialogs();
+        forgotPasswordDialog.style.display = 'flex';
+      });
+    });
+
+    document.querySelectorAll('.cancel-button').forEach(function (button) {
+      button.addEventListener('click', function(event){
+        event.preventDefault();
+        event.stopPropagation();
+        hideDialogs();
+      });
+    });
+
+    // Automatically remove all flash messages after 5 seconds
+    setTimeout(function(){
+      document.querySelectorAll('.flash').forEach(function(element){
+        element.remove();
+      })
+    }, 5*1000);
+  });
+
 </script>
 
 <script nonce="{{ csp_nonce() }}" type="text/javascript">
@@ -172,6 +281,54 @@
     document.getElementById("mySearch").value = qstring;
   });
 </script>
+
+<div id="login-dialog" class="dialog">
+  <div class="dialog-backdrop"></div>
+  <div class="dialog-content">
+    <form action="{{ url_for('auth.login') }}" method="post">
+      <label>Email</label>
+      <input type="email" name="email" placeholder="Email" required />
+
+      <label>Password</label>
+      <input type="password" name="password" placeholder="Password" required/>
+
+      <button type="submit" class="altcen-button login-button">Log in</button>
+
+      <a href="#" id="forgot-password" class="forgot-password">Forgot password?</a>
+      <p class="no-account-section">No account? <a href="#" class="create-one" id="register-button">Create one</a></p>
+    </form>
+  </div>
+</div>
+
+<div id="register-dialog" class="dialog">
+  <div class="dialog-backdrop"></div>
+  <div class="dialog-content">
+    <form action="{{ url_for('auth.register') }}" method="post">
+      <h1>Register a New Account</h1>
+      <label>Email</label>
+      <input type="email" name="email" placeholder="Email" required />
+
+      <label>Password</label>
+      <input type="password" name="password" placeholder="Password" required />
+
+      <button type="submit" class="altcen-button create-account-button">Create account</button>
+      <p class="no-account-section">Already have an account? <a href="#" class="create-one" id="back-to-login-button">Log in</a></p>
+    </form>
+  </div>
+</div>
+
+<div id="forgot-password-dialog" class="dialog">
+  <div class="dialog-backdrop"></div>
+  <div class="dialog-content">
+    <form action="{{ url_for('auth.forgot_password')}}" method="post">
+      <h1>Reset Password</h1>
+      <input type="email" name="email" placeholder="Email" required />
+      <button type="submit" class="altcen-button password-reset-button">Reset password</button>
+      <button class="altcen-button cancel-button">Cancel</button>
+    </form>
+  </div>
+</div>
+
 
 </body>
 </html>

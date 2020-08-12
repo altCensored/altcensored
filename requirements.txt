@@ -1,9 +1,9 @@
-# Editable install with no version control (alt2==0.0.0)
-# -e /media/win/py/alt2
 Babel==2.8.0
 backports.csv==1.0.7
+bcrypt==3.1.7
 bleach==3.1.5
 certifi==2020.4.5.2
+cffi==1.14.1
 chardet==3.0.4
 Click==7.0
 contextlib2==0.6.0.post1
@@ -25,13 +25,18 @@ jsonpointer==2.0
 MarkupSafe==1.1.0
 monotonic==1.5
 packaging==20.4
+pkg-resources==0.0.0
 psycopg2==2.8.4
+pycparser==2.20
 pyparsing==2.4.7
+python-http-client==3.2.7
 pytz==2018.9
 requests==2.23.0
 schema==0.7.2
+sendgrid==6.4.5
 six==1.12.0
 SQLAlchemy==1.2.18
+starkbank-ecdsa==1.0.0
 total-ordering==0.1.0
 tqdm==4.46.1
 urllib3==1.25.9

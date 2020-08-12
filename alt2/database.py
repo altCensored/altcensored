@@ -5,7 +5,7 @@ from . import config
 
 dbase = config.SQLALCHEMY_DATABASE_URI
 
-engine = create_engine(dbase)
+engine = create_engine('postgresql+psycopg2://readonly:jasly73&mso9!@altcensored.com/altcen')
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
                                          bind=engine))

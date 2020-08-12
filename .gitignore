@@ -2,3 +2,4 @@
 .idea/
 altcen.db
 .env
+venv/

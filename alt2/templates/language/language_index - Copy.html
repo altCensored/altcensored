@@ -20,11 +20,9 @@
                 </a>
             </div>       
             <div class="pure-u-1-3">
-              <b>
-                <a style="text-align:center;" class="pure-menu-heading">
+                <a href="{{ url_for('category.index') }}" style="text-align:center;" class="pure-menu-heading">
                     Category
                 </a>
-              </b>
             </div>  
         </div>
     </div>
@@ -45,47 +43,20 @@
       <div class="h-box">
 
           <center>
-            <a href="{{ url_for('category.item', cat_id=language['lang_id'] ) }}">
-              <div class="thumbnail">
-                  <img style="width:50%"
-                   src="https://{{ config['MYSERVER_NAME'] }}/{{ language['lang_image'] }}" >
-                  </style>
-              </div>
-              <b>{{ language['lang_name'] }}</b>
-              <br>
-              <b>{{ language['lang_code'] }}</b>
-
+            <a href="{{ url_for('language.item', lang_code=language['lang_code'] ) }}">
+              <i class="flag-icon {{ language['lang_image'] }}" style="font-size: 2.1em;border: .001em solid black"></i>
+                <br>
+                <b>{{ language['lang_name'] }}</b>
+                <br>
+                <b>{{ language['lang_code'] }}</b>
             </a>
             <br>
           </center>
-        </a>
-  </div>
-</div>
 
-{% endfor %}
-<br>
-<br>
-
-  {% for category in categories %}
-    <div class="pure-u-1-2 pure-u-md-1-8">
-      <div class="h-box">
-<br>
-          <center>
-            <a href="{{ url_for('category.item', cat_id=category['cat_id']) }}">
-              <i class="{{ category['cat_image'] }}"  style="font-size: 48px"></i>
-              <br>
-            </a>
-              <b>{{ category['cat_name'] }}</b>
-              <br>
-            <a href="{{ url_for('category.item', cat_id=category['cat_id']) }}">
-              {{ category['cat_count']|commafy }}
-              <br>
-            </a>
-            <br>
-          </center>
         </a>
-  </div>
-</div>
+      </div>
+    </div>
+
 {% endfor %}
 
 

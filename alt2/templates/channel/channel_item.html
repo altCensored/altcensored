@@ -86,12 +86,13 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
             {% if channel['ytc_deleted'] %}
             {% else %}
             &nbsp;{{ gettext('Monitor') }}:
-              {% if channel.allow %}{{ gettext('True') }}<br>
-              {% else %}{{ gettext('False') }}<br>
+              {% if channel.allow %}{{ gettext('On') }}<br>
+              {% else %}{{ gettext('Off') }}<br>
               {% endif %}
             &nbsp;{{ gettext('Archive') }}:
-              {% if channel.ytc_archive %}{{ gettext('True') }}<br>
-              {% else %}{{ gettext('False') }}<br>
+              {% if channel.ytc_archive %}{{ gettext('Full') }}<br>
+              {% elif channel.ytc_partarchive %}{{ gettext('Part') }}<br>
+              {% else %}{{ gettext('Off') }}<br>
               {% endif %}
             {% endif %}
             &nbsp;<b><a style="width:100%;" href="https://www.youtube.com/channel/{{ channel['ytc_id'] }}" target="_blank">YouTube {{ gettext('Channel') }}</a></b><br>

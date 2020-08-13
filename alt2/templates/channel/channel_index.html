@@ -276,8 +276,9 @@
               {% else %}{{ gettext('False') }}<br>
               {% endif %}
               {{ gettext('Archive') }}:
-              {% if channel.ytc_archive %}{{ gettext('True') }}<br>
-              {% else %}{{ gettext('False') }}<br>
+              {% if channel.ytc_archive %}{{ gettext('Full') }}<br>
+              {% elif channel.ytc_partarchive %}{{ gettext('Part') }}<br>
+              {% else %}{{ gettext('None') }}<br>
               {% endif %}
             {% endif %}
           </div>

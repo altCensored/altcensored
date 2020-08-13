@@ -171,6 +171,7 @@ class Mv_Channel(Base):
     allow = Column(String, nullable=True)
     ytc_deleteddate = Column(DateTime, nullable=True)
     ytc_addeddate = Column(DateTime, nullable=True)
+    ytc_partarchive = Column(Boolean, nullable=False, default=False)
 
     def __init__(self, ytc_id=None, ytc_title=None):
         self.id = id
@@ -188,6 +189,7 @@ class Mv_Channel(Base):
         self.allow = allow
         self.ytc_deleteddate = ytc_deleteddate        
         self.ytc_addeddate = ytc_addeddate
+        self.ytc_partarchive = ytc_partarchive
   
     def __repr__(self):
         return '<Mv_Channel %r>' % (self.ytc_id)

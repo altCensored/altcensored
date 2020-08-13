@@ -91,7 +91,7 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
               {% endif %}
             &nbsp;{{ gettext('Archive') }}:
               {% if channel.ytc_archive %}{{ gettext('Full') }}<br>
-              {% elif channel.ytc_partarchive %}{{ gettext('Part') }}<br>
+              {% elif channel.ytc_partarchive %}{{ gettext('Partial') }}<br>
               {% else %}{{ gettext('None') }}<br>
               {% endif %}
             {% endif %}

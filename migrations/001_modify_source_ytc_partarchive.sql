@@ -1,2 +1,3 @@
-ALTER TABLE source
-ADD ytc_partarchive bool;
+ALTER TABLE "source" (
+    ADD COLUMN "ytc_partarchive" BOOLEAN 
+);

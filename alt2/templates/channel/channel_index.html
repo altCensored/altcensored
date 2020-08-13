@@ -272,13 +272,13 @@
             </style>
             {% else %}
               {{ gettext('Monitor') }}:
-              {% if channel.allow %}{{ gettext('On') }}<br>
-              {% else %}{{ gettext('Off') }}<br>
+              {% if channel.allow %}{{ gettext('True') }}<br>
+              {% else %}{{ gettext('False') }}<br>
               {% endif %}
               {{ gettext('Archive') }}:
               {% if channel.ytc_archive %}{{ gettext('Full') }}<br>
               {% elif channel.ytc_partarchive %}{{ gettext('Part') }}<br>
-              {% else %}{{ gettext('Off') }}<br>
+              {% else %}{{ gettext('None') }}<br>
               {% endif %}
             {% endif %}
           </div>

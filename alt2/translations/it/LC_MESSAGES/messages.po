@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-07-27 20:42+0000\n"
+"POT-Creation-Date: 2020-08-13 19:43+0000\n"
 "PO-Revision-Date: 2020-07-28 19:09+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: it\n"
@@ -47,7 +47,7 @@ msgstr ""
 #: templates/category/category_item.html:38
 #: templates/channel/channel_index.html:45
 #: templates/channel/channel_item.html:41
-#: templates/channel/channel_item.html:97
+#: templates/channel/channel_item.html:98
 #: templates/language/language_index.html:35
 #: templates/language/language_item.html:18
 #: templates/settings/settings_index.html:31
@@ -63,7 +63,7 @@ msgstr "Canale"
 #: templates/language/language_index.html:40
 #: templates/language/language_item.html:23
 #: templates/settings/settings_index.html:36
-#: templates/video/video_index.html:54 templates/video/video_item.html:97
+#: templates/video/video_index.html:54 templates/video/video_item.html:82
 #: templates/video/video_search.html:50
 msgid "Category"
 msgstr "Categoria"
@@ -92,93 +92,94 @@ msgstr "Termini e condizioni"
 msgid "or"
 msgstr "o"
 
-#: templates/about/about_index.html:70 templates/about/about_index.html:87
+#: templates/about/about_index.html:70 templates/about/about_index.html:85
 msgid "Community Guidelines"
 msgstr "Regole della Comunità"
 
-#: templates/about/about_index.html:74
+#: templates/about/about_index.html:73
 msgid "\"Limited state\" videos"
-msgstr "I video "stato limitato""
+msgstr "I video \"stato limitato\""
 
-#: templates/about/about_index.html:75
+#: templates/about/about_index.html:74
 msgid ""
 "are placed behind a warning message, cannot be shared, monetized or "
 "easily found, and have likes, comments, view counts and suggested videos "
 "disabled"
 msgstr ""
-"sono collocati dietro un messaggio di avvertimento, non possono essere condivisi, monetizzati o trovati facilmente, e "
-"hanno "mi piace", commenti, conteggi di visualizzazione e video suggeriti disabilitati"
+"sono collocati dietro un messaggio di avvertimento, non possono essere "
+"condivisi, monetizzati o trovati facilmente, e hanno \"mi piace\", "
+"commenti, conteggi di visualizzazione e video suggeriti disabilitati"
 
-
-#: templates/about/about_index.html:81
+#: templates/about/about_index.html:79
 msgid "removes"
 msgstr "rimuove"
 
-#: templates/about/about_index.html:82
+#: templates/about/about_index.html:80
 msgid "videos that violate their"
 msgstr "video che violano i loro"
 
-#: templates/about/about_index.html:84
+#: templates/about/about_index.html:82
 msgid "ever-changing"
 msgstr "in continua evoluzione"
 
-#: templates/about/about_index.html:84
+#: templates/about/about_index.html:82
 msgid "and"
 msgstr "e"
 
-#: templates/about/about_index.html:86
+#: templates/about/about_index.html:84
 msgid "arbitrarily enforced"
 msgstr "applicato arbitrariamente"
 
-#: templates/about/about_index.html:88
+#: templates/about/about_index.html:86
 msgid ""
 "while Creators increasingly \"self-censor\" trying to avoid channel "
 "strikes and terminations"
 msgstr ""
-"mentre i creatori sempre più" autocensurano cercando di evitare il canale "
-"scioperi e cessazioni"
+"mentre i creatori sempre più\" autocensurano cercando di evitare il "
+"canale scioperi e cessazioni"
 
-#: templates/about/about_index.html:93
+#: templates/about/about_index.html:90
 msgid "is an unbiased community catalog of"
 msgstr "è un catalogo comunitario imparziale di"
 
-#: templates/about/about_index.html:96
+#: templates/about/about_index.html:93
 msgid "limited state, removed, and self-censored YouTube videos across"
 msgstr "stato limitato, rimosso e video YouTube autocensurati attraverso"
 
-#: templates/about/about_index.html:99
+#: templates/about/about_index.html:96
 msgid "monitored channels, of which"
 msgstr "canali monitorati, di cui"
 
-#: templates/about/about_index.html:102
+#: templates/about/about_index.html:99
 msgid "have been deleted and"
 msgstr "sono stati cancellati e"
 
-#: templates/about/about_index.html:105
+#: templates/about/about_index.html:102
 msgid "are being archived in case of deletion"
 msgstr "vengono archiviati in caso di cancellazione"
 
-#: templates/about/about_index.html:109
+#: templates/about/about_index.html:105
 msgid "Find videos and channels using the search bar"
 msgstr "Trova video e canali tramite la barra di ricerca"
 
-#: templates/about/about_index.html:110
+#: templates/about/about_index.html:106
 msgid ""
 "Download videos with \"right mouse button click\" inside the video window"
 " or use the \"Download Torrent\" link. Channel and Video RSS Feeds"
 msgstr ""
-"Scaricare i video con \"click del tasto destro del mouse \" all interno della finestra video"
-"o utilizzare il link "Scarica Torrent". Feed di canali e video RSS"
+"Scaricare i video con \"click del tasto destro del mouse \" all interno "
+"della finestra videoo utilizzare il link \"Scarica Torrent\". Feed di "
+"canali e video RSS"
 
-#: templates/about/about_index.html:114
+#: templates/about/about_index.html:110
 msgid "contain torrent links to easily download multiple videos"
 msgstr "contengono link torrent per scaricare facilmente più video"
 
-#: templates/about/about_index.html:115
+#: templates/about/about_index.html:111
 msgid "Embed videos in any website exactly like YouTube"
 msgstr "Embed i video in qualsiasi sito web esattamente come YouTube"
 
-#: templates/about/about_index.html:118
+#: templates/about/about_index.html:114
 msgid "Email new channel suggestions to"
 msgstr "Invia suggerimenti per nuovi canali via e-mail a"
 
@@ -215,9 +216,9 @@ msgstr "ultimo"
 #: templates/channel/channel_index.html:195
 #: templates/channel/channel_index.html:209
 #: templates/channel/channel_index.html:223
-#: templates/channel/channel_item.html:144
-#: templates/channel/channel_item.html:154
-#: templates/channel/channel_item.html:164
+#: templates/channel/channel_item.html:145
+#: templates/channel/channel_item.html:155
+#: templates/channel/channel_item.html:165
 #: templates/language/language_item.html:146
 #: templates/language/language_item.html:160
 #: templates/language/language_item.html:174
@@ -241,9 +242,9 @@ msgstr "ultimo nato"
 #: templates/channel/channel_index.html:198
 #: templates/channel/channel_index.html:212
 #: templates/channel/channel_index.html:226
-#: templates/channel/channel_item.html:147
-#: templates/channel/channel_item.html:157
-#: templates/channel/channel_item.html:167
+#: templates/channel/channel_item.html:148
+#: templates/channel/channel_item.html:158
+#: templates/channel/channel_item.html:168
 #: templates/language/language_item.html:149
 #: templates/language/language_item.html:163
 #: templates/language/language_item.html:177
@@ -267,9 +268,9 @@ msgstr "il più vecchio"
 #: templates/channel/channel_index.html:201
 #: templates/channel/channel_index.html:215
 #: templates/channel/channel_index.html:229
-#: templates/channel/channel_item.html:150
-#: templates/channel/channel_item.html:160
-#: templates/channel/channel_item.html:170
+#: templates/channel/channel_item.html:151
+#: templates/channel/channel_item.html:161
+#: templates/channel/channel_item.html:171
 #: templates/language/language_item.html:152
 #: templates/language/language_item.html:166
 #: templates/language/language_item.html:180
@@ -282,16 +283,16 @@ msgid "popular"
 msgstr "popolare"
 
 #: templates/category/category_item.html:161
-#: templates/channel/channel_item.html:213
+#: templates/channel/channel_item.html:214
 #: templates/language/language_item.html:231
 #: templates/video/video_index.html:187 templates/video/video_search.html:254
 msgid "Published"
 msgstr "Pubblicato"
 
 #: templates/category/category_item.html:164
-#: templates/channel/channel_item.html:216
+#: templates/channel/channel_item.html:217
 #: templates/language/language_item.html:234
-#: templates/video/video_index.html:190 templates/video/video_item.html:169
+#: templates/video/video_index.html:190 templates/video/video_item.html:154
 #: templates/video/video_search.html:257
 msgid "views"
 msgstr "visual"
@@ -326,7 +327,7 @@ msgstr "Totale"
 
 #: templates/channel/channel_index.html:265
 #: templates/channel/channel_item.html:84
-#: templates/language/language_item.html:89 templates/video/video_item.html:95
+#: templates/language/language_item.html:89 templates/video/video_item.html:80
 #: templates/video/video_search.html:91
 msgid "Views"
 msgstr "Visual"
@@ -345,9 +346,7 @@ msgid "Monitor"
 msgstr "Monitorare"
 
 #: templates/channel/channel_index.html:275
-#: templates/channel/channel_index.html:279
 #: templates/channel/channel_item.html:89
-#: templates/channel/channel_item.html:93
 #: templates/language/language_item.html:99
 #: templates/language/language_item.html:103
 #: templates/video/video_search.html:101 templates/video/video_search.html:105
@@ -355,9 +354,7 @@ msgid "True"
 msgstr "Vero"
 
 #: templates/channel/channel_index.html:276
-#: templates/channel/channel_index.html:280
 #: templates/channel/channel_item.html:90
-#: templates/channel/channel_item.html:94
 #: templates/language/language_item.html:100
 #: templates/language/language_item.html:104
 #: templates/video/video_search.html:102 templates/video/video_search.html:106
@@ -371,15 +368,30 @@ msgstr "Falso"
 msgid "Archive"
 msgstr "Archivio"
 
-#: templates/channel/channel_index.html:291
-#: templates/channel/channel_item.html:124
+#: templates/channel/channel_index.html:279
+#: templates/channel/channel_item.html:93
+msgid "Full"
+msgstr "Tutti"
+
+#: templates/channel/channel_index.html:280
+#: templates/channel/channel_item.html:94
+msgid "Part"
+msgstr "Parte"
+
+#: templates/channel/channel_index.html:281
+#: templates/channel/channel_item.html:95
+msgid "None"
+msgstr ""
+
+#: templates/channel/channel_index.html:292
+#: templates/channel/channel_item.html:125
 #: templates/language/language_item.html:114
 #: templates/video/video_search.html:117
 msgid "Created"
 msgstr "Creato"
 
-#: templates/channel/channel_index.html:294
-#: templates/channel/channel_item.html:131
+#: templates/channel/channel_index.html:295
+#: templates/channel/channel_item.html:132
 #: templates/video/video_search.html:120
 msgid "Deleted"
 msgstr "Cancellato"
@@ -392,7 +404,7 @@ msgstr "Video"
 msgid "Subscribers"
 msgstr "Abbonati"
 
-#: templates/channel/channel_item.html:98
+#: templates/channel/channel_item.html:99
 msgid "Stats"
 msgstr "Statistiche"
 
@@ -404,14 +416,15 @@ msgstr "Lingua"
 msgid "Save"
 msgstr "Salva"
 
-#: templates/video/video_item.html:90
+#: templates/video/video_item.html:75
 msgid "View on"
 msgstr "Visualizza su"
 
-#: templates/video/video_item.html:92
+#: templates/video/video_item.html:77
 msgid "Download Torrent"
 msgstr "Scarica Torrent"
 
-#: templates/video/video_item.html:134
+#: templates/video/video_item.html:119
 msgid "Published on"
 msgstr "Pubblicato il"
+

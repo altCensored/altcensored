@@ -5,6 +5,7 @@ from flask_seasurf import SeaSurf
 from flask_talisman import Talisman
 from jinja2 import evalcontextfilter, Markup, escape
 from flask_babelplus import Babel, gettext, ngettext
+from urllib.parse import quote_plus
 
 import bleach
 import unicodedata
@@ -119,7 +120,10 @@ def create_app(test_config=None):
 
     @app.context_processor
     def inject_locale_and_theme():
-        return dict(locale=util.get_locale(), theme=util.get_theme())
+        return dict(
+            locale=util.get_locale(),
+            theme=util.get_theme(),
+            current_url=quote_plus(request.url))
 
     def has_no_empty_params(rule):
         defaults = rule.defaults if rule.defaults is not None else ()

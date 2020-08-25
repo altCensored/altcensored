@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, Interval
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, Interval, ARRAY
 from alt2.database import Base
 
 class Entity(Base):

@@ -30,7 +30,7 @@ def index(page):
     if not videos and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)    
-    return render_template('video/video_index.html', pagination=pagination, videos=videos, videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, order=order, locale=util.get_locale())
+    return render_template('video/video_index.html', pagination=pagination, videos=videos, videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, order=order)
 
 
 @bp.route('/feed', defaults={'page': 1})
@@ -47,7 +47,7 @@ def feed(page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)
 
-    template = render_template('video/video_index.xml', pagination=pagination, videos=videos, videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, order=order, locale=util.get_locale())
+    template = render_template('video/video_index.xml', pagination=pagination, videos=videos, videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, order=order)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
     return response    
@@ -65,7 +65,7 @@ def new(page):
     if not videos and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)    
-    return render_template('video/video_index.html', pagination=pagination, videos=videos, videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, order=order, locale=util.get_locale())
+    return render_template('video/video_index.html', pagination=pagination, videos=videos, videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, order=order)
 
 
 @bp.route('/old', defaults={'page': 1})
@@ -80,7 +80,7 @@ def old(page):
     if not videos and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)    
-    return render_template('video/video_index.html', pagination=pagination, videos=videos, videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, order=order, locale=util.get_locale())
+    return render_template('video/video_index.html', pagination=pagination, videos=videos, videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, order=order)
 
 
 @bp.route('/popular', defaults={'page': 1})
@@ -94,9 +94,9 @@ def popular(page):
     videos = Mv_Video.query.order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset)
     if not videos and page != 1:
         abort(404)
-    pagination = Pagination(page, PER_PAGE, videocount)    
-    return render_template('video/video_index.html', pagination=pagination, videos=videos, videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, order=order, locale=util.get_locale())
- 
+    pagination = Pagination(page, PER_PAGE, videocount)
+    return render_template('video/video_index.html', pagination=pagination, videos=videos, videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, order=order)
+
  
 @bp.route("/watch")
 def watch():
@@ -136,7 +136,7 @@ def watch():
         ac_url = MYSERVER_URL + "/videos/" + video_id
 
     return render_template('video/video_item.html', ia_url=ia_url, ia_url_short= ia_url_short,\
-        video_id=video_id, channel=channel, video=video, videos=videos, cat_id=cat_id, tags=tags, locale=util.get_locale(), ac_url=ac_url)
+        video_id=video_id, channel=channel, video=video, videos=videos, cat_id=cat_id, tags=tags, ac_url=ac_url)
 
 @bp.route('/embed/<video_id>')
 def embed(video_id):
@@ -164,7 +164,7 @@ def embed(video_id):
         MYSERVER_URL = current_app.config['MYSERVER_URL']
         ac_url = MYSERVER_URL + "/videos/" + video_id
 
-    return render_template('video/video_embed.html', ia_url=ia_url, video_id=video_id, video=video, locale=util.get_locale(), ac_url=ac_url)
+    return render_template('video/video_embed.html', ia_url=ia_url, video_id=video_id, video=video, ac_url=ac_url)
 
 
 @bp.route("/search", defaults={'page': 1})
@@ -199,9 +199,9 @@ def search(page):
 
     if videos is None:
         videos = Mv_Video.query.limit(24).all()
-        return render_template('video/video_index.html', videos=videos, locale=util.get_locale())
+        return render_template('video/video_index.html', videos=videos)
     else:
-        return render_template('video/video_search.html', videos=videos, pagination=pagination, rawsearch=rawsearch,  order=order, delchannelcount=delchannelcount, channels=channels, videocount=videocount, locale=util.get_locale())
+        return render_template('video/video_search.html', videos=videos, pagination=pagination, rawsearch=rawsearch,  order=order, delchannelcount=delchannelcount, channels=channels, videocount=videocount)
 
 
 @bp.route("/search/latest", defaults={'page': 1})
@@ -233,9 +233,9 @@ def search_latest(page):
 
     if videos is None:
         videos = Mv_Video.query.limit(24).all()
-        return render_template('video/video_index.html', videos=videos, locale=util.get_locale())
+        return render_template('video/video_index.html', videos=videos)
     else:
-        return render_template('video/video_search.html', videos=videos, pagination=pagination, rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount, locale=util.get_locale())
+        return render_template('video/video_search.html', videos=videos, pagination=pagination, rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount)
 
 
 @bp.route("/search/new", defaults={'page': 1})
@@ -267,9 +267,9 @@ def search_new(page):
 
     if videos is None:
         videos = Mv_Video.query.limit(24).all()
-        return render_template('video/video_index.html', videos=videos, locale=util.get_locale())
+        return render_template('video/video_index.html', videos=videos)
     else:
-        return render_template('video/video_search.html', videos=videos, pagination=pagination, rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount, locale=util.get_locale())
+        return render_template('video/video_search.html', videos=videos, pagination=pagination, rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount)
 
 
 @bp.route("/search/old", defaults={'page': 1})
@@ -301,9 +301,9 @@ def search_old(page):
 
     if videos is None:
         videos = Mv_Video.query.limit(24).all()
-        return render_template('video/video_index.html', videos=videos, locale=util.get_locale())
+        return render_template('video/video_index.html', videos=videos)
     else:
-        return render_template('video/video_search.html', videos=videos, pagination=pagination, rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount, locale=util.get_locale())
+        return render_template('video/video_search.html', videos=videos, pagination=pagination, rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount)
 
 
 @bp.route("/search/popular", defaults={'page': 1})
@@ -335,6 +335,6 @@ def search_popular(page):
 
     if videos is None:
         videos = Mv_Video.query.limit(24).all()
-        return render_template('video/video_index.html', videos=videos, locale=util.get_locale())
+        return render_template('video/video_index.html', videos=videos)
     else:
-        return render_template('video/video_search.html', videos=videos, pagination=pagination, rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount, locale=util.get_locale())
+        return render_template('video/video_search.html', videos=videos, pagination=pagination, rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount)

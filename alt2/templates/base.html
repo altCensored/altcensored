@@ -33,7 +33,9 @@
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/lighttheme.css') }}">
 
-  <link disabled id="dark-reader" rel="stylesheet" href="{{ url_for('static', filename='css/dark.css') }}">
+  {% if theme == 'dark' %}
+  <link id="dark-reader" rel="stylesheet" href="{{ url_for('static', filename='css/dark.css') }}">
+  {% endif %}
 
   {#
   <link href="https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css" rel="stylesheet">
@@ -69,8 +71,12 @@
       </div>
       <div class="pure-u-1 pure-u-md-8-24 user-field">
         <div class="pure-u-1-2">
-          <a href="javascript:void(0)" onclick="dark_toggle();return false;">
+          <a href="{{url_for('theme.toggle')}}?original_url={{ url_for(request.endpoint) }}">
+            {%if theme == 'light' %}
             <i id="dark-reader-icon" class="icon ion-ios-moon"></i>
+            {% else %}
+            <i id="dark-reader-icon" class="icon ion-ios-sunny"></i>
+            {% endif %}
           </a>
         </div>
         <div class="pure-u-1-2">
@@ -140,30 +146,6 @@
   </footer>
 
 </section>
-
-<script nonce="{{ csp_nonce() }}" type="text/javascript">
-  if (localStorage.getItem("darkreader") == "enabled") {
-    document.getElementById("dark-reader").disabled = false;
-  } else {
-    document.getElementById("dark-reader").disabled = true;
-  }
-</script>
-
-<script nonce="{{ csp_nonce() }}" type="text/javascript">
-  function dark_toggle() {
-    var el1 = document.getElementById("dark-reader");
-    var icon = document.getElementById("dark-reader-icon");
-    if(el1.disabled) {
-      el1.disabled = false;
-      icon.setAttribute("class", "ion-ios-sunny");
-      localStorage.setItem("darkreader", "enabled");
-    } else {
-      el1.disabled = true;
-      icon.setAttribute("class", "ion-ios-moon");
-      localStorage.setItem("darkreader", "disabled");
-    }
-  }
-</script>
 
 <script nonce="{{ csp_nonce() }}" type="text/javascript">
   window.addEventListener('DOMContentLoaded', (event) => {

@@ -61,9 +61,9 @@ def item(lang_code,page):
 
     if videos is None:
         videos = Mv_Video.query.limit(24).all()
-        return render_template('language/language_index.html', videos=videos, locale=util.get_locale())
+        return render_template('language/language_index.html', videos=videos)
     else:
-        return render_template('language/language_item.html',videos=videos,pagination=pagination,order=order,channels=channels,videocount=videocount,channelcount=channelcount,language=language, locale=util.get_locale())
+        return render_template('language/language_item.html',videos=videos,pagination=pagination,order=order,channels=channels,videocount=videocount,channelcount=channelcount,language=language)
 
 
 @bp.route('/<lang_code>/new', defaults={'page': 1})
@@ -99,9 +99,9 @@ def item_new(lang_code,page):
 
     if videos is None:
         videos = Mv_Video.query.limit(24).all()
-        return render_template('language/language_index.html', videos=videos, locale=util.get_locale())
+        return render_template('language/language_index.html', videos=videos)
     else:
-        return render_template('language/language_item.html',videos=videos,pagination=pagination,order=order,channels=channels,videocount=videocount,channelcount=channelcount,language=language, locale=util.get_locale())
+        return render_template('language/language_item.html',videos=videos,pagination=pagination,order=order,channels=channels,videocount=videocount,channelcount=channelcount,language=language)
 
 
 @bp.route('/<lang_code>/old', defaults={'page': 1})
@@ -137,9 +137,9 @@ def item_old(lang_code,page):
 
     if videos is None:
         videos = Mv_Video.query.limit(24).all()
-        return render_template('language/language_index.html', videos=videos, locale=util.get_locale())
+        return render_template('language/language_index.html', videos=videos)
     else:
-        return render_template('language/language_item.html',videos=videos,pagination=pagination,order=order,channels=channels,videocount=videocount,channelcount=channelcount,language=language, locale=util.get_locale())
+        return render_template('language/language_item.html',videos=videos,pagination=pagination,order=order,channels=channels,videocount=videocount,channelcount=channelcount,language=language)
 
 
 @bp.route('/<lang_code>/popular', defaults={'page': 1})
@@ -175,6 +175,6 @@ def item_popular(lang_code,page):
 
     if videos is None:
         videos = Mv_Video.query.limit(24).all()
-        return render_template('language/language_index.html', videos=videos, locale=util.get_locale())
+        return render_template('language/language_index.html', videos=videos)
     else:
-        return render_template('language/language_item.html',videos=videos,pagination=pagination,order=order,channels=channels,videocount=videocount,channelcount=channelcount,language=language, locale=util.get_locale())
+        return render_template('language/language_item.html',videos=videos,pagination=pagination,order=order,channels=channels,videocount=videocount,channelcount=channelcount,language=language)

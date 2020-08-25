@@ -96,7 +96,7 @@ def login():
             return redirect(url_for('video.index'))
         else:
             flash('Email and password combination is invalid', 'error')
-    return render_template('/auth/auth_index.html', locale=util.get_locale())
+    return render_template('/auth/auth_index.html')
 
 
 
@@ -126,7 +126,7 @@ def reset_password(token):
         flash('The reset password link is invalid or has expired', 'danger')
         return redirect(url_for('video.index'))
     if request.method == 'GET':
-        return render_template('auth/auth_reset_password.html', locale=util.get_locale(), token=token)
+        return render_template('auth/auth_reset_password.html', token=token)
     elif request.method == 'POST':
         password = request.form['password']
         db_session.query(User).filter(User.email == email).update({"password": bcrypt.hashpw(password.encode('utf8'), salt).decode('utf8')})

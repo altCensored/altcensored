@@ -12,6 +12,10 @@ def get_locale():
     return session['locale']
 
 
+def get_theme():
+    return session.get('theme', 'light')
+
+
 def send_welcome_email(email,content):
     message = Mail(
     from_email='registration@altCensored.com',

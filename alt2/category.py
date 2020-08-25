@@ -28,8 +28,7 @@ def index(page):
     languages = Language.query.limit(PER_PAGE).offset(offset)
 
     return render_template('category/category_index.html', 
-        pagination=pagination, videocount=videocount, categories=categories, categorycount=categorycount,
-        locale=util.get_locale())
+        pagination=pagination, videocount=videocount, categories=categories, categorycount=categorycount)
 
 
 @bp.route('/<cat_id>', defaults={'page': 1})
@@ -45,8 +44,7 @@ def item(cat_id,page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)    
     return render_template('category/category_item.html', 
-        pagination=pagination, category=category, videos=videos, videocount=videocount, order=order,
-        locale=util.get_locale())
+        pagination=pagination, category=category, videos=videos, videocount=videocount, order=order)
 
 
 @bp.route('/<cat_id>/new', defaults={'page': 1})
@@ -62,8 +60,7 @@ def item_new(cat_id,page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)    
     return render_template('category/category_item.html', 
-        pagination=pagination, category=category, videos=videos, videocount=videocount, order=order,
-        locale=util.get_locale())
+        pagination=pagination, category=category, videos=videos, videocount=videocount, order=order)
 
 
 @bp.route('/<cat_id>/old', defaults={'page': 1})
@@ -79,8 +76,7 @@ def item_old(cat_id,page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)    
     return render_template('category/category_item.html', 
-        pagination=pagination, category=category, videos=videos, videocount=videocount, order=order,
-        locale=util.get_locale())
+        pagination=pagination, category=category, videos=videos, videocount=videocount, order=order)
 
 
 @bp.route('/<cat_id>/popular', defaults={'page': 1})
@@ -96,8 +92,7 @@ def item_popular(cat_id,page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)    
     return render_template('category/category_item.html', 
-        pagination=pagination, category=category, videos=videos, videocount=videocount, order=order,
-        locale=util.get_locale())
+        pagination=pagination, category=category, videos=videos, videocount=videocount, order=order)
 
 
 @bp.route('/<lang_code>', defaults={'page': 1})
@@ -128,5 +123,4 @@ def lang_item(lang_code,page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)    
     return render_template('category/category_item.html', 
-        pagination=pagination, language=language, videos=videos, videocount=videocount, order=order,
-        locale=util.get_locale())
+        pagination=pagination, language=language, videos=videos, videocount=videocount, order=order)

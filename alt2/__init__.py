@@ -117,6 +117,10 @@ def create_app(test_config=None):
             result = Markup(result)
         return result
 
+    @app.context_processor
+    def inject_locale_and_theme():
+        return dict(locale=util.get_locale(), theme=util.get_theme())
+
     def has_no_empty_params(rule):
         defaults = rule.defaults if rule.defaults is not None else ()
         arguments = rule.arguments if rule.arguments is not None else ()
@@ -141,7 +145,7 @@ def create_app(test_config=None):
         db_session.remove()    
 
     # apply the blueprints to the app
-    from . import video, channel, about, category, language, settings, auth
+    from . import video, channel, about, category, language, settings, auth, theme
     app.register_blueprint(video.bp)
     app.register_blueprint(channel.bp)
     app.register_blueprint(about.bp)
@@ -149,6 +153,8 @@ def create_app(test_config=None):
     app.register_blueprint(language.bp)
     app.register_blueprint(settings.bp)
     app.register_blueprint(settings.bp)
+    app.register_blueprint(auth.bp)
+    app.register_blueprint(theme.bp)
     # app.register_blueprint(auth.bp)
     # make url_for('index') == url_for('blog.index')
     # in another app, you might define a separate main index here with

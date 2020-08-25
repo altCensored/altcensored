@@ -92,6 +92,9 @@ def login():
             flash('Confirmation email sent', 'success')
             return redirect(url_for('video.index'))
         elif submitvalue == 'reset':
+            if not user_exists(email):
+                flash('User does not exist', 'error')
+                return redirect(url_for('auth.login'))
             send_reset_password_email(email)
             flash('Reset password email sent', 'success')
             return redirect(url_for('video.index'))

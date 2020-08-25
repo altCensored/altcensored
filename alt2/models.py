@@ -246,3 +246,12 @@ class Language(Base):
 
     def __repr__(self):
         return '<Language %r>' % (self.lang_id)
+
+
+class User(Base):
+    __tablename__ = 'altcen_user'
+    id = Column(Integer, primary_key=True, nullable=False)
+    email = Column(String, nullable=False)
+    email_verified = Column(Boolean, nullable=False, default=False)
+    password = Column(String, nullable=False)
+    watched = Column(ARRAY(Integer))

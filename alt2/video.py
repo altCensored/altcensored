@@ -5,7 +5,7 @@ from werkzeug.exceptions import abort
 from sqlalchemy import func, text
 from internetarchive import get_item
 from .database import db_session
-from .models import Mv_Video, Mv_Channel, Mv_Category
+from .models import Mv_Video, Mv_Channel, Mv_Category, User
 from .pagination import Pagination
 from . import util
 

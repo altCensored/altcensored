@@ -94,6 +94,17 @@
             {{ gettext('About') }}
           </a>
         </div>
+        <div class="pure-u-1-2">
+          {% if not session['user'] %}
+          <a href="{{ url_for('auth.login') }}" class="pure-menu-heading">
+            {{ gettext('Log In') }}
+          </a>
+          {% else %}
+          <a href="{{ url_for('auth.logout') }}" class="pure-menu-heading">
+            {{ gettext('Log Out') }}
+          {% endif %}
+          </a>          
+        </div>
       </div>
     </div>
   </div>

@@ -4,15 +4,13 @@ from flask import (
 from sqlalchemy.orm.exc import NoResultFound
 from .database import db_session
 from .models import User
-import bcrypt
+from werkzeug.security import check_password_hash, generate_password_hash
+
 from . import util
 from .util import get_locale, send_welcome_email, send_forgot_password_email, generate_confirmation_token, confirm_token
 import functools
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
-
-salt = bcrypt.gensalt()
-
 
 def login_required(view):
     @functools.wraps(view)
@@ -38,11 +36,11 @@ def user_and_password_is_valid(email, password):
     user = find_user_by_email(email)
     if not user:
         return False
-    return bcrypt.checkpw(password.encode('utf8'), user.password.encode('utf8'))
+    return check_password_hash(user.password, password)
 
 
 def register_user(email, password):
-    user = User(email=email, password=bcrypt.hashpw(password.encode('utf8'), salt).decode('utf8'), email_verified=False)
+    user = User(email=email, password=generate_password_hash(password), email_verified=False)
     db_session.add(user)
     db_session.commit()
     return user

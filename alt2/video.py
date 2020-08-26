@@ -3,6 +3,7 @@ from flask import (
     send_from_directory, make_response, session, current_app )
 from werkzeug.exceptions import abort
 from sqlalchemy import func, text
+from sqlalchemy.orm.attributes import flag_modified
 from internetarchive import get_item
 from .database import db_session
 from .models import Mv_Video, Mv_Channel, Mv_Category, User
@@ -12,9 +13,6 @@ from . import util
 bp = Blueprint('video', __name__ )
 
 PER_PAGE = 24
-#MYSERVER_URL = current_app.config['MYSERVER_URL']
-#languages = (current_app.config['SUPPORTED_LANGUAGES'].keys())
-#MYSERVER_URL="https://www.altCensored.com"
 
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
@@ -26,7 +24,6 @@ def index(page):
     channelcount = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
     delchannelcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
     videos = Mv_Video.query.order_by(Mv_Video.id.desc()).limit(PER_PAGE).offset(offset)
-#    videos = Mv_Video.query.limit(PER_PAGE).offset(offset)
     if not videos and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)    
@@ -42,7 +39,6 @@ def feed(page):
     channelcount = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
     delchannelcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
     videos = Mv_Video.query.order_by(Mv_Video.id.desc()).limit(PER_PAGE).offset(offset)
-#    videos = Mv_Video.query.limit(PER_PAGE).offset(offset)
     if not videos and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)
@@ -111,14 +107,10 @@ def watch():
         tags = None
 
     category = Mv_Category.query.filter_by(cat_name=cat_name).first()
-
     cat_id = category.cat_id
-
     ytc_id = video.ytc_id
     channel = Mv_Channel.query.get(ytc_id)
     videos = Mv_Video.query.filter_by(ytc_id=ytc_id).limit(PER_PAGE)
-#    videos = Mv_Video.query.filter_by(ytc_id=ytc_id).all()
-#    videos = Mv_Video.query.filter_by(ytc_id=ytc_id).order_by(Mv_Video.published.desc()).limit(12).all()
 
     try:
         item = get_item('youtube-' + video_id)
@@ -135,6 +127,16 @@ def watch():
         MYSERVER_URL = current_app.config['MYSERVER_URL']
         ac_url = MYSERVER_URL + "/videos/" + video_id
 
+    if session.get('user') is not None:
+        user = db_session.query(User).filter(User.email == session['user']['email']).one()
+        try:
+            user.watched += [video.id]
+        except:
+            user.watched = [video.id]
+        flag_modified(user, "watched")
+        db_session.commit()
+
+
     return render_template('video/video_item.html', ia_url=ia_url, ia_url_short= ia_url_short,\
         video_id=video_id, channel=channel, video=video, videos=videos, cat_id=cat_id, tags=tags, ac_url=ac_url)
 
@@ -142,12 +144,6 @@ def watch():
 def embed(video_id):
 #    video_id = request.args.get('v', None)
     video = Mv_Video.query.get(video_id)
-
-
-#    ytc_id = video.ytc_id
-#    channel = Mv_Channel.query.get(ytc_id)
-#    videos = Mv_Video.query.filter_by(ytc_id=ytc_id).all()
-#    videos = Mv_Video.query.filter_by(ytc_id=ytc_id).order_by(Mv_Video.published.desc()).limit(12).all()
 
     try:
         item = get_item('youtube-' + video_id)

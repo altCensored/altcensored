@@ -29,7 +29,7 @@
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pure-min.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/grids-responsive-min.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}?v=1">
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/lighttheme.css') }}">
 
@@ -120,8 +120,11 @@
     {% if messages %}
       <div class="flash-container">
         {% for category, message in messages %}
-          <div class="flash flash-{{category}}">
-            <div class="flash-message">{{message}}</div>
+          <div class="flash-inner-container">
+            <input type="checkbox" class="flash-dismiss-button">
+            <div class="flash flash-{{category}}">
+              <div class="flash-message">{{message}}</div>
+            </div>
           </div>
         {% endfor %}
       </div>

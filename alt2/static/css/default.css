@@ -448,22 +448,51 @@ ul.share-buttons img{
 }
 
 .flash-dismiss-button {
-  font-weight: bold;
   cursor: pointer;
-  user-select: none;
   position: relative;
-  left: 20px;
-  top: -1px;
-  width: 20px;
-  text-align: center;
 }
 
-.flash-dismiss-button::before {
+.flash-dismiss-button::after {
   content: '\00d7';
 }
 
 .flash-dismiss-button:hover {
   border-radius: 5px;
+}
+
+.flash-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flash-inner-container {
+  position: relative;
+}
+
+.flash-message {
+  margin-right: 10px;
+}
+
+.flash-dismiss-button {
+  cursor: pointer;
+  position: absolute;
+  right: 9px;
+  top: 15px;
+  z-index: 99;
+}
+
+.flash-dismiss-button:hover {
+  color: hsl(100,70%,20%);
+}
+
+.flash-dismiss-button:checked {
+  display: none;
+}
+
+.flash-dismiss-button:checked ~ div {
+  display: none;
 }
 
 

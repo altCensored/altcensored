@@ -9,6 +9,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from . import util
 from .util import get_locale, send_welcome_email, send_forgot_password_email, generate_confirmation_token, confirm_token
 import functools
+from email_validator import validate_email, EmailNotValidError
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -37,6 +38,13 @@ def user_and_password_is_valid(email, password):
     if not user:
         return False
     return check_password_hash(user.password, password)
+
+def validate_user_email(email):
+    try:
+        valid = validate_email(email)
+        email = valid.email
+    except EmailNotValidError as e:
+        return e
 
 
 def register_user(email, password):

@@ -46,7 +46,6 @@ def validate_user_email(email):
     except EmailNotValidError as e:
         return e
 
-
 def register_user(email, password):
     user = User(email=email, password=generate_password_hash(password), email_verified=False)
     db_session.add(user)
@@ -75,6 +74,10 @@ def login():
         email = request.form['email']
         password = request.form['password']
         submitvalue = request.form['submitvalue']
+        ret_val = validate_user_email(email)
+        if ret_val is not None:
+            flash(str(ret_val), 'error')
+            return redirect(url_for('auth.login'))
         if user_and_password_is_valid(email, password):
             user = db_session.query(User).filter(User.email==email).one()
             session['user'] = dict(id=user.id, email=user.email)

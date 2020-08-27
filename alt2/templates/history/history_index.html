@@ -40,13 +40,19 @@
     <div class="pure-u-1 pure-u-md-2-24"></div>
     <div class="pure-u-1 pure-u-md-20-24">
       <div class="pure-g h-box">
-        <div class="pure-u-1 pure-md-1-4"></div>
-        <div class="pure-u-1 pure-md-1-4"></div>
-        <div class="pure-u-1 pure-md-1-4"></div>
-        <div class="pure-u-1 pure-md-1-4">
-          <i class='ion-ios-film'  style="font-size: 24px"></i>
-          </a>
-          <b>&nbsp;{{ videocount | commafy }}</b>
+        <div class="pure-u-1-2">
+          <div class="pure-u-1 pure-md-1-1">
+            <i class='ion-ios-film'  style="font-size: 24px"></i>
+            <b>&nbsp;{{ videocount | commafy }}</b>
+          </div>
+        </div>
+        <div class="pure-u-1-2">
+          <div class="pure-g" style="text-align:right">
+            <div class="pure-u-1 pure-md-1-1">
+              <a href="{{ url_for('history.clear_watch_history') }}">
+              <i class='ion-ios-trash' style="font-size: 24px"></i></a>
+            </div>
+          </div>
         </div>
       </div>
     <div class="h-box">

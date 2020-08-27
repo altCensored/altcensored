@@ -14,7 +14,7 @@ from .auth import login_required
 
 bp = Blueprint('history', __name__, url_prefix='/history')
 
-PER_PAGE = 4
+PER_PAGE = 24
 
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')

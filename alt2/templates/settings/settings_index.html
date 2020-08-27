@@ -71,6 +71,11 @@
                 <a href="{{ url_for('history.index') }}">
                     {{ gettext('Watch History') }}
                 </a>
+                <br>
+                <br>
+                <a href="{{ url_for('history.clear_watch_history') }}">
+                    {{ gettext('Clear Watch History') }}
+                </a>
                 {% endif %}
               </div>
             </div>

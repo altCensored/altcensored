@@ -1,13 +1,16 @@
 from flask import (
     Blueprint, flash, redirect, render_template, request, url_for,
     send_from_directory, make_response, session, current_app )
-from . import util
-from datetime import datetime, timedelta
-from .models import Mv_Video, Mv_Channel, Mv_Category, User
 from sqlalchemy import func, text, case
+from sqlalchemy.orm.attributes import flag_modified
+from datetime import datetime, timedelta
+
+from . import util
+from .models import Mv_Video, Mv_Channel, Mv_Category, User
 from .database import db_session
 from .pagination import Pagination
 from .auth import login_required
+
 
 bp = Blueprint('history', __name__, url_prefix='/history')
 
@@ -31,3 +34,19 @@ def index(page):
     except:
         flash('No History Available', 'success')
         return redirect('/')
+
+
+@bp.route('/clear_watch_history', methods=['GET', 'POST'])
+@login_required
+def clear_watch_history():
+    if request.method == 'POST':
+        submitvalue = request.form['submitvalue']
+        if submitvalue == 'yes':
+            user = db_session.query(User).filter(User.email == session['user']['email']).one()
+            user.watched = None
+            flag_modified(user, "watched")
+            db_session.commit()
+            return redirect('/')
+        else:
+            return redirect('/')
+    return render_template('/history/history_clear_watch.html')

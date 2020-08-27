@@ -50,3 +50,11 @@ def clear_watch_history():
         else:
             return redirect('/')
     return render_template('/history/history_clear_watch.html')
+
+
+@bp.route('/remove_video')
+@login_required
+def remove_video():
+    video_id = request.args.get('v', None)
+    flash(video_id, 'success')
+    return redirect('/')

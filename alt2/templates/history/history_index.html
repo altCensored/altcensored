@@ -70,6 +70,8 @@
                 <p class="length">{{ video['duration'] | hourminsec }}</p>
               {% else %}
               {% endif %}
+              <a class="action" href="{{ url_for('history.remove_video', v=video['extractor_data']) }}">
+              <p class="watched"> <i class='ion-ios-trash' style="font-size: 24px"></p></i></a>
             </div>
            </a>
           <p><a class="action" href="{{ url_for('video.watch', v=video['extractor_data']) }}">

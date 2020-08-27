@@ -8,8 +8,9 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from . import util
 from .util import get_locale, send_welcome_email, send_forgot_password_email, generate_confirmation_token, confirm_token
-import functools
+import functools, datetime
 from email_validator import validate_email, EmailNotValidError
+
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -47,7 +48,8 @@ def validate_user_email(email):
         return e
 
 def register_user(email, password):
-    user = User(email=email, password=generate_password_hash(password), email_verified=False)
+    d = datetime.date.today()
+    user = User(email=email, password=generate_password_hash(password), created_date=d, email_verified=False)
     db_session.add(user)
     db_session.commit()
     return user
@@ -126,6 +128,7 @@ def confirm_email(token):
         return redirect(url_for('video.index'))
     else:
         user.email_verified = True
+        user.email_verified_date = datetime.date.today()
         db_session.add(user)
         db_session.commit()
         flash('You have confirmed your account. Thanks!', 'success')

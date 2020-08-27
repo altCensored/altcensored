@@ -4,8 +4,8 @@ CREATE TABLE IF NOT EXISTS "altcen_user" (
     email_verified BOOL NOT NULL DEFAULT FALSE,
     password TEXT NOT NULL,
     watched INT[],
-    created timestamptz,
-    email_verified timestamptz
+    created_date timestamptz,
+    email_verified_date timestamptz
 );
 
 CREATE TABLE IF NOT EXISTS user_subscription (

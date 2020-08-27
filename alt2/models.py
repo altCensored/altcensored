@@ -255,3 +255,5 @@ class User(Base):
     email_verified = Column(Boolean, nullable=False, default=False)
     password = Column(String, nullable=False)
     watched = Column(ARRAY(Integer))
+    created_date = Column(DateTime, nullable=True)
+    email_verified_date = Column(DateTime, nullable=True)

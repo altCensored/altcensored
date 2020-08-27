@@ -7,9 +7,7 @@ from sqlalchemy import func
 from .database import db_session
 from .models import Entity, Source, Mv_Video, Mv_Channel
 
-
 bp = Blueprint('settings', __name__, url_prefix='/settings' )
-
 
 @bp.route('/', methods=['GET', 'POST'])
 def index():

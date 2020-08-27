@@ -58,66 +58,7 @@
         <div class="pure-u-1-2">
           <div class="pure-g" style="text-align:right">
 
-            {% if order == 'latest' %}
-              <div class="pure-u-1 pure-md-1-4">
-                <b>{{ gettext('latest') }}</a></b>
-              </div>
-              <div class="pure-u-1 pure-md-1-4">
-                <b><a href="{{ url_for('video.new') }}">{{ gettext('newest') }}</a></b>
-              </div>              
-              <div class="pure-u-1 pure-md-1-4">
-                <b><a href="{{ url_for('video.old') }}">{{ gettext('oldest') }}</a></b>
-              </div>
-              <div class="pure-u-1 pure-md-1-4">
-                <b><a href="{{ url_for('video.popular') }}">{{ gettext('popular') }}</a></b>
-              </div>
 
-
-            {% elif order == 'newest' %}
-              <div class="pure-u-1 pure-md-1-4">
-                <b><a href="{{ url_for('video.index') }}">{{ gettext('latest') }}</a></b>
-              </div>
-              <div class="pure-u-1 pure-md-1-4">
-                <b>{{ gettext('newest') }}</a></b>
-              </div>              
-              <div class="pure-u-1 pure-md-1-4">
-                <b><a href="{{ url_for('video.old') }}">{{ gettext('oldest') }}</a></b>
-              </div>
-              <div class="pure-u-1 pure-md-1-4">
-                <b><a href="{{ url_for('video.popular') }}">{{ gettext('popular') }}</a></b>
-              </div>
-
-
-            {% elif order == 'oldest' %}
-              <div class="pure-u-1 pure-md-1-4">
-                <b><a href="{{ url_for('video.index') }}">{{ gettext('latest') }}</a></b>
-              </div>
-              <div class="pure-u-1 pure-md-1-4">
-                <b><a href="{{ url_for('video.new') }}">{{ gettext('newest') }}</a></b>
-              </div>              
-              <div class="pure-u-1 pure-md-1-4">
-                <b>{{ gettext('oldest') }}</a></b>
-              </div>
-              <div class="pure-u-1 pure-md-1-4">
-                <b><a href="{{ url_for('video.popular') }}">{{ gettext('popular') }}</a></b>
-              </div>
-
-
-            {% elif order == 'popular' %}
-              <div class="pure-u-1 pure-md-1-4">
-                <b><a href="{{ url_for('video.index') }}">{{ gettext('latest') }}</a></b>
-              </div>
-              <div class="pure-u-1 pure-md-1-4">
-                <b><a href="{{ url_for('video.new') }}">{{ gettext('newest') }}</a></b>
-              </div>              
-              <div class="pure-u-1 pure-md-1-4">
-                <b><a href="{{ url_for('video.old') }}">{{ gettext('oldest') }}</a></b>
-              </div>
-              <div class="pure-u-1 pure-md-1-4">
-                <b>{{ gettext('popular') }}</a></b>
-              </div>
-
-            {% endif %}
           </div>
         </div>
       </div>
@@ -127,13 +68,6 @@
 <div class="h-box">
  <hr>
 </div>
-
-
-
-
-
-
-
 <div class="pure-g">
   {% for video in videos %}
       <div class="pure-u-1 pure-u-md-1-4">

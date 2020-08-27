@@ -111,7 +111,7 @@ def login():
             return redirect(url_for('video.index'))
         else:
             flash('Email and password combination is invalid', 'error')
-    return render_template('/auth/auth_index.html', locale=util.get_locale())
+    return render_template('/auth/auth_index.html')
 
 
 

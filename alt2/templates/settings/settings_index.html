@@ -63,13 +63,15 @@
                     {% for language in languages %}
                     <option value= "{{language}}">{{language}}</option>"
                     {% endfor %}
-
-
                   </select>
                   <input type="submit" name="submit" value="{{ gettext('Save') }}">
-
                 </form>
-
+                {% if session.user %}
+                <br>
+                <a href="{{ url_for('history.index') }}">
+                    {{ gettext('Watch History') }}
+                </a>
+                {% endif %}
               </div>
             </div>
 

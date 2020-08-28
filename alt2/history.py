@@ -56,5 +56,10 @@ def clear_watch_history():
 @login_required
 def remove_video():
     video_id = request.args.get('v', None)
-    flash(video_id, 'success')
-    return redirect('/')
+    user = db_session.query(User).filter(User.email == session['user']['email']).one()
+    video = Mv_Video.query.get(video_id)
+    if video.id in user.watched:
+        user.watched.remove(video.id)
+        flag_modified(user, "watched")
+        db_session.commit()
+    return redirect(url_for('history.index'))

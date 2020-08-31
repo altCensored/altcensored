@@ -6,7 +6,7 @@ from flask_talisman import Talisman
 from jinja2 import evalcontextfilter, Markup, escape
 from flask_babelplus import Babel, gettext, ngettext
 from urllib.parse import quote_plus
-
+import urllib
 import bleach
 import unicodedata
 import math
@@ -132,6 +132,16 @@ def create_app(test_config=None):
 
     def page_not_found(e):
         return redirect(url_for('video.index'))
+
+    def url_alive(url):
+        request = urllib.request.Request(url)
+        try:
+            urllib.request.urlopen(request)
+            return True
+        except urllib.request.HTTPError:
+            return False     
+    app.jinja_env.globals.update(url_alive=url_alive)
+
 
     app.register_error_handler(404, page_not_found)
     app.register_error_handler(400, page_not_found)

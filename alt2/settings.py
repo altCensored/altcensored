@@ -11,17 +11,17 @@ bp = Blueprint('settings', __name__, url_prefix='/settings' )
 
 @bp.route('/', methods=['GET', 'POST'])
 def index():
-
 	if request.method == 'POST':
-		locale = request.form['locale']
 		session['locale'] = request.form['locale']
+
+#		session['theme'] = request.form['theme']
 	videocount = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
 	delchannelcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
 	languages = (current_app.config['SUPPORTED_LANGUAGES'].keys())
-	locale = session['locale']
 	languages_list=list(languages)
-	languages_list.remove(locale)
+	languages_list.remove(session['locale'])
 	languages = languages_list
+	themes = (current_app.config['SUPPORTED_THEMES'])
 
 	return render_template('settings/settings_index.html', videocount=videocount, \
-		delchannelcount=delchannelcount,languages=languages,locale=locale)
+		delchannelcount=delchannelcount,languages=languages,themes=themes)

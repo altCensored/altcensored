@@ -14,5 +14,6 @@ IPROXYTW="https://altcensored.com/ip/144x144/"
 IPROXYTWBIG="https://altcensored.com/ip/"
 
 SUPPORTED_LANGUAGES = {'en': 'English', 'de': 'Deutsch', 'es': 'Español', 'fr': 'Français', 'pt': 'Portuguese', 'nl': 'Nederlandse', 'it': 'Italiano', 'se': 'Sverige'}
+SUPPORTED_THEMES = {'light', 'dark'}
 BABEL_DEFAULT_LOCALE = 'en'
 BABEL_DEFAULT_TIMEZONE = 'UTC'

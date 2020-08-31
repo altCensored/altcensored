@@ -197,15 +197,7 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
         <div class="thumbnail">
 
 
-          {% set url1 = config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['title'] | ia_fname ~ '-' ~ video['extractor_data'] ~ '.jpg' %}
-
-          {% set url2 = config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/'  ~ 'youtube-' ~ video['extractor_data'] ~ '.thumbs/' ~ video['title'] | ia_fname ~ '-' ~ video['extractor_data'] ~ '_000001.jpg' %}
-
-          {% if url_alive(url1) %}
-           <img class="thumbnail" src="{{ url1 }}"
-          {% else %}
-           <img class="thumbnail" src="{{ url2 }}"
-          {% endif %}      
+          <img class="thumbnail" src="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['title'] | ia_fname ~ '-' ~ video['extractor_data'] ~ '.jpg' }}" onerror="this.onerror=null;this.src='https://{{ config['MYSERVER_NAME'] }}/image_error.gif';">     
 
           {% if video['duration']  is not none %}
             <p class="length">{{ video['duration'] | hourminsec }}</p>

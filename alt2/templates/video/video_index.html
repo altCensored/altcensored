@@ -151,16 +151,9 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/UCMLbmp5tcLxzahMLTmeM4lg/fee
         </div>
       </div>
 
-
 <div class="h-box">
  <hr>
 </div>
-
-
-
-
-
-
 
 <div class="pure-g">
   {% for video in videos %}
@@ -178,12 +171,6 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/UCMLbmp5tcLxzahMLTmeM4lg/fee
               {% else %}
                <img class="thumbnail" src="{{ url2 }}"
               {% endif %}              
-
-{#
-              <img class="thumbnail" src="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['title'] | ia_fname ~ '-' ~ video['extractor_data'] ~ '.jpg' }}"
-              onerror="this.onerror=null;this.src='https://{{ config['MYSERVER_NAME'] }}/image_error.gif';" >
-
-#}
 
               {% if video['duration']  is not none %}
                 <p class="length">{{ video['duration'] | hourminsec }}</p>

@@ -14,6 +14,8 @@
 {% endblock %}
 {% block content %}
 
+{#
+
   <div class="pure-g">
     <div class="pure-u-1 pure-u-md-2-24"></div>
       <div class="pure-u-1 pure-u-md-20-24">
@@ -46,6 +48,8 @@
 </div>
 </div>
 
+#}
+
 <br>
 
   <div class="pure-g">
@@ -72,22 +76,22 @@
                     {% endfor %}
                   </select>
                   <p> {{ gettext('Nav Menu') }}:
-                  <select name=tab1>
+                  <select name=tab1_value>
                     <option value= "{{navtabs["tab1"]}}" SELECTED>{{navtabs["tab1"]}}</option>"   
-                    {% for navtab_value in navtab_values %}
-                    <option value= "{{tab1}}">{{navtab_value}}</option>"
+                    {% for tab1_value in tab1_values %}
+                    <option value= "{{tab1_value}}">{{tab1_value}}</option>"
                     {% endfor %}
                   </select>
-                  <select name=tab2>
-                    <option value= "{{navtabs["tab1"]}}" SELECTED>{{navtabs["tab2"]}}</option>"   
-                    {% for navtab_value in navtab_values %}
-                    <option value= "{{tab2}}">{{navtab_value}}</option>"
+                  <select name=tab2_value>
+                    <option value= "{{navtabs["tab2"]}}" SELECTED>{{navtabs["tab2"]}}</option>"   
+                    {% for tab2_value in tab2_values %}
+                    <option value= "{{tab2_value}}">{{tab2_value}}</option>"
                     {% endfor %}
                   </select>
-                  <select name=tab3>
-                    <option value= "{{navtabs["tab1"]}}" SELECTED>{{navtabs["tab3"]}}</option>"   
-                    {% for navtab_value in navtab_values %}
-                    <option value= "{{tab3}}">{{navtab_value}}</option>"
+                  <select name=tab3_value>
+                    <option value= "{{navtabs["tab3"]}}" SELECTED>{{navtabs["tab3"]}}</option>"   
+                    {% for tab3_value in tab3_values %}
+                    <option value= "{{tab3_value}}">{{tab3_value}}</option>"
                     {% endfor %}
                   </select>
                   <p>
@@ -105,8 +109,9 @@
                 </a>
                 {% endif %}
                 <br>
-                {{ navtabs["tab3"]|pprint}}
+{#                {{ navtabs["tab3"]|pprint}}
                 {{ navtab2|pprint}}
+#}
               </div>
             </div>
 

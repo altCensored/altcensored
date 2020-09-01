@@ -6,42 +6,47 @@ from sqlalchemy import func
 
 from .database import db_session
 from .models import Entity, Source, Mv_Video, Mv_Channel
-from .util import get_navtabs 
+from .util import get_locale, get_theme, get_navtabs
 
 bp = Blueprint('settings', __name__, url_prefix='/settings' )
 
 @bp.route('/', methods=['GET', 'POST'])
 def index():
-	if request.method == 'POST':
-		session['locale'] = request.form['locale']
-		session['theme'] = request.form['theme']
-	videocount = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
-	delchannelcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
+    if request.method == 'POST':
+        session['locale'] = request.form['locale']
+        session['theme'] = request.form['theme']
+        session['navtabs']['tab1'] = request.form['tab1_value']
+        session['navtabs']['tab2'] = request.form['tab2_value']
+        session['navtabs']['tab3'] = request.form['tab3_value']
 
-	languages = (current_app.config['SUPPORTED_LANGUAGES'].keys())
-	languages_list=list(languages)
-	languages_list.remove(session['locale'])
-	languages = languages_list
+    videocount = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
+    delchannelcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
 
-	themes = (current_app.config['SUPPORTED_THEMES'])
-	themes_list=list(themes)
-	if session.get('theme') is None:
-		session['theme'] = 'light'
-	themes_list.remove(session['theme'])
-	themes = themes_list
+    languages = (current_app.config['SUPPORTED_LANGUAGES'].keys())
+    languages_list=list(languages)
+    if session.get('locale') is None:
+        get_locale()    
+    languages_list.remove(session['locale'])
+    languages = languages_list
 
-	navtab_values = (current_app.config['SUPPORTED_NAVTABS'].values())
-	navtab_tab1_values_list=list(navtab_values)
+    themes = (current_app.config['SUPPORTED_THEMES'])
+    themes_list=list(themes)
+    if session.get('theme') is None:
+        session['theme'] = get_theme()
+    themes_list.remove(session['theme'])
+    themes = themes_list
 
-#	if session.get('navtabs') is None:
-#		get_navtabs()
+    navtab_values = (current_app.config['SUPPORTED_NAVTABS'].values())
+    tab1_values=list(navtab_values)
+    tab2_values=list(navtab_values)
+    tab3_values=list(navtab_values)
 
+    if session.get('navtabs') is None:
+        get_navtabs()
+    tab1_values.remove(session['navtabs']['tab1'])
+    tab2_values.remove(session['navtabs']['tab2'])
+    tab3_values.remove(session['navtabs']['tab3'])
 
-#	navtab_tab1_values_list.remove(session.get('navtabs'["tab1"]))
-#	navtab_tab1_values = navtab_tab1_values_list
-
-#	return render_template('settings/settings_index.html', videocount=videocount, \
-#		delchannelcount=delchannelcount,languages=languages,themes=themes,navtab_tab1_values=navtab_tab1_values)
-
-	return render_template('settings/settings_index.html', videocount=videocount, \
-		delchannelcount=delchannelcount,languages=languages,themes=themes)
+    return render_template('settings/settings_index.html', videocount=videocount, \
+        delchannelcount=delchannelcount,languages=languages,themes=themes, \
+        tab1_values=tab1_values, tab2_values=tab2_values, tab3_values=tab3_values)

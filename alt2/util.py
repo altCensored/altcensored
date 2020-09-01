@@ -23,17 +23,6 @@ def get_navtabs():
         session['navtabs'] = config.SUPPORTED_NAVTABS
     return session['navtabs']
 
-#    if session.get('navtabs') is None:
-#        session['navtabs'] = config.SUPPORTED_NAVTABS
-#    session['navtab1'] = session['navtabs'[1]] 
-#   return session['navtabs']
-
-
-def get_navtab2():
-    if session.get('navtab2') is None:
-        session['navtab2'] = 'channel'
-    return session['navtab2']
-
 
 def send_welcome_email(email,content):
     message = Mail(

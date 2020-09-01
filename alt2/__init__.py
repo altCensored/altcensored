@@ -124,8 +124,7 @@ def create_app(test_config=None):
             locale=util.get_locale(),
             theme=util.get_theme(),
             current_url=quote_plus(request.url),
-            navtabs=util.get_navtabs(),
-            navtab2=util.get_navtab2())
+            navtabs=util.get_navtabs())
 
     def has_no_empty_params(rule):
         defaults = rule.defaults if rule.defaults is not None else ()

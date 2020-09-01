@@ -138,37 +138,26 @@ def create_app(test_config=None):
     app.register_error_handler(400, page_not_found)
     app.register_error_handler(500, page_not_found)
 
-
-
-#
-# http://flask.pocoo.org/docs/1.0/patterns/sqlalchemy/
-#
     from .database import db_session
 
     @app.teardown_appcontext
     def shutdown_session(exception=None):
         db_session.remove()    
 
-    # apply the blueprints to the app
-    from . import video, channel, about, category, language, settings, auth, theme, history
+    from . import video, channel, about, category, language, settings, auth, subscription, history, playlist, theme
     app.register_blueprint(video.bp)
     app.register_blueprint(channel.bp)
     app.register_blueprint(about.bp)
     app.register_blueprint(category.bp)
     app.register_blueprint(language.bp)
     app.register_blueprint(settings.bp)
-    app.register_blueprint(settings.bp)
     app.register_blueprint(auth.bp)
-    app.register_blueprint(theme.bp)
+    app.register_blueprint(subscription.bp)
     app.register_blueprint(history.bp)
-    # app.register_blueprint(auth.bp)
-    # make url_for('index') == url_for('blog.index')
-    # in another app, you might define a separate main index here with
-    # app.route, while giving the blog blueprint a url_prefix, but for
-    # the tutorial the blog will be the main index
+    app.register_blueprint(playlist.bp)
+    app.register_blueprint(theme.bp)
+
     app.add_url_rule('/', endpoint='video.index', defaults={'page': 1})
-
-
 
 
 #    csrf = SeaSurf(app)
@@ -206,11 +195,6 @@ def create_app(test_config=None):
         frame_options_allow_from='*'
     )
 
-
-#    @app.route('/favicon.ico')
-#    def favicon():
-#        return send_from_directory(os.path.join(app.root_path, 'static'),
-#                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
         
     def url_for_other_page(page):
         args = request.view_args.copy()

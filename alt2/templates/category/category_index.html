@@ -18,8 +18,9 @@
 {% endblock %}
 {% block content %}
 
-{% include "widgets/navtabs.html" %}
-
+{% with active_nav='category' %}
+    {% include "widgets/navtabs.html" %}
+{% endwith %}
 
 <br>
 <br>

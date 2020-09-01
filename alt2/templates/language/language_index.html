@@ -18,9 +18,10 @@
 {% endblock %}
 {% block content %}
 
-{% include "widgets/navtabs.html" %}
+{% with active_nav='language' %}
+    {% include "widgets/navtabs.html" %}
+{% endwith %}
 
-<br>
 <br>
 <br>
 

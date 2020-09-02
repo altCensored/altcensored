@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-08-13 19:43+0000\n"
+"POT-Creation-Date: 2020-09-02 02:44+0000\n"
 "PO-Revision-Date: 2020-06-24 15:39+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es\n"
@@ -18,89 +18,74 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.8.0\n"
 
-#: templates/base.html:65
+#: settings.py:51 templates/widgets/navtabs.html:10
+#, python-format
+msgid "%(tab1)s"
+msgstr "video"
+
+#: settings.py:52 templates/widgets/navtabs.html:15
+#, python-format
+msgid "%(tab2)s"
+msgstr "canal"
+
+#: settings.py:53 templates/widgets/navtabs.html:20
+#, python-format
+msgid "%(tab3)s"
+msgstr "categoria"
+
+#: templates/base.html:67
 msgid "search"
 msgstr "buscar"
 
-#: templates/base.html:88
+#: templates/base.html:94
 msgid "About"
 msgstr "Sobre"
 
-#: templates/base.html:134
+#: templates/base.html:100
+msgid "Log In"
+msgstr ""
+
+#: templates/base.html:104
+msgid "Log Out"
+msgstr ""
+
+#: templates/base.html:163
 msgid "Released under the"
 msgstr "Lanzado bajo el"
 
-#: templates/about/about_index.html:26
-#: templates/category/category_index.html:16
-#: templates/category/category_item.html:33
-#: templates/channel/channel_index.html:39
-#: templates/channel/channel_item.html:36
-#: templates/language/language_index.html:30
-#: templates/language/language_item.html:13
-#: templates/settings/settings_index.html:26
-#: templates/video/video_index.html:43 templates/video/video_search.html:40
-msgid "Video"
-msgstr "Vídeo"
-
-#: templates/about/about_index.html:31
-#: templates/category/category_index.html:21
-#: templates/category/category_item.html:38
-#: templates/channel/channel_index.html:45
-#: templates/channel/channel_item.html:41
-#: templates/channel/channel_item.html:98
-#: templates/language/language_index.html:35
-#: templates/language/language_item.html:18
-#: templates/settings/settings_index.html:31
-#: templates/video/video_index.html:49 templates/video/video_search.html:45
-msgid "Channel"
-msgstr "Canal"
-
-#: templates/about/about_index.html:36
-#: templates/category/category_index.html:26
-#: templates/category/category_item.html:43
-#: templates/channel/channel_index.html:51
-#: templates/channel/channel_item.html:46
-#: templates/language/language_index.html:40
-#: templates/language/language_item.html:23
-#: templates/settings/settings_index.html:36
-#: templates/video/video_index.html:54 templates/video/video_item.html:82
-#: templates/video/video_search.html:50
-msgid "Category"
-msgstr "Categoría"
-
-#: templates/about/about_index.html:62
+#: templates/about/about_index.html:34
 msgid "limits"
 msgstr "limita"
 
-#: templates/about/about_index.html:63
+#: templates/about/about_index.html:35
 msgid "access to videos that are neither"
 msgstr "el acceso a las videos que no son"
 
-#: templates/about/about_index.html:65
+#: templates/about/about_index.html:37
 msgid "illegal"
 msgstr "ilegal"
 
-#: templates/about/about_index.html:66
+#: templates/about/about_index.html:38
 msgid "nor violate their own"
 msgstr "ni violar la suya"
 
-#: templates/about/about_index.html:68
+#: templates/about/about_index.html:40
 msgid "Terms and Conditions"
 msgstr "Términos y Condiciones"
 
-#: templates/about/about_index.html:68
+#: templates/about/about_index.html:40
 msgid "or"
 msgstr "o"
 
-#: templates/about/about_index.html:70 templates/about/about_index.html:85
+#: templates/about/about_index.html:42 templates/about/about_index.html:57
 msgid "Community Guidelines"
 msgstr "Principios de la Comunidad"
 
-#: templates/about/about_index.html:73
+#: templates/about/about_index.html:45
 msgid "\"Limited state\" videos"
 msgstr "Videos de \"estado limitado\""
 
-#: templates/about/about_index.html:74
+#: templates/about/about_index.html:46
 msgid ""
 "are placed behind a warning message, cannot be shared, monetized or "
 "easily found, and have likes, comments, view counts and suggested videos "
@@ -110,27 +95,27 @@ msgstr ""
 "monetizar o encontrar fácilmente, y likes, comentarios, recuentos de "
 "vistas y videos sugeridos estan dishabilitados"
 
-#: templates/about/about_index.html:79
+#: templates/about/about_index.html:51
 msgid "removes"
 msgstr "elimina"
 
-#: templates/about/about_index.html:80
+#: templates/about/about_index.html:52
 msgid "videos that violate their"
 msgstr "videos que violan sus"
 
-#: templates/about/about_index.html:82
+#: templates/about/about_index.html:54
 msgid "ever-changing"
 msgstr "siempre cambiante"
 
-#: templates/about/about_index.html:82
+#: templates/about/about_index.html:54
 msgid "and"
 msgstr "y"
 
-#: templates/about/about_index.html:84
+#: templates/about/about_index.html:56
 msgid "arbitrarily enforced"
 msgstr "aplicado arbitrariamente"
 
-#: templates/about/about_index.html:86
+#: templates/about/about_index.html:58
 msgid ""
 "while Creators increasingly \"self-censor\" trying to avoid channel "
 "strikes and terminations"
@@ -138,33 +123,33 @@ msgstr ""
 "mientras que los creadores se autocensuran cada vez más tratando de "
 "evitar las penalizaciones y las terminaciones de los canales"
 
-#: templates/about/about_index.html:90
+#: templates/about/about_index.html:62
 msgid "is an unbiased community catalog of"
 msgstr "es un catálogo comunitario imparcial de"
 
-#: templates/about/about_index.html:93
+#: templates/about/about_index.html:65
 msgid "limited state, removed, and self-censored YouTube videos across"
 msgstr ""
 "videos de YouTube de estado limitado, eliminados y autocensurados a "
 "través de"
 
-#: templates/about/about_index.html:96
+#: templates/about/about_index.html:68
 msgid "monitored channels, of which"
 msgstr "canales vigilados, de los cuales"
 
-#: templates/about/about_index.html:99
+#: templates/about/about_index.html:71
 msgid "have been deleted and"
 msgstr "han sido eliminados y"
 
-#: templates/about/about_index.html:102
+#: templates/about/about_index.html:74
 msgid "are being archived in case of deletion"
 msgstr "se archivan en caso de eliminación"
 
-#: templates/about/about_index.html:105
+#: templates/about/about_index.html:77
 msgid "Find videos and channels using the search bar"
 msgstr "Encuentra videos y canales usando la barra de búsqueda"
 
-#: templates/about/about_index.html:106
+#: templates/about/about_index.html:78
 msgid ""
 "Download videos with \"right mouse button click\" inside the video window"
 " or use the \"Download Torrent\" link. Channel and Video RSS Feeds"
@@ -173,250 +158,293 @@ msgstr ""
 "la ventana de video o use el enlace \"Descargar Torrent\". Canal y Video "
 "RSS Feeds"
 
-#: templates/about/about_index.html:110
+#: templates/about/about_index.html:82
 msgid "contain torrent links to easily download multiple videos"
 msgstr "contienen enlaces de torrent para descargar fácilmente múltiples videos"
 
-#: templates/about/about_index.html:111
+#: templates/about/about_index.html:83
 msgid "Embed videos in any website exactly like YouTube"
 msgstr "Embed videos en cualquier sitio web exactamente como YouTube"
 
-#: templates/about/about_index.html:114
+#: templates/about/about_index.html:86
 msgid "Email new channel suggestions to"
 msgstr "Enviar sugerencias de canales nuevos a"
 
-#: templates/category/category_item.html:77
+#: templates/auth/auth_reset_password.html:16
+#: templates/history/history_clear_watch.html:16
+#: templates/history/history_index.html:16
+#: templates/language/language_item.html:13
+msgid "Video"
+msgstr "Vídeo"
+
+#: templates/auth/auth_reset_password.html:21
+#: templates/channel/channel_item.html:71
+#: templates/history/history_clear_watch.html:21
+#: templates/history/history_index.html:21
+#: templates/language/language_item.html:18
+msgid "Channel"
+msgstr "Canal"
+
+#: templates/auth/auth_reset_password.html:26
+#: templates/history/history_clear_watch.html:26
+#: templates/history/history_index.html:26
+#: templates/language/language_item.html:23 templates/video/video_item.html:82
+msgid "Category"
+msgstr "Categoría"
+
+#: templates/category/category_item.html:51
+#: templates/category/category_item.html:65
+#: templates/category/category_item.html:78
 #: templates/category/category_item.html:91
-#: templates/category/category_item.html:104
-#: templates/category/category_item.html:117
-#: templates/channel/channel_index.html:132
-#: templates/channel/channel_index.html:147
-#: templates/channel/channel_index.html:162
-#: templates/channel/channel_index.html:177
+#: templates/channel/channel_index.html:104
+#: templates/channel/channel_index.html:119
+#: templates/channel/channel_index.html:134
+#: templates/channel/channel_index.html:149
+#: templates/channel/channel_index.html:164
+#: templates/channel/channel_index.html:178
 #: templates/channel/channel_index.html:192
-#: templates/channel/channel_index.html:206
-#: templates/channel/channel_index.html:220
 #: templates/language/language_item.html:143
 #: templates/language/language_item.html:157
 #: templates/language/language_item.html:171
 #: templates/language/language_item.html:186
-#: templates/video/video_index.html:92 templates/video/video_index.html:107
-#: templates/video/video_index.html:122 templates/video/video_index.html:137
-#: templates/video/video_search.html:149 templates/video/video_search.html:164
-#: templates/video/video_search.html:179 templates/video/video_search.html:209
+#: templates/video/video_index.html:65 templates/video/video_index.html:80
+#: templates/video/video_index.html:95 templates/video/video_index.html:110
+#: templates/video/video_search.html:109 templates/video/video_search.html:124
+#: templates/video/video_search.html:139 templates/video/video_search.html:169
 msgid "latest"
 msgstr "último"
 
-#: templates/category/category_item.html:80
+#: templates/category/category_item.html:54
+#: templates/category/category_item.html:68
+#: templates/category/category_item.html:81
 #: templates/category/category_item.html:94
-#: templates/category/category_item.html:107
-#: templates/category/category_item.html:120
-#: templates/channel/channel_index.html:135
-#: templates/channel/channel_index.html:150
-#: templates/channel/channel_index.html:165
-#: templates/channel/channel_index.html:180
+#: templates/channel/channel_index.html:107
+#: templates/channel/channel_index.html:122
+#: templates/channel/channel_index.html:137
+#: templates/channel/channel_index.html:152
+#: templates/channel/channel_index.html:167
+#: templates/channel/channel_index.html:181
 #: templates/channel/channel_index.html:195
-#: templates/channel/channel_index.html:209
-#: templates/channel/channel_index.html:223
-#: templates/channel/channel_item.html:145
-#: templates/channel/channel_item.html:155
-#: templates/channel/channel_item.html:165
+#: templates/channel/channel_item.html:118
+#: templates/channel/channel_item.html:128
+#: templates/channel/channel_item.html:138
 #: templates/language/language_item.html:146
 #: templates/language/language_item.html:160
 #: templates/language/language_item.html:174
 #: templates/language/language_item.html:189
-#: templates/video/video_index.html:95 templates/video/video_index.html:110
-#: templates/video/video_index.html:125 templates/video/video_index.html:140
-#: templates/video/video_search.html:152 templates/video/video_search.html:167
-#: templates/video/video_search.html:182 templates/video/video_search.html:197
-#: templates/video/video_search.html:212
+#: templates/video/video_index.html:68 templates/video/video_index.html:83
+#: templates/video/video_index.html:98 templates/video/video_index.html:113
+#: templates/video/video_search.html:112 templates/video/video_search.html:127
+#: templates/video/video_search.html:142 templates/video/video_search.html:157
+#: templates/video/video_search.html:172
 msgid "newest"
 msgstr "más nuevo"
 
-#: templates/category/category_item.html:83
+#: templates/category/category_item.html:57
+#: templates/category/category_item.html:71
+#: templates/category/category_item.html:84
 #: templates/category/category_item.html:97
-#: templates/category/category_item.html:110
-#: templates/category/category_item.html:123
-#: templates/channel/channel_index.html:138
-#: templates/channel/channel_index.html:153
-#: templates/channel/channel_index.html:168
-#: templates/channel/channel_index.html:183
+#: templates/channel/channel_index.html:110
+#: templates/channel/channel_index.html:125
+#: templates/channel/channel_index.html:140
+#: templates/channel/channel_index.html:155
+#: templates/channel/channel_index.html:170
+#: templates/channel/channel_index.html:184
 #: templates/channel/channel_index.html:198
-#: templates/channel/channel_index.html:212
-#: templates/channel/channel_index.html:226
-#: templates/channel/channel_item.html:148
-#: templates/channel/channel_item.html:158
-#: templates/channel/channel_item.html:168
+#: templates/channel/channel_item.html:121
+#: templates/channel/channel_item.html:131
+#: templates/channel/channel_item.html:141
 #: templates/language/language_item.html:149
 #: templates/language/language_item.html:163
 #: templates/language/language_item.html:177
 #: templates/language/language_item.html:192
-#: templates/video/video_index.html:98 templates/video/video_index.html:113
-#: templates/video/video_index.html:128 templates/video/video_index.html:143
-#: templates/video/video_search.html:155 templates/video/video_search.html:170
-#: templates/video/video_search.html:185 templates/video/video_search.html:200
-#: templates/video/video_search.html:215
+#: templates/video/video_index.html:71 templates/video/video_index.html:86
+#: templates/video/video_index.html:101 templates/video/video_index.html:116
+#: templates/video/video_search.html:115 templates/video/video_search.html:130
+#: templates/video/video_search.html:145 templates/video/video_search.html:160
+#: templates/video/video_search.html:175
 msgid "oldest"
 msgstr "más antiguo"
 
-#: templates/category/category_item.html:86
+#: templates/category/category_item.html:60
+#: templates/category/category_item.html:74
+#: templates/category/category_item.html:87
 #: templates/category/category_item.html:100
-#: templates/category/category_item.html:113
-#: templates/category/category_item.html:126
-#: templates/channel/channel_index.html:141
-#: templates/channel/channel_index.html:156
-#: templates/channel/channel_index.html:171
-#: templates/channel/channel_index.html:186
+#: templates/channel/channel_index.html:113
+#: templates/channel/channel_index.html:128
+#: templates/channel/channel_index.html:143
+#: templates/channel/channel_index.html:158
+#: templates/channel/channel_index.html:173
+#: templates/channel/channel_index.html:187
 #: templates/channel/channel_index.html:201
-#: templates/channel/channel_index.html:215
-#: templates/channel/channel_index.html:229
-#: templates/channel/channel_item.html:151
-#: templates/channel/channel_item.html:161
-#: templates/channel/channel_item.html:171
+#: templates/channel/channel_item.html:124
+#: templates/channel/channel_item.html:134
+#: templates/channel/channel_item.html:144
 #: templates/language/language_item.html:152
 #: templates/language/language_item.html:166
 #: templates/language/language_item.html:180
 #: templates/language/language_item.html:195
-#: templates/video/video_index.html:101 templates/video/video_index.html:116
-#: templates/video/video_index.html:131 templates/video/video_index.html:146
-#: templates/video/video_search.html:173 templates/video/video_search.html:188
-#: templates/video/video_search.html:203 templates/video/video_search.html:218
+#: templates/video/video_index.html:74 templates/video/video_index.html:89
+#: templates/video/video_index.html:104 templates/video/video_index.html:119
+#: templates/video/video_search.html:133 templates/video/video_search.html:148
+#: templates/video/video_search.html:163 templates/video/video_search.html:178
 msgid "popular"
 msgstr ""
 
-#: templates/category/category_item.html:161
-#: templates/channel/channel_item.html:214
+#: templates/category/category_item.html:135
+#: templates/channel/channel_item.html:187
+#: templates/history/history_index.html:85
 #: templates/language/language_item.html:231
-#: templates/video/video_index.html:187 templates/video/video_search.html:254
+#: templates/video/video_index.html:155 templates/video/video_search.html:214
 msgid "Published"
 msgstr "Publicado"
 
-#: templates/category/category_item.html:164
-#: templates/channel/channel_item.html:217
+#: templates/category/category_item.html:138
+#: templates/channel/channel_item.html:190
+#: templates/history/history_index.html:88
 #: templates/language/language_item.html:234
-#: templates/video/video_index.html:190 templates/video/video_item.html:154
-#: templates/video/video_search.html:257
+#: templates/video/video_index.html:158 templates/video/video_item.html:154
+#: templates/video/video_search.html:217
 msgid "views"
 msgstr "vistas"
 
-#: templates/channel/channel_index.html:71
-#: templates/channel/channel_index.html:75
+#: templates/channel/channel_index.html:43
+#: templates/channel/channel_index.html:47
 msgid "deleted"
 msgstr "eliminado"
 
-#: templates/channel/channel_index.html:82
-#: templates/channel/channel_index.html:86
+#: templates/channel/channel_index.html:54
+#: templates/channel/channel_index.html:58
 msgid "most limited"
 msgstr "más limitado"
 
-#: templates/channel/channel_index.html:94
-#: templates/channel/channel_index.html:98
+#: templates/channel/channel_index.html:66
+#: templates/channel/channel_index.html:70
 msgid "archived"
 msgstr "archivado"
 
-#: templates/channel/channel_index.html:260
-#: templates/channel/channel_item.html:82
+#: templates/channel/channel_index.html:231
+#: templates/channel/channel_item.html:55
 #: templates/language/language_item.html:86
-#: templates/video/video_search.html:86
+#: templates/video/video_search.html:45
 msgid "Limited"
 msgstr "Limitado"
 
-#: templates/channel/channel_index.html:263
+#: templates/channel/channel_index.html:234
 #: templates/language/language_item.html:88
-#: templates/video/video_search.html:89
+#: templates/video/video_search.html:48
 msgid "Total"
 msgstr ""
 
-#: templates/channel/channel_index.html:265
-#: templates/channel/channel_item.html:84
+#: templates/channel/channel_index.html:236
+#: templates/channel/channel_item.html:57
 #: templates/language/language_item.html:89 templates/video/video_item.html:80
-#: templates/video/video_search.html:91
+#: templates/video/video_search.html:50
 msgid "Views"
 msgstr "Vistas"
 
-#: templates/channel/channel_index.html:267
+#: templates/channel/channel_index.html:238
 #: templates/language/language_item.html:90
-#: templates/video/video_search.html:93
+#: templates/video/video_search.html:52
 msgid "Subs"
 msgstr ""
 
-#: templates/channel/channel_index.html:274
-#: templates/channel/channel_item.html:88
+#: templates/channel/channel_index.html:245
+#: templates/channel/channel_item.html:61
 #: templates/language/language_item.html:98
-#: templates/video/video_search.html:100
+#: templates/video/video_search.html:59
 msgid "Monitor"
 msgstr ""
 
-#: templates/channel/channel_index.html:275
-#: templates/channel/channel_item.html:89
+#: templates/channel/channel_index.html:246
+#: templates/channel/channel_item.html:62
 #: templates/language/language_item.html:99
 #: templates/language/language_item.html:103
-#: templates/video/video_search.html:101 templates/video/video_search.html:105
+#: templates/video/video_search.html:60
 msgid "True"
 msgstr "Sí"
 
-#: templates/channel/channel_index.html:276
-#: templates/channel/channel_item.html:90
+#: templates/channel/channel_index.html:247
+#: templates/channel/channel_item.html:63
 #: templates/language/language_item.html:100
 #: templates/language/language_item.html:104
-#: templates/video/video_search.html:102 templates/video/video_search.html:106
+#: templates/video/video_search.html:61
 msgid "False"
 msgstr "No"
 
-#: templates/channel/channel_index.html:278
-#: templates/channel/channel_item.html:92
+#: templates/channel/channel_index.html:249
+#: templates/channel/channel_item.html:65
 #: templates/language/language_item.html:102
-#: templates/video/video_search.html:104
+#: templates/video/video_search.html:63
 msgid "Archive"
 msgstr "Archivar"
 
-#: templates/channel/channel_index.html:279
-#: templates/channel/channel_item.html:93
+#: templates/channel/channel_index.html:250
+#: templates/channel/channel_item.html:66 templates/video/video_search.html:64
 msgid "Full"
 msgstr "Total"
 
-#: templates/channel/channel_index.html:280
-#: templates/channel/channel_item.html:94
+#: templates/channel/channel_index.html:251
+#: templates/video/video_search.html:65
 msgid "Part"
 msgstr "Parte"
 
-#: templates/channel/channel_index.html:281
-#: templates/channel/channel_item.html:95
+#: templates/channel/channel_index.html:252
+#: templates/channel/channel_item.html:68 templates/video/video_search.html:66
 msgid "None"
 msgstr "Nada"
 
-#: templates/channel/channel_index.html:292
-#: templates/channel/channel_item.html:125
+#: templates/channel/channel_index.html:263
+#: templates/channel/channel_item.html:98
 #: templates/language/language_item.html:114
-#: templates/video/video_search.html:117
+#: templates/video/video_search.html:77
 msgid "Created"
 msgstr "Creado"
 
-#: templates/channel/channel_index.html:295
-#: templates/channel/channel_item.html:132
-#: templates/video/video_search.html:120
+#: templates/channel/channel_index.html:266
+#: templates/channel/channel_item.html:105 templates/video/video_search.html:80
 msgid "Deleted"
 msgstr "Eliminado"
 
-#: templates/channel/channel_item.html:83
+#: templates/channel/channel_item.html:56
 msgid "Videos"
 msgstr "Vidéos"
 
-#: templates/channel/channel_item.html:85
+#: templates/channel/channel_item.html:58
 msgid "Subscribers"
 msgstr "Suscriptores"
 
-#: templates/channel/channel_item.html:99
+#: templates/channel/channel_item.html:67
+msgid "Partial"
+msgstr ""
+
+#: templates/channel/channel_item.html:72
 msgid "Stats"
 msgstr ""
 
-#: templates/settings/settings_index.html:60
+#: templates/settings/settings_index.html:31
 msgid "Language"
 msgstr "Idioma"
 
-#: templates/settings/settings_index.html:69
+#: templates/settings/settings_index.html:38
+msgid "Theme"
+msgstr ""
+
+#: templates/settings/settings_index.html:45
+msgid "Nav Menu"
+msgstr ""
+
+#: templates/settings/settings_index.html:65
 msgid "Save"
 msgstr "Salvar"
+
+#: templates/settings/settings_index.html:70
+msgid "Watch History"
+msgstr ""
+
+#: templates/settings/settings_index.html:75
+msgid "Clear Watch History"
+msgstr ""
 
 #: templates/video/video_item.html:75
 msgid "View on"

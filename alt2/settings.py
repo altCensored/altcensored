@@ -3,6 +3,7 @@ from flask import (
     )
 from werkzeug.exceptions import abort
 from sqlalchemy import func
+from flask_babelplus import Babel, gettext
 
 from .database import db_session
 from .models import Entity, Source, Mv_Video, Mv_Channel
@@ -46,6 +47,10 @@ def index():
     tab1_values.remove(session['navtabs']['tab1'])
     tab2_values.remove(session['navtabs']['tab2'])
     tab3_values.remove(session['navtabs']['tab3'])
+
+    gettext('%(tab1)s', tab1 = (tab1_values[0]))
+    gettext('%(tab2)s', tab2 = (tab1_values[1]))
+    gettext('%(tab3)s', tab3 = (tab1_values[2]))
 
     return render_template('settings/settings_index.html', videocount=videocount, \
         delchannelcount=delchannelcount,languages=languages,themes=themes, \

@@ -16,10 +16,25 @@ def index():
     if request.method == 'POST':
         session['locale'] = request.form['locale']
         session['theme'] = request.form['theme']
-        session['navtabs']['tab1'] = request.form['tab1_value']
-        session['navtabs']['tab2'] = request.form['tab2_value']
-        session['navtabs']['tab3'] = request.form['tab3_value']
 
+ #       session['navtabs']['tab1'] = request.form['tab1_value']
+ #       session['navtabs']['tab2'] = request.form['tab2_value']
+ #       session['navtabs']['tab3'] = request.form['tab3_value']
+        
+        navkey1 = (list(session['navtabs'].keys())[list(session['navtabs'].values()).index(request.form['tab1_value'])])
+        navkey2 = (list(session['navtabs'].keys())[list(session['navtabs'].values()).index(request.form['tab2_value'])])
+        navkey3 = (list(session['navtabs'].keys())[list(session['navtabs'].values()).index(request.form['tab3_value'])])
+
+        session['act_navtabs'].clear()
+        session['act_navtabs'][navkey1] = request.form['tab1_value']
+        session['act_navtabs'][navkey2] = request.form['tab2_value']
+        session['act_navtabs'][navkey3] = request.form['tab3_value']
+
+        session['tmp_navtabs'].clear()
+        session['tmp_navtabs']['tab1'] = request.form['tab1_value']
+        session['tmp_navtabs']['tab2'] = request.form['tab2_value']
+        session['tmp_navtabs']['tab3'] = request.form['tab3_value']
+        
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
     delchannelcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
 
@@ -44,13 +59,16 @@ def index():
 
     if session.get('navtabs') is None:
         get_navtabs()
-    tab1_values.remove(session['navtabs']['tab1'])
-    tab2_values.remove(session['navtabs']['tab2'])
-    tab3_values.remove(session['navtabs']['tab3'])
 
-    gettext('%(tab1)s', tab1 = (tab1_values[0]))
-    gettext('%(tab2)s', tab2 = (tab1_values[1]))
-    gettext('%(tab3)s', tab3 = (tab1_values[2]))
+    if session.get('act_navtabs') is None:
+        get_act_navtabs() 
+
+    if session.get('tmp_navtabs') is None:
+        get_tmp_navtabs() 
+
+    tab1_values.remove(session['tmp_navtabs']['tab1'])
+    tab2_values.remove(session['tmp_navtabs']['tab2'])
+    tab3_values.remove(session['tmp_navtabs']['tab3'])
 
     return render_template('settings/settings_index.html', videocount=videocount, \
         delchannelcount=delchannelcount,languages=languages,themes=themes, \

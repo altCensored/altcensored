@@ -15,6 +15,8 @@ IPROXYTWBIG="https://altcensored.com/ip/"
 
 SUPPORTED_LANGUAGES = {'en': 'English', 'de': 'Deutsch', 'es': 'Español', 'fr': 'Français', 'pt': 'Portuguese', 'nl': 'Nederlandse', 'it': 'Italiano', 'se': 'Sverige'}
 SUPPORTED_NAVTABS = {'tab1': 'video', 'tab2': 'channel', 'tab3': 'category', 'tab4': 'playlist', 'tab5': 'history', 'tab6': 'settings'}
+DEFAULT_NAVTABS = {'tab1': 'video', 'tab2': 'channel', 'tab3': 'category'}
+DEFAULT_NAVTAB1 = {'tab1': 'video'}
 SUPPORTED_THEMES = {'light', 'dark'}
 BABEL_DEFAULT_LOCALE = 'en'
 BABEL_DEFAULT_TIMEZONE = 'UTC'

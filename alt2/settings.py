@@ -47,9 +47,9 @@ def index():
     if session.get('navtabs') is None:
         get_navtabs()
 
-    tab1_values.remove(session['tmp_navtabs']['tab1'])
-    tab2_values.remove(session['tmp_navtabs']['tab2'])
-    tab3_values.remove(session['tmp_navtabs']['tab3'])
+    tab1_values.remove(session['navtabs']['tab1'])
+    tab2_values.remove(session['navtabs']['tab2'])
+    tab3_values.remove(session['navtabs']['tab3'])
 
     return render_template('settings/settings_index.html', videocount=videocount, \
         delchannelcount=delchannelcount,languages=languages,themes=themes, \

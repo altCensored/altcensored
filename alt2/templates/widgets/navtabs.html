@@ -8,17 +8,17 @@
             <div class="pure-u-1-3">
 
             <a href="{{ url_for(navtabs["tab1"] + '.index') }}" style="text-align:center;" class="pure-menu-heading {{'selected' if active_nav == navtabs["tab1"] }}"">
-            {{ gettext('%(tab1)s', tab1 = (navtabs["tab1"])) }}
+            {{ (navtabs["tab1"]) }}
             </a>
             </div>          
             <div class="pure-u-1-3">
             <a href="{{ url_for(navtabs["tab2"] + '.index') }}" style="text-align:center;" class="pure-menu-heading {{'selected' if active_nav == navtabs["tab2"] }}"">
-            {{ gettext('%(tab2)s', tab2 = (navtabs["tab2"])) }}
+            {{ (navtabs["tab2"]) }}
             </a>
             </div>       
             <div class="pure-u-1-3">
             <a href="{{ url_for(navtabs["tab3"] + '.index') }}" style="text-align:center;" class="pure-menu-heading {{'selected' if active_nav == navtabs["tab3"] }}"">
-            {{ gettext('%(tab3)s', tab3 = (navtabs["tab3"])) }}
+            {{ (navtabs["tab3"]) }}
             </a>
             </div>  
           </div>

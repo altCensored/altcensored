@@ -23,19 +23,6 @@ def get_navtabs():
         session['navtabs'] = config.SUPPORTED_NAVTABS
     return session['navtabs']
 
-def get_act_navtabs():
-    if 'act_navtabs' in session:
-        return session['act_navtabs']
-    else:
-        session['act_navtabs'] = config.DEFAULT_NAVTABS
-    return session['act_navtabs']
-
-def get_tmp_navtabs():
-    if 'tmp_navtabs' in session:
-        return session['tmp_navtabs']
-    else:
-        session['tmp_navtabs'] = config.DEFAULT_NAVTABS
-    return session['tmp_navtabs']
 
 def send_welcome_email(email,content):
     message = Mail(

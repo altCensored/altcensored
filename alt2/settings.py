@@ -17,9 +17,9 @@ def index():
         session['locale'] = request.form['locale']
         session['theme'] = request.form['theme']
 
-        session['navtabs']['tab1'] = request.form['tab1_value']
-        session['navtabs']['tab2'] = request.form['tab2_value']
-        session['navtabs']['tab3'] = request.form['tab3_value']
+        session['navtabs']['navtab1'] = request.form['navtab1_value']
+        session['navtabs']['navtab2'] = request.form['navtab2_value']
+        session['navtabs']['navtab3'] = request.form['navtab3_value']
         
         
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
@@ -40,17 +40,17 @@ def index():
     themes = themes_list
 
     navtab_values = (current_app.config['SUPPORTED_NAVTABS'].values())
-    tab1_values=list(navtab_values)
-    tab2_values=list(navtab_values)
-    tab3_values=list(navtab_values)
+    navtab1_values=list(navtab_values)
+    navtab2_values=list(navtab_values)
+    navtab3_values=list(navtab_values)
 
     if session.get('navtabs') is None:
         get_navtabs()
 
-    tab1_values.remove(session['navtabs']['tab1'])
-    tab2_values.remove(session['navtabs']['tab2'])
-    tab3_values.remove(session['navtabs']['tab3'])
+    navtab1_values.remove(session['navtabs']['navtab1'])
+    navtab2_values.remove(session['navtabs']['navtab2'])
+    navtab3_values.remove(session['navtabs']['navtab3'])
 
     return render_template('settings/settings_index.html', videocount=videocount, \
         delchannelcount=delchannelcount,languages=languages,themes=themes, \
-        tab1_values=tab1_values, tab2_values=tab2_values, tab3_values=tab3_values)
+        navtab1_values=navtab1_values, navtab2_values=navtab2_values, navtab3_values=navtab3_values)

@@ -452,10 +452,6 @@ ul.share-buttons img{
   position: relative;
 }
 
-.flash-dismiss-button::after {
-  content: '\00d7';
-}
-
 .flash-dismiss-button:hover {
   border-radius: 5px;
 }

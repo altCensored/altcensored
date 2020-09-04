@@ -2,6 +2,10 @@ from flask import session, request
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from itsdangerous import URLSafeTimedSerializer
+
+from sqlalchemy import func, text, desc
+from .database import db_session
+from .models import Translation
 from . import config
 
 def get_locale():
@@ -16,11 +20,30 @@ def get_theme():
     return session.get('theme', 'light')
 
 
+#def get_navtabs():
+#    if 'navtabs' in session:
+#        return session['navtabs']
+#    else:
+#        session['navtabs'] = config.SUPPORTED_NAVTABS
+
+#    return session['navtabs']
+
 def get_navtabs():
     if 'navtabs' in session:
         return session['navtabs']
+
     else:
-        session['navtabs'] = config.SUPPORTED_NAVTABS
+        session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys())
+#        session['locale'] = 'pt'
+
+        row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, session['locale'])).all()
+        rowtuple = tuple(row)
+        session['navtabs'] = dict(rowtuple)
+
+#        row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, session['locale'])).all()
+#        rowtuple = tuple(row)
+#        session['navtabs'] = dict(rowtuple)
+
     return session['navtabs']
 
 

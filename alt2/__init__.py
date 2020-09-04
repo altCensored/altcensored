@@ -125,6 +125,15 @@ def create_app(test_config=None):
             theme=util.get_theme(),
             current_url=quote_plus(request.url),
             navtabs=util.get_navtabs())
+#            navtabsnew=util.get_navtabs())
+
+#    @app.context_processor
+#    def inject_locale_and_theme2():
+#        return dict(
+#            navtabs=util.get_newnavtabs())
+
+
+
 
     def has_no_empty_params(rule):
         defaults = rule.defaults if rule.defaults is not None else ()

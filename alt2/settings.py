@@ -6,7 +6,7 @@ from sqlalchemy import func
 from flask_babelplus import Babel, gettext
 
 from .database import db_session
-from .models import Entity, Source, Mv_Video, Mv_Channel
+from .models import Entity, Source, Mv_Video, Mv_Channel, Translation
 from .util import get_locale, get_theme, get_navtabs
 
 bp = Blueprint('settings', __name__, url_prefix='/settings' )
@@ -50,6 +50,19 @@ def index():
     navtab1_values.remove(session['navtabs']['navtab1'])
     navtab2_values.remove(session['navtabs']['navtab2'])
     navtab3_values.remove(session['navtabs']['navtab3'])
+
+#    row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, session['locale'])).all()
+#    rowtuple = tuple(row)
+#    navtabs = dict(rowtuple)
+
+#    flash( navtabs, 'success')
+
+#    session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys())
+    row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, session['locale'])).all()
+    rowtuple = tuple(row)
+    newnavtabs = dict(rowtuple)
+
+#    flash( session['navtabs'], 'success')
 
     return render_template('settings/settings_index.html', videocount=videocount, \
         delchannelcount=delchannelcount,languages=languages,themes=themes, \

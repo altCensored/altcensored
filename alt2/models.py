@@ -257,3 +257,16 @@ class User(Base):
     watched = Column(ARRAY(Integer))
     created_date = Column(DateTime, nullable=True)
     email_verified_date = Column(DateTime, nullable=True)
+
+
+class Translation(Base):
+    __tablename__ = 'translation'
+    varname = Column(String, primary_key=True, nullable=False)
+    en = Column(String, nullable=False)
+    de = Column(String, nullable=True)
+    es = Column(String, nullable=True)
+    fr = Column(String, nullable=True)
+    pt = Column(String, nullable=True)
+    nl = Column(String, nullable=True)
+    it = Column(String, nullable=True)
+    se = Column(String, nullable=True)

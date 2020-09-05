@@ -20,32 +20,35 @@ def get_theme():
     return session.get('theme', 'light')
 
 
-#def get_navtabs():
-#    if 'navtabs' in session:
-#        return session['navtabs']
-#    else:
-#        session['navtabs'] = config.SUPPORTED_NAVTABS
-
-#    return session['navtabs']
-
 def get_navtabs():
     if 'navtabs' in session:
         return session['navtabs']
-
     else:
         session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys())
 #        session['locale'] = 'pt'
-
         row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, session['locale'])).all()
         rowtuple = tuple(row)
         session['navtabs'] = dict(rowtuple)
-
-#        row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, session['locale'])).all()
-#        rowtuple = tuple(row)
-#        session['navtabs'] = dict(rowtuple)
-
     return session['navtabs']
 
+
+def get_navtabs_index():
+    if 'navtabs_index' in session:
+        return session['navtabs_index']
+    else:
+        row = db_session.query(Translation).with_entities(Translation.varname,Translation.en).all()
+        rowtuple = tuple(row)
+        session['navtabs_index'] = dict(rowtuple)
+    return session['navtabs_index']
+
+
+def get_navtabs_perm():
+    session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys())
+#        session['locale'] = 'pt'
+    row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, session['locale'])).all()
+    rowtuple = tuple(row)
+    navtabs_perm = dict(rowtuple)
+    return navtabs_perm
 
 def send_welcome_email(email,content):
     message = Mail(

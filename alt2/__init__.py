@@ -124,8 +124,8 @@ def create_app(test_config=None):
             locale=util.get_locale(),
             theme=util.get_theme(),
             current_url=quote_plus(request.url),
-            navtabs=util.get_navtabs())
-#            navtabsnew=util.get_navtabs())
+            navtabs=util.get_navtabs(),
+            navtabs_index=util.get_navtabs_index())
 
 #    @app.context_processor
 #    def inject_locale_and_theme2():

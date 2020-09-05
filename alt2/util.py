@@ -54,7 +54,7 @@ def send_welcome_email(email,content):
     message = Mail(
     from_email='registration@altCensored.com',
     to_emails=email,
-    subject='Welcome to altCensored! Confirm your Email',
+    subject='Welcome to altCensored.com! Confirm your Email for Full Access',
     html_content=content)
 
     sg = SendGridAPIClient(config.SENDGRID_API_KEY)

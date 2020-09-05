@@ -49,7 +49,8 @@ def validate_user_email(email):
 
 def register_user(email, password):
     d = datetime.date.today()
-    user = User(email=email, password=generate_password_hash(password), created_date=d, email_verified=False)
+    dt = datetime.datetime.now(tz=None)
+    user = User(email=email, password=generate_password_hash(password), created_date=d, updated=dt, email_verified=False)
     db_session.add(user)
     db_session.commit()
     return user
@@ -129,6 +130,7 @@ def confirm_email(token):
     else:
         user.email_verified = True
         user.email_verified_date = datetime.date.today()
+        user.updated = datetime.datetime.now(tz=None)
         db_session.add(user)
         db_session.commit()
         flash('You have confirmed your account. Thanks!', 'success')

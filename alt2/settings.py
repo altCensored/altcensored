@@ -6,8 +6,9 @@ from sqlalchemy import func
 from flask_babelplus import Babel, gettext
 
 from .database import db_session
-from .models import Entity, Source, Mv_Video, Mv_Channel, Translation
+from .models import Mv_Video, Mv_Channel, Translation, User
 from .util import get_locale, get_theme, get_navtabs, get_navtabs_index, get_navtabs_perm
+import datetime
 
 bp = Blueprint('settings', __name__, url_prefix='/settings' )
 
@@ -58,6 +59,15 @@ def index():
         session['navtabs']['navtab2'] = fnt2
         session['navtabs']['navtab3'] = fnt3
   
+        if 'user' in session:
+            user = db_session.query(User).filter(User.email == session['user']['email']).one()
+            user.updated = datetime.datetime.now(tz=None)
+            user.locale = session['locale']
+            user.theme = session['theme'] 
+            user.navtabs =  [ session['navtabs']['navtab1'], session['navtabs']['navtab2'], session['navtabs']['navtab3'] ]
+            user.navtabs_index =  [ session['navtabs_index']['navtab1'], session['navtabs_index']['navtab2'], session['navtabs_index']['navtab3'] ]
+            db_session.commit()
+
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
     delchannelcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
 

@@ -258,6 +258,12 @@ class User(Base):
     created_date = Column(DateTime, nullable=True)
     email_verified_date = Column(DateTime, nullable=True)
     updated = Column(DateTime, nullable=True)
+    locale = Column(String, nullable=True)
+    theme = Column(String, nullable=True)
+    navtabs = Column(ARRAY(String))
+    navtabs_index = Column(ARRAY(String))
+    username = Column(String, nullable=True)
+    username_descrip = Column(String, nullable=True)
 
 class Translation(Base):
     __tablename__ = 'translation'

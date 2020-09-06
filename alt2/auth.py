@@ -7,7 +7,10 @@ from .models import User
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from . import util
-from .util import get_locale, send_welcome_email, send_forgot_password_email, generate_confirmation_token, confirm_token
+from .util import ( 
+    get_locale, get_theme, get_navtabs, get_navtabs_index, send_welcome_email, 
+    send_forgot_password_email, generate_confirmation_token, confirm_token
+    )
 import functools, datetime
 from email_validator import validate_email, EmailNotValidError
 
@@ -47,14 +50,28 @@ def validate_user_email(email):
     except EmailNotValidError as e:
         return e
 
-def register_user(email, password):
+def register_user(email, password): 
+    if session.get('locale') is None:
+        get_locale()
+    if session.get('theme') is None:
+        session['theme'] = get_theme()
+    if session.get('navtabs') is None:
+        get_navtabs()
+    if session.get('navtabs_index') is None:
+        get_navtabs_index()
+
     d = datetime.date.today()
     dt = datetime.datetime.now(tz=None)
-    user = User(email=email, password=generate_password_hash(password), created_date=d, updated=dt, email_verified=False)
+
+    user = User (
+        email=email, password=generate_password_hash(password), created_date=d, updated=dt, email_verified=False,
+        locale = session['locale'], theme = session['theme'], 
+        navtabs =  [ session['navtabs']['navtab1'], session['navtabs']['navtab2'], session['navtabs']['navtab3'] ], 
+        navtabs_index =  [ session['navtabs_index']['navtab1'], session['navtabs_index']['navtab2'], session['navtabs_index']['navtab3'] ], 
+        )
     db_session.add(user)
     db_session.commit()
     return user
-
 
 def send_confirm_email(email):
     token = generate_confirmation_token(email)
@@ -84,6 +101,17 @@ def login():
         if user_and_password_is_valid(email, password):
             user = db_session.query(User).filter(User.email==email).one()
             session['user'] = dict(id=user.id, email=user.email)
+            session['locale'] = user.locale
+            session['theme'] = user.theme
+
+            session['navtabs']['navtab1'] = user.navtabs[0]
+            session['navtabs']['navtab2'] = user.navtabs[1]
+            session['navtabs']['navtab3'] = user.navtabs[2]
+
+            session['navtabs_index']['navtab1'] = user.navtabs_index[0]
+            session['navtabs_index']['navtab2'] = user.navtabs_index[1]
+            session['navtabs_index']['navtab3'] = user.navtabs_index[2]
+
             if user.email_verified:
                 flash('You were successfully logged in', 'success')
                 return redirect(url_for('video.index'))
@@ -155,6 +183,14 @@ def reset_password(token):
 
 @bp.route('/logout')
 def logout():
-    session['user'] = None
+    user = db_session.query(User).filter(User.email == session['user']['email']).one()
+    user.updated = datetime.datetime.now(tz=None)
+    user.locale = session['locale']
+    user.theme = session['theme'] 
+    user.navtabs =  [ session['navtabs']['navtab1'], session['navtabs']['navtab2'], session['navtabs']['navtab3'] ]
+    user.navtabs_index =  [ session['navtabs_index']['navtab1'], session['navtabs_index']['navtab2'], session['navtabs_index']['navtab3'] ]
+    db_session.commit()
+    
     flash('Logout complete', 'success')
+    session['user'] = None
     return redirect(url_for('video.index'))

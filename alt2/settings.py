@@ -14,27 +14,12 @@ from .util import get_locale, get_theme, get_navtabs, get_navtabs_index, get_nav
 
 bp = Blueprint('settings', __name__, url_prefix='/settings' )
 
-def find_username_by_username(username):
-    try:
-        return db_session.query(User).filter(func.lower(User.username) == func.lower(User.username)).one()
-    except NoResultFound:
-        return None
 
 def username_exists(username):
     if username == session['user']['name']:
         return False
-    return find_username_by_username(username) is not None
-
-
-def username_exists2(username):
-    if username == session['user']['name']:
-        return False
-#    if db_session.query(User.username).filter_by(username=username).scalar() is not None:
     if db_session.query(User.username).filter(func.lower(User.username) == func.lower(username)).scalar() is not None:
         return True
-
-#models.User.query.filter_by(username="GANYE").first()
-#models.User.query.filter(func.lower(User.username) == func.lower("GaNyE")).first()
 
 
 @bp.route('/', methods=['GET', 'POST'])

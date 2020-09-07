@@ -3,14 +3,27 @@ from flask import (
     )
 from werkzeug.exceptions import abort
 from sqlalchemy import func
+from sqlalchemy.orm.exc import NoResultFound
 from flask_babelplus import Babel, gettext
+import datetime
 
 from .database import db_session
 from .models import Mv_Video, Mv_Channel, Translation, User
-from .util import get_locale, get_theme, get_navtabs, get_navtabs_index, get_navtabs_perm
-import datetime
+from .util import get_locale, get_theme, get_navtabs, get_navtabs_index, get_navtabs_perm, str_to_bool, contains_profanity
+
 
 bp = Blueprint('settings', __name__, url_prefix='/settings' )
+
+def find_username_by_username(username):
+    try:
+        return db_session.query(User).filter(User.username == username).one()
+    except NoResultFound:
+        return None
+
+def username_exists(username):
+    if username == session['user']['name']:
+        return False
+    return find_username_by_username(username) is not None
 
 @bp.route('/', methods=['GET', 'POST'])
 def index():
@@ -60,20 +73,46 @@ def index():
         session['navtabs']['navtab3'] = fnt3
   
         if 'user' in session:
+
+            fusername = request.form['username'].replace('None', '')
+            fdescription = request.form['description'].replace('None', '')
+            fpublic = str_to_bool(request.form['public'])
+
+            if contains_profanity(fusername):
+                flash('Profanity not allowed', 'error')
+                return redirect(url_for('settings.index'))
+            if contains_profanity(fdescription):
+                flash('Profanity not allowed', 'error')
+                return redirect(url_for('settings.index'))
+
+            if username_exists(fusername):
+                flash('Username already exists', 'error')
+                return redirect(url_for('settings.index'))
+ 
+            session['user']['name'] = fusername
+            session['user']['descrip'] = fdescription
+            session['user']['public'] = fpublic
+
             user = db_session.query(User).filter(User.email == session['user']['email']).one()
             user.updated = datetime.datetime.now(tz=None)
             user.locale = session['locale']
-            user.theme = session['theme'] 
+            user.theme = session['theme']
+            user.username = fusername
+            user.username_descrip = fdescription
+            user.user_public = fpublic
             user.navtabs =  [ session['navtabs']['navtab1'], session['navtabs']['navtab2'], session['navtabs']['navtab3'] ]
             user.navtabs_index =  [ session['navtabs_index']['navtab1'], session['navtabs_index']['navtab2'], session['navtabs_index']['navtab3'] ]
             db_session.commit()
 
+            flash('Success', 'success')
+            return redirect(url_for('settings.index'))
+
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
     delchannelcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
 
-    languages = (current_app.config['SUPPORTED_LANGUAGES'].keys())
-    languages=list(languages)
-    languages.remove(session['locale'])
+    locales = (current_app.config['SUPPORTED_LANGUAGES'].keys())
+    locales=list(locales)
+    locales.remove(session['locale'])
 
     themes = (current_app.config['SUPPORTED_THEMES'])
     themes=list(themes)
@@ -91,5 +130,5 @@ def index():
     navtab3_values.remove(session['navtabs']['navtab3'])
 
     return render_template('settings/settings_index.html', videocount=videocount, \
-        delchannelcount=delchannelcount,languages=languages,themes=themes, \
+        delchannelcount=delchannelcount, locales=locales, themes=themes, \
         navtab1_values=navtab1_values, navtab2_values=navtab2_values, navtab3_values=navtab3_values)

@@ -2,11 +2,15 @@ from flask import session, request
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from itsdangerous import URLSafeTimedSerializer
+from better_profanity import profanity
 
 from sqlalchemy import func, text, desc
 from .database import db_session
 from .models import Translation
 from . import config
+
+#custom_badwords = ['hitler', 'SS', 'holocaust']
+#profanity.add_censor_words(custom_badwords)
 
 def get_locale():
     if 'locale' in session:
@@ -47,6 +51,7 @@ def get_navtabs_perm():
     navtabs_perm = dict(rowtuple)
     return navtabs_perm
 
+
 def send_welcome_email(email,content):
     message = Mail(
     from_email='registration@altCensored.com',
@@ -85,3 +90,18 @@ def confirm_token(token, expiration=3600):
     except:
         return False
     return email
+
+
+def str_to_bool(s):
+    if s == 'True':
+        return True
+    elif s == 'False':
+        return False
+    else:
+        raise ValueError # evil ValueError that doesn't tell you what the wrong value was
+
+def contains_profanity(dirty_text):
+    if profanity.contains_profanity(dirty_text):
+        return True
+    else:
+        return False

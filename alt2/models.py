@@ -264,6 +264,7 @@ class User(Base):
     navtabs_index = Column(ARRAY(String))
     username = Column(String, nullable=True)
     username_descrip = Column(String, nullable=True)
+    user_public = Column(Boolean, nullable=False, default=False)
 
 class Translation(Base):
     __tablename__ = 'translation'

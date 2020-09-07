@@ -23,62 +23,79 @@
     <div class="pure-u-1 pure-u-md-2-24"></div>
       <div class="pure-u-1 pure-u-md-20-24">
         <div class="pure-g">
-
             <div class="pure-u-1 pure-u-md-1-1">
               <div class="h-box">
-
                 <form name=get_language method="post">
                   <p> {{ gettext('Language') }}:
                   <select name=locale>
-                    <option value= "{{locale}}" SELECTED>{{locale}}</option>"
-                    {% for language in languages %}
-                    <option value= "{{language}}">{{language}}</option>"
+                    <option value="{{locale}}" SELECTED>{{locale}}</option>"
+                    {% for locale in locales %}
+                    <option value="{{locale}}">{{locale}}</option>"
                     {% endfor %}
                   </select>
                   <p> {{ gettext('Theme') }}:
                   <select name=theme>
-                    <option value= "{{theme}}" SELECTED>{{theme}}</option>"             
+                    <option value="{{theme}}" SELECTED>{{theme}}</option>"             
                     {% for theme in themes %}
-                    <option value= "{{theme}}">{{theme}}</option>"
+                    <option value="{{theme}}">{{theme}}</option>"
                     {% endfor %}
                   </select>
-                  <p> {{ gettext('Nav Menu') }}:
+                  <p> {{ gettext('Menu') }}:
                   <select name=navtab1_value>
-                    <option value= "{{navtabs["navtab1"]}}" SELECTED>{{navtabs["navtab1"]}}</option>"   
+                    <option value="{{navtabs["navtab1"]}}" SELECTED>{{navtabs["navtab1"]}}</option>"   
                     {% for navtab1_value in navtab1_values %}
-                    <option value= "{{navtab1_value}}">{{navtab1_value}}</option>"
+                    <option value="{{navtab1_value}}">{{navtab1_value}}</option>"
                     {% endfor %}
                   </select>
                   <select name=navtab2_value>
-                    <option value= "{{navtabs["navtab2"]}}" SELECTED>{{navtabs["navtab2"]}}</option>"   
+                    <option value="{{navtabs["navtab2"]}}" SELECTED>{{navtabs["navtab2"]}}</option>"   
                     {% for navtab2_value in navtab2_values %}
-                    <option value= "{{navtab2_value}}">{{navtab2_value}}</option>"
+                    <option value="{{navtab2_value}}">{{navtab2_value}}</option>"
                     {% endfor %}
                   </select>
                   <select name=navtab3_value>
-                    <option value= "{{navtabs["navtab3"]}}" SELECTED>{{navtabs["navtab3"]}}</option>"   
+                    <option value="{{navtabs["navtab3"]}}" SELECTED>{{navtabs["navtab3"]}}</option>"   
                     {% for navtab3_value in navtab3_values %}
-                    <option value= "{{navtab3_value}}">{{navtab3_value}}</option>"
+                    <option value="{{navtab3_value}}">{{navtab3_value}}</option>"
                     {% endfor %}
                   </select>
                   <p>
-                  <input type="submit" name="submit" value="{{ gettext('Save') }}">
-                </form>
-                {% if session.user %}
+                  {% if session.user %}
+                  <p>
+                  <br>
+                  {{ session.user.email }}
+                  <hr>
+                  <p> {{ gettext('Username') }}:
+                  <input type="text" id="username" value="{{ session.user.name }}" name="username" maxlength="18">
+                  <p>
+                  <p> {{ gettext('Description') }}:
+                  <input type="text" id="description" value="{{ session.user.descrip }}" name="description" maxlength="50">
+                  <p>
+                  <p> {{ gettext('Public') }}:
+                  <select name=public>
+                    <option value= "{{session.user.public}}" SELECTED>{{session.user.public}}</option>"     
+                    {% if session.user.public %}        
+                      <option value=False>False</option>"
+                    {% else %}
+                      <option value=True>True</option>"
+                    {% endif %}
+                  </select>
                 <br>
+                <p>               
                 <a href="{{ url_for('history.index') }}">
-                    {{ gettext('Watch History') }}
+                    {{ gettext('History') }}
                 </a>
-                <br>
                 <br>
                 <a href="{{ url_for('history.clear_watch_history') }}">
-                    {{ gettext('Clear Watch History') }}
+                    {{ gettext('Clear History') }}
                 </a>
                 {% endif %}
+                <p>
+                <input type="submit" name="submit" value="{{ gettext('Save') }}">
+                </form>
                 <br>
               </div>
             </div>
-
         </div>
       </div>
     <div class="pure-u-1 pure-u-md-2-24"></div>

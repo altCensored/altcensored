@@ -24,3 +24,11 @@ def index(page):
     return render_template('user/user_index.html', 
         pagination=pagination, usercount=usercount, users=users)
 
+
+@bp.route('/<user>')
+def item(user):
+    user = db_session.query(User).filter(func.lower(User.username) == func.lower(user)).scalar()
+    if not user and page != 1:
+        abort(404)
+    return render_template('user/user_item.html', 
+        user=user)

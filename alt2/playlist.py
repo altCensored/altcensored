@@ -23,3 +23,11 @@ def index(page):
 
     return render_template('playlist/playlist_index.html', 
         pagination=pagination, usercount=usercount, users=users)
+
+@bp.route('/<username>')
+def item(username):
+    user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
+
+    if not username and page != 1:
+        abort(404)
+    return render_template('playlist/playlist_item.html', user=user)

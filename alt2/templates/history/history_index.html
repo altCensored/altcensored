@@ -22,7 +22,7 @@
           <div class="pure-g" style="text-align:right">
             <div class="pure-u-1 pure-md-1-1">
               <a href="{{ url_for('history.clear_watch_history') }}">
-              <i class='ion-ios-trash' style="font-size: 24px"></i></a>
+              <i class='ion-md-trash' style="font-size: 24px"></i></a>
             </div>
           </div>
         </div>
@@ -43,7 +43,7 @@
               {% else %}
               {% endif %}
               <a class="action" href="{{ url_for('history.remove_video', v=video['extractor_data']) }}">
-              <p class="watched"> <i class='ion-ios-trash' style="font-size: 24px"></p></i></a>
+              <p class="watched"> <i class='ion-md-trash' style="font-size: 24px"></p></i></a>
             </div>
            </a>
           <p><a class="action" href="{{ url_for('video.watch', v=video['extractor_data']) }}">

@@ -66,10 +66,10 @@
                   {{ session.user.email }}
                   <hr>
                   <p> {{ gettext('Username') }}:
-                  <input type="text" id="username" value="{{ session.user.name }}" name="username" maxlength="18">
+                  <input type="text" id="username" value="{{ session.user.username }}" name="username" maxlength="18">
                   <p>
                   <p> {{ gettext('Description') }}:
-                  <input type="text" id="description" value="{{ session.user.descrip }}" name="description" maxlength="50">
+                  <input type="text" id="description" value="{{ session.user.description }}" name="description" maxlength="50">
                   <p>
                   <p> {{ gettext('Public') }}:
                   <select name=public>

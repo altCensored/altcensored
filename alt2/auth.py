@@ -101,7 +101,7 @@ def login():
             return redirect(url_for('auth.login'))
         if user_and_password_is_valid(email, password):
             user = db_session.query(User).filter(User.email==email).one()
-            session['user'] = dict(id=user.id, email=user.email, name=user.username, descrip=user.username_descrip, public=user.user_public, )
+            session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public, )
             session['locale'] = user.locale
             session['theme'] = user.theme
 
@@ -129,7 +129,7 @@ def login():
                 return redirect(url_for('auth.login'))
             user = register_user(email, password)
             send_confirm_email(email)
-            session['user'] = dict(id=user.id, email=user.email, name=user.username, descrip=user.username_descrip, public=user.user_public, )
+            session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public, )
             flash('Confirmation email sent', 'success')
             return redirect(url_for('video.index'))
         elif submitvalue == 'reset':
@@ -153,7 +153,7 @@ def confirm_email(token):
         return redirect(url_for('video.index'))
     user = db_session.query(User).filter(User.email==email).one()
     if user.email_verified:
-        session['user'] = dict(id=user.id, email=user.email, name=user.username, descrip=user.username_descrip, public=user.user_public, )
+        session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public, )
         flash('Account already confirmed. Please login', 'success')
         return redirect(url_for('video.index'))
     else:

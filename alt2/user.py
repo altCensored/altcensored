@@ -14,8 +14,8 @@ PER_PAGE = 24
 @bp.route('/page/<int:page>')
 def index(page):
     offset = ((int(page)-1) * PER_PAGE)
-    usercount = User.query.filter(User.user_public).count()
-    users = User.query.filter(User.user_public).limit(PER_PAGE).offset(offset)
+    usercount = User.query.filter(User.public).count()
+    users = User.query.filter(User.public).limit(PER_PAGE).offset(offset)
 
     if not users and page != 1:
         abort(404)
@@ -25,11 +25,10 @@ def index(page):
         pagination=pagination, usercount=usercount, users=users)
 
 
-@bp.route('/<user>')
-def item(user):
-    user = User.query.filter(func.lower(User.username) == func.lower(user)).scalar()
+@bp.route('/<username>')
+def item(username):
+    user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
 
-    if not user and page != 1:
+    if not username and page != 1:
         abort(404)
-    return render_template('user/user_item.html', 
-        user=user)
+    return render_template('user/user_item.html', user=user)

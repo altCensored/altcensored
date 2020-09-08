@@ -16,15 +16,19 @@
     <div class="pure-g h-box">
       <div class="pure-u-1-2">
         <div class="pure-u-1 pure-md-1-1">
-          <i class='ion-ios-contacts'  style="font-size: 26px"></i>
+          <i class='ion-md-contacts'  style="font-size: 24px"></i>
           <b>&nbsp;{{ usercount | commafy }}</b>
         </div>
       </div>
       <div class="pure-u-1-2">
         <div class="pure-g" style="text-align:right">
           <div class="pure-u-1 pure-md-1-1">
-            <a href="{{ url_for('history.clear_watch_history') }}">
-              <i class='ion-ios-trash' style="font-size: 24px"></i></a>
+            {% if session.user %}
+            <a href="{{ url_for('settings.index') }}">
+              <i class='ion-md-create' style="font-size: 24px"></i>&nbsp;</a>
+            <a href="{{ url_for('user.item', username=session.user.username) }}">
+            {{ session.user.username }}</a>
+            {% endif %}  
           </div>
         </div>
       </div>
@@ -35,7 +39,6 @@
   </div>
 </div>
 
-
 <div class="pure-g">
   <div class="pure-u-1 pure-u-md-2-24"></div>
   <div class="pure-u-1 pure-u-md-20-24">
@@ -43,11 +46,11 @@
       {% for user in users %}
       <div class="pure-u-1 pure-u-md-1-4">
         <div class="h-box">
-          <a href="{{ url_for('user.item', user=user.username) }}">
+          <a href="{{ url_for('user.item', username=user.username) }}">
             <b>{{ user.username }}</b></a>
             <br>
             <br>
-            {{user.username_descrip | linkify | safe }}
+            {{ user.description | linkify | safe }}
             <br>
             (playlists go here. maybe allow fav video which appears here for a graphic effect?)
             <hr>
@@ -58,8 +61,6 @@
     </div>
   </div>
 </div>
-
-
     
 {% from "_helpers.html" import render_pagination %}
       <div class="pure-u-1 pure-u-md-4-4">
@@ -68,6 +69,4 @@
          </div>
       </div>
 
-
 {% endblock %}
-

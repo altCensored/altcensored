@@ -16,7 +16,7 @@ bp = Blueprint('settings', __name__, url_prefix='/settings' )
 
 
 def username_exists(username):
-    if username == session['user']['name']:
+    if username == session['user']['username']:
         return False
     if db_session.query(User.username).filter(func.lower(User.username) == func.lower(username)).scalar() is not None:
         return True
@@ -85,8 +85,8 @@ def index():
                 flash('Username already exists', 'error')
                 return redirect(url_for('settings.index'))
  
-            session['user']['name'] = fusername
-            session['user']['descrip'] = fdescription
+            session['user']['username'] = fusername
+            session['user']['description'] = fdescription
             session['user']['public'] = fpublic
 
             user = db_session.query(User).filter(User.email == session['user']['email']).one()
@@ -94,8 +94,8 @@ def index():
             user.locale = session['locale']
             user.theme = session['theme']
             user.username = fusername
-            user.username_descrip = fdescription
-            user.user_public = fpublic
+            user.description = fdescription
+            user.public = fpublic
             user.navtabs =  [ session['navtabs']['navtab1'], session['navtabs']['navtab2'], session['navtabs']['navtab3'] ]
             user.navtabs_index =  [ session['navtabs_index']['navtab1'], session['navtabs_index']['navtab2'], session['navtabs_index']['navtab3'] ]
             db_session.commit()

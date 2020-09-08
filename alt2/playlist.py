@@ -1,11 +1,25 @@
 from flask import (
-    Blueprint, flash, redirect, render_template, request, url_for,
-    send_from_directory, make_response, session, current_app )
-from . import util
+    Blueprint, session, render_template
+)
+
+from sqlalchemy import func
+from .models import User
+from .pagination import Pagination
 
 bp = Blueprint('playlist', __name__, url_prefix='/playlist')
 
+PER_PAGE = 24
 
-@bp.route('/')
-def index():
-    return render_template('playlist/playlist_index.html')
+@bp.route('/', defaults={'page': 1})
+@bp.route('/page/<int:page>')
+def index(page):
+    offset = ((int(page)-1) * PER_PAGE)
+    usercount = User.query.filter(User.public).count()
+    users = User.query.filter(User.public).limit(PER_PAGE).offset(offset)
+
+    if not users and page != 1:
+        abort(404)
+    pagination = Pagination(page, PER_PAGE, usercount)
+
+    return render_template('playlist/playlist_index.html', 
+        pagination=pagination, usercount=usercount, users=users)

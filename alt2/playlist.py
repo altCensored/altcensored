@@ -25,22 +25,21 @@ def title_exists(ftitle):
 @bp.route('/page/<int:page>')
 def index(page):
     offset = ((int(page)-1) * PER_PAGE)
-    usercount = User.query.filter(User.public).count()
-    users = User.query.filter(User.public).limit(PER_PAGE).offset(offset)
-    if not users and page != 1:
+    playlistcount = Playlist.query.filter(Playlist.public).count()
+    playlists = Playlist.query.filter(Playlist.public).limit(PER_PAGE).offset(offset)
+    if not playlists and page != 1:
         abort(404)
-    pagination = Pagination(page, PER_PAGE, usercount)
+    pagination = Pagination(page, PER_PAGE, playlistcount)
 
     return render_template('playlist/playlist_index.html', 
-        pagination=pagination, usercount=usercount, users=users)
+        pagination=pagination, playlistcount=playlistcount, playlists=playlists)
 
 
-@bp.route('/<username>')
-def item(username):
-    user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
-    if not username and page != 1:
-        abort(404)
-    return render_template('playlist/playlist_item.html', user=user)
+@bp.route('/<playlist>')
+def item(playlist):
+    playlist = Playlist.query.get(playlist)
+#    playlist = Playlist.query.filter(Playlist.id) == (playlist_id).scalar()
+    return render_template('playlist/playlist_item.html', playlist=playlist)
 
 
 @bp.route('/create', methods=['GET', 'POST'])
@@ -56,7 +55,7 @@ def create():
             return redirect(url_for('playlist.create'))
 
         hashids = Hashids(min_length=22)
-        hashid = 'UU' + hashids.encode(random.getrandbits(104))
+        hashid = 'AC' + hashids.encode(random.getrandbits(104))
 
         dt = datetime.datetime.now(tz=None)
         playlist = Playlist (title=ftitle, id=hashid, user_id=user_id, created=dt, public=False,)

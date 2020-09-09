@@ -1,17 +1,25 @@
 from flask import (
-    Blueprint, session, render_template, request, flash
+    Blueprint, session, render_template, request, flash, redirect, url_for
 )
 from sqlalchemy import func
 from hashids import Hashids
 from .database import db_session
 from .models import User, Playlist
 from .pagination import Pagination
-from .auth import login_required
+from .util import login_required
 import datetime, random
 
 bp = Blueprint('playlist', __name__, url_prefix='/playlist')
 
 PER_PAGE = 24
+
+def title_exists(ftitle):
+#    if username == session['user']['username']:
+#        return False
+    user_id = session['user']['id']
+#    if db_session.query(Playlist.title).filter(User.user_id) == (user_id).scalar() is not None:
+    if db_session.query(Playlist.title).filter((Playlist.title) == (ftitle)).filter((Playlist.user_id) == (user_id)).scalar() is not None:
+        return True
 
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
@@ -38,11 +46,14 @@ def item(username):
 @bp.route('/create', methods=['GET', 'POST'])
 @login_required
 def create():
-
     if request.method == 'POST':
         ftitle = request.form['title']
         fprivacy = request.form['privacy']
         user_id = session['user']['id']
+
+        if title_exists(ftitle):
+            flash('Title already exists', 'error')
+            return redirect(url_for('playlist.create'))
 
         hashids = Hashids(min_length=22)
         hashid = 'UU' + hashids.encode(random.getrandbits(104))

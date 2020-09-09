@@ -9,7 +9,7 @@ from . import util
 from .models import Mv_Video, Mv_Channel, Mv_Category, User
 from .database import db_session
 from .pagination import Pagination
-from .auth import login_required
+from .util import login_required
 
 
 bp = Blueprint('history', __name__, url_prefix='/history')

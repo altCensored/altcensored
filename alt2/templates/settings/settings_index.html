@@ -61,14 +61,25 @@
               <p>
               {% if session.user %}
               <p>
-              <br>
-              {{ session.user.email }}
+              <br> {{ session.user.email }}
+                {% if session.user.email_verified %}
+                {% else %}
+                &nbsp;&nbsp;<b>{{ gettext('(Not Verified)') }}</b>
+                {% endif %}
               <hr>
               <p> {{ gettext('Username') }}:
-              <input type="text" id="username" value="{{ session.user.username }}" name="username" maxlength="18">
+                {% if session.user.username %}
+                <input type="text" id="username" value="{{ session.user.username }}" name="username" maxlength="18">
+                {% else %}
+                <input type="text" id="username" placeholder="Username" name="username" maxlength="18">
+                {% endif %}
               <p>
               <p> {{ gettext('Description') }}:
-              <input type="text" id="description" value="{{ session.user.description }}" name="description" maxlength="50">
+                {% if session.user.description %}
+                <input type="text" id="description" value="{{ session.user.description }}" name="description" maxlength="50">
+                {% else %}
+                <input type="text" id="description" placeholder="Description" name="description" maxlength="50">
+                {% endif %}
               <p>
               <p> {{ gettext('Public') }}:
               <select name=public>

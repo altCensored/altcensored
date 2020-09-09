@@ -71,8 +71,8 @@ def index():
   
         if 'user' in session:
 
-            fusername = request.form['username'].replace('None', '')
-            fdescription = request.form['description'].replace('None', '')
+            fusername = request.form['username']
+            fdescription = request.form['description']
             fpublic = str_to_bool(request.form['public'])
 
             if contains_profanity(fusername):

@@ -11,19 +11,10 @@ from .util import (
     get_locale, get_theme, get_navtabs, get_navtabs_index, send_welcome_email, 
     send_forgot_password_email, generate_confirmation_token, confirm_token
     )
-import functools, datetime
+import datetime
 from email_validator import validate_email, EmailNotValidError
 
-
 bp = Blueprint('auth', __name__, url_prefix='/auth')
-
-def login_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if session.get('user') is None:
-            return redirect(url_for('video.index'))
-        return view(**kwargs)
-    return wrapped_view
 
 
 def find_user_by_email(email):
@@ -103,7 +94,8 @@ def login():
             return redirect(url_for('auth.login'))
         if user_and_password_is_valid(email, password):
             user = db_session.query(User).filter(User.email==email).one()
-            session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public, )
+            session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, 
+                public=user.public, email_verified=user.email_verified,)
             session['locale'] = user.locale
             session['theme'] = user.theme
 
@@ -115,13 +107,20 @@ def login():
             session['navtabs_index']['navtab2'] = user.navtabs_index[1]
             session['navtabs_index']['navtab3'] = user.navtabs_index[2]
 
-            if user.email_verified:
-                flash('You were successfully logged in', 'success')
-                return redirect(url_for('video.index'))
-            else:
+            if user.username is None and not user.email_verified:
+                send_confirm_email(email)
+                flash('Choose Username. Account not verified. Confirmation email resent', 'success')
+                return redirect(url_for('settings.index'))
+            elif user.username is None:
+                flash('Choose Username', 'success')
+                return redirect(url_for('settings.index'))
+            elif not user.email_verified:
                 send_confirm_email(email)
                 flash('Account not verified. Confirmation email resent', 'success')
-                return redirect(url_for('video.index'))
+            else:
+                flash('You were successfully logged in', 'success')
+            return redirect(url_for('video.index'))
+
         elif submitvalue == 'register':
             if not password:
                 flash('Enter Password', 'error')
@@ -134,6 +133,7 @@ def login():
             session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public, )
             flash('Confirmation email sent', 'success')
             return redirect(url_for('video.index'))
+
         elif submitvalue == 'reset':
             if not user_exists(email):
                 flash('User does not exist', 'error')
@@ -141,10 +141,10 @@ def login():
             send_reset_password_email(email)
             flash('Reset password email sent', 'success')
             return redirect(url_for('video.index'))
+
         else:
             flash('Email and password combination is invalid', 'error')
     return render_template('/auth/auth_index.html')
-
 
 
 @bp.route('/confirm/<token>', methods=['GET', 'POST'])

@@ -25,8 +25,6 @@
             {% if session.user %}
             <a href="{{ url_for('playlist.create') }}">
               <i class='ion-md-add' style="font-size: 24px"></i>&nbsp;</a>
-            <a href="{{ url_for('user.item', username=session.user.username) }}">
-            {{ session.user.username }}</a>
             {% endif %}  
           </div>
         </div>

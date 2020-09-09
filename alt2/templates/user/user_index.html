@@ -26,8 +26,6 @@
             {% if session.user %}
             <a href="{{ url_for('settings.index') }}">
               <i class='ion-md-create' style="font-size: 24px"></i>&nbsp;</a>
-            <a href="{{ url_for('user.item', username=session.user.username) }}">
-            {{ session.user.username }}</a>
             {% endif %}  
           </div>
         </div>

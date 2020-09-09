@@ -1,4 +1,4 @@
-from flask import session, request
+from flask import session, request, redirect, url_for
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from itsdangerous import URLSafeTimedSerializer
@@ -8,6 +8,7 @@ from sqlalchemy import func, text, desc
 from .database import db_session
 from .models import Translation
 from . import config
+import functools
 
 #custom_badwords = ['hitler', 'SS', 'holocaust']
 #profanity.add_censor_words(custom_badwords)
@@ -106,3 +107,12 @@ def contains_profanity(dirty_text):
         return True
     else:
         return False
+
+
+def login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if session.get('user') is None:
+            return redirect(url_for('video.index'))
+        return view(**kwargs)
+    return wrapped_view

@@ -277,3 +277,15 @@ class Translation(Base):
     nl = Column(String, nullable=True)
     it = Column(String, nullable=True)
     se = Column(String, nullable=True)
+
+class Playlist(Base):
+    __tablename__ = 'playlist'
+    title = Column(String, nullable=True)
+    id = Column(String, primary_key=True, nullable=False)
+    user_id = Column(Integer, nullable=False)
+    description = Column(String, nullable=True)
+    videos = Column(ARRAY(Integer))
+    video_count = Column(Integer, nullable=True)
+    created = Column(DateTime, nullable=True)
+    updated = Column(DateTime, nullable=True)
+    public = Column(Boolean, nullable=False, default=True)

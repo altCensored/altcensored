@@ -24,7 +24,6 @@ def index(page):
     return render_template('user/user_index.html', 
         pagination=pagination, usercount=usercount, users=users)
 
-
 @bp.route('/<username>')
 def item(username):
     user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()

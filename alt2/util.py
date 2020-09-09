@@ -100,6 +100,7 @@ def str_to_bool(s):
     else:
         raise ValueError # evil ValueError that doesn't tell you what the wrong value was
 
+
 def contains_profanity(dirty_text):
     if profanity.contains_profanity(dirty_text):
         return True

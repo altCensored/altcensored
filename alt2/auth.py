@@ -43,12 +43,14 @@ def user_and_password_is_valid(email, password):
         return False
     return check_password_hash(user.password, password)
 
+
 def validate_user_email(email):
     try:
         valid = validate_email(email)
         email = valid.email
     except EmailNotValidError as e:
         return e
+
 
 def register_user(email, password): 
     if session.get('locale') is None:

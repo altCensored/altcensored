@@ -98,17 +98,17 @@ def edit(playlist):
 def delete(playlist):
     playlistobj = Playlist.query.get(playlist)
     l_msg = lazy_gettext('Remove playlist')
-    playlist_title_quotes = (f'"{playlistobj.title}"')
-    message = l_msg + ' ' + playlist_title_quotes + '?'
+    item_quoted = (f'"{playlistobj.title}"')
+    message = l_msg + ' ' + item_quoted + '?'
     if request.method == 'POST':
         submitvalue = request.form['submitvalue']
         if submitvalue == 'yes':
             playlist = db_session.query(Playlist).filter(Playlist.id == playlist).one()
             db_session.delete(playlist)
             db_session.commit()
-            flash('Playlist ' + playlist_title_quotes + ' removed', 'success')
+            flash('Playlist ' + item_quoted + ' removed', 'success')
             return redirect(url_for('playlist.index'))
         else:
-            flash('Playlist ' + playlist_title_quotes + ' NOT removed', 'error')
+            flash('Playlist ' + item_quoted + ' NOT removed', 'error')
             return redirect(url_for('playlist.index'))
     return render_template('widgets/widgets_confirm.html', message=message)

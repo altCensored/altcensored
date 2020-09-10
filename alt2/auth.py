@@ -2,6 +2,7 @@ from flask import (
     Blueprint, redirect, request, current_app, session, render_template, flash, url_for
 )
 from sqlalchemy.orm.exc import NoResultFound
+from flask_babelplus import lazy_gettext
 from .database import db_session
 from .models import User
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -9,7 +10,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from . import util
 from .util import ( 
     get_locale, get_theme, get_navtabs, get_navtabs_index, send_welcome_email, 
-    send_forgot_password_email, generate_confirmation_token, confirm_token
+    send_forgot_password_email, generate_confirmation_token, confirm_token, login_required
     )
 import datetime
 from email_validator import validate_email, EmailNotValidError
@@ -94,8 +95,7 @@ def login():
             return redirect(url_for('auth.login'))
         if user_and_password_is_valid(email, password):
             user = db_session.query(User).filter(User.email==email).one()
-            session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, 
-                public=user.public, email_verified=user.email_verified,)
+            session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public, email_verified=user.email_verified)
             session['locale'] = user.locale
             session['theme'] = user.theme
 
@@ -130,9 +130,9 @@ def login():
                 return redirect(url_for('auth.login'))
             user = register_user(email, password)
             send_confirm_email(email)
-            session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public, )
-            flash('Confirmation email sent', 'success')
-            return redirect(url_for('video.index'))
+            session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public, email_verified=user.email_verified)
+            flash('Now Choose Username, Confirmation email sent', 'success')
+            return redirect(url_for('settings.index'))
 
         elif submitvalue == 'reset':
             if not user_exists(email):
@@ -155,7 +155,7 @@ def confirm_email(token):
         return redirect(url_for('video.index'))
     user = db_session.query(User).filter(User.email==email).one()
     if user.email_verified:
-        session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public, )
+        session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public, email_verified=user.email_verified)
         flash('Account already confirmed. Please login', 'success')
         return redirect(url_for('video.index'))
     else:
@@ -185,6 +185,7 @@ def reset_password(token):
 
 
 @bp.route('/logout')
+@login_required
 def logout():
     user = db_session.query(User).filter(User.email == session['user']['email']).one()
     user.updated = datetime.datetime.now(tz=None)
@@ -197,3 +198,26 @@ def logout():
     flash('Logout complete', 'success')
     session['user'] = None
     return redirect(url_for('video.index'))
+
+
+@bp.route('/delete', methods=['GET', 'POST'])
+@login_required
+def delete():
+    user_id = session['user']['id']
+    user_email = session['user']['email']
+    l_msg = lazy_gettext('Delete User ')
+    item_quoted = (f'"{user_email}"')
+    message = l_msg + ' ' + item_quoted + '?'
+    if request.method == 'POST':
+        submitvalue = request.form['submitvalue']
+        if submitvalue == 'yes':
+            user = db_session.query(User).filter(User.id == user_id).one()
+            db_session.delete(user)
+            db_session.commit()
+            flash(item_quoted + ' deleted', 'success')
+            session['user'] = None
+            return redirect(url_for('video.index'))
+        else:
+            flash(item_quoted + ' NOT deleted', 'error')
+            return redirect(url_for('video.index'))
+    return render_template('widgets/widgets_confirm.html', message=message)

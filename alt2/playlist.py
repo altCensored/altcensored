@@ -7,7 +7,8 @@ from .database import db_session
 from .models import User, Playlist
 from .pagination import Pagination
 from .util import login_required
-import datetime, random
+import random, timeago, datetime
+from datetime import timezone
 
 bp = Blueprint('playlist', __name__, url_prefix='/playlist')
 
@@ -38,8 +39,13 @@ def index(page):
 @bp.route('/<playlist>')
 def item(playlist):
     playlist = Playlist.query.get(playlist)
-#    playlist = Playlist.query.filter(Playlist.id) == (playlist_id).scalar()
-    return render_template('playlist/playlist_item.html', playlist=playlist)
+
+    updated = playlist.updated
+    now = datetime.datetime.now(timezone.utc) + datetime.timedelta(seconds = 60 * 3.4)
+    timediff = timeago.format(updated, now)
+#    timediff = (timeago.format('2016-05-27 12:12:03', '2016-05-27 12:12:12'))
+
+    return render_template('playlist/playlist_item.html', playlist=playlist, timediff=timediff)
 
 
 @bp.route('/create', methods=['GET', 'POST'])
@@ -57,8 +63,8 @@ def create():
         hashids = Hashids(min_length=22)
         hashid = 'AC' + hashids.encode(random.getrandbits(104))
 
-        dt = datetime.datetime.now(tz=None)
-        playlist = Playlist (title=ftitle, id=hashid, user_id=user_id, created=dt, public=False,)
+        now = datetime.now(timezone.utc)
+        playlist = Playlist (title=ftitle, id=hashid, user_id=user_id, created=now, updated=now, public=False,)
         db_session.add(playlist)
         db_session.commit()
 

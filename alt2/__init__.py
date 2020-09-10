@@ -4,7 +4,7 @@ from flask import Flask, send_from_directory, request, url_for, redirect, g, fla
 from flask_seasurf import SeaSurf
 from flask_talisman import Talisman
 from jinja2 import evalcontextfilter, Markup, escape
-from flask_babelplus import Babel, gettext, ngettext
+from flask_babelplus import Babel, gettext, lazy_gettext
 from urllib.parse import quote_plus
 
 import bleach

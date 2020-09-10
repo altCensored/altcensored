@@ -3,8 +3,8 @@ from flask import (
     send_from_directory, make_response, session, current_app )
 from sqlalchemy import func, text, case
 from sqlalchemy.orm.attributes import flag_modified
+from flask_babelplus import lazy_gettext
 from datetime import datetime, timedelta
-
 from . import util
 from .models import Mv_Video, Mv_Channel, Mv_Category, User
 from .database import db_session
@@ -39,6 +39,8 @@ def index(page):
 @bp.route('/clear_watch_history', methods=['GET', 'POST'])
 @login_required
 def clear_watch_history():
+    l_msg = lazy_gettext('Clear History')
+    message = l_msg + ' ?'
     if request.method == 'POST':
         submitvalue = request.form['submitvalue']
         if submitvalue == 'yes':
@@ -46,10 +48,12 @@ def clear_watch_history():
             user.watched = None
             flag_modified(user, "watched")
             db_session.commit()
+            flash('History cleared', 'success')
             return redirect('/')
         else:
-            return redirect('/')
-    return render_template('/history/history_clear_watch.html')
+            flash('History NOT cleared', 'error')
+            return redirect(url_for('history.index'))
+    return render_template('widgets/widgets_confirm.html', message=message)
 
 
 @bp.route('/remove_video')

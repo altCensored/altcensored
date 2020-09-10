@@ -22,11 +22,12 @@
       <div class="pure-u-1-2">
         <div class="pure-u-1 pure-md-1-1" style="text-align:right">
           {% if session.user.id == playlist.user_id %}
-            <a href="{{ url_for('playlist.create') }}">
-              <i class='ion-md-create' style="font-size: 24px"></i></a>
-              &nbsp;&nbsp;
-              <i class='ion-md-add' style="font-size: 24px"></i></a>
-            {% endif %}
+          <a href="{{ url_for('playlist.edit', playlist=playlist.id ) }}">
+            <i class='ion-md-create' style="font-size: 24px"></i></a>
+            &nbsp;&nbsp;
+          <a href="{{ url_for('playlist.delete', playlist=playlist.id ) }}">
+            <i class='ion-md-trash' style="font-size: 24px"></i></a>
+          {% endif %}
         </div>
       </div>
       <div class="pure-u-1-1">
@@ -48,6 +49,21 @@
           {{ playlist.description }}     
         </div>
       </div>
+
+      <div class="pure-u-1-2">
+        <div class="pure-u-1 pure-md-1-1">
+
+        </div>
+      </div>
+      <div class="pure-u-1-2">
+        <div class="pure-u-1 pure-md-1-1" style="text-align:right">
+          {% if session.user.id == playlist.user_id %}
+          <a href="{{ url_for('playlist.edit', playlist=playlist.id ) }}">
+            <i class='ion-md-add' style="font-size: 24px"></i></a>
+          {% endif %}
+        </div>
+      </div>
+
     </div>
     <div class="h-box">
       <hr>

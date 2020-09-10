@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block head %}
+
+{% endblock %}
+{% block content %}
+
+<br>
+<br>
+<br>
+<div class="pure-g">
+  <div class="pure-u-1 pure-u-md-2-24"></div>
+  <div class="pure-u-1 pure-u-md-20-24">
+    <div class="pure-g h-box">
+      <div class="pure-u-1 pure-u-md-1-1">
+        <form method="post">
+          {{ message }}&ensp;
+          <button type="submit" name="submitvalue" value="yes">Yes</button>&ensp;
+          <button type="submit" name="submitvalue" value="no">No</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

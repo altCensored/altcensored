@@ -2,6 +2,7 @@ from flask import (
     Blueprint, redirect, request, current_app, session, render_template, flash, url_for
 )
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy import func
 from flask_babelplus import lazy_gettext
 from .database import db_session
 from .models import User
@@ -13,6 +14,7 @@ from .util import (
     send_forgot_password_email, generate_confirmation_token, confirm_token, login_required
     )
 import datetime
+from datetime import timezone
 from email_validator import validate_email, EmailNotValidError
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -44,7 +46,19 @@ def validate_user_email(email):
         return e
 
 
-def register_user(email, password): 
+def email_exist(email):
+    if db_session.query(User.email).filter((User.email) == (email)).scalar() is not None:
+        return True
+
+
+def username_exist(username):
+    if username is None:
+        return False
+    if db_session.query(User.username).filter(func.lower(User.username) == func.lower(username)).scalar() is not None:
+        return True
+
+
+def register_user(email, password, username): 
     if session.get('locale') is None:
         get_locale()
     if session.get('theme') is None:
@@ -54,11 +68,10 @@ def register_user(email, password):
     if session.get('navtabs_index') is None:
         get_navtabs_index()
 
-    d = datetime.date.today()
-    dt = datetime.datetime.now(tz=None)
+    now = datetime.datetime.now(timezone.utc)
 
     user = User (
-        email=email, password=generate_password_hash(password), created_date=d, updated=dt, email_verified=False,
+        email=email, password=generate_password_hash(password), username=username, created_date=now, updated=now, email_verified=False,
         locale = session['locale'], theme = session['theme'], 
         navtabs =  [ session['navtabs']['navtab1'], session['navtabs']['navtab2'], session['navtabs']['navtab3'] ], 
         navtabs_index =  [ session['navtabs_index']['navtab1'], session['navtabs_index']['navtab2'], session['navtabs_index']['navtab3'] ], 
@@ -90,12 +103,43 @@ def login():
         password = request.form['password']
         submitvalue = request.form['submitvalue']
         ret_val = validate_user_email(email)
+        try:
+            username = request.form['username']
+        except:
+            username = None
+
         if ret_val is not None:
             flash(str(ret_val), 'error')
             return redirect(url_for('auth.login'))
+
+        if submitvalue == 'reset':
+            if not email_exist(email):
+                flash('User does not exist', 'error')
+                return redirect(url_for('auth.login'))
+            send_reset_password_email(email)
+            flash('Reset password email sent', 'success')
+            return redirect(url_for('video.index'))
+
+        if not email_exist(email) and session.get('register_email') is None:
+            session['register_email'] = email
+            return redirect(url_for('auth.login'))
+
+        if username_exist(username):
+            session['register_email'] = email
+            flash('Username exists', 'error')
+            return redirect(url_for('auth.login'))
+
+        if submitvalue == 'register':
+            user = register_user(email, password, username)
+            send_confirm_email(email)
+            session['register_email'] = None
+            session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public, email_verified=user.email_verified)
+            flash('Confirmation email sent', 'success')
+            return redirect(url_for('settings.index'))
+
         if user_and_password_is_valid(email, password):
             user = db_session.query(User).filter(User.email==email).one()
-            session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public, email_verified=user.email_verified)
+            session['user'] = dict(id=user.id, email=user.email, sername=user.username, description=user.description, public=user.public, email_verified=user.email_verified)
             session['locale'] = user.locale
             session['theme'] = user.theme
 
@@ -107,43 +151,16 @@ def login():
             session['navtabs_index']['navtab2'] = user.navtabs_index[1]
             session['navtabs_index']['navtab3'] = user.navtabs_index[2]
 
-            if user.username is None and not user.email_verified:
-                send_confirm_email(email)
-                flash('Choose Username. Account not verified. Confirmation email resent', 'success')
-                return redirect(url_for('settings.index'))
-            elif user.username is None:
-                flash('Choose Username', 'success')
-                return redirect(url_for('settings.index'))
-            elif not user.email_verified:
+            if not user.email_verified:
                 send_confirm_email(email)
                 flash('Account not verified. Confirmation email resent', 'success')
             else:
                 flash('You were successfully logged in', 'success')
             return redirect(url_for('video.index'))
 
-        elif submitvalue == 'register':
-            if not password:
-                flash('Enter Password', 'error')
-                return redirect(url_for('auth.login'))
-            if user_exists(email):
-                flash('User already exists', 'error')
-                return redirect(url_for('auth.login'))
-            user = register_user(email, password)
-            send_confirm_email(email)
-            session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public, email_verified=user.email_verified)
-            flash('Now Choose Username, Confirmation email sent', 'success')
-            return redirect(url_for('settings.index'))
-
-        elif submitvalue == 'reset':
-            if not user_exists(email):
-                flash('User does not exist', 'error')
-                return redirect(url_for('auth.login'))
-            send_reset_password_email(email)
-            flash('Reset password email sent', 'success')
-            return redirect(url_for('video.index'))
-
         else:
             flash('Email and password combination is invalid', 'error')
+
     return render_template('/auth/auth_index.html')
 
 
@@ -159,11 +176,13 @@ def confirm_email(token):
         flash('Account already confirmed. Please login', 'success')
         return redirect(url_for('video.index'))
     else:
+        now = datetime.datetime.now(timezone.utc)
         user.email_verified = True
-        user.email_verified_date = datetime.date.today()
-        user.updated = datetime.datetime.now(tz=None)
+        user.email_verified_date = now
+        user.updated = now
         db_session.add(user)
         db_session.commit()
+        session['user']['email_verified'] = True
         flash('You have confirmed your account. Thanks!', 'success')
     return redirect(url_for('video.index'))
 
@@ -187,8 +206,9 @@ def reset_password(token):
 @bp.route('/logout')
 @login_required
 def logout():
+    now = datetime.datetime.now(timezone.utc)
     user = db_session.query(User).filter(User.email == session['user']['email']).one()
-    user.updated = datetime.datetime.now(tz=None)
+    user.updated = now
     user.locale = session['locale']
     user.theme = session['theme'] 
     user.navtabs =  [ session['navtabs']['navtab1'], session['navtabs']['navtab2'], session['navtabs']['navtab3'] ]

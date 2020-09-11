@@ -116,3 +116,10 @@ def login_required(view):
             return redirect(url_for('video.index'))
         return view(**kwargs)
     return wrapped_view
+
+
+def username_exists(username):
+    if username == session['user']['username']:
+        return False
+    if db_session.query(User.username).filter(func.lower(User.username) == func.lower(username)).scalar() is not None:
+        return True

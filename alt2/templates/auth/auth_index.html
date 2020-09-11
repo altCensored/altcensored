@@ -17,20 +17,36 @@
         <div class="h-box">
           <form class="pure-form pure-form-aligned" method="post">
             <fieldset>
+              {% if session.register_email %}
               <div class="pure-control-group">
                 <label for="email">Email:</label>
-                <input name="email" id="email" required>
+                <input name="email" id="email" value="{{ session.register_email }}" required>
               </div>
               <div class="pure-control-group">
                 <label for="password">Password:</label>
-                <input type="password" name="password" id="password">
+                <input type="password" name="password" id="password" placeholder="Password" required>
+              </div>
+              <div class="pure-control-group">
+                <label for="password">Username:</label>
+                <input name="username" id="username" placeholder="Username" required>
               </div>
               <div class="pure-controls">
-                <button type="submit" name="submitvalue" value="login">Log In</button>
                 <button type="submit" name="submitvalue" value="register">Register</button>
-                &nbsp;
+              </div>
+              {% else %}
+              <div class="pure-control-group">
+                <label for="email">Email:</label>
+                <input name="email" id="email" placeholder="Email" required>
+              </div>
+              <div class="pure-control-group">
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password" placeholder="Password">
+              </div>
+              <div class="pure-controls">
+                <button type="submit" name="submitvalue" value="login">Sign In/Register</button>
                 <button type="submit" name="submitvalue" value="reset">Reset Password</button>
               </div>
+              {% endif %}
             </fieldset>
           </form>
         </div>

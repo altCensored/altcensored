@@ -6,6 +6,7 @@ from sqlalchemy import func
 from sqlalchemy.orm.exc import NoResultFound
 from flask_babelplus import Babel, gettext
 import datetime
+from datetime import timezone
 
 from .database import db_session
 from .models import Mv_Video, Mv_Channel, Translation, User
@@ -89,8 +90,9 @@ def index():
             session['user']['description'] = fdescription
             session['user']['public'] = fpublic
 
+            now = datetime.datetime.now(timezone.utc)
             user = db_session.query(User).filter(User.email == session['user']['email']).one()
-            user.updated = datetime.datetime.now(tz=None)
+            user.updated = now
             user.locale = session['locale']
             user.theme = session['theme']
             user.username = fusername

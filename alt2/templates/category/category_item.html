@@ -144,8 +144,7 @@
         <div class="thumbnail">
 
 
-          <img class="thumbnail" src="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['title'] | ia_fname ~ '-' ~ video['extractor_data'] ~ '.jpg' }}" onerror="this.onerror=null;this.src='https://{{ config['MYSERVER_NAME'] }}/image_error.gif';">     
-
+          <img class="thumbnail" src="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['title'] | ia_fname ~ '-' ~ video['extractor_data'] ~ '.jpg' }}" onerror="this.onerror=null;this.src='{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}';" >
           {% if video['duration']  is not none %}
             <p class="length">{{ video['duration'] | hourminsec }}</p>
             {% else %}

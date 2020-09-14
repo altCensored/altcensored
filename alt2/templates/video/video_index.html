@@ -133,11 +133,10 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/UCMLbmp5tcLxzahMLTmeM4lg/fee
               <p class="length">{{ video['duration'] | hourminsec }}</p>
               {% else %}
               {% endif %}
-              {% if session.user %}
 
-              <a class="action" href="{{ url_for('user.add_video', v=video['extractor_data']) }}">
+              {% if session.user %}
+              <a class="action" href="{{ url_for('user.add_video_watchlater', v=video['extractor_data']) }}">
               <p class="watchlater"> <i class='ion-md-time' style="font-size: 24px"></p></i></a>
-              
               {% endif %}
 
             </div>

@@ -36,7 +36,6 @@ def item(username):
         abort(404)
     return render_template('user/user_item.html', user=user)
 
-
 @bp.route('/history', defaults={'page': 1})
 @bp.route('/history/page/<int:page>')
 @login_required
@@ -56,9 +55,9 @@ def history(page):
         flash('No History Available', 'success')
         return redirect('/')
 
-@bp.route('/add_video')
+@bp.route('/remove_video_history')
 @login_required
-def add_video():
+def remove_video_history():
     video_id = request.args.get('v', None)
     user = User.query.filter(User.email == session['user']['email']).scalar()
     video = Mv_Video.query.get(video_id)
@@ -68,23 +67,9 @@ def add_video():
         db_session.commit()
     return redirect(url_for('user.history'))
 
-
-@bp.route('/remove_video')
+@bp.route('/clear_history', methods=['GET', 'POST'])
 @login_required
-def remove_video():
-    video_id = request.args.get('v', None)
-    user = User.query.filter(User.email == session['user']['email']).scalar()
-    video = Mv_Video.query.get(video_id)
-    if video.id in user.watched:
-        user.watched.remove(video.id)
-        flag_modified(user, "watched")
-        db_session.commit()
-    return redirect(url_for('user.history'))
-
-
-@bp.route('/clear_watch_history', methods=['GET', 'POST'])
-@login_required
-def clear_watch_history():
+def clear_history():
     user = User.query.filter(User.email == session['user']['email']).scalar()
     if not user.watched:
         flash('No History Available', 'success')
@@ -105,4 +90,74 @@ def clear_watch_history():
             return redirect(url_for('user.history'))
     return render_template('widgets/widgets_confirm.html', message=message)
 
+@bp.route('/watchlater', defaults={'page': 1})
+@bp.route('/watchlater/page/<int:page>')
+@login_required
+def watchlater(page):
+    offset = ((int(page)-1) * PER_PAGE)
+    user = User.query.filter(User.email == session['user']['email']).scalar()
+    if not user.watchlater:
+        flash('No WatchLater Available', 'success')
+        return redirect('/')
+    try:
+        ordering = case(
+            {id: index for index, id in reversed(list(enumerate(reversed(user.watchlater))))},
+            value=Mv_Video.id
+         )
+        videos = Mv_Video.query.filter(Mv_Video.id.in_(user.watchlater)).order_by(ordering).limit(PER_PAGE).offset(offset)
+        videocount = db_session.query(func.count(Mv_Video.id)).filter(Mv_Video.id.in_(user.watchlater)).scalar()
+        pagination = Pagination(page, PER_PAGE, videocount)  
+        return render_template('user/user_watchlater_index.html', pagination=pagination, videos=videos, videocount=videocount)
+    except:
+        flash('No Watch Later Available', 'success')
+        return redirect('/')
 
+@bp.route('/add_video_watchlater')
+@login_required
+def add_video_watchlater():
+    video_id = request.args.get('v', None)
+    video = Mv_Video.query.get(video_id)
+    user = db_session.query(User).filter(User.email == session['user']['email']).one()
+    try:
+        user.watchlater += [video.id]
+    except:
+        user.watchlater = [video.id]
+    flag_modified(user, "watchlater")
+    db_session.commit()
+    flash('Video Added to Watch Later', 'success')
+    return redirect(request.args.get('original_url', '/'))
+
+@bp.route('/remove_video_watchlater')
+@login_required
+def remove_video_watchlater():
+    video_id = request.args.get('v', None)
+    user = User.query.filter(User.email == session['user']['email']).scalar()
+    video = Mv_Video.query.get(video_id)
+    if video.id in user.watchlater:
+        user.watchlater.remove(video.id)
+        flag_modified(user, "watchlater")
+        db_session.commit()
+    return redirect(url_for('user.watchlater'))
+
+@bp.route('/clear_watchlater', methods=['GET', 'POST'])
+@login_required
+def clear_watchlater():
+    user = User.query.filter(User.email == session['user']['email']).scalar()
+    if not user.watched:
+        flash('No Watch Later Available', 'success')
+        return redirect('/')
+    l_msg = lazy_gettext('Clear Watch Later')
+    message = l_msg + ' ?'
+    if request.method == 'POST':
+        submitvalue = request.form['submitvalue']
+        if submitvalue == 'yes':
+            user = db_session.query(User).filter(User.email == session['user']['email']).one()
+            user.watchlater = None
+            flag_modified(user, "watchlater")
+            db_session.commit()
+            flash('Watch Later Cleared', 'success')
+            return redirect('/')
+        else:
+            flash('Watch Later NOT Cleared', 'error')
+            return redirect(url_for('user.history'))
+    return render_template('widgets/widgets_confirm.html', message=message)

@@ -101,18 +101,30 @@
                   {% endif %}
                 </select>
               </div>
-              <a href="{{ url_for('user.history') }}">
-                {{ gettext('History') }}
-              </a>
-              <br>
-              <a href="{{ url_for('user.clear_watch_history') }}">
-                {{ gettext('Clear History') }}
-              </a>
-              <br>
-              <a href="{{ url_for('auth.delete') }}">
-                {{ gettext('Delete Account') }}
-              </a>
-              {% endif %}
+              <div class="pure-controls">
+                <a href="{{ url_for('user.history') }}">
+                  {{ gettext('History') }}
+                </a>
+                <br>
+                <a href="{{ url_for('user.clear_history') }}">
+                  {{ gettext('Clear History') }}
+                </a>
+                <br>
+
+                <a href="{{ url_for('user.watchlater') }}">
+                  {{ gettext('WatchLater') }}
+                </a>
+                <br>
+                <a href="{{ url_for('user.clear_watchlater') }}">
+                  {{ gettext('Clear WatchLater') }}
+                </a>
+                <br>
+
+                <a href="{{ url_for('auth.delete') }}">
+                  {{ gettext('Delete Account') }}
+                </a>
+                {% endif %}
+              </div>
               <div class="pure-controls">
                 <input type="submit" name="submit" value="{{ gettext('Save') }}">
               </div>

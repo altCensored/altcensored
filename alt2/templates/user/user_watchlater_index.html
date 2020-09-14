@@ -15,13 +15,13 @@
         <div class="pure-u-1-2">
           <div class="pure-u-1 pure-md-1-1">
             <i class='ion-ios-film'  style="font-size: 24px"></i>
-            <b>&nbsp;{{ videocount | commafy }}</b>&nbsp;History
+            <b>&nbsp;{{ videocount | commafy }}&nbsp;</b>WatchLater
           </div>
         </div>
         <div class="pure-u-1-2">
           <div class="pure-g" style="text-align:right">
             <div class="pure-u-1 pure-md-1-1">
-              <a href="{{ url_for('user.clear_history') }}">
+              <a href="{{ url_for('user.clear_watchlater') }}">
               <i class='ion-md-trash' style="font-size: 24px"></i></a>
             </div>
           </div>
@@ -42,7 +42,7 @@
                 <p class="length">{{ video['duration'] | hourminsec }}</p>
               {% else %}
               {% endif %}
-              <a class="action" href="{{ url_for('user.remove_video_history', v=video['extractor_data']) }}">
+              <a class="action" href="{{ url_for('user.remove_video_watchlater', v=video['extractor_data']) }}">
               <p class="watched"> <i class='ion-md-trash' style="font-size: 24px"></p></i></a>
             </div>
            </a>

@@ -26,7 +26,15 @@ def index(page):
     videos = Mv_Video.query.order_by(Mv_Video.id.desc()).limit(PER_PAGE).offset(offset)
     if not videos and page != 1:
         abort(404)
-    pagination = Pagination(page, PER_PAGE, videocount)    
+    pagination = Pagination(page, PER_PAGE, videocount)
+
+    if session.get('user') is not None:
+        user = User.query.filter(User.email == session['user']['email']).scalar()
+        if user.watchlater:
+            return render_template('video/video_index.html', pagination=pagination, videos=videos, 
+            videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, 
+            order=order, watchlater=user.watchlater)
+
     return render_template('video/video_index.html', pagination=pagination, videos=videos, videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, order=order)
 
 
@@ -42,7 +50,6 @@ def feed(page):
     if not videos and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)
-
     template = render_template('video/video_index.xml', pagination=pagination, videos=videos, videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, order=order)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'

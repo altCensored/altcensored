@@ -102,29 +102,28 @@
                 </select>
               </div>
               <div class="pure-controls">
-                <a href="{{ url_for('user.history') }}">
+                <a href="{{ url_for('user.history')}}?original_url={{ current_url }}"}}">
                   {{ gettext('History') }}
                 </a>
                 <br>
-                <a href="{{ url_for('user.clear_history') }}">
+                <a href="{{ url_for('user.clear_history')}}?original_url={{ current_url }}"}}">
                   {{ gettext('Clear History') }}
                 </a>
                 <br>
 
-                <a href="{{ url_for('user.watchlater') }}">
+                <a href="{{ url_for('user.watchlater') }}?original_url={{ current_url }}"}}">
                   {{ gettext('WatchLater') }}
                 </a>
                 <br>
-                <a href="{{ url_for('user.clear_watchlater') }}">
+                <a href="{{ url_for('user.clear_watchlater')}}?original_url={{ current_url }}"}}">
                   {{ gettext('Clear WatchLater') }}
                 </a>
                 <br>
-
-                <a href="{{ url_for('auth.delete') }}">
+                <a href="{{ url_for('auth.delete') }}?original_url={{ current_url }}"}}">
                   {{ gettext('Delete Account') }}
                 </a>
-                {% endif %}
               </div>
+                {% endif %}
               <div class="pure-controls">
                 <input type="submit" name="submit" value="{{ gettext('Save') }}">
               </div>

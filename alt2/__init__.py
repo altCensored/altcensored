@@ -51,7 +51,6 @@ def create_app(test_config=None):
         if user is not None:
             return user.timezone 
 
-
     @app.template_filter('viewdisplay')
     def viewdisplay(views):
         if views < 1000:
@@ -73,7 +72,6 @@ def create_app(test_config=None):
 
         elif (views >= 10000000000) and (views < 1000000000000):
             return str(views // 1000000000) + 'B'
-
 
     @app.template_filter('commafy')
     def commafy(value):
@@ -126,14 +124,6 @@ def create_app(test_config=None):
             current_url=quote_plus(request.url),
             navtabs=util.get_navtabs(),
             navtabs_index=util.get_navtabs_index())
-
-#    @app.context_processor
-#    def inject_locale_and_theme2():
-#        return dict(
-#            navtabs=util.get_newnavtabs())
-
-
-
 
     def has_no_empty_params(rule):
         defaults = rule.defaults if rule.defaults is not None else ()
@@ -204,20 +194,12 @@ def create_app(test_config=None):
         frame_options='ALLOW_FROM',
         frame_options_allow_from='*'
     )
-
-
-#    @app.route('/favicon.ico')
-#    def favicon():
-#        return send_from_directory(os.path.join(app.root_path, 'static'),
-#                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
         
     def url_for_other_page(page):
         args = request.view_args.copy()
         args['page'] = page
         return url_for(request.endpoint, **args)
 
-
     app.jinja_env.globals['url_for_other_page'] = url_for_other_page
-
 
     return app

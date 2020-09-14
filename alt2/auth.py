@@ -153,7 +153,7 @@ def login():
 
         if user_and_password_is_valid(email, password):
             user = db_session.query(User).filter(User.email==email).one()
-            session['user'] = dict(id=user.id, email=user.email, sername=user.username, description=user.description, public=user.public, email_verified=user.email_verified)
+            session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public, email_verified=user.email_verified)
             session['locale'] = user.locale
             session['theme'] = user.theme
 
@@ -182,7 +182,7 @@ def login():
 def confirm_email(token):
     email = confirm_token(token)
     if email == False:
-        flash('The confirmation link is invalid or has expired', 'danger')
+        flash('The confirmation link is invalid or has expired', 'error')
         return redirect(url_for('video.index'))
     user = db_session.query(User).filter(User.email==email).one()
     if user.email_verified:
@@ -206,7 +206,7 @@ def confirm_email(token):
 def reset_password(token):
     email = confirm_token(token)
     if email == False:
-        flash('The reset password link is invalid or has expired', 'danger')
+        flash('The reset password link is invalid or has expired', 'error')
         return redirect(url_for('video.index'))
     if request.method == 'GET':
         return render_template('auth/auth_reset_password.html', locale=util.get_locale(), token=token)

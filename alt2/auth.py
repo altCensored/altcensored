@@ -4,18 +4,20 @@ from flask import (
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy import func
 from flask_babelplus import lazy_gettext
+from werkzeug.security import check_password_hash, generate_password_hash
+from captcha.image import ImageCaptcha
+from email_validator import validate_email, EmailNotValidError
+from datetime import timezone
+import datetime, os
+
 from .database import db_session
 from .models import User
-from werkzeug.security import check_password_hash, generate_password_hash
-
 from . import util
 from .util import ( 
     get_locale, get_theme, get_navtabs, get_navtabs_index, send_welcome_email, 
-    send_forgot_password_email, generate_confirmation_token, confirm_token, login_required
+    send_forgot_password_email, generate_confirmation_token, confirm_token, 
+    login_required, generate_random, create_captcha
     )
-import datetime
-from datetime import timezone
-from email_validator import validate_email, EmailNotValidError
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -29,6 +31,12 @@ def find_user_by_email(email):
 
 def user_exists(email):
     return find_user_by_email(email) is not None
+
+
+def generate_captcha():
+    session['myrandom'] = generate_random()
+    session['mycaptcha'] = 'captcha_tmp.png'
+    create_captcha(session['myrandom'], session['mycaptcha'])
 
 
 def user_and_password_is_valid(email, password):
@@ -122,6 +130,7 @@ def login():
 
         if not email_exist(email) and session.get('register_email') is None:
             session['register_email'] = email
+            generate_captcha()
             return redirect(url_for('auth.login'))
 
         if username_exist(username):
@@ -130,6 +139,11 @@ def login():
             return redirect(url_for('auth.login'))
 
         if submitvalue == 'register':
+            captcha = request.form['captcha']
+            if captcha.casefold() != session['myrandom'].casefold():
+                generate_captcha()
+                flash('Captcha not correct', 'error')
+                return redirect(url_for('auth.login'))
             user = register_user(email, password, username)
             send_confirm_email(email)
             session['register_email'] = None
@@ -182,7 +196,8 @@ def confirm_email(token):
         user.updated = now
         db_session.add(user)
         db_session.commit()
-        session['user']['email_verified'] = True
+        if session.get('user') is not None:
+            session['user']['email_verified'] = True
         flash('You have confirmed your account. Thanks!', 'success')
     return redirect(url_for('video.index'))
 

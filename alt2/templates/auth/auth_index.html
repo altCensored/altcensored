@@ -30,6 +30,16 @@
                 <label for="password">Username:</label>
                 <input name="username" id="username" placeholder="Username" required>
               </div>
+
+              <div class="pure-controls">
+                <img class="captcha" src="{{ url_for('static', filename = session.mycaptcha ) }}?{{ range(1, 101) | random }}" />
+              </div>
+
+              <div class="pure-control-group">
+                <label for="captcha">Captcha:</label>
+                <input name="captcha" id="captcha" placeholder="Captcha" required>
+              </div>
+
               <div class="pure-controls">
                 <button type="submit" name="submitvalue" value="register">Register</button>
               </div>

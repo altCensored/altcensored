@@ -1,14 +1,17 @@
-from flask import session, request, redirect, url_for
+from flask import (
+    session, request, redirect, url_for, current_app
+    )
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from itsdangerous import URLSafeTimedSerializer
 from better_profanity import profanity
-
 from sqlalchemy import func, text, desc
+from captcha.image import ImageCaptcha
 from .database import db_session
 from .models import Translation
 from . import config
-import functools
+import functools, os, string, random
+
 
 #custom_badwords = ['hitler', 'SS', 'holocaust']
 #profanity.add_censor_words(custom_badwords)
@@ -99,7 +102,7 @@ def str_to_bool(s):
     elif s == 'False':
         return False
     else:
-        raise ValueError # evil ValueError that doesn't tell you what the wrong value was
+        raise ValueError
 
 
 def contains_profanity(dirty_text):
@@ -123,3 +126,13 @@ def username_exists(username):
         return False
     if db_session.query(User.username).filter(func.lower(User.username) == func.lower(username)).scalar() is not None:
         return True
+
+
+def generate_random(size=4, chars=string.ascii_uppercase):
+    return ''.join(random.choice(chars) for _ in range(size))
+
+
+def create_captcha(myrandom, mycaptcha):
+    image = ImageCaptcha()
+    data = image.generate(str(myrandom))
+    image.write(str(myrandom), os.path.join(current_app.static_folder, mycaptcha))

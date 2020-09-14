@@ -153,7 +153,8 @@ def create_app(test_config=None):
     def shutdown_session(exception=None):
         db_session.remove()    
 
-    from . import video, channel, about, category, language, settings, auth, subscription, history, playlist, theme, user
+    from . import video, channel, about, category, language, settings, auth, subscription, playlist, theme, user
+
     app.register_blueprint(video.bp)
     app.register_blueprint(channel.bp)
     app.register_blueprint(about.bp)
@@ -162,7 +163,6 @@ def create_app(test_config=None):
     app.register_blueprint(settings.bp)
     app.register_blueprint(auth.bp)
     app.register_blueprint(subscription.bp)
-    app.register_blueprint(history.bp)
     app.register_blueprint(playlist.bp)
     app.register_blueprint(theme.bp)
     app.register_blueprint(user.bp)

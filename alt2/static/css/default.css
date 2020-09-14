@@ -94,7 +94,7 @@ img.thumbnail {
   padding: 2px;
   font-size: 16px;
   font-family: sans-serif;
-  right: 0.5em;
+  right: 0.2em;
   bottom: -0.5em;
 }
 
@@ -104,13 +104,26 @@ img.thumbnail {
   background-color: rgba(35, 35, 35, 0.75);
   color: #fff;
   border-radius: 2px;
-  padding: 4px 8px 4px 8px;
+  padding: 2px;
   font-size: 16px;
   font-family: sans-serif;
   left: 0.2em;
   top: -0.7em;
 }
 
+
+.watchlater {
+  z-index: 100;
+  position: absolute;
+  background-color: rgba(35, 35, 35, 0.75);
+  color: #fff;
+  border-radius: 2px;
+  padding: 2px;
+  font-size: 16px;
+  font-family: sans-serif;
+  right: 0.2em;
+  top: -0.7em;
+}
 /*
  * Navbar
  */

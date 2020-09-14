@@ -82,9 +82,6 @@ def index():
             if contains_profanity(fdescription):
                 flash('Profanity not allowed', 'error')
                 return redirect(url_for('settings.index'))
-            if username_exists(fusername):
-                flash('Username already exists', 'error')
-                return redirect(url_for('settings.index'))
  
             session['user']['username'] = fusername
             session['user']['description'] = fdescription

@@ -16,12 +16,13 @@
       <div class="pure-u-1-2">
         <div class="pure-u-1 pure-md-1-1">
           <b>{{ playlist.title }}</b>
-          <br><br>
+          <br>
+          <br>
         </div>
       </div>
       <div class="pure-u-1-2">
         <div class="pure-u-1 pure-md-1-1" style="text-align:right">
-          {% if session.user.id == playlist.user_id %}
+          {% if session.user %}
           <a href="{{ url_for('playlist.edit', playlist=playlist.id ) }}">
             <i class='ion-md-create' style="font-size: 24px"></i></a>
             &nbsp;&nbsp;
@@ -38,13 +39,11 @@
           <i class='ion-md-create'  style="font-size: 20px"></i>
           <b>&nbsp;{{ timediff }}</b>
           <b>&nbsp;|&nbsp;</b>
-          {% if session.user.public %}        
+          <i class='ion-ios-contact'  style="font-size: 20px"></i>
+          <b>{{ playlist.user.username }} </b>
+          <b>&nbsp;|&nbsp;</b>
           <i class='ion-md-globe'  style="font-size: 20px"></i>
           <b>Public</b>
-          {% else %}
-          <i class='ion-md-lock'  style="font-size: 20px"></i>
-          <b>Private</b>
-          {% endif %}
           <br><br>
           {{ playlist.description }}     
         </div>
@@ -57,9 +56,11 @@
       </div>
       <div class="pure-u-1-2">
         <div class="pure-u-1 pure-md-1-1" style="text-align:right">
+          {% if session.user %}
           {% if session.user.id == playlist.user_id %}
           <a href="{{ url_for('playlist.edit', playlist=playlist.id ) }}">
             <i class='ion-md-add' style="font-size: 24px"></i></a>
+          {% endif %}
           {% endif %}
         </div>
       </div>

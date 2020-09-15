@@ -33,12 +33,10 @@ def index(page):
 
     elif order == 'popular':
         playlists = Playlist.query.filter(Playlist.public)\
-        .join(User,Playlist.user_id == User.id)\
         .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
 
     else:
         playlists = Playlist.query.filter(Playlist.public)\
-        .join(User,Playlist.user_id == User.id)\
         .order_by(Playlist.id.asc()).limit(PER_PAGE).offset(offset)
 
 
@@ -52,7 +50,7 @@ def index(page):
 
 @bp.route('/<playlist>')
 def item(playlist):
-    playlist = Playlist.query.get(playlist)
+    playlist = Playlist.query.filter(Playlist.id == playlist).scalar()
 
     updated = playlist.updated
     now = datetime.datetime.now(timezone.utc) + datetime.timedelta(seconds = 60 * 3.4)

@@ -25,15 +25,23 @@ def title_exists(ftitle):
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
 def index(page):
+    order = request.args.get('order','newest')
     offset = ((int(page)-1) * PER_PAGE)
     playlistcount = Playlist.query.filter(Playlist.public).count()
-    playlists = Playlist.query.filter(Playlist.public).limit(PER_PAGE).offset(offset)
+
+    if order == session['user']['username']:
+        playlists = Playlist.query.filter(Playlist.public).order_by(Playlist.id.desc()).limit(PER_PAGE).offset(offset)
+    elif order == 'popular':
+        playlists = Playlist.query.filter(Playlist.public).order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
+    else:
+        playlists = Playlist.query.filter(Playlist.public).order_by(Playlist.id.desc()).limit(PER_PAGE).offset(offset)
+
     if not playlists and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, playlistcount)
 
     return render_template('playlist/playlist_index.html', 
-        pagination=pagination, playlistcount=playlistcount, playlists=playlists)
+        pagination=pagination, playlistcount=playlistcount, playlists=playlists, order=order)
 
 
 @bp.route('/<playlist>')

@@ -508,3 +508,8 @@ ul.share-buttons img{
 .pure-menu-heading.selected {
   font-weight: bold;
 }
+
+
+.pure-menu-item.selected {
+  font-weight: bold;
+}

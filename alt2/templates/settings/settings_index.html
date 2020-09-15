@@ -119,6 +119,10 @@
                   {{ gettext('Clear WatchLater') }}
                 </a>
                 <br>
+                <a href="{{ url_for('playlist.create')}}?original_url={{ current_url }}"}}">
+                  {{ gettext('Playlist Create') }}
+                </a>
+                <br>
                 <a href="{{ url_for('auth.delete') }}?original_url={{ current_url }}"}}">
                   {{ gettext('Delete Account') }}
                 </a>

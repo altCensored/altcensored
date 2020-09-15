@@ -14,18 +14,28 @@
   <div class="pure-u-1 pure-u-md-20-24">
     <div class="pure-g h-box">
       <div class="pure-u-1-2">
-        <div class="pure-u-1 pure-md-1-1">
+          <div class="pure-u-1 pure-md-1-2">
+            {% if session.user %}
+            <a href="{{ url_for('user.item', username=session.user.username) }}">
+              <b>{{ session.user.username }}</b></a>
+            {% endif %}
+          </div>
+        <div class="pure-u-1 pure-md-1-2">
           <i class='ion-md-contacts'  style="font-size: 24px"></i>
           <b>&nbsp;{{ usercount | commafy }}</b>
         </div>
       </div>
       <div class="pure-u-1-2">
         <div class="pure-g" style="text-align:right">
-          <div class="pure-u-1 pure-md-1-1">
-            {% if session.user %}
-            <a href="{{ url_for('settings.index') }}">
-              <i class='ion-md-create' style="font-size: 24px"></i>&nbsp;</a>
-            {% endif %}  
+          <div class="pure-u-1 pure-md-1-2">
+            <a href="{{ url_for('user.index', order='newest') }}" class="pure-menu-item {{'selected' if order == 'newest' }}">
+            {{ gettext('newest') }}</a>
+          </div>
+          <div class="pure-u-1 pure-md-1-2">
+            <a href="{{ url_for('user.index', order='popular') }}" class="pure-menu-item {{'selected' if order == 'popular' }}">
+            {{ gettext('popular') }}</a>
+          </div>
+          <div class="pure-u-1 pure-md-1-2">
           </div>
         </div>
       </div>

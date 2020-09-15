@@ -266,6 +266,10 @@ class User(Base):
     username = Column(String, nullable=True)
     description = Column(String, nullable=True)
     public = Column(Boolean, nullable=False, default=False)
+    view_counter = Column(Integer, nullable=True)
+    featured_video = Column(Integer, nullable=True)
+    featured_playlist = Column(Integer, nullable=True)
+
 
 class Translation(Base):
     __tablename__ = 'translation'
@@ -279,6 +283,7 @@ class Translation(Base):
     it = Column(String, nullable=True)
     se = Column(String, nullable=True)
 
+
 class Playlist(Base):
     __tablename__ = 'playlist'
     title = Column(String, nullable=True)
@@ -290,3 +295,4 @@ class Playlist(Base):
     created = Column(DateTime, nullable=True)
     updated = Column(DateTime, nullable=True)
     public = Column(Boolean, nullable=False, default=True)
+    view_counter = Column(Integer, nullable=True)

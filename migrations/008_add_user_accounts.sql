@@ -13,6 +13,9 @@ CREATE TABLE IF NOT EXISTS public.altcen_user (
     navtabs_index TEXT[],
     username TEXT,
     description TEXT,
+    view_counter integer,
+    featured_video integer,
+    featured_playlist integer,
     public BOOL NOT NULL DEFAULT FALSE
 );
 
@@ -26,9 +29,10 @@ CREATE TABLE IF NOT EXISTS public.playlist
     title text,
     id VARCHAR primary key,
     user_id INT REFERENCES public.altcen_user(id) ON DELETE CASCADE NOT NULL,
-    description text,    
-        videos INT[],
+    description text,
+    videos INT[],
     video_count integer,
+    view_counter integer,
     created timestamptz,
     updated timestamptz,
     public BOOL NOT NULL DEFAULT TRUE

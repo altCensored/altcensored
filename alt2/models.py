@@ -1,4 +1,6 @@
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, Interval, ARRAY
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, Interval, ARRAY, ForeignKey
+from sqlalchemy.orm import relationship
+
 from alt2.database import Base
 
 class Entity(Base):
@@ -270,6 +272,28 @@ class User(Base):
     featured_video = Column(Integer, nullable=True)
     featured_playlist = Column(Integer, nullable=True)
 
+    def __repr__(self):
+        return '<User %r>' % self.username
+
+
+class Playlist(Base):
+    __tablename__ = 'playlist'
+    title = Column(String, nullable=True)
+    id = Column(String, primary_key=True, nullable=False)
+    description = Column(String, nullable=True)
+    videos = Column(ARRAY(Integer))
+    video_count = Column(Integer, nullable=True)
+    created = Column(DateTime, nullable=True)
+    updated = Column(DateTime, nullable=True)
+    public = Column(Boolean, nullable=False, default=True)
+    view_counter = Column(Integer, nullable=True)
+
+    user_id = Column(Integer, ForeignKey('altcen_user.id'), nullable=False)
+    user = relationship("User", backref="playlist")
+
+    def __repr__(self):
+        return '<Playlist %r>' % self.title
+
 
 class Translation(Base):
     __tablename__ = 'translation'
@@ -282,17 +306,3 @@ class Translation(Base):
     nl = Column(String, nullable=True)
     it = Column(String, nullable=True)
     se = Column(String, nullable=True)
-
-
-class Playlist(Base):
-    __tablename__ = 'playlist'
-    title = Column(String, nullable=True)
-    id = Column(String, primary_key=True, nullable=False)
-    user_id = Column(Integer, nullable=False)
-    description = Column(String, nullable=True)
-    videos = Column(ARRAY(Integer))
-    video_count = Column(Integer, nullable=True)
-    created = Column(DateTime, nullable=True)
-    updated = Column(DateTime, nullable=True)
-    public = Column(Boolean, nullable=False, default=True)
-    view_counter = Column(Integer, nullable=True)

@@ -9,17 +9,11 @@ from datetime import timezone
 from .database import db_session
 from .models import User, Playlist
 from .pagination import Pagination
-from .util import login_required, str_to_bool
-
+from .util import login_required, str_to_bool, title_exists
 
 bp = Blueprint('playlist', __name__, url_prefix='/playlist')
 
 PER_PAGE = 24
-
-def title_exists(ftitle):
-    user_id = session['user']['id']
-    if db_session.query(Playlist.title).filter((Playlist.title) == (ftitle)).filter((Playlist.user_id) == (user_id)).scalar() is not None:
-        return True
 
 
 @bp.route('/', defaults={'page': 1})
@@ -29,12 +23,24 @@ def index(page):
     offset = ((int(page)-1) * PER_PAGE)
     playlistcount = Playlist.query.filter(Playlist.public).count()
 
-    if order == session['user']['username']:
-        playlists = Playlist.query.filter(Playlist.public).order_by(Playlist.id.desc()).limit(PER_PAGE).offset(offset)
+    if session.get('user') is not None and order == session['user']['username']:
+        user = User.query.filter(func.lower(User.username) == func.lower(order)).scalar()
+
+        playlists = Playlist.query.filter(Playlist.public)\
+        .join(User,Playlist.user_id == User.id)\
+        .filter(User.username == order)\
+        .order_by(Playlist.id.asc()).limit(PER_PAGE).offset(offset)
+
     elif order == 'popular':
-        playlists = Playlist.query.filter(Playlist.public).order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
+        playlists = Playlist.query.filter(Playlist.public)\
+        .join(User,Playlist.user_id == User.id)\
+        .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
+
     else:
-        playlists = Playlist.query.filter(Playlist.public).order_by(Playlist.id.desc()).limit(PER_PAGE).offset(offset)
+        playlists = Playlist.query.filter(Playlist.public)\
+        .join(User,Playlist.user_id == User.id)\
+        .order_by(Playlist.id.asc()).limit(PER_PAGE).offset(offset)
+
 
     if not playlists and page != 1:
         abort(404)

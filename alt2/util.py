@@ -8,7 +8,7 @@ from better_profanity import profanity
 from sqlalchemy import func, text, desc
 from captcha.image import ImageCaptcha
 from .database import db_session
-from .models import Translation
+from .models import Translation, Playlist
 from . import config
 import functools, os, string, random
 
@@ -136,3 +136,9 @@ def create_captcha(myrandom, mycaptcha):
     image = ImageCaptcha()
     data = image.generate(str(myrandom))
     image.write(str(myrandom), os.path.join(current_app.static_folder, mycaptcha))
+
+
+def title_exists(ftitle):
+    user_id = session['user']['id']
+    if db_session.query(Playlist.title).filter((Playlist.title) == (ftitle)).filter((Playlist.user_id) == (user_id)).scalar() is not None:
+        return True

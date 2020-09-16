@@ -124,6 +124,28 @@ img.thumbnail {
   right: 0.2em;
   top: -0.7em;
 }
+
+.watchlater {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.has-tooltip .tooltip {
+  display: none;
+}
+
+.has-tooltip:hover .tooltip {
+  display: flex;
+}
+
+.tooltip {
+  position: fixed;
+  background: rgba(35, 35, 35, 0.75);
+  padding: 10px 15px;
+  border-radius: 3px;
+}
+
 /*
  * Navbar
  */

@@ -8,40 +8,46 @@
     {% include "widgets/navtabs.html" %}
 {% endwith %}
 
-<br>
 <div class="pure-g">
   <div class="pure-u-1 pure-u-md-2-24"></div>
   <div class="pure-u-1 pure-u-md-20-24">
     <div class="pure-g h-box">
       <div class="pure-u-1-2">
-          <div class="pure-u-1 pure-md-1-2">
-            {% if session.user %}
-            <a href="{{ url_for('user.item', username=session.user.username) }}">
-              <b>{{ session.user.username }}</b></a>
-            &nbsp;
-            <a href="{{ url_for('settings.index') }}">
-              <i class='ion-md-create' style="font-size: 24px"></i></a>
-            {% endif %}
-          </div>
-        <div class="pure-u-1 pure-md-1-2">
+        <div class="pure-u-1 pure-md-1-4">
+        </div>
+        {% if session.user %}
+        <div class="pure-u-1 pure-md-2-4">
+          <a href="{{ url_for('user.item', username=session.user.username) }}">
+          <b>{{ session.user.username }}</b></a>
+          &nbsp;
+          <a href="{{ url_for('settings.index') }}">
+          <i class='ion-md-create' style="font-size: 24px"></i></a>
+        </div>
+        {% else %}
+        <div class="pure-u-1 pure-md-1-4">
+        </div>
+        <div class="pure-u-1 pure-md-1-4">
+        </div>
+        {% endif %}
+        <div class="pure-u-1 pure-md-1-4">
           <i class='ion-ios-contacts'  style="font-size: 24px"></i>
           <b>&nbsp;{{ usercount | commafy }}</b>
         </div>
       </div>
-      <div class="pure-u-1-2">
-        <div class="pure-g" style="text-align:right">
-          <div class="pure-u-1 pure-md-1-2">
-            <a href="{{ url_for('user.index') }}" class="pure-menu-item {{'selected' if order == 'newest' }}">
-            {{ gettext('newest') }}</a>
-          </div>
-          <div class="pure-u-1 pure-md-1-2">
-            <a href="{{ url_for('user.popular') }}" class="pure-menu-item {{'selected' if order == 'popular' }}">
-            {{ gettext('popular') }}</a>
-          </div>
-          <div class="pure-u-1 pure-md-1-2">
-          </div>
+      <div class="pure-u-1-2" style="text-align:right">
+        <div class="pure-u-1 pure-md-1-4">
         </div>
-      </div>
+        <div class="pure-u-1 pure-md-1-4">
+        </div>
+        <div class="pure-u-1 pure-md-1-4">
+          <a href="{{ url_for('user.index') }}" class="pure-menu-item {{'selected' if order == 'newest' }}">
+          {{ gettext('newest') }}</a>
+        </div>
+        <div class="pure-u-1 pure-md-1-4">
+          <a href="{{ url_for('user.popular') }}" class="pure-menu-item {{'selected' if order == 'popular' }}">
+          {{ gettext('popular') }}</a>
+        </div>
+    </div>
     </div>
     <div class="h-box">
       <hr>

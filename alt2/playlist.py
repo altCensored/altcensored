@@ -19,28 +19,40 @@ PER_PAGE = 24
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
 def index(page):
-    order = request.args.get('order','newest')
     offset = ((int(page)-1) * PER_PAGE)
-    playlistcount = Playlist.query.filter(Playlist.public).count()
+    order = 'newest'
 
     if session.get('user') is not None and order == session['user']['username']:
         user = User.query.filter(func.lower(User.username) == func.lower(order)).scalar()
-        playlistcount = Playlist.query.filter(Playlist.public).filter(Playlist.user_id == user.id).count()
 
+        playlistcount = Playlist.query.filter(Playlist.public).filter(Playlist.user_id == user.id).count()
         playlists = Playlist.query.filter(Playlist.public)\
         .join(User,Playlist.user_id == User.id)\
         .filter(User.username == order)\
-        .order_by(Playlist.id.asc()).limit(PER_PAGE).offset(offset)
-
-    elif order == 'popular':
-        playlistcount = Playlist.query.filter(Playlist.public).count()
-        playlists = Playlist.query.filter(Playlist.public)\
-        .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
+        .order_by(Playlist.id.desc()).limit(PER_PAGE).offset(offset)
 
     else:
         playlistcount = Playlist.query.filter(Playlist.public).count()
         playlists = Playlist.query.filter(Playlist.public)\
-        .order_by(Playlist.id.asc()).limit(PER_PAGE).offset(offset)
+        .order_by(Playlist.id.desc()).limit(PER_PAGE).offset(offset)
+
+    if not playlists and page != 1:
+        abort(404)
+    pagination = Pagination(page, PER_PAGE, playlistcount)
+
+    return render_template('playlist/playlist_index.html', 
+        pagination=pagination, playlistcount=playlistcount, playlists=playlists, order=order)
+
+
+@bp.route('/popular', defaults={'page': 1})
+@bp.route('/popular/page/<int:page>')
+def popular(page):
+    offset = ((int(page)-1) * PER_PAGE)
+    order = 'popular'
+
+    playlistcount = Playlist.query.filter(Playlist.public).count()
+    playlists = Playlist.query.filter(Playlist.public)\
+    .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
 
     if not playlists and page != 1:
         abort(404)

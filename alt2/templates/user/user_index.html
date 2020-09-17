@@ -31,11 +31,11 @@
       <div class="pure-u-1-2">
         <div class="pure-g" style="text-align:right">
           <div class="pure-u-1 pure-md-1-2">
-            <a href="{{ url_for('user.index', order='newest') }}" class="pure-menu-item {{'selected' if order == 'newest' }}">
+            <a href="{{ url_for('user.index') }}" class="pure-menu-item {{'selected' if order == 'newest' }}">
             {{ gettext('newest') }}</a>
           </div>
           <div class="pure-u-1 pure-md-1-2">
-            <a href="{{ url_for('user.index', order='popular') }}" class="pure-menu-item {{'selected' if order == 'popular' }}">
+            <a href="{{ url_for('user.popular') }}" class="pure-menu-item {{'selected' if order == 'popular' }}">
             {{ gettext('popular') }}</a>
           </div>
           <div class="pure-u-1 pure-md-1-2">

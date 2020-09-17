@@ -42,12 +42,14 @@
           <i class='ion-md-eye'  style="font-size: 20px"></i>
           <b>&nbsp;{{ user.view_counter }}</b>
           <b>&nbsp;|&nbsp;</b>
+          {% if session.user %}
           {% if session.user.public %}
           <i class='ion-md-globe'  style="font-size: 20px"></i>
           <b>Public</b>
           {% else %}
           <i class='ion-md-lock'  style="font-size: 20px"></i>
           <b>Private</b>"
+          {% endif %}
           {% endif %}
           <br><br>
           {{ user.description }}     

@@ -17,14 +17,28 @@ PER_PAGE = 24
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
 def index(page):
-    order = request.args.get('order','newest')
     offset = ((int(page)-1) * PER_PAGE)
+    order = 'newest'
     usercount = User.query.filter(User.public).count()
 
-    if order == 'popular':
-        users = User.query.filter(User.public).order_by(User.view_counter.desc()).limit(PER_PAGE).offset(offset)
-    else:
-        users = User.query.filter(User.public).order_by(User.id.desc()).limit(PER_PAGE).offset(offset)
+    users = User.query.filter(User.public).order_by(User.id.desc()).limit(PER_PAGE).offset(offset)
+
+    if not users and page != 1:
+        abort(404)
+    pagination = Pagination(page, PER_PAGE, usercount)
+
+    return render_template('user/user_index.html', 
+        pagination=pagination, usercount=usercount, users=users, order=order)
+
+
+@bp.route('/popular', defaults={'page': 1})
+@bp.route('/popular/page/<int:page>')
+def popular(page):
+    offset = ((int(page)-1) * PER_PAGE)
+    order = 'popular'
+    usercount = User.query.filter(User.public).count()
+
+    users = User.query.filter(User.public).order_by(User.view_counter.desc()).limit(PER_PAGE).offset(offset)
 
     if not users and page != 1:
         abort(404)

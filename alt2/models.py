@@ -280,8 +280,9 @@ class User(Base):
 
 class Playlist(Base):
     __tablename__ = 'playlist'
+    id = Column(Integer, primary_key=True, nullable=False)
+    hashid = Column(String, nullable=False)
     title = Column(String, nullable=True)
-    id = Column(String, primary_key=True, nullable=False)
     description = Column(String, nullable=True)
     videos = Column(ARRAY(Integer))
     video_count = Column(Integer, nullable=True)

@@ -90,7 +90,7 @@ def create():
         hashid = 'AC' + hashids.encode(random.getrandbits(104))
 
         now = datetime.datetime.now(timezone.utc)
-        playlist = Playlist (title=ftitle, description=fdescription, id=hashid, user_id=user_id, created=now, updated=now, public=fprivacy,)
+        playlist = Playlist (title=ftitle, description=fdescription, hashid=hashid, user_id=user_id, created=now, updated=now, public=fprivacy,)
         db_session.add(playlist)
         db_session.commit()
 

@@ -212,7 +212,7 @@ def reset_password(token):
         return render_template('auth/auth_reset_password.html', locale=util.get_locale(), token=token)
     elif request.method == 'POST':
         password = request.form['password']
-        db_session.query(User).filter(User.email == email).update({"password": bcrypt.hashpw(password.encode('utf8'), salt).decode('utf8')})
+        db_session.query(User).filter(User.email == email).update({"password": generate_password_hash(password),})
         db_session.commit()
         flash('Password has been updated', 'success')
         return redirect(url_for('video.index'))
@@ -246,7 +246,7 @@ def delete():
     if request.method == 'POST':
         submitvalue = request.form['submitvalue']
         if submitvalue == 'yes':
-            user = db_session.query(User).filter(User.id == user_id).one()
+            user = db_session.query(User).filter(User.id == user_id).first()
             db_session.delete(user)
             db_session.commit()
             flash(item_quoted + ' deleted', 'success')
@@ -254,5 +254,5 @@ def delete():
             return redirect(url_for('video.index'))
         else:
             flash(item_quoted + ' NOT deleted', 'error')
-            return redirect(url_for('video.index'))
+            return redirect(request.args.get('original_url', '/'))
     return render_template('widgets/widgets_confirm.html', message=message)

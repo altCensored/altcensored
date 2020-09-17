@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, Interval, ARRAY, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 from alt2.database import Base
 
@@ -272,6 +272,8 @@ class User(Base):
     featured_video = Column(Integer, nullable=True)
     featured_playlist = Column(Integer, nullable=True)
 
+    playlists = relationship("Playlist", cascade="all, delete-orphan")
+
     def __repr__(self):
         return '<User %r>' % self.username
 
@@ -287,8 +289,8 @@ class Playlist(Base):
     updated = Column(DateTime, nullable=True)
     public = Column(Boolean, nullable=False, default=True)
     view_counter = Column(Integer, nullable=True)
-
     user_id = Column(Integer, ForeignKey('altcen_user.id'), nullable=False)
+
     user = relationship("User", backref="playlist")
 
     def __repr__(self):

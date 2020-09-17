@@ -25,6 +25,7 @@ def index(page):
 
     if session.get('user') is not None and order == session['user']['username']:
         user = User.query.filter(func.lower(User.username) == func.lower(order)).scalar()
+        playlistcount = Playlist.query.filter(Playlist.public).filter(Playlist.user_id == user.id).count()
 
         playlists = Playlist.query.filter(Playlist.public)\
         .join(User,Playlist.user_id == User.id)\
@@ -32,13 +33,14 @@ def index(page):
         .order_by(Playlist.id.asc()).limit(PER_PAGE).offset(offset)
 
     elif order == 'popular':
+        playlistcount = Playlist.query.filter(Playlist.public).count()
         playlists = Playlist.query.filter(Playlist.public)\
         .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
 
     else:
+        playlistcount = Playlist.query.filter(Playlist.public).count()
         playlists = Playlist.query.filter(Playlist.public)\
         .order_by(Playlist.id.asc()).limit(PER_PAGE).offset(offset)
-
 
     if not playlists and page != 1:
         abort(404)
@@ -64,6 +66,7 @@ def item(playlist):
 def create():
     if request.method == 'POST':
         ftitle = request.form['title']
+        fdescription = request.form['description']        
         fprivacy = str_to_bool(request.form['privacy'])
         user_id = session['user']['id']
 
@@ -75,7 +78,7 @@ def create():
         hashid = 'AC' + hashids.encode(random.getrandbits(104))
 
         now = datetime.datetime.now(timezone.utc)
-        playlist = Playlist (title=ftitle, id=hashid, user_id=user_id, created=now, updated=now, public=fprivacy,)
+        playlist = Playlist (title=ftitle, description=fdescription, id=hashid, user_id=user_id, created=now, updated=now, public=fprivacy,)
         db_session.add(playlist)
         db_session.commit()
 

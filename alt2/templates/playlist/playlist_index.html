@@ -18,6 +18,9 @@
             {% if session.user %}
             <a href="{{ url_for('playlist.index', order=session.user.username) }}">
               <b>{{ session.user.username }}</b></a>
+            &nbsp;
+            <a href="{{ url_for('playlist.create') }}">
+              <i class='ion-md-add-circle' style="font-size: 24px"></i></a>
             {% endif %}
           </div>
         <div class="pure-u-1 pure-md-1-2">
@@ -57,6 +60,7 @@
             <b>{{ playlist.title }}</b></a>
             <br>
             <br>
+{#            Owner: {{ playlist.user.username }}  #}
             Owner: {{ playlist.user.username }}
             <br>
             Descr: {{ playlist.description }}

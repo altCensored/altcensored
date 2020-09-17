@@ -6,7 +6,7 @@ from sqlalchemy import func, case
 from sqlalchemy.orm.attributes import flag_modified
 from flask_babelplus import lazy_gettext
 from .database import db_session
-from .models import User, Mv_Video
+from .models import User, Mv_Video, Playlist
 from .pagination import Pagination
 from .util import login_required
 
@@ -37,10 +37,11 @@ def index(page):
 @bp.route('/<username>')
 def item(username):
     user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
+    playlistcount = Playlist.query.filter(Playlist.public).filter(Playlist.user_id == user.id).count()
 
     if not username and page != 1:
         abort(404)
-    return render_template('user/user_item.html', user=user)
+    return render_template('user/user_item.html', user=user, playlistcount=playlistcount)
 
 
 @bp.route('/history', defaults={'page': 1})

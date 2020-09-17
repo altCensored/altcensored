@@ -9,32 +9,69 @@
 {% endwith %}
 
 <br>
-
 <div class="pure-g">
   <div class="pure-u-1 pure-u-md-2-24"></div>
   <div class="pure-u-1 pure-u-md-20-24">
-    <div class="pure-g">
-      <div class="pure-u-1 pure-u-md-1-1">
-        <div class="h-box">
+    <div class="pure-g h-box">
+      <div class="pure-u-1-2">
+        <div class="pure-u-1 pure-md-1-1">
             <i class='ion-ios-contact' style="font-size: 24px"></i></a>
             <b>{{ user.username }}</b>
-            {% if session.user %}
-            <a href="{{ url_for('settings.index') }}">
-              &nbsp;
-              <i class='ion-md-create' style="font-size: 24px"></i></a>
-            {% endif %}              
-            <br>
-            <br>
-            {{ user.description | linkify | safe }}
-            <br>
-            (playlists go here. maybe allow fav video which appears here for a graphic effect?)
-          </a>
+          <br>
+          <br>
+        </div>
+      </div>
+      <div class="pure-u-1-2">
+        <div class="pure-u-1 pure-md-1-1" style="text-align:right">
+          {% if session.user %}
+          {% if session.user.id == user.id %}
+          <a href="{{ url_for('settings.index' ) }}">
+            <i class='ion-md-create' style="font-size: 24px"></i></a>
+            &nbsp;&nbsp;
+          <a href="{{ url_for('auth.delete') }}?original_url={{ current_url }}"}}">
+            <i class='ion-md-trash' style="font-size: 24px"></i></a>
+          {% endif %}
+          {% endif %}
+        </div>
+      </div>
+      <div class="pure-u-1-1">
+        <div class="pure-u-1 pure-md-1-1">
+          <i class='ion-md-list'  style="font-size: 24px"></i>
+          <b>&nbsp;{{ playlistcount }}</b>
+          <b>&nbsp;|&nbsp;</b>
+          <i class='ion-md-eye'  style="font-size: 20px"></i>
+          <b>&nbsp;{{ user.view_counter }}</b>
+          <b>&nbsp;|&nbsp;</b>
+          {% if session.user.public %}
+          <i class='ion-md-globe'  style="font-size: 20px"></i>
+          <b>Public</b>
+          {% else %}
+          <i class='ion-md-lock'  style="font-size: 20px"></i>
+          <b>Private</b>"
+          {% endif %}
+          <br><br>
+          {{ user.description }}     
+        </div>
+      </div>
+      <div class="pure-u-1-2">
+        <div class="pure-u-1 pure-md-1-1">
+        </div>
+      </div>
+      <div class="pure-u-1-2">
+        <div class="pure-u-1 pure-md-1-1" style="text-align:right">
+          {% if session.user %}
+          {% if session.user.id == user.id %}
+          <a href="{{ url_for('settings.index' ) }}">
+            <i class='ion-md-add' style="font-size: 24px"></i></a>
+          {% endif %}
+          {% endif %}
         </div>
       </div>
     </div>
+    <div class="h-box">
+      <hr>
+    </div>
   </div>
 </div>
-
-<br>
 
 {% endblock %}

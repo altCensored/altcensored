@@ -34,8 +34,37 @@
                   <option value=False>Private</option>"
                 </select>
               </div>
-              <div class="pure-controls">
-              <input type="submit" name="submit" value="{{ gettext('Create Playlist') }}">
+
+              <div class="pure-control-group">
+                <label for="Videos">
+                <i class='ion-md-add-circle' style="font-size: 24px"></i></a>
+                
+                {{ gettext('Videos') }}:</label>
+
+
+
+{#              <div class="pure-controls"> #}
+
+                <button class="pure-button" type="submit" name="submit" value="reset">
+                <i class='ion-md-done-all'  style="font-size: 24px"></i>
+                {{ gettext('History') }}
+                </button>
+
+                <button class="pure-button" type="submit" name="submit" value="reset">
+                <i class='ion-md-time'  style="font-size: 24px"></i>
+                {{ gettext('WatchLater') }}
+                </button>
+
+                <button class="pure-button" type="submit" name="submit" value="reset">
+                <i class='ion-md-search'  style="font-size: 24px"></i>
+                {{ gettext('Search') }}
+                </button>
+
+              </div>
+
+{#
+                <button class="pure-button" type="submit" name="submit" value="reset">{{ gettext('Create Playlist') }}</button>
+                #}
               </div>
             </fieldset>
           </form>

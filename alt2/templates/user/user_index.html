@@ -20,7 +20,7 @@
           <a href="{{ url_for('user.item', username=session.user.username) }}">
           <b>{{ session.user.username }}</b></a>
           &nbsp;
-          <a href="{{ url_for('settings.index') }}">
+          <a href="{{ url_for('settings.index') }}?original_url={{ current_url }}"}}">
           <i class='ion-md-create' style="font-size: 24px"></i></a>
         </div>
         {% else %}

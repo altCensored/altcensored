@@ -58,6 +58,17 @@ def item(username):
     return render_template('user/user_item.html', user=user, playlistcount=playlistcount)
 
 
+
+@bp.route('/edit/<username>')
+def edit(username):
+    user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
+    playlistcount = Playlist.query.filter(Playlist.public).filter(Playlist.user_id == user.id).count()
+
+    if not username and page != 1:
+        abort(404)
+    return render_template('user/user_item_edit.html', user=user, playlistcount=playlistcount)
+
+
 @bp.route('/history', defaults={'page': 1})
 @bp.route('/history/page/<int:page>')
 @login_required

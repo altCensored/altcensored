@@ -229,8 +229,7 @@ def logout():
     user.navtabs =  [ session['navtabs']['navtab1'], session['navtabs']['navtab2'], session['navtabs']['navtab3'] ]
     user.navtabs_index =  [ session['navtabs_index']['navtab1'], session['navtabs_index']['navtab2'], session['navtabs_index']['navtab3'] ]
     db_session.commit()
-    
-    flash('Logout complete', 'success')
+
     session['user'] = None
     return redirect(url_for('video.index'))
 

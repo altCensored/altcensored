@@ -99,8 +99,7 @@ def index():
             user.navtabs_index =  [ session['navtabs_index']['navtab1'], session['navtabs_index']['navtab2'], session['navtabs_index']['navtab3'] ]
             db_session.commit()
 
-            flash('Success', 'success')
-            return redirect(url_for('settings.index'))
+            return redirect(request.args.get('original_url', '/'))
 
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
     delchannelcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()

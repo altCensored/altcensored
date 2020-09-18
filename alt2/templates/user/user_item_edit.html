@@ -15,18 +15,19 @@
     <div class="pure-g h-box">
       <div class="pure-u-2-3">
         <div class="pure-u-1 pure-md-1-1">
+          <form name=user_name method="post">
             <i class='ion-ios-contact' style="font-size: 24px"></i></a>
-            <b>{{ user.username }}</b>
-          <br>
-          <br>
+              <input type="text" id="username" value="{{ session.user.username }}" name="username" size="16" maxlength="18">
+              <br>
+              <br>
         </div>
       </div>
       <div class="pure-u-1-3">
         <div class="pure-u-1 pure-md-1-1" style="text-align:right">
           {% if session.user %}
           {% if session.user.id == user.id %}
-          <a href="{{ url_for('settings.index') }}?original_url={{ current_url }}"}}">
-            <i class='ion-md-create' style="font-size: 24px"></i></a>
+          <a href="{{ url_for('settings.index' ) }}">
+            <i class='ion-md-save' style="font-size: 24px"></i></a>
             &nbsp;&nbsp;
           <a href="{{ url_for('auth.delete') }}?original_url={{ current_url }}"}}">
             <i class='ion-md-trash' style="font-size: 24px"></i></a>
@@ -42,35 +43,32 @@
           <i class='ion-md-eye'  style="font-size: 20px"></i>
           <b>&nbsp;{{ user.view_counter }}</b>
           <b>&nbsp;|&nbsp;</b>
-          {% if session.user %}
+
           {% if session.user.public %}
-          <i class='ion-md-globe'  style="font-size: 20px"></i>
-          <b>Public</b>
+            <i class='ion-md-globe'  style="font-size: 20px"></i>
           {% else %}
-          <i class='ion-md-lock'  style="font-size: 20px"></i>
-          <b>Private</b>
+            <i class='ion-md-lock'  style="font-size: 20px"></i>
+          {% endif %}        
+
+          <select name=public>
+          {% if session.user.public %}
+            <option value="True" SELECTED>Public</option>"
+          {% else %}
+            <option value="False" SELECTED>Private</option>"
           {% endif %}
+
+          {% if session.user.public %}
+          <option value=False>Private</option>"
+          {% else %}
+          <option value=True>Public</option>"
           {% endif %}
+          </select>        
           <br><br>
-          {{ user.description | linkify | safe }}
-          <br><br>
-          {% if session.user %}
-          {% if session.user.id == user.id %}
-          <a href="{{ url_for('user.history') }}?original_url={{ current_url }}"}}">
-          <i class='ion-md-done-all'  style="font-size: 24px"></i>
-          <b>History</b></a>
-          <b>&nbsp;|&nbsp;</b>
-          <a href="{{ url_for('user.clear_history') }}?original_url={{ current_url }}"}}">
-          <i class='ion-md-trash' style="font-size: 24px"></i></a>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <a href="{{ url_for('user.watchlater') }}?original_url={{ current_url }}"}}">
-          <i class='ion-md-time'  style="font-size: 24px"></i>
-          <b>WatchLater</b></a>
-          <b>&nbsp;|&nbsp;</b>
-          <a href="{{ url_for('user.clear_watchlater') }}?original_url={{ current_url }}"}}">
-          <i class='ion-md-trash' style="font-size: 24px"></i></a>
-          {% endif %}
-          {% endif %}
+
+          <input type="text" id="description" value="{{ session.user.description }}" name="description" size="32" maxlength="50">
+
+          </form>
+ 
         </div>
       </div>
       <div class="pure-u-1-2">

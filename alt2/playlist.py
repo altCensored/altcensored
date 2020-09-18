@@ -20,7 +20,7 @@ PER_PAGE = 24
 @bp.route('/page/<int:page>')
 def index(page):
     offset = ((int(page)-1) * PER_PAGE)
-    order = 'newest'
+    order = request.args.get('order','newest')
 
     if session.get('user') is not None and order == session['user']['username']:
         user = User.query.filter(func.lower(User.username) == func.lower(order)).scalar()

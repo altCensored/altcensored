@@ -64,7 +64,7 @@ def popular(page):
 
 @bp.route('/<playlist>')
 def item(playlist):
-    playlist = Playlist.query.filter(Playlist.id == playlist).scalar()
+    playlist = Playlist.query.filter(Playlist.title == playlist).scalar()
 
     updated = playlist.updated
     now = datetime.datetime.now(timezone.utc) + datetime.timedelta(seconds = 60 * 3.4)

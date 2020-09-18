@@ -18,9 +18,9 @@
           <form class="pure-form pure-form-aligned" method="post">
             <fieldset>
               <div class="pure-controls">
-                <label for="message">{{ message }}</label>
-                <button type="submit" name="submitvalue" value="yes">Yes</button>
-                <button type="submit" name="submitvalue" value="no">No</button>
+                <label for="message">{{ message }}:&nbsp;</label>
+                <button class="pure-button" type="submit" name="submitvalue" value="yes">{{ gettext('Yes') }}</button>
+                <button class="pure-button" type="submit" name="submitvalue" value="no">{{ gettext('No') }}</button>
               </div>
             </fieldset>
           </form>

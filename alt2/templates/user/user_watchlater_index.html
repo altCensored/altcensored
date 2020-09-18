@@ -12,14 +12,28 @@
     <div class="pure-u-1 pure-u-md-2-24"></div>
     <div class="pure-u-1 pure-u-md-20-24">
       <div class="pure-g h-box">
-        <div class="pure-u-1-2">
+        <div class="pure-u-1-3">
           <div class="pure-u-1 pure-md-1-1">
             <i class='ion-md-time'  style="font-size: 24px"></i>
             <i class='ion-logo-rss' style="font-size: 21px"></i>
-            <b>&nbsp;{{ videocount | commafy }}&nbsp;</b><b>WatchLater</b>
+            <b>&nbsp;{{ videocount | commafy }}&nbsp;</b>
           </div>
         </div>
-        <div class="pure-u-1-2">
+        <div class="pure-u-1-3">
+          <div class="pure-g" style="text-align:center;">
+            <div class="pure-u-1 pure-md-1-1">
+              {% if playlist %}
+              <i class='ion-md-create' style="font-size: 24px"></i></a>
+              <i class='ion-md-list' style="font-size: 24px"></i></a>
+              &nbsp;
+              <b>{{ playlist }}</b>
+              {% else %}
+              <b>{{ gettext('WATCHLATER') }}</b>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="pure-u-1-3">
           <div class="pure-g" style="text-align:right">
             <div class="pure-u-1 pure-md-1-1">
               <a href="{{ url_for('user.clear_watchlater') }}">
@@ -43,7 +57,7 @@
                 <p class="length">{{ video['duration'] | hourminsec }}</p>
               {% else %}
               {% endif %}
-              <a class="action" href="{{ url_for('user.remove_video_watchlater', v=video['extractor_data']) }}">
+              <a class="action" href="{{ url_for('user.remove_video_watchlater')}}?v={{video.extractor_data}}&original_url={{ current_url }}">
               <p class="watched"> <i class='ion-md-trash' style="font-size: 24px"></p></i></a>
             </div>
            </a>

@@ -7,7 +7,7 @@ from flask_babelplus import lazy_gettext
 import random, timeago, datetime
 from datetime import timezone
 from .database import db_session
-from .models import User, Playlist
+from .models import User, Playlist, Mv_Video
 from .pagination import Pagination
 from .util import login_required, str_to_bool, title_exists
 
@@ -80,6 +80,7 @@ def create():
         ftitle = request.form['title']
         fdescription = request.form['description']        
         fprivacy = str_to_bool(request.form['privacy'])
+        submitvalue = request.form['submitvalue']
         user_id = session['user']['id']
 
         if title_exists(ftitle):
@@ -93,6 +94,12 @@ def create():
         playlist = Playlist (title=ftitle, description=fdescription, hashid=hashid, user_id=user_id, created=now, updated=now, public=fprivacy,)
         db_session.add(playlist)
         db_session.commit()
+
+        playlist = ftitle
+
+        if submitvalue == 'history':
+            return redirect(url_for('user.history', playlist=playlist))
+        
 
     return render_template('playlist/playlist_create.html')
 
@@ -118,6 +125,22 @@ def edit(playlist):
         db_session.commit()
 
     return render_template('playlist/playlist_edit.html')
+
+
+@bp.route('/add_video_playlist')
+@login_required
+def add_video_playlist():
+    playlist = request.args.get('playlist', None)
+    video_id = request.args.get('v', None)
+    user = User.query.filter(User.email == session['user']['email']).scalar()
+    video = Mv_Video.query.get(video_id)
+    flash('Video ' + video_id + ' would be added to playlist ' + playlist, 'success')
+
+#    if video.id in user.watched:
+#        user.watched.remove(video.id)
+#        flag_modified(user, "watched")
+#        db_session.commit()
+    return redirect(request.args.get('original_url', '/'))
 
 
 @bp.route('/delete/<playlist>', methods=['GET', 'POST'])

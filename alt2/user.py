@@ -74,6 +74,7 @@ def edit(username):
 @login_required
 def history(page):
     offset = ((int(page)-1) * PER_PAGE)
+    playlist = request.args.get('playlist', None)
     user = User.query.filter(User.email == session['user']['email']).scalar()
     try:
         ordering = case(
@@ -83,7 +84,8 @@ def history(page):
         videos = Mv_Video.query.filter(Mv_Video.id.in_(user.watched)).order_by(ordering).limit(PER_PAGE).offset(offset)
         videocount = db_session.query(func.count(Mv_Video.id)).filter(Mv_Video.id.in_(user.watched)).scalar()
         pagination = Pagination(page, PER_PAGE, videocount)  
-        return render_template('user/user_history_index.html', pagination=pagination, videos=videos, videocount=videocount)
+        return render_template('user/user_history_index.html', pagination=pagination,\
+         videos=videos, videocount=videocount, playlist=playlist)
     except:
         flash('History Empty', 'success')
         return redirect(request.args.get('original_url', '/'))

@@ -62,7 +62,7 @@
       {% for playlist in playlists %}
       <div class="pure-u-1 pure-u-md-1-4">
         <div class="h-box">
-          <a href="{{ url_for('playlist.item', playlist=playlist.title ) }}">
+          <a href="{{ url_for('playlist.item', playlist=playlist.hashid ) }}">
             <b>{{ playlist.title }}</b></a>
             <br>
             <br>

@@ -19,7 +19,6 @@
             <b>&nbsp;{{ videocount | commafy }}</b>&nbsp;
           </div>
         </div>
-
         <div class="pure-u-1-3">
           <div class="pure-g" style="text-align:center;">
             <div class="pure-u-1 pure-md-1-1">
@@ -27,7 +26,7 @@
               <i class='ion-md-create' style="font-size: 24px"></i></a>
               <i class='ion-md-list' style="font-size: 24px"></i></a>
               &nbsp;
-              <b>{{ playlist }}</b>
+              <b> {{ playlist }}</b>
               {% else %}
               <b>{{ gettext('HISTORY') }}</b>
               {% endif %}
@@ -61,7 +60,7 @@
 
               {% if playlist %}
               <a class="action" href="{{ url_for('playlist.add_video_playlist')}}?v={{video.extractor_data}}&playlist={{ playlist }}&original_url={{ current_url }}">
-              <p class="watchlater"> <i class='ion-md-add-circle' style="font-size: 24px"></p></i></a>
+              <p class="adddtoplaylist"> <i class='ion-md-add-circle' style="font-size: 24px"></p></i></a>
 
               {% else %}
               <a class="action" href="{{ url_for('user.remove_video_history')}}?v={{video.extractor_data}}&original_url={{ current_url }}">

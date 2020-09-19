@@ -29,18 +29,6 @@
             <i class='ion-md-create' style="font-size: 24px"></i></a>
             &nbsp;&nbsp;
 
-{#            <a href="{{ url_for('playlist.delete')}}?playlist={{playlist.id}}&original_url={{ current_url }}">
-             
-            <a href="{{ url_for('playlist.delete', playlist=playlist.id ) }}">
-            <a href="{{ url_for('playlist.delete')}}?v={{video.extractor_data}}&original_url={{ current_url }}">
-
-  works     <a href="{{ url_for('playlist.delete', playlist=playlist.id, original_url=current_url ) }}">
-
-
-  nogo      <a href="{{ url_for('playlist.delete') }}?playlist={{playlist.id}}&original_url={{ current_url }}">
-
-  nogo      <a href="{{ url_for('playlist.delete', playlist=playlist.id)}}&original_url={{ current_url }}">
-#}
             <a href="{{ url_for('playlist.delete', playlist=playlist.id, original_url=current_url ) }}">
 
             <i class='ion-md-trash' style="font-size: 24px"></i></a>

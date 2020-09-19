@@ -80,7 +80,7 @@ def register_user(email, password, username):
 
     user = User (
         email=email, password=generate_password_hash(password), username=username, created_date=now, updated=now, email_verified=False,
-        locale = session['locale'], theme = session['theme'], 
+        locale = session['locale'], theme = session['theme'], view_counter = 0,
         navtabs =  [ session['navtabs']['navtab1'], session['navtabs']['navtab2'], session['navtabs']['navtab3'] ], 
         navtabs_index =  [ session['navtabs_index']['navtab1'], session['navtabs_index']['navtab2'], session['navtabs_index']['navtab3'] ], 
         )

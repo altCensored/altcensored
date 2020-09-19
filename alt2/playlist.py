@@ -2,19 +2,20 @@ from flask import (
     Blueprint, session, render_template, request, flash, redirect, url_for
 )
 from sqlalchemy import func
+from sqlalchemy.orm.attributes import flag_modified
 from hashids import Hashids
 from flask_babelplus import lazy_gettext
 import random, timeago, datetime
 from datetime import timezone
 from .database import db_session
-from .models import User, Playlist, Mv_Video
+from .models import User, Playlist, Mv_Video, Counter
 from .pagination import Pagination
 from .util import login_required, str_to_bool, title_exists
+import datetime
 
 bp = Blueprint('playlist', __name__, url_prefix='/playlist')
 
 PER_PAGE = 24
-
 
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
@@ -64,7 +65,22 @@ def popular(page):
 
 @bp.route('/<playlist>')
 def item(playlist):
-    playlist = Playlist.query.filter(Playlist.title == playlist).scalar()
+    playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
+
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    header = request.headers.get('User-Agent')
+    today = str(datetime.date.today())
+    myhash=hash(ip+header+today+str(playlist))
+    flash(myhash, 'error')
+
+    if Counter.query.filter(Counter.hash == myhash).scalar() is None:
+        counter = Counter (hash=myhash)
+        db_session.add(counter)
+        db_session.commit()
+
+        playlist.view_counter = playlist.view_counter + 1
+        flag_modified(playlist, "view_counter")
+        db_session.commit()
 
     updated = playlist.updated
     now = datetime.datetime.now(timezone.utc) + datetime.timedelta(seconds = 60 * 3.4)
@@ -91,14 +107,16 @@ def create():
         hashid = 'AC' + hashids.encode(random.getrandbits(104))
 
         now = datetime.datetime.now(timezone.utc)
-        playlist = Playlist (title=ftitle, description=fdescription, hashid=hashid, user_id=user_id, created=now, updated=now, public=fprivacy,)
+        playlist = Playlist (title=ftitle, description=fdescription, hashid=hashid,\
+         user_id=user_id, created=now, updated=now, public=fprivacy, view_counter=0)
         db_session.add(playlist)
         db_session.commit()
 
-        playlist = ftitle
+#        playlistobj = Playlist.query.filter(Playlist.title == ftitle).scalar()
+#        playlist = ftitle
 
         if submitvalue == 'history':
-            return redirect(url_for('user.history', playlist=playlist))
+            return redirect(url_for('user.history', playlist=ftitle))
         
 
     return render_template('playlist/playlist_create.html')
@@ -136,11 +154,14 @@ def add_video_playlist():
     video = Mv_Video.query.get(video_id)
     flash('Video ' + video_id + ' would be added to playlist ' + playlist, 'success')
 
+    playlist = Playlist.query.filter(Playlist.title == playlist).scalar()
+
+
 #    if video.id in user.watched:
 #        user.watched.remove(video.id)
 #        flag_modified(user, "watched")
 #        db_session.commit()
-    return redirect(request.args.get('original_url', '/'))
+    return redirect(request.args.get('original_url', '/', playlist=playlist))
 
 
 @bp.route('/delete/<playlist>', methods=['GET', 'POST'])

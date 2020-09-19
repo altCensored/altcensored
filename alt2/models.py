@@ -309,3 +309,8 @@ class Translation(Base):
     nl = Column(String, nullable=True)
     it = Column(String, nullable=True)
     se = Column(String, nullable=True)
+
+
+class Counter(Base):
+    __tablename__ = 'counter'
+    hash = Column(Integer, primary_key=True, nullable=False)

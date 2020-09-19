@@ -1,14 +1,14 @@
 from flask import (
     Blueprint, session, render_template, flash, redirect, request, url_for
 )
-
 from sqlalchemy import func, case
 from sqlalchemy.orm.attributes import flag_modified
 from flask_babelplus import lazy_gettext
 from .database import db_session
-from .models import User, Mv_Video, Playlist
+from .models import User, Mv_Video, Playlist, Counter
 from .pagination import Pagination
 from .util import login_required
+import datetime
 
 bp = Blueprint('user', __name__, url_prefix='/user' )
 
@@ -53,6 +53,22 @@ def item(username):
     user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
     playlistcount = Playlist.query.filter(Playlist.public).filter(Playlist.user_id == user.id).count()
 
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    header = request.headers.get('User-Agent')
+    today = str(datetime.date.today())
+    myhash=hash(ip+header+today+username)
+    flash(myhash, 'success')
+
+
+    if Counter.query.filter(Counter.hash == myhash).scalar() is None:
+        counter = Counter (hash=myhash)
+        db_session.add(counter)
+        db_session.commit()
+
+        user.view_counter = user.view_counter + 1
+        flag_modified(user, "view_counter")
+        db_session.commit()
+ 
     if not username and page != 1:
         abort(404)
     return render_template('user/user_item.html', user=user, playlistcount=playlistcount)

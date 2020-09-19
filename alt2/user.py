@@ -57,8 +57,6 @@ def item(username):
     header = request.headers.get('User-Agent')
     today = str(datetime.date.today())
     myhash=hash(ip+header+today+username)
-    flash(myhash, 'success')
-
 
     if Counter.query.filter(Counter.hash == myhash).scalar() is None:
         counter = Counter (hash=myhash)

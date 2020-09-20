@@ -79,9 +79,9 @@ def register_user(email, password, username):
     now = datetime.datetime.now(timezone.utc)
 
     user = User (
-        email=email, password=generate_password_hash(password), username=username, created_date=now, updated=now, email_verified=False,
-        locale = session['locale'], theme = session['theme'], view_counter = 0,
-        navtabs =  [ session['navtabs']['navtab1'], session['navtabs']['navtab2'], session['navtabs']['navtab3'] ], 
+        email=email, password=generate_password_hash(password), username=username, description="", created_date=now, \
+        updated=now, email_verified=False, locale = session['locale'], theme = session['theme'], view_counter = 0, \
+        navtabs =  [ session['navtabs']['navtab1'], session['navtabs']['navtab2'], session['navtabs']['navtab3'] ], \
         navtabs_index =  [ session['navtabs_index']['navtab1'], session['navtabs_index']['navtab2'], session['navtabs_index']['navtab3'] ], 
         )
     db_session.add(user)
@@ -168,8 +168,7 @@ def login():
             if not user.email_verified:
                 send_confirm_email(email)
                 flash('Account not verified. Confirmation email resent', 'success')
-            else:
-                flash('You were successfully logged in', 'success')
+
             return redirect(url_for('video.index'))
 
         else:

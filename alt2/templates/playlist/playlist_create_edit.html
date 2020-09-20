@@ -19,22 +19,38 @@
             <fieldset>
               <div class="pure-control-group">
                 <label for="Title">{{ gettext('Title') }}:</label>
+                {% if playlist %}
+                <input type=text id=title value="{{ playlist.title  }}" name=title required maxlength="18">
+                {% else %}
                 <input type=text id=title placeholder="Title" name=title required maxlength="18">
+                {% endif %}
               </div>
               <div class="pure-control-group">
                 <label for="Description">{{ gettext('Description') }}:</label>
+                {% if playlist %}
+                <input type=text id=description value="{{ playlist.description  }}" name=description size="30" required maxlength="50">
+                {% else %}
                 <input type=text id=description placeholder="Description" name=description size="30" required maxlength="50">
+                {% endif %}
               </div>
               <div class="pure-control-group">
                 <label for="Privacy">{{ gettext('Privacy') }}:</label>
                 <select name=privacy>
-                  <option value=True SELECTED>Public</option>"           
+                  {% if playlist and playlist.public == false %}
+                  <option value=False SELECTED>Private</option>"
+                  <option value=True>Public</option>"
+                  {% else %}
+                  <option value=True SELECTED>Public</option>"
                   <option value=False>Private</option>"
+                  {% endif %}    
                 </select>
               </div>
-
               <div class="pure-controls">
+                {% if playlist %}
+                <button class="pure-button" type="submit" name="submitvalue">{{ gettext('Update Playlist') }}</button>
+                {% else %}
                 <button class="pure-button" type="submit" name="submitvalue">{{ gettext('Create Playlist') }}</button>
+                {% endif %}    
               </div>
 
 

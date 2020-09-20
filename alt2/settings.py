@@ -12,9 +12,7 @@ from .database import db_session
 from .models import Mv_Video, Mv_Channel, Translation, User
 from .util import get_locale, get_theme, get_navtabs, get_navtabs_index, get_navtabs_perm, str_to_bool, contains_profanity
 
-
 bp = Blueprint('settings', __name__, url_prefix='/settings' )
-
 
 def username_exists(username):
     if username == session['user']['username']:
@@ -25,29 +23,22 @@ def username_exists(username):
 
 @bp.route('/', methods=['GET', 'POST'])
 def index():
-
     if session.get('locale') is None:
         get_locale()
-
     if session.get('theme') is None:
         session['theme'] = get_theme()
-
     if session.get('navtabs') is None:
         get_navtabs()
-
     if session.get('navtabs_index') is None:
         get_navtabs_index()
-
     if request.method == 'POST':
-
         fnt1 = request.form['navtab1_value']
         fnt2 = request.form['navtab2_value']
         fnt3 = request.form['navtab3_value']
 
         session['theme'] = request.form['theme']
 
-        if session['locale'] != request.form['locale']:
-            
+        if session['locale'] != request.form['locale']:            
             row = db_session.query(Translation).with_entities(getattr(Translation, session['locale']),getattr(Translation, request.form['locale'])).all()
             rowtuple = tuple(row)
             navtabs_change_locale = dict(rowtuple)
@@ -71,7 +62,6 @@ def index():
         session['navtabs']['navtab3'] = fnt3
   
         if 'user' in session:
-
             fusername = request.form['username']
             fdescription = request.form['description']
             fpublic = str_to_bool(request.form['public'])

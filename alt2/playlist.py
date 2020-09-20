@@ -1,7 +1,7 @@
 from flask import (
     Blueprint, session, render_template, request, flash, redirect, url_for
 )
-from sqlalchemy import func
+from sqlalchemy import func, case
 from sqlalchemy.orm.attributes import flag_modified
 from hashids import Hashids
 from flask_babelplus import lazy_gettext
@@ -22,6 +22,7 @@ PER_PAGE = 24
 def index(page):
     offset = ((int(page)-1) * PER_PAGE)
     order = request.args.get('order','newest')
+    playlistcount = Playlist.query.filter(Playlist.public).count()
 
     if session.get('user') is not None and order == session['user']['username']:
         user = User.query.filter(func.lower(User.username) == func.lower(order)).scalar()
@@ -32,8 +33,10 @@ def index(page):
         .filter(User.username == order)\
         .order_by(Playlist.id.desc()).limit(PER_PAGE).offset(offset)
 
+    elif order =='popular':
+        playlists = Playlist.query.filter(Playlist.public)\
+        .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
     else:
-        playlistcount = Playlist.query.filter(Playlist.public).count()
         playlists = Playlist.query.filter(Playlist.public)\
         .order_by(Playlist.id.desc()).limit(PER_PAGE).offset(offset)
 
@@ -45,26 +48,10 @@ def index(page):
         pagination=pagination, playlistcount=playlistcount, playlists=playlists, order=order)
 
 
-@bp.route('/popular', defaults={'page': 1})
-@bp.route('/popular/page/<int:page>')
-def popular(page):
+@bp.route('/<playlist>', defaults={'page': 1})
+@bp.route('/<playlist>/page/<int:page>')
+def item(playlist,page):
     offset = ((int(page)-1) * PER_PAGE)
-    order = 'popular'
-
-    playlistcount = Playlist.query.filter(Playlist.public).count()
-    playlists = Playlist.query.filter(Playlist.public)\
-    .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
-
-    if not playlists and page != 1:
-        abort(404)
-    pagination = Pagination(page, PER_PAGE, playlistcount)
-
-    return render_template('playlist/playlist_index.html', 
-        pagination=pagination, playlistcount=playlistcount, playlists=playlists, order=order)
-
-
-@bp.route('/<playlist>')
-def item(playlist):
     playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
 
     ip = request.headers.get('X-Forwarded-For', request.remote_addr)
@@ -85,7 +72,21 @@ def item(playlist):
     now = datetime.datetime.now(timezone.utc) + datetime.timedelta(seconds = 60 * 3.4)
     timediff = timeago.format(updated, now)
 
-    return render_template('playlist/playlist_item.html', playlist=playlist, timediff=timediff)
+    if playlist.videos:
+        ordering = case(
+            {id: index for index, id in reversed(list(enumerate(reversed(playlist.videos))))},
+            value=Mv_Video.id
+         )
+        videos = Mv_Video.query.filter(Mv_Video.id.in_(playlist.videos)).order_by(ordering).limit(PER_PAGE).offset(offset)
+        videocount = db_session.query(func.count(Mv_Video.id)).filter(Mv_Video.id.in_(playlist.videos)).scalar()
+        pagination = Pagination(page, PER_PAGE, videocount)
+    else:
+        videos = []
+        videocount = 0
+        pagination = 0
+
+    return render_template('playlist/playlist_item.html', playlist=playlist, timediff=timediff,\
+        videos=videos, videocount=videocount, pagination=pagination)
 
 
 @bp.route('/create', methods=['GET', 'POST'])
@@ -95,7 +96,6 @@ def create():
         ftitle = request.form['title']
         fdescription = request.form['description']        
         fprivacy = str_to_bool(request.form['privacy'])
-        submitvalue = request.form['submitvalue']
         user_id = session['user']['id']
 
         if title_exists(ftitle):
@@ -107,41 +107,37 @@ def create():
 
         now = datetime.datetime.now(timezone.utc)
         playlist = Playlist (title=ftitle, description=fdescription, hashid=hashid,\
-         user_id=user_id, created=now, updated=now, public=fprivacy, view_counter=0)
+         user_id=user_id, created=now, updated=now, public=fprivacy, view_counter=0, video_count=0)
         db_session.add(playlist)
         db_session.commit()
 
-#        playlistobj = Playlist.query.filter(Playlist.title == ftitle).scalar()
-#        playlist = ftitle
-
-        if submitvalue == 'history':
-            return redirect(url_for('user.history', playlist=ftitle))
+        return redirect(url_for('playlist.item', playlist=hashid))
         
-
-    return render_template('playlist/playlist_create.html')
+    return render_template('playlist/playlist_create_edit.html')
 
 
 @bp.route('/edit/<playlist>', methods=['GET', 'POST'])
 @login_required
 def edit(playlist):
+    playlist = Playlist.query.get(playlist)
+
     if request.method == 'POST':
         ftitle = request.form['title']
+        fdescription = request.form['description']        
         fprivacy = str_to_bool(request.form['privacy'])
-        user_id = session['user']['id']
 
-        if title_exists(ftitle):
+        if ftitle != playlist.title and title_exists(ftitle):
             flash('Title already exists', 'error')
             return redirect(url_for('playlist.create'))
 
-        hashids = Hashids(min_length=22)
-        hashid = 'AC' + hashids.encode(random.getrandbits(104))
-
-        now = datetime.now(timezone.utc)
-        playlist = Playlist (title=ftitle, id=hashid, user_id=user_id, created=now, updated=now, public=fprivacy)
-        db_session.add(playlist)
+        now = datetime.datetime.now(timezone.utc)
+        playlist.title = ftitle
+        playlist.description = fdescription
+        playlist.public = fprivacy
         db_session.commit()
+        return redirect(url_for('playlist.item', playlist=playlist.hashid))
 
-    return render_template('playlist/playlist_edit.html')
+    return render_template('playlist/playlist_create_edit.html', playlist=playlist)
 
 
 @bp.route('/add_video_playlist')
@@ -155,11 +151,6 @@ def add_video_playlist():
 
     playlist = Playlist.query.filter(Playlist.title == playlist).scalar()
 
-
-#    if video.id in user.watched:
-#        user.watched.remove(video.id)
-#        flag_modified(user, "watched")
-#        db_session.commit()
     return redirect(request.args.get('original_url', '/', playlist=playlist))
 
 
@@ -170,6 +161,7 @@ def delete(playlist):
     l_msg = lazy_gettext('Remove playlist')
     item_quoted = (f'"{playlistobj.title}"')
     message = l_msg + ' ' + item_quoted + '?'
+
     if request.method == 'POST':
         submitvalue = request.form['submitvalue']
         if submitvalue == 'yes':
@@ -181,4 +173,5 @@ def delete(playlist):
         else:
             flash('Playlist ' + item_quoted + ' NOT removed', 'error')
             return redirect(url_for('playlist.index'))
+
     return render_template('widgets/widgets_confirm.html', message=message)

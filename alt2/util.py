@@ -13,9 +13,6 @@ from . import config
 import functools, os, string, random
 
 
-#custom_badwords = ['hitler', 'SS', 'holocaust']
-#profanity.add_censor_words(custom_badwords)
-
 def get_locale():
     if 'locale' in session:
         return session['locale']

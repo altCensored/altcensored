@@ -23,14 +23,12 @@
       </div>
       <div class="pure-u-1-3">
         <div class="pure-u-1 pure-md-1-1" style="text-align:right">
-          {% if session.user %}
-          {% if session.user.id == user.id %}
+          {% if session.user and session.user.id == user.id %}
           <a href="{{ url_for('settings.index') }}?original_url={{ current_url }}"}}">
             <i class='ion-md-create' style="font-size: 24px"></i></a>
             &nbsp;&nbsp;
           <a href="{{ url_for('auth.delete') }}?original_url={{ current_url }}"}}">
             <i class='ion-md-trash' style="font-size: 24px"></i></a>
-          {% endif %}
           {% endif %}
         </div>
       </div>
@@ -42,54 +40,41 @@
           <i class='ion-md-eye'  style="font-size: 20px"></i>
           <b>&nbsp;{{ user.view_counter }}</b>
           <b>&nbsp;|&nbsp;</b>
-          {% if session.user %}
-          {% if session.user.public %}
-          <i class='ion-md-globe'  style="font-size: 20px"></i>
-          <b>Public</b>
+          {% if user.public  %}
+            <i class='ion-md-globe'  style="font-size: 20px"></i>
+            <b>Public</b>
           {% else %}
-          <i class='ion-md-lock'  style="font-size: 20px"></i>
-          <b>Private</b>
-          {% endif %}
+            <i class='ion-md-lock'  style="font-size: 20px"></i>
+            <b>Private</b>
           {% endif %}
           <br><br>
           {{ user.description | linkify | safe }}
           <br><br>
-          {% if session.user %}
-          {% if session.user.id == user.id %}
-          <a href="{{ url_for('user.history') }}?original_url={{ current_url }}"}}">
-          <i class='ion-md-done-all'  style="font-size: 24px"></i>
-          <b>History</b></a>
-          <b>&nbsp;|&nbsp;</b>
-          <a href="{{ url_for('user.clear_history') }}?original_url={{ current_url }}"}}">
-          <i class='ion-md-trash' style="font-size: 24px"></i></a>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <a href="{{ url_for('user.watchlater') }}?original_url={{ current_url }}"}}">
-          <i class='ion-md-time'  style="font-size: 24px"></i>
-          <b>WatchLater</b></a>
-          <b>&nbsp;|&nbsp;</b>
-          <a href="{{ url_for('user.clear_watchlater') }}?original_url={{ current_url }}"}}">
-          <i class='ion-md-trash' style="font-size: 24px"></i></a>
-          {% endif %}
-          {% endif %}
         </div>
       </div>
-      <div class="pure-u-1-2">
-        <div class="pure-u-1 pure-md-1-1">
+      {% if session.user and session.user.id == user.id %}
+        <div class="pure-u-1-3">
+          <div class="pure-u-1 pure-md-1-1">
+            <a href="{{ url_for('user.history') }}?original_url={{ current_url }}"}}">
+            <i class='ion-md-done-all'  style="font-size: 24px"></i>
+            <b>History</b></a>          
+          </div>
         </div>
-      </div>
-      <div class="pure-u-1-2">
-        <div class="pure-u-1 pure-md-1-1" style="text-align:right">
-          {% if session.user %}
-          {% if session.user.id == user.id %}
-          <a href="{{ url_for('settings.index' ) }}">
-            <i class='ion-md-add' style="font-size: 24px"></i></a>
-          {% endif %}
-          {% endif %}
+        <div class="pure-u-1-3">
+          <div class="pure-u-1 pure-md-1-1" style="text-align:center;">
+            <a href="{{ url_for('user.playlist') }}?original_url={{ current_url }}"}}">
+            <i class='ion-md-list'  style="font-size: 24px"></i>
+            <b>PlayList</b></a>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="h-box">
-      <hr>
+        <div class="pure-u-1-3">
+          <div class="pure-u-1 pure-md-1-1" style="text-align:right;">
+            <a href="{{ url_for('user.watchlater') }}?original_url={{ current_url }}"}}">
+            <i class='ion-md-time'  style="font-size: 24px"></i>
+            <b>WatchLater</b></a>
+          </div>
+        </div>
+      {% endif %}
     </div>
   </div>
 </div>

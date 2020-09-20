@@ -26,40 +26,40 @@
           <form class="pure-form pure-form-aligned" name=get_language method="post">
             <fieldset>
               {% if session.user %}
-              <br>
-              <b>{{ session.user.email }}</b>
-              {% if session.user.email_verified %}
-              {% else %}
-              &nbsp;&nbsp;<b>{{ gettext('(Not Verified)') }}</b>
-              {% endif %}
-              <hr>
-              <div class="pure-control-group">
-                <label for="Username"> {{ gettext('Username') }}:</label>
-                {% if session.user.username %}
-                <input type="text" id="username" value="{{ session.user.username }}" name="username" maxlength="18">
-                {% else %}
-                <input type="text" id="username" placeholder="Username" name="username" maxlength="18">
-                {% endif %}
-              </div>
-              <div class="pure-control-group">
-                <label for="Description"> {{ gettext('Description') }}:</label>
-                {% if session.user.description %}
-                <input type="text" id="description" value="{{ session.user.description }}" name="description" size="30" maxlength="50">
-                {% else %}
-                <input type="text" id="description" placeholder="Description" name="description" size="30" maxlength="50">
-                {% endif %}
-              </div>
-              <div class="pure-control-group">
-                <label for="Public"> {{ gettext('User Public') }}:</label>
-                <select name=public>
-                  <option value= "{{session.user.public}}" SELECTED>{{session.user.public}}</option>"     
-                  {% if session.user.public %}
-                  <option value=False>False</option>"
+                <br>
+                <b>{{ session.user.email }}</b>
+                {% if session.user.email_verified %}
                   {% else %}
-                  <option value=True>True</option>"
+                  &nbsp;&nbsp;<b>{{ gettext('(Not Verified)') }}</b>
+                {% endif %}
+                <hr>
+                <div class="pure-control-group">
+                  <label for="Username"> {{ gettext('Username') }}:</label>
+                  {% if session.user.username %}
+                    <input type="text" id="username" value="{{ session.user.username }}" name="username" maxlength="18">
+                  {% else %}
+                    <input type="text" id="username" placeholder="Username" name="username" maxlength="18">
                   {% endif %}
-                </select>
-              </div>
+                </div>
+                <div class="pure-control-group">
+                  <label for="Description"> {{ gettext('Description') }}:</label>
+                  {% if session.user.description %}
+                    <input type="text" id="description" value="{{ session.user.description }}" name="description" size="30" maxlength="50">
+                  {% else %}
+                    <input type="text" id="description" placeholder="Description" name="description" size="30" maxlength="50">
+                  {% endif %}
+                </div>
+                <div class="pure-control-group">
+                  <label for="Public"> {{ gettext('User Public') }}:</label>
+                  <select name=public>
+                    <option value= "{{session.user.public}}" SELECTED>{{session.user.public}}</option>"     
+                    {% if session.user.public %}
+                      <option value=False>False</option>"
+                    {% else %}
+                    <option value=True>True</option>"
+                    {% endif %}
+                  </select>
+                </div>
               {% endif %}
               <br>
               <b>Preferences</b>
@@ -69,7 +69,7 @@
                 <select name=locale>
                   <option value="{{locale}}" SELECTED>{{locale}}</option>"
                   {% for locale in locales %}
-                  <option value="{{locale}}">{{locale}}</option>"
+                    <option value="{{locale}}">{{locale}}</option>"
                   {% endfor %}
                 </select>
               </div>
@@ -78,7 +78,7 @@
                 <select name=theme>
                   <option value="{{theme}}" SELECTED>{{theme}}</option>"             
                   {% for theme in themes %}
-                  <option value="{{theme}}">{{theme}}</option>"
+                    <option value="{{theme}}">{{theme}}</option>"
                   {% endfor %}
                 </select>
               </div>
@@ -87,24 +87,23 @@
                 <select name=navtab1_value>
                   <option value="{{navtabs["navtab1"]}}" SELECTED>{{navtabs["navtab1"]}}</option>"   
                   {% for navtab1_value in navtab1_values %}
-                  <option value="{{navtab1_value}}">{{navtab1_value}}</option>"
+                    <option value="{{navtab1_value}}">{{navtab1_value}}</option>"
                   {% endfor %}
                 </select>
                 <select name=navtab2_value>
                   <option value="{{navtabs["navtab2"]}}" SELECTED>{{navtabs["navtab2"]}}</option>"   
                   {% for navtab2_value in navtab2_values %}
-                  <option value="{{navtab2_value}}">{{navtab2_value}}</option>"
+                    <option value="{{navtab2_value}}">{{navtab2_value}}</option>"
                   {% endfor %}
                 </select>
                 <select name=navtab3_value>
                   <option value="{{navtabs["navtab3"]}}" SELECTED>{{navtabs["navtab3"]}}</option>"   
                   {% for navtab3_value in navtab3_values %}
-                  <option value="{{navtab3_value}}">{{navtab3_value}}</option>"
+                    <option value="{{navtab3_value}}">{{navtab3_value}}</option>"
                   {% endfor %}
                 </select>
               </div>
               <div class="pure-controls">
-
                 <button class="pure-button" type="submit" name="submit" value="login">{{ gettext('Save') }}</button>
               </div>
             </fieldset>

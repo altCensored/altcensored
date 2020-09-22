@@ -52,6 +52,9 @@ def popular(page):
 def item(username):
     user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
     playlistcount = Playlist.query.filter(Playlist.public).filter(Playlist.user_id == user.id).count()
+
+    playlist = Playlist.query.filter(Playlist.user_id == user.id).order_by(Playlist.view_counter.desc()).first()
+
     if user.watched is None:
         historycount = 0
     else:
@@ -74,11 +77,11 @@ def item(username):
         user.view_counter = user.view_counter + 1
         flag_modified(user, "view_counter")
         db_session.commit()
- 
+
     if not username and page != 1:
         abort(404)
     return render_template('user/user_item.html', user=user, playlistcount=playlistcount,\
-     historycount=historycount, watchlatercount=watchlatercount)
+     historycount=historycount, watchlatercount=watchlatercount, playlist=playlist)
 
 
 @bp.route('/history', defaults={'page': 1})
@@ -88,6 +91,14 @@ def history(page):
     offset = ((int(page)-1) * PER_PAGE)
     playlist = request.args.get('playlist', None)
     user = User.query.filter(User.email == session['user']['email']).scalar()
+    playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
+
+    watchlater = None
+    if session.get('user') is not None:
+        user = User.query.filter(User.email == session['user']['email']).scalar()
+        if user.watchlater:
+            watchlater=user.watchlater
+
     try:
         ordering = case(
             {id: index for index, id in reversed(list(enumerate(reversed(user.watched))))},
@@ -100,7 +111,7 @@ def history(page):
             videocount=len(user.watched)
         pagination = Pagination(page, PER_PAGE, videocount)  
         return render_template('user/user_history_index.html', pagination=pagination,\
-         videos=videos, videocount=videocount, playlist=playlist)
+         videos=videos, videocount=videocount, playlist=playlist, watchlater=watchlater)
     except:
         flash('History Empty', 'success')
         return redirect(request.args.get('original_url', '/'))
@@ -113,8 +124,8 @@ def remove_video_history():
     user = User.query.filter(User.email == session['user']['email']).scalar()
     video = Mv_Video.query.get(video_id)
     if video.id in user.watched:
+        user.watched = list(dict.fromkeys(user.watched))
         user.watched.remove(video.id)
-        flag_modified(user, "watched")
         db_session.commit()
     return redirect(request.args.get('original_url', '/'))
 
@@ -151,6 +162,7 @@ def watchlater(page):
     if not user.watchlater:
         flash('WatchLater Empty', 'success')
         return redirect(request.args.get('original_url', '/'))
+
     try:
         ordering = case(
             {id: index for index, id in reversed(list(enumerate(reversed(user.watchlater))))},
@@ -190,8 +202,8 @@ def remove_video_watchlater():
     user = User.query.filter(User.email == session['user']['email']).scalar()
     video = Mv_Video.query.get(video_id)
     if video.id in user.watchlater:
+        user.watchlater = list(dict.fromkeys(user.watchlater))
         user.watchlater.remove(video.id)
-        flag_modified(user, "watchlater")
         db_session.commit()
     return redirect(request.args.get('original_url', '/'))
 

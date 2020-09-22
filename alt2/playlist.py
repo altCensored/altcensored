@@ -53,6 +53,13 @@ def index(page):
 def item(playlist,page):
     offset = ((int(page)-1) * PER_PAGE)
     playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
+    button = request.args.get('button', None)
+
+    watchlater = None
+    if session.get('user') is not None:
+        user = User.query.filter(User.email == session['user']['email']).scalar()
+        if user.watchlater:
+            watchlater=user.watchlater
 
     ip = request.headers.get('X-Forwarded-For', request.remote_addr)
     header = request.headers.get('User-Agent')
@@ -86,7 +93,7 @@ def item(playlist,page):
         pagination = 0
 
     return render_template('playlist/playlist_item.html', playlist=playlist, timediff=timediff,\
-        videos=videos, videocount=videocount, pagination=pagination)
+        videos=videos, videocount=videocount, pagination=pagination, watchlater=watchlater, button=button)
 
 
 @bp.route('/create', methods=['GET', 'POST'])

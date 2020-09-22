@@ -269,8 +269,11 @@ class User(Base):
     description = Column(String, nullable=True)
     public = Column(Boolean, nullable=False, default=False)
     view_counter = Column(Integer, nullable=True)
-    featured_video = Column(Integer, nullable=True)
+#    featured_video = Column(Integer, nullable=True)
     featured_playlist = Column(Integer, nullable=True)
+
+    featured_video = Column(Integer, ForeignKey('mv_video.id'), nullable=True)
+    video = relationship("Mv_Video", backref="altcen_user")
 
     playlists = relationship("Playlist", cascade="all, delete-orphan")
 

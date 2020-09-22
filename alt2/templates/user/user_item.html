@@ -50,6 +50,9 @@
           <br><br>
           {{ user.description | linkify | safe }}
           <br><br>
+          {{ playlist.title }}
+
+          <br><br>
         </div>
       </div>
       {% if session.user and session.user.id == user.id %}

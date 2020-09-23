@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, Interval, ARRAY, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, Interval, ARRAY, ForeignKey, BigInteger
 from sqlalchemy.orm import relationship, backref
 
 from alt2.database import Base
@@ -316,4 +316,4 @@ class Translation(Base):
 
 class Counter(Base):
     __tablename__ = 'counter'
-    hash = Column(Integer, primary_key=True, nullable=False)
+    hash = Column(BigInteger, primary_key=True, nullable=False)

@@ -1,0 +1,9 @@
+CREATE MATERIALIZED VIEW mv_category AS
+SELECT category.cat_id,
+    category.cat_name,
+    category.cat_image,
+    count(mv_video.category) AS cat_count
+   FROM (mv_video
+     JOIN category ON (((category.cat_name)::text = (mv_video.category)::text)))
+  GROUP BY category.cat_id, category.cat_name, category.cat_image
+  ORDER BY (count(mv_video.category)) DESC

@@ -1,0 +1,19 @@
+INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (18, 'Short Movies', 'ion-ios-cog');
+INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (21, 'Videoblogging', 'ion-ios-cog');
+INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (2, 'Autos & Vehicles', 'ion-ios-car');
+INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (10, 'Music', 'ion-ios-musical-notes	
+
+');
+INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (15, 'Pets & Animals', 'ion-ios-paw');
+INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (17, 'Sports', 'ion-ios-tennisball');
+INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (19, 'Travel & Events', 'ion-ios-airplane');
+INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (20, 'Gaming', 'ion-ios-trophy');
+INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (22, 'People & Blogs', 'ion-ios-people');
+INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (23, 'Comedy', 'ion-ios-happy');
+INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (24, 'Entertainment', 'ion-ios-headset');
+INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (25, 'News & Politics', 'ion-ios-megaphone');
+INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (26, 'Howto & Style', 'ion-ios-construct');
+INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (27, 'Education', 'ion-ios-school');
+INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (28, 'Science & Technology', 'ion-ios-flask');
+INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (29, 'Nonprofits & Activism', 'ion-ios-book');
+INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (1, 'Film & Animation', 'ion-ios-videocam');

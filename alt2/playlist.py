@@ -92,6 +92,11 @@ def item(playlist,page):
         videocount = 0
         pagination = 0
 
+    playlist.video_count = videocount
+    flag_modified(playlist, "video_count")
+    db_session.commit()
+
+
     return render_template('playlist/playlist_item.html', playlist=playlist, timediff=timediff,\
         videos=videos, videocount=videocount, pagination=pagination, watchlater=watchlater, button=button)
 
@@ -113,8 +118,9 @@ def create():
         hashid = 'AC' + hashids.encode(random.getrandbits(104))
 
         now = datetime.datetime.now(timezone.utc)
+        empty_list = []
         playlist = Playlist (title=ftitle, description=fdescription, hashid=hashid,\
-         user_id=user_id, created=now, updated=now, public=fprivacy, view_counter=0, video_count=0)
+         user_id=user_id, created=now, updated=now, public=fprivacy, view_counter=0, video_count=0, videos=empty_list)
         db_session.add(playlist)
         db_session.commit()
 
@@ -150,15 +156,35 @@ def edit(playlist):
 @bp.route('/add_video_playlist')
 @login_required
 def add_video_playlist():
-    playlist = request.args.get('playlist', None)
+    playlist_hashid = request.args.get('playlist', None)
     video_id = request.args.get('v', None)
-    user = User.query.filter(User.email == session['user']['email']).scalar()
     video = Mv_Video.query.get(video_id)
-    flash('Video ' + video_id + ' would be added to playlist ' + playlist, 'success')
+    playlist = Playlist.query.filter(Playlist.hashid == playlist_hashid).scalar()
+    try:
+        playlist.videos += [video.id]
+    except:
+        playlist.videos = [video.id]
+    flag_modified(playlist, "videos")
+    db_session.commit()
 
-    playlist = Playlist.query.filter(Playlist.title == playlist).scalar()
+    return redirect(request.args.get('original_url', '/'))
 
-    return redirect(request.args.get('original_url', '/', playlist=playlist))
+
+@bp.route('/remove_video_playlist')
+@login_required
+def remove_video_playlist():
+    playlist_hashid = request.args.get('playlist', None)
+    video_id = request.args.get('v', None)
+    video = Mv_Video.query.get(video_id)
+    playlist = Playlist.query.filter(Playlist.hashid == playlist_hashid).scalar()
+
+    if video.id in playlist.videos:
+        playlist.videos = list(dict.fromkeys(playlist.videos))
+        playlist.videos.remove(video.id)
+        db_session.commit()
+
+    return redirect(request.args.get('original_url', '/'))
+
 
 
 @bp.route('/delete/<playlist>', methods=['GET', 'POST'])

@@ -93,25 +93,16 @@ def history(page):
     user = User.query.filter(User.email == session['user']['email']).scalar()
     playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
 
-    watchlater = None
-    if session.get('user') is not None:
-        user = User.query.filter(User.email == session['user']['email']).scalar()
-        if user.watchlater:
-            watchlater=user.watchlater
-
     try:
         ordering = case(
             {id: index for index, id in reversed(list(enumerate(reversed(user.watched))))},
             value=Mv_Video.id
          )
         videos = Mv_Video.query.filter(Mv_Video.id.in_(user.watched)).order_by(ordering).limit(PER_PAGE).offset(offset)
-        if user.watched is None:
-            videocount = 0
-        else:
-            videocount=len(user.watched)
+        videocount=len(user.watched)
         pagination = Pagination(page, PER_PAGE, videocount)  
         return render_template('user/user_history_index.html', pagination=pagination,\
-         videos=videos, videocount=videocount, playlist=playlist, watchlater=watchlater)
+         videos=videos, videocount=videocount, playlist=playlist, watchlater=user.watchlater)
     except:
         flash('History Empty', 'success')
         return redirect(request.args.get('original_url', '/'))
@@ -158,10 +149,9 @@ def clear_history():
 @login_required
 def watchlater(page):
     offset = ((int(page)-1) * PER_PAGE)
+    playlist = request.args.get('playlist', None)
     user = User.query.filter(User.email == session['user']['email']).scalar()
-    if not user.watchlater:
-        flash('WatchLater Empty', 'success')
-        return redirect(request.args.get('original_url', '/'))
+    playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
 
     try:
         ordering = case(
@@ -169,12 +159,10 @@ def watchlater(page):
             value=Mv_Video.id
          )
         videos = Mv_Video.query.filter(Mv_Video.id.in_(user.watchlater)).order_by(ordering).limit(PER_PAGE).offset(offset)
-        if user.watchlater is None:
-            videocount = 0
-        else:
-            videocount=len(user.watchlater)
+        videocount=len(user.watchlater)
         pagination = Pagination(page, PER_PAGE, videocount)  
-        return render_template('user/user_watchlater_index.html', pagination=pagination, videos=videos, videocount=videocount)
+        return render_template('user/user_watchlater_index.html', pagination=pagination, \
+            videos=videos, videocount=videocount, playlist=playlist, watchlater=user.watchlater)
     except:
         flash('No Watch Later Available', 'success')
         return redirect(request.args.get('original_url', '/'))

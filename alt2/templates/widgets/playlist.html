@@ -25,7 +25,7 @@
       <div class="pure-u-1-1">
         <div class="pure-u-1 pure-md-1-1">
           <i class='ion-logo-youtube'  style="font-size: 20px"></i>
-          <b>&nbsp;{{ playlist.video_count }}</b>
+          <b>&nbsp;{{ videocount }}</b>
           <b>&nbsp;|&nbsp;</b>
           <i class='ion-md-eye'  style="font-size: 20px"></i>
           <b>&nbsp;{{ playlist.view_counter }}</b>
@@ -64,25 +64,28 @@
             <a href="{{ url_for('playlist.item', playlist=playlist.hashid, original_url=current_url, button='add_video' ) }}">
             <i class='ion-md-add' style="font-size: 24px"></i></a>
           {% endif %}
+
         </div>
       </div>
     </div>
     <div class="h-box">
       {% if button %}
-      <div class="pure-control-group">
-        <form action="{{ url_for('user.history', playlist=playlist.hashid, original_url=current_url ) }}">
-          <button class="pure-button" type="submit" name="submitvalue" value="history">
+      <style>
+       form { display: inline-block; //Or display: inline;}
+      </style>
+        <form action="{{ url_for('user.history', playlist=playlist.hashid, original_url=current_url ) }}" >
+          <button class="pure-button" type="submit" name="playlist" value= {{ playlist.hashid }}>
             <i class='ion-md-done-all'  style="font-size: 24px"></i>
             {{ gettext('History') }}
           </button>
         </form>
         <form action="{{ url_for('user.watchlater', playlist=playlist.hashid, original_url=current_url ) }}">
-          <button class="pure-button" type="submit" name="submitvalue" value="watchlater">
+          <button class="pure-button" type="submit" name="playlist" value= {{ playlist.hashid }}>
             <i class='ion-md-time'  style="font-size: 24px"></i>
             {{ gettext('WatchLater') }}
           </button>
         </form>
-      </div>
+{#      </div>  #}
       {% endif %}
       <hr>
     </div>

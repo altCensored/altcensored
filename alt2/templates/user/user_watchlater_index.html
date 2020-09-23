@@ -24,10 +24,11 @@
         <div class="pure-g" style="text-align:center;">
           <div class="pure-u-1 pure-md-1-1">
             {% if playlist %}
-            <i class='ion-md-create' style="font-size: 24px"></i></a>
-            <i class='ion-md-list' style="font-size: 24px"></i></a>
+            <a href="{{ url_for('playlist.item', playlist=playlist.hashid ) }}">
+            <i class='ion-md-return-left' style="font-size: 24px"></i>
+            <i class='ion-md-list' style="font-size: 24px"></i>
             &nbsp;
-            <b>{{ playlist }}</b>
+            <b> {{ playlist.title }}</b></a>
             {% else %}
             <b>{{ gettext('WATCHLATER') }}</b>
             {% endif %}

@@ -22,12 +22,12 @@
                       {% if userlist and (video.id in playlist.videos) %}
                         <a class="action has-tooltip" href="{{url_for('playlist.remove_video_playlist')}}?v={{video.extractor_data}}&playlist={{playlist.hashid}}&original_url={{ current_url }}">
                             <p class="watchlater"> <i class='ion-md-checkmark' style="font-size: 24px"> </i></p>
-                            <p class="tooltip">Remove from Play List</p>
+                            <p class="tooltip">Remove from PlayList</p>
                         </a>
                       {% else %}
                         <a class="action has-tooltip" href="{{ url_for('playlist.add_video_playlist')}}?v={{video.extractor_data}}&playlist={{playlist.hashid}}&original_url={{ current_url }}">
                             <p class="watchlater"> <i class='ion-md-add' style="font-size: 24px"></i></p>
-                            <p class="tooltip">Add to Play List</p>
+                            <p class="tooltip">Add to PlayList</p>
                         </a>
                       {% endif %}
                     {% else %} 

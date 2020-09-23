@@ -11,7 +11,6 @@ from .database import db_session
 from .models import User, Playlist, Mv_Video, Counter
 from .pagination import Pagination
 from .util import login_required, str_to_bool, title_exists
-import datetime
 
 bp = Blueprint('playlist', __name__, url_prefix='/playlist')
 

@@ -22,12 +22,12 @@
                       {% if userlist and (video.id in playlist.videos) %}
                         <a class="action has-tooltip" href="{{url_for('playlist.remove_video_playlist')}}?v={{video.extractor_data}}&playlist={{playlist.hashid}}&original_url={{ current_url }}">
                             <p class="watchlater"> <i class='ion-md-checkmark' style="font-size: 24px"> </i></p>
-                            <p class="tooltip">Remove from WatchList</p>
+                            <p class="tooltip">Remove from Play List</p>
                         </a>
                       {% else %}
                         <a class="action has-tooltip" href="{{ url_for('playlist.add_video_playlist')}}?v={{video.extractor_data}}&playlist={{playlist.hashid}}&original_url={{ current_url }}">
-                            <p class="watchlater"> <i class='ion-md-time' style="font-size: 24px"></i></p>
-                            <p class="tooltip">Add to Watchlist</p>
+                            <p class="watchlater"> <i class='ion-md-add' style="font-size: 24px"></i></p>
+                            <p class="tooltip">Add to Play List</p>
                         </a>
                       {% endif %}
                     {% else %} 
@@ -39,12 +39,12 @@
                     {% if watchlater and (video.id in watchlater) %}
                       <a class="action has-tooltip" href="{{ url_for('user.remove_video_watchlater')}}?v={{video.extractor_data}}&original_url={{ current_url }}">
                         <p class="watchlater"> <i class='ion-md-checkmark' style="font-size: 24px"> </i></p>
-                        <p class="tooltip">Remove from WatchList</p>
+                        <p class="tooltip">Remove from WatchLater</p>
                       </a>
                     {% else %}
                       <a class="action has-tooltip" href="{{ url_for('user.add_video_watchlater')}}?v={{video.extractor_data}}&original_url={{ current_url }}">
                           <p class="watchlater"> <i class='ion-md-time' style="font-size: 24px"></i></p>
-                          <p class="tooltip">Add to WatchList</p>
+                          <p class="tooltip">Add to WatchLater</p>
                       </a>
                     {% endif %}
                   {% endif %}
@@ -70,12 +70,12 @@
                   {% if watchlater and (video.id in watchlater) %}
                     <a class="action has-tooltip" href="{{ url_for('user.remove_video_watchlater')}}?v={{video.extractor_data}}&original_url={{ current_url }}"}}">
                         <p class="watchlater"> <i class='ion-md-checkmark' style="font-size: 24px"> </i></p>
-                        <p class="tooltip">Remove from WatchList</p>
+                        <p class="tooltip">Remove from WatchLater</p>
                     </a>
                   {% else %}
                     <a class="action has-tooltip" href="{{ url_for('user.add_video_watchlater')}}?v={{video.extractor_data}}&original_url={{ current_url }}"}}">
                         <p class="watchlater"> <i class='ion-md-time' style="font-size: 24px"></i></p>
-                        <p class="tooltip">Add to Watchlist</p>
+                        <p class="tooltip">Add to WatchLater</p>
                     </a>
                   {% endif %}
                 {% endif %}

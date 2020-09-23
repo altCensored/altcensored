@@ -120,12 +120,11 @@ img.thumbnail {
 }
 
 
-/*
-
 .watchlater {
   position: absolute;
   top: 0;
   right: 0;
+  width: 19px;
 }
 
 .has-tooltip .tooltip {
@@ -137,13 +136,17 @@ img.thumbnail {
 }
 
 .tooltip {
-  position: fixed;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
   background: rgba(35, 35, 35, 0.75);
-  padding: 10px 15px;
-  border-radius: 3px;
+  padding: 5px 15px;
+  color: white;
+  right: 19px;
+  top: 4px;
+  height: 19px;
+  font-size: 12px;
 }
-
-*/
 
 /*
  * Navbar

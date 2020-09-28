@@ -7,10 +7,10 @@
 </head>
 
 <html>
-
+<body>
 {% if ia_url  is not none %}
 
-<video preload="auto" playsinline outline="none" controls
+<video id="video-player" preload="auto" playsinline outline="none" controls
 style="outline:none;
     background-color:#000;
     background-size:cover;
@@ -49,7 +49,7 @@ style="outline:none;
 
 {% else %}
 
-<video preload="auto" playsinline outline="none" controls
+<video id="video-player" preload="auto" playsinline outline="none" controls
 style="outline:none;
     background-color:#000;
     background-size:cover;
@@ -87,3 +87,14 @@ style="outline:none;
 </video>
 
 {% endif %}
+
+<script type="text/javascript">
+  document.getElementById('video-player').play();
+  {% if next_video %}
+    document.getElementById('video-player').addEventListener('ended', function(){
+      window.parent.location = "/watch?v={{next_video}}"
+    });
+  {% endif %}
+</script>
+</body>
+</html>

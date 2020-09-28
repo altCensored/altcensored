@@ -146,7 +146,6 @@ def watch():
         flag_modified(user, "watched")
         db_session.commit()
 
-
     return render_template('video/video_item.html', ia_url=ia_url, ia_url_short= ia_url_short,\
         video_id=video_id, channel=channel, video=video, videos=videos, cat_id=cat_id, tags=tags, ac_url=ac_url)
 
@@ -170,7 +169,12 @@ def embed(video_id):
         MYSERVER_URL = current_app.config['MYSERVER_URL']
         ac_url = MYSERVER_URL + "/videos/" + video_id
 
-    return render_template('video/video_embed.html', ia_url=ia_url, video_id=video_id, video=video, ac_url=ac_url)
+    videos = Mv_Video.query.filter_by(ytc_id=video.ytc_id).filter(Mv_Video.published > video.published).order_by(Mv_Video.published).limit(PER_PAGE)
+    next_video = None
+    if videos.count() > 0:
+        next_video = videos[0].extractor_data
+
+    return render_template('video/video_embed.html', ia_url=ia_url, video_id=video_id, video=video, ac_url=ac_url, next_video=next_video)
 
 
 @bp.route("/search", defaults={'page': 1})

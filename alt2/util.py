@@ -20,10 +20,15 @@ def get_locale():
         session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys())
     return session['locale']
 
-
 def get_theme():
     return session.get('theme', 'light')
 
+def get_playnext():
+    if 'playnext' in session:
+        return session['playnext']
+    else:
+        session['playnext'] = False
+    return session['playnext']
 
 def get_navtabs():
     if 'navtabs' in session:

@@ -27,6 +27,8 @@ def index():
         get_locale()
     if session.get('theme') is None:
         session['theme'] = get_theme()
+    if session.get('playnext') is None:
+        get_playnext()
     if session.get('navtabs') is None:
         get_navtabs()
     if session.get('navtabs_index') is None:
@@ -36,6 +38,7 @@ def index():
         fnt2 = request.form['navtab2_value']
         fnt3 = request.form['navtab3_value']
 
+        session['playnext'] = str_to_bool(request.form['playnext'])
         session['theme'] = request.form['theme']
 
         if session['locale'] != request.form['locale']:            
@@ -80,8 +83,12 @@ def index():
             now = datetime.datetime.now(timezone.utc)
             user = db_session.query(User).filter(User.email == session['user']['email']).one()
             user.updated = now
-            user.locale = session['locale']
-            user.theme = session['theme']
+            user.settings = {
+            "theme": session['theme'],
+            "locale": session['locale'],
+            "playnext": session['playnext']
+            }
+
             user.username = fusername
             user.description = fdescription
             user.public = fpublic

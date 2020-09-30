@@ -82,6 +82,21 @@
                   {% endfor %}
                 </select>
               </div>
+
+
+              <div class="pure-control-group">
+                <label for="PlayNext"> {{ gettext('Play Next Video') }}: </label>
+                <select name=playnext>
+                  <option value="{{playnext}}" SELECTED>{{playnext}}</option>"             
+                  {% if playnext %}
+                    <option value=False>False</option>"
+                  {% else %}
+                  <option value=True>True</option>"
+                  {% endif %}
+                </select>
+              </div>
+
+
               <div class="pure-control-group">
                 <label for="Menu"> {{ gettext('Menu') }}:</label>
                 <select name=navtab1_value>

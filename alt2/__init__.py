@@ -117,10 +117,11 @@ def create_app(test_config=None):
         return result
 
     @app.context_processor
-    def inject_locale_and_theme():
+    def inject_context():
         return dict(
             locale=util.get_locale(),
             theme=util.get_theme(),
+            playnext=util.get_playnext(),
             current_url=quote_plus(request.url),
             navtabs=util.get_navtabs(),
             navtabs_index=util.get_navtabs_index())

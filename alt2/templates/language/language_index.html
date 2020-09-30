@@ -37,7 +37,8 @@
                 <a style="width:100%;" href="{{ url_for('language.item', lang_code=language['lang_code'] ) }}">
 
 
-                    <img class="thumbnail" src="https://{{ config['MYSERVER_NAME'] }}/flags/4x3/{{ language['lang_image'] }}"
+                    <img class="thumbnail" src="{{ url_for('static', filename='flags/4x3') }}/{{ language['lang_image'] }}"
+
                       style="border: 1px solid black;">
 
 

@@ -2,11 +2,11 @@ from flask import (
     Blueprint, flash, redirect, render_template, request, url_for,
     send_from_directory, make_response, session, current_app )
 from werkzeug.exceptions import abort
-from sqlalchemy import func, text
+from sqlalchemy import func, text, case
 from sqlalchemy.orm.attributes import flag_modified
 from internetarchive import get_item
 from .database import db_session
-from .models import Mv_Video, Mv_Channel, Mv_Category, User
+from .models import Mv_Video, Mv_Channel, Mv_Category, User, Playlist
 from .pagination import Pagination
 from . import util
 
@@ -107,6 +107,8 @@ def popular(page):
 @bp.route("/watch")
 def watch():
     video_id = request.args.get('v', None)
+    playlist_id = request.args.get('p', None)
+    userlist = request.args.get('u', None)
     video = Mv_Video.query.get(video_id)
     cat_name = video.category
     tagstring = video.tags
@@ -120,7 +122,31 @@ def watch():
     cat_id = category.cat_id
     ytc_id = video.ytc_id
     channel = Mv_Channel.query.get(ytc_id)
-    videos = Mv_Video.query.filter_by(ytc_id=ytc_id).limit(PER_PAGE)
+    videos = Mv_Video.query.filter_by(ytc_id=ytc_id).order_by(Mv_Video.published.desc(),Mv_Video.extractor_data.desc()).limit(PER_PAGE)
+
+    if playlist_id:
+        playlist = Playlist.query.filter(Playlist.hashid == playlist_id).scalar()
+        ordering = case(
+            {id: index for index, id in reversed(list(enumerate(reversed(playlist.videos))))},
+            value=Mv_Video.id
+         )
+        videos = Mv_Video.query.filter(Mv_Video.id.in_(playlist.videos)).order_by(ordering)
+
+    if userlist == "history":
+        user = User.query.filter(User.email == session['user']['email']).scalar()
+        ordering = case(
+            {id: index for index, id in reversed(list(enumerate(reversed(user.watched))))},
+            value=Mv_Video.id
+         )
+        videos = Mv_Video.query.filter(Mv_Video.id.in_(user.watched)).order_by(ordering)
+
+    if userlist == "watchlater":
+        user = User.query.filter(User.email == session['user']['email']).scalar()
+        ordering = case(
+            {id: index for index, id in reversed(list(enumerate(reversed(user.watchlater))))},
+            value=Mv_Video.id
+         )
+        videos = Mv_Video.query.filter(Mv_Video.id.in_(user.watchlater)).order_by(ordering)
 
     try:
         item = get_item('youtube-' + video_id)

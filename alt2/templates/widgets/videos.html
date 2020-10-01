@@ -6,13 +6,12 @@
       {% for video in videos %}
       <div class="pure-u-1 pure-u-md-1-4">
         <div class="h-box">
-
           {% if playlist %}
-          <a style="width:100%;" href="{{ url_for('video.watch', v=video['extractor_data'], p=playlist.hashid) }}">
+          <a style="width:100%;" href="{{ url_for('video.watch', v=video.extractor_data, playlist=playlist.hashid) }}">
           {% elif userlist %}
-          <a style="width:100%;" href="{{ url_for('video.watch', v=video['extractor_data'], u=userlist) }}">
+          <a style="width:100%;" href="{{ url_for('video.watch', v=video.extractor_data, userlist=userlist) }}">
           {% else %}
-          <a style="width:100%;" href="{{ url_for('video.watch', v=video['extractor_data']) }}">
+          <a style="width:100%;" href="{{ url_for('video.watch', v=video.extractor_data) }}">
           {% endif %}
             <div class="thumbnail">
               <img class="thumbnail" src="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['title'] | ia_fname ~ '-' ~ video['extractor_data'] ~ '.jpg' }}"onerror="this.onerror=null;this.src='{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}';" >
@@ -87,11 +86,16 @@
                   {% endif %}
                 {% endif %}
               {% endif %}
-
             </div>
           </a>
           <p>
-            <a class="action" href="{{ url_for('video.watch', v=video['extractor_data']) }}">
+            {% if playlist %}
+            <a style="width:100%;" href="{{ url_for('video.watch', v=video['extractor_data'], playlist=playlist.hashid) }}">
+            {% elif userlist %}
+            <a style="width:100%;" href="{{ url_for('video.watch', v=video['extractor_data'], userlist=userlist) }}">
+            {% else %}
+            <a style="width:100%;" href="{{ url_for('video.watch', v=video['extractor_data']) }}">
+            {% endif %}
             {{ video['title'] }}</a>
           </p>
           <p>

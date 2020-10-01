@@ -8,7 +8,8 @@
 
 <html>
 <body>
-{% if ia_url  is not none %}
+
+{% if ia_url %}
 
 <video id="video-player" preload="auto" playsinline outline="none" controls
 style="outline:none;
@@ -90,10 +91,18 @@ style="outline:none;
 
 <script nonce="{{ csp_nonce() }}" type="text/javascript">
   document.getElementById('video-player').play();
+  {% if playnext %}
   {% if next_video %}
     document.getElementById('video-player').addEventListener('ended', function(){
-      window.parent.location = "/watch?v={{next_video}}"
+    {% if playlist %}
+    window.parent.location = "/watch?v={{next_video}}&playlist={{playlist.hashid}}"
+    {% elif userlist %}
+    window.parent.location = "/watch?v={{next_video}}&userlist={{userlist}}"
+    {% else %}
+    window.parent.location = "/watch?v={{next_video}}"
+    {% endif %}
     });
+  {% endif %}
   {% endif %}
 </script>
 </body>

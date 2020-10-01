@@ -20,16 +20,14 @@
 
 <br>
 
-  <div class="pure-g">
-    <div class="pure-u-1 pure-u-md-2-24"></div>
-      <div class="pure-u-1 pure-u-md-20-24">
-        <div class="pure-g">
-
-            <div class="pure-u-1 pure-u-md-1-1">
-              <div class="h-box">
-
-                <p> 
-                  YouTube
+<div class="pure-g">
+  <div class="pure-u-1 pure-u-md-2-24"></div>
+  <div class="pure-u-1 pure-u-md-20-24">
+    <div class="pure-g">
+      <div class="pure-u-1 pure-u-md-1-1">
+        <div class="h-box">
+          <p>
+                YouTube
                   <u><b><a href = "https://youtube.googleblog.com/2017/08/an-update-on-our-commitment-to-fight.html" target="_blank">
                    {{ gettext('limits') }}</a></b></u>
                    {{ gettext('access to videos that are neither') }}
@@ -40,12 +38,12 @@
                    {{ gettext('Terms and Conditions') }}</a></b></u> {{ gettext('or') }}
                   <u><b><a href = "https://www.youtube.com/yt/about/policies/#community-guidelines" target="_blank">
                    {{ gettext('Community Guidelines') }}</a></b></u>.
-                </p>
-                <p>
+          </p>
+          <p>
                   <u><b><a href = "https://support.google.com/youtube/answer/7458465" target="_blank">{{ gettext('"Limited state" videos') }}</a></b></u>
                    {{ gettext('are placed behind a warning message, cannot be shared, monetized or easily found, and have likes, comments, view counts and suggested videos disabled') }}.
-                </p>
-                <p> 
+          </p>
+          <p> 
                   YouTube
                   <u><b><a href = "https://transparencyreport.google.com/youtube-policy/removals" target="_blank">
                    {{ gettext('removes') }}</a></b></u>
@@ -56,8 +54,8 @@
                    {{ gettext('arbitrarily enforced') }}</a></b></u>
                    {{ gettext('Community Guidelines') }}</a></b></u>,
                    {{ gettext('while Creators increasingly "self-censor" trying to avoid channel strikes and terminations') }}.
-                </p>
-                <p>
+          </p>
+          <p>
                   <b>altCensored.com</b>
                    {{ gettext('is an unbiased community catalog of') }}
                   <b><u><a href="{{ url_for('video.index') }}">
@@ -72,8 +70,8 @@
                   <b><u><a href="{{ url_for('channel.archived') }}">
                    {{ archchancount }}</a></b></u>
                    {{ gettext('are being archived in case of deletion') }}.
-                </p>
-                <p>
+          </p>
+          <p>
                   {{ gettext('Find videos and channels using the search bar') }}.
                   {{ gettext('Download videos with "right mouse button click" inside the video window or use the "Download Torrent" link. Channel and Video RSS Feeds') }}
                   ( 
@@ -81,18 +79,15 @@
                   )
                   {{ gettext('contain torrent links to easily download multiple videos') }}.
                   {{ gettext('Embed videos in any website exactly like YouTube') }}.
-                </p>
-                <p>
+          </p>
+          <p>
                   {{ gettext('Email new channel suggestions to') }}
                   <b>altCensored@protonmail.com</b>.
-                </p>
-
-              </div>
-            </div>
-
+          </p>
         </div>
       </div>
-    <div class="pure-u-1 pure-u-md-2-24"></div>
-  </div>   
+    </div>
+  </div>
+</div>   
 
 {% endblock %}

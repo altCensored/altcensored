@@ -107,8 +107,8 @@ def popular(page):
 @bp.route("/watch")
 def watch():
     video_id = request.args.get('v', None)
-    playlist_id = request.args.get('p', None)
-    userlist = request.args.get('u', None)
+    playlist = request.args.get('playlist', None)
+    userlist = request.args.get('userlist', None)
     video = Mv_Video.query.get(video_id)
     cat_name = video.category
     tagstring = video.tags
@@ -122,17 +122,17 @@ def watch():
     cat_id = category.cat_id
     ytc_id = video.ytc_id
     channel = Mv_Channel.query.get(ytc_id)
-    videos = Mv_Video.query.filter_by(ytc_id=ytc_id).order_by(Mv_Video.published.desc(),Mv_Video.extractor_data.desc()).limit(PER_PAGE)
 
-    if playlist_id:
-        playlist = Playlist.query.filter(Playlist.hashid == playlist_id).scalar()
+    if playlist:
+        playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
         ordering = case(
             {id: index for index, id in reversed(list(enumerate(reversed(playlist.videos))))},
             value=Mv_Video.id
          )
         videos = Mv_Video.query.filter(Mv_Video.id.in_(playlist.videos)).order_by(ordering)
+#        playlist = playlist.hashid
 
-    if userlist == "history":
+    elif userlist == "history":
         user = User.query.filter(User.email == session['user']['email']).scalar()
         ordering = case(
             {id: index for index, id in reversed(list(enumerate(reversed(user.watched))))},
@@ -140,13 +140,18 @@ def watch():
          )
         videos = Mv_Video.query.filter(Mv_Video.id.in_(user.watched)).order_by(ordering)
 
-    if userlist == "watchlater":
+    elif userlist == "watchlater":
         user = User.query.filter(User.email == session['user']['email']).scalar()
         ordering = case(
             {id: index for index, id in reversed(list(enumerate(reversed(user.watchlater))))},
             value=Mv_Video.id
          )
         videos = Mv_Video.query.filter(Mv_Video.id.in_(user.watchlater)).order_by(ordering)
+
+    else:
+        videos = Mv_Video.query.filter_by(ytc_id=ytc_id).order_by(Mv_Video.published.desc(),\
+            Mv_Video.extractor_data.desc()).limit(PER_PAGE)
+        playlist = None
 
     try:
         item = get_item('youtube-' + video_id)
@@ -172,13 +177,15 @@ def watch():
         flag_modified(user, "watched")
         db_session.commit()
 
-    return render_template('video/video_item.html', ia_url=ia_url, ia_url_short= ia_url_short,\
-        video_id=video_id, channel=channel, video=video, videos=videos, cat_id=cat_id, tags=tags, ac_url=ac_url)
+    return render_template('video/video_item.html', ia_url=ia_url, ia_url_short=ia_url_short,\
+     video_id=video_id, channel=channel, video=video, videos=videos, cat_id=cat_id, tags=tags,\
+     ac_url=ac_url, playlist=playlist, userlist=userlist)
 
 @bp.route('/embed/<video_id>')
 def embed(video_id):
-#    video_id = request.args.get('v', None)
     video = Mv_Video.query.get(video_id)
+    playlist = request.args.get('playlist', None)
+    userlist = request.args.get('userlist', None)
 
     try:
         item = get_item('youtube-' + video_id)
@@ -195,12 +202,51 @@ def embed(video_id):
         MYSERVER_URL = current_app.config['MYSERVER_URL']
         ac_url = MYSERVER_URL + "/videos/" + video_id
 
-    videos = Mv_Video.query.filter_by(ytc_id=video.ytc_id).filter(Mv_Video.published > video.published).order_by(Mv_Video.published).limit(PER_PAGE)
-    next_video = None
-    if videos.count() > 0:
-        next_video = videos[0].extractor_data
 
-    return render_template('video/video_embed.html', ia_url=ia_url, video_id=video_id, video=video, ac_url=ac_url, next_video=next_video)
+    if playlist:
+        playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
+
+        ordering = case(
+            {id: index for index, id in reversed(list(enumerate(reversed(playlist.videos))))},
+            value=Mv_Video.id
+         )
+        videos = Mv_Video.query.filter(Mv_Video.id.in_(playlist.videos)).order_by(ordering)
+
+        idx = (playlist.videos).index(video.id)
+        flash(idx, 'success')
+
+        newidx = (idx +1)
+        flash(newidx, 'success')
+
+        next_video = None
+        if videos.count() > 0:
+            next_video = videos[newidx].extractor_data
+
+    elif userlist == "history":
+        user = User.query.filter(User.email == session['user']['email']).scalar()
+        ordering = case(
+            {id: index for index, id in reversed(list(enumerate(reversed(user.watched))))},
+            value=Mv_Video.id
+         )
+        videos = Mv_Video.query.filter(Mv_Video.id.in_(user.watched)).order_by(ordering)
+
+    elif userlist == "watchlater":
+        user = User.query.filter(User.email == session['user']['email']).scalar()
+        ordering = case(
+            {id: index for index, id in reversed(list(enumerate(reversed(user.watchlater))))},
+            value=Mv_Video.id
+         )
+        videos = Mv_Video.query.filter(Mv_Video.id.in_(user.watchlater)).order_by(ordering)
+
+    else:
+        videos = Mv_Video.query.filter_by(ytc_id=video.ytc_id).filter(Mv_Video.published < video.published)\
+        .order_by(Mv_Video.published.desc()).limit(PER_PAGE)
+
+        next_video = None
+        if videos.count() > 0:
+            next_video = videos[0].extractor_data
+
+    return render_template('video/video_embed.html', ia_url=ia_url, ac_url=ac_url, next_video=next_video, playlist=playlist, userlist=userlist)
 
 
 @bp.route("/search", defaults={'page': 1})

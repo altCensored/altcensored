@@ -71,6 +71,8 @@ def register_user(email, password, username):
         get_locale()
     if session.get('playnext') is None:
         get_playnext()
+    if session.get('looplist') is None:
+        get_looplist()
     if session.get('theme') is None:
         session['theme'] = get_theme()
     if session.get('navtabs') is None:
@@ -82,7 +84,8 @@ def register_user(email, password, username):
     settings = {
     "theme": session['theme'],
     "locale": session['locale'],
-    "playnext": session['playnext']
+    "playnext": session['playnext'],
+    "looplist": session['looplist']
     }
 
     user = User (

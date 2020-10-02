@@ -85,10 +85,22 @@
 
 
               <div class="pure-control-group">
-                <label for="PlayNext"> {{ gettext('Play Next Video') }}: </label>
+                <label for="PlayNext"> {{ gettext('AutoPlay') }}: </label>
                 <select name=playnext>
                   <option value="{{playnext}}" SELECTED>{{playnext}}</option>"             
                   {% if playnext %}
+                    <option value=False>False</option>"
+                  {% else %}
+                  <option value=True>True</option>"
+                  {% endif %}
+                </select>
+              </div>
+
+              <div class="pure-control-group">
+                <label for="LoopList"> {{ gettext('Loop List') }}: </label>
+                <select name=looplist>
+                  <option value="{{looplist}}" SELECTED>{{looplist}}</option>"             
+                  {% if looplist %}
                     <option value=False>False</option>"
                   {% else %}
                   <option value=True>True</option>"

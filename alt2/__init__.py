@@ -122,6 +122,7 @@ def create_app(test_config=None):
             locale=util.get_locale(),
             theme=util.get_theme(),
             playnext=util.get_playnext(),
+            looplist=util.get_looplist(),
             current_url=quote_plus(request.url),
             navtabs=util.get_navtabs(),
             navtabs_index=util.get_navtabs_index())

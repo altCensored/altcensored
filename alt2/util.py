@@ -30,6 +30,13 @@ def get_playnext():
         session['playnext'] = False
     return session['playnext']
 
+def get_looplist():
+    if 'looplist' in session:
+        return session['looplist']
+    else:
+        session['looplist'] = True
+    return session['looplist']
+
 def get_navtabs():
     if 'navtabs' in session:
         return session['navtabs']

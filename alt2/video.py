@@ -205,32 +205,33 @@ def embed(video_id):
         MYSERVER_URL = current_app.config['MYSERVER_URL']
         ac_url = MYSERVER_URL + "/videos/" + video_id
 
+    next_video = None
 
     if playlist:
         playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
-        idx = (playlist.videos).index(video.extractor_data)
-        next_video = (playlist.videos).pop(idx-1)
-
+        if len(playlist.videos) > 1:
+            idx = (playlist.videos).index(video.extractor_data)
+            next_video = (playlist.videos).pop(idx-1)
 
     elif userlist == "history":
         user = User.query.filter(User.email == session['user']['email']).scalar()
-        idx = (user.watched).index(video.extractor_data)
-        next_video = (user.watched).pop(idx-1)
-
+        if len(user.watched) > 1:
+            idx = (user.watched).index(video.extractor_data)
+            next_video = (user.watched).pop(idx-1)
 
     elif userlist == "watchlater":
         user = User.query.filter(User.email == session['user']['email']).scalar()
-        idx = (user.watchlater).index(video.extractor_data)
-        next_video = (user.watchlater).pop(idx-1)
-
+        if len(user.watchlater) > 1:
+            idx = (user.watchlater).index(video.extractor_data)
+            next_video = (user.watchlater).pop(idx-1)
 
     else:
-        videos = Mv_Video.query.filter_by(ytc_id=video.ytc_id).filter(Mv_Video.published < video.published)\
-        .order_by(Mv_Video.published.desc()).limit(PER_PAGE)
-
-        next_video = None
-        if videos.count() > 0:
-            next_video = videos[0].extractor_data
+        videos = db_session.query(Mv_Video.extractor_data).filter_by(ytc_id=video.ytc_id).order_by(Mv_Video.published.asc()).limit(PER_PAGE)
+        if videos.count() > 1:
+            videos_extractor = [r[0] for r in videos]
+            videos_extractor_list = list(videos_extractor)
+            idx = (videos_extractor_list).index(video.extractor_data)
+            next_video = (videos_extractor_list).pop(idx-1)
 
     return render_template('video/video_embed.html', ia_url=ia_url, ac_url=ac_url, next_video=next_video, playlist=playlist, userlist=userlist)
 

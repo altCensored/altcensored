@@ -29,6 +29,8 @@ def index():
         session['theme'] = get_theme()
     if session.get('playnext') is None:
         get_playnext()
+    if session.get('looplist') is None:
+        get_looplist()
     if session.get('navtabs') is None:
         get_navtabs()
     if session.get('navtabs_index') is None:
@@ -39,6 +41,7 @@ def index():
         fnt3 = request.form['navtab3_value']
 
         session['playnext'] = str_to_bool(request.form['playnext'])
+        session['looplist'] = str_to_bool(request.form['looplist'])
         session['theme'] = request.form['theme']
 
         if session['locale'] != request.form['locale']:            

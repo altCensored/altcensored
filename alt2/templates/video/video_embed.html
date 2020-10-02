@@ -91,7 +91,6 @@ style="outline:none;
 
 <script nonce="{{ csp_nonce() }}" type="text/javascript">
   document.getElementById('video-player').play();
-  {% if playnext %}
   {% if next_video %}
     document.getElementById('video-player').addEventListener('ended', function(){
     {% if playlist %}
@@ -102,7 +101,6 @@ style="outline:none;
     window.parent.location = "/watch?v={{next_video}}"
     {% endif %}
     });
-  {% endif %}
   {% endif %}
 </script>
 </body>

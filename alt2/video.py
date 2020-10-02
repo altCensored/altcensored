@@ -126,10 +126,10 @@ def watch():
     if playlist:
         playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
         ordering = case(
-            {id: index for index, id in reversed(list(enumerate(reversed(playlist.videos))))},
-            value=Mv_Video.id
+            {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(playlist.videos))))},
+            value=Mv_Video.extractor_data
          )
-        videos = Mv_Video.query.filter(Mv_Video.id.in_(playlist.videos)).order_by(ordering)
+        videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(playlist.videos)).order_by(ordering)
 
     elif userlist == "history":
         user = User.query.filter(User.email == session['user']['email']).scalar()

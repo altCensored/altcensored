@@ -116,7 +116,7 @@ def remove_video_history():
     video_id = request.args.get('v', None)
     user = User.query.filter(User.email == session['user']['email']).scalar()
     video = Mv_Video.query.get(video_id)
-    if video.id in user.watched:
+    if video.extractor_data in user.watched:
         user.watched = list(dict.fromkeys(user.watched))
         user.watched.remove(video.extractor_data)
         db_session.commit()
@@ -191,7 +191,7 @@ def remove_video_watchlater():
     video_id = request.args.get('v', None)
     user = User.query.filter(User.email == session['user']['email']).scalar()
     video = Mv_Video.query.get(video_id)
-    if video.id in user.watchlater:
+    if video.extractor_data in user.watchlater:
         user.watchlater = list(dict.fromkeys(user.watchlater))
         user.watchlater.remove(video.extractor_data)
         db_session.commit()

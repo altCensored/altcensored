@@ -84,7 +84,7 @@ def item(playlist,page):
             value=Mv_Video.extractor_data
          )
         videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(playlist.videos)).order_by(ordering).limit(PER_PAGE).offset(offset)
-        videocount = db_session.query(func.count(Mv_Video.id)).filter(Mv_Video.id.in_(playlist.videos)).scalar()
+        videocount = db_session.query(func.count(Mv_Video.id)).filter(Mv_Video.extractor_data.in_(playlist.videos)).scalar()
         pagination = Pagination(page, PER_PAGE, videocount)
     else:
         videos = []
@@ -117,10 +117,9 @@ def create():
         hashid = 'AC' + hashids.encode(random.getrandbits(104))
 
         now = datetime.datetime.now(timezone.utc)
-#        empty_list = []
+        empty_list = []
         playlist = Playlist (title=ftitle, description=fdescription, hashid=hashid,\
-#         user_id=user_id, created=now, updated=now, public=fprivacy, view_counter=0, video_count=0, videos=empty_list)
-         user_id=user_id, created=now, updated=now, public=fprivacy, view_counter=0, video_count=0)
+         user_id=user_id, created=now, updated=now, public=fprivacy, view_counter=0, video_count=0, videos=empty_list)
 
         db_session.add(playlist)
         db_session.commit()

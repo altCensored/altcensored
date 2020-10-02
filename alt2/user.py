@@ -92,14 +92,15 @@ def history(page):
     playlist = request.args.get('playlist', None)
     user = User.query.filter(User.email == session['user']['email']).scalar()
     playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
-    user.watched = list(dict.fromkeys(user.watched))
+#    user.watched = list(dict.fromkeys(user.watched))
 
     try:
         ordering = case(
-            {id: index for index, id in reversed(list(enumerate(reversed(user.watched))))},
-            value=Mv_Video.id
+            {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(user.watched))))},
+            value=Mv_Video.extractor_data
          )
-        videos = Mv_Video.query.filter(Mv_Video.id.in_(user.watched)).order_by(ordering).limit(PER_PAGE).offset(offset)
+        videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(user.watched)).order_by(ordering).limit(PER_PAGE).offset(offset)
+
         videocount=len(user.watched)
         pagination = Pagination(page, PER_PAGE, videocount)  
         return render_template('user/user_history_index.html', pagination=pagination,\
@@ -117,7 +118,7 @@ def remove_video_history():
     video = Mv_Video.query.get(video_id)
     if video.id in user.watched:
         user.watched = list(dict.fromkeys(user.watched))
-        user.watched.remove(video.id)
+        user.watched.remove(video.extractor_data)
         db_session.commit()
     return redirect(request.args.get('original_url', '/'))
 
@@ -156,10 +157,10 @@ def watchlater(page):
 
     try:
         ordering = case(
-            {id: index for index, id in reversed(list(enumerate(reversed(user.watchlater))))},
-            value=Mv_Video.id
+            {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(user.watchlater))))},
+            value=Mv_Video.extractor_data
          )
-        videos = Mv_Video.query.filter(Mv_Video.id.in_(user.watchlater)).order_by(ordering).limit(PER_PAGE).offset(offset)
+        videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(user.watchlater)).order_by(ordering).limit(PER_PAGE).offset(offset)
         videocount=len(user.watchlater)
         pagination = Pagination(page, PER_PAGE, videocount)  
         return render_template('user/user_watchlater_index.html', pagination=pagination, \
@@ -176,9 +177,9 @@ def add_video_watchlater():
     video = Mv_Video.query.get(video_id)
     user = db_session.query(User).filter(User.email == session['user']['email']).one()
     try:
-        user.watchlater += [video.id]
+        user.watchlater += [video.extractor_data]
     except:
-        user.watchlater = [video.id]
+        user.watchlater = [video.extractor_data]
     flag_modified(user, "watchlater")
     db_session.commit()
     return redirect(request.args.get('original_url', '/'))
@@ -192,7 +193,7 @@ def remove_video_watchlater():
     video = Mv_Video.query.get(video_id)
     if video.id in user.watchlater:
         user.watchlater = list(dict.fromkeys(user.watchlater))
-        user.watchlater.remove(video.id)
+        user.watchlater.remove(video.extractor_data)
         db_session.commit()
     return redirect(request.args.get('original_url', '/'))
 

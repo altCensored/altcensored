@@ -130,23 +130,23 @@ def watch():
             value=Mv_Video.id
          )
         videos = Mv_Video.query.filter(Mv_Video.id.in_(playlist.videos)).order_by(ordering)
-#        playlist = playlist.hashid
 
     elif userlist == "history":
         user = User.query.filter(User.email == session['user']['email']).scalar()
         ordering = case(
-            {id: index for index, id in reversed(list(enumerate(reversed(user.watched))))},
-            value=Mv_Video.id
+            {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(user.watched))))},
+            value=Mv_Video.extractor_data
          )
-        videos = Mv_Video.query.filter(Mv_Video.id.in_(user.watched)).order_by(ordering)
+
+        videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(user.watched)).order_by(ordering)
 
     elif userlist == "watchlater":
         user = User.query.filter(User.email == session['user']['email']).scalar()
         ordering = case(
-            {id: index for index, id in reversed(list(enumerate(reversed(user.watchlater))))},
-            value=Mv_Video.id
+            {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(user.watchlater))))},
+            value=Mv_Video.extractor_data
          )
-        videos = Mv_Video.query.filter(Mv_Video.id.in_(user.watchlater)).order_by(ordering)
+        videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(user.watchlater)).order_by(ordering)
 
     else:
         videos = Mv_Video.query.filter_by(ytc_id=ytc_id).order_by(Mv_Video.published.desc(),\
@@ -170,10 +170,13 @@ def watch():
 
     if session.get('user') is not None:
         user = db_session.query(User).filter(User.email == session['user']['email']).one()
+
         try:
-            user.watched += [video.id]
+            user.watched += [video.extractor_data]
         except:
-            user.watched = [video.id]
+            user.watched = [video.extractor_data]
+
+        user.watched = list(dict.fromkeys(user.watched))
         flag_modified(user, "watched")
         db_session.commit()
 
@@ -205,38 +208,21 @@ def embed(video_id):
 
     if playlist:
         playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
+        idx = (playlist.videos).index(video.extractor_data)
+        next_video = (playlist.videos).pop(idx-1)
 
-        ordering = case(
-            {id: index for index, id in reversed(list(enumerate(reversed(playlist.videos))))},
-            value=Mv_Video.id
-         )
-        videos = Mv_Video.query.filter(Mv_Video.id.in_(playlist.videos)).order_by(ordering)
-
-        idx = (playlist.videos).index(video.id)
-        flash(idx, 'success')
-
-        newidx = (idx +1)
-        flash(newidx, 'success')
-
-        next_video = None
-        if videos.count() > 0:
-            next_video = videos[newidx].extractor_data
 
     elif userlist == "history":
         user = User.query.filter(User.email == session['user']['email']).scalar()
-        ordering = case(
-            {id: index for index, id in reversed(list(enumerate(reversed(user.watched))))},
-            value=Mv_Video.id
-         )
-        videos = Mv_Video.query.filter(Mv_Video.id.in_(user.watched)).order_by(ordering)
+        idx = (user.watched).index(video.extractor_data)
+        next_video = (user.watched).pop(idx-1)
+
 
     elif userlist == "watchlater":
         user = User.query.filter(User.email == session['user']['email']).scalar()
-        ordering = case(
-            {id: index for index, id in reversed(list(enumerate(reversed(user.watchlater))))},
-            value=Mv_Video.id
-         )
-        videos = Mv_Video.query.filter(Mv_Video.id.in_(user.watchlater)).order_by(ordering)
+        idx = (user.watchlater).index(video.extractor_data)
+        next_video = (user.watchlater).pop(idx-1)
+
 
     else:
         videos = Mv_Video.query.filter_by(ytc_id=video.ytc_id).filter(Mv_Video.published < video.published)\

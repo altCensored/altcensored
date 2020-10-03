@@ -137,7 +137,6 @@ def watch():
             {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(user.watched))))},
             value=Mv_Video.extractor_data
          )
-
         videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(user.watched)).order_by(ordering)
 
     elif userlist == "watchlater":
@@ -207,31 +206,42 @@ def embed(video_id):
 
     next_video = None
 
-    if playlist:
-        playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
-        if len(playlist.videos) > 1:
-            idx = (playlist.videos).index(video.extractor_data)
-            next_video = (playlist.videos).pop(idx-1)
+    if session.get('playnext'):
 
-    elif userlist == "history":
-        user = User.query.filter(User.email == session['user']['email']).scalar()
-        if len(user.watched) > 1:
-            idx = (user.watched).index(video.extractor_data)
-            next_video = (user.watched).pop(idx-1)
+        if playlist:
+            playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
+            if len(playlist.videos) > 1:
+                idx = (playlist.videos).index(video.extractor_data)
+                next_video = (playlist.videos).pop(idx-1)
+                if not session.get('looplist') and idx == 0:
+                    next_video = None
 
-    elif userlist == "watchlater":
-        user = User.query.filter(User.email == session['user']['email']).scalar()
-        if len(user.watchlater) > 1:
-            idx = (user.watchlater).index(video.extractor_data)
-            next_video = (user.watchlater).pop(idx-1)
+        elif userlist == "history":
+            user = User.query.filter(User.email == session['user']['email']).scalar()
+            if len(user.watched) > 1:
+                idx = (user.watched).index(video.extractor_data)
+                next_video = (user.watched).pop(idx-1)
+                if not session.get('looplist') and idx == 0:
+                    next_video = None
 
-    else:
-        videos = db_session.query(Mv_Video.extractor_data).filter_by(ytc_id=video.ytc_id).order_by(Mv_Video.published.asc()).limit(PER_PAGE)
-        if videos.count() > 1:
-            videos_extractor = [r[0] for r in videos]
-            videos_extractor_list = list(videos_extractor)
-            idx = (videos_extractor_list).index(video.extractor_data)
-            next_video = (videos_extractor_list).pop(idx-1)
+        elif userlist == "watchlater":
+            user = User.query.filter(User.email == session['user']['email']).scalar()
+            if len(user.watchlater) > 1:
+                idx = (user.watchlater).index(video.extractor_data)
+                next_video = (user.watchlater).pop(idx-1)
+                if not session.get('looplist') and idx == 0:
+                    next_video = None
+
+        else:
+            videos = db_session.query(Mv_Video.extractor_data).filter_by(ytc_id=video.ytc_id).order_by(Mv_Video.published.asc()).limit(PER_PAGE)
+            if videos.count() > 1:
+                videos_extractor = [r[0] for r in videos]
+                videos_extractor_list = list(videos_extractor)
+                idx = (videos_extractor_list).index(video.extractor_data)
+                listlen = len(videos_extractor_list)
+                next_video = (videos_extractor_list).pop(idx-1)
+                if not session.get('looplist') and idx == 0:
+                    next_video = None
 
     return render_template('video/video_embed.html', ia_url=ia_url, ac_url=ac_url, next_video=next_video, playlist=playlist, userlist=userlist)
 

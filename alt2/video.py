@@ -226,6 +226,7 @@ def embed(video_id):
 
         elif userlist == "watchlater":
             user = User.query.filter(User.email == session['user']['email']).scalar()
+            print("Watch Later", user.watchlater)
             if len(user.watchlater) > 1:
                 idx = (user.watchlater).index(video.extractor_data)
                 next_video = (user.watchlater).pop(idx-1)
@@ -237,10 +238,13 @@ def embed(video_id):
             if videos.count() > 1:
                 videos_extractor = [r[0] for r in videos]
                 videos_extractor_list = list(videos_extractor)
-                idx = (videos_extractor_list).index(video.extractor_data)
-                listlen = len(videos_extractor_list)
-                next_video = (videos_extractor_list).pop(idx-1)
-                if not session.get('looplist') and idx == 0:
+                try:
+                    idx = (videos_extractor_list).index(video.extractor_data)
+                    listlen = len(videos_extractor_list)
+                    next_video = (videos_extractor_list).pop(idx-1)
+                    if not session.get('looplist') and idx == 0:
+                        next_video = None
+                except:
                     next_video = None
 
     return render_template('video/video_embed.html', ia_url=ia_url, ac_url=ac_url, next_video=next_video, playlist=playlist, userlist=userlist)

@@ -90,18 +90,23 @@ style="outline:none;
 {% endif %}
 
 <script nonce="{{ csp_nonce() }}" type="text/javascript">
-  document.getElementById('video-player').play();
-  {% if next_video %}
-    document.getElementById('video-player').addEventListener('ended', function(){
+  (function(){
+    var nextVideoURL;
     {% if playlist %}
-    window.parent.location = "/watch?v={{next_video}}&playlist={{playlist.hashid}}"
+      nextVideoURL = "/watch?v={{next_video}}&playlist={{playlist.hashid}}"
     {% elif userlist %}
-    window.parent.location = "/watch?v={{next_video}}&userlist={{userlist}}"
+      nextVideoURL = "/watch?v={{next_video}}&userlist={{userlist}}"
     {% else %}
-    window.parent.location = "/watch?v={{next_video}}"
+      nextVideoURL = "/watch?v={{next_video}}"
     {% endif %}
-    });
-  {% endif %}
+    document.getElementById('video-player').play();
+    {% if next_video %}
+      document.getElementById('video-player').addEventListener('ended', function(){
+        window.parent.location = nextVideoURL;
+      });
+    {% endif %}
+  })();
+
 </script>
 </body>
 </html>

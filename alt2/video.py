@@ -157,15 +157,14 @@ def watch():
         fileitem = next(item for item in item.files if item["format"] == "JSON")
         filenamelong = (fileitem['name'])
         filename = filenamelong[:-10]
-        ia_url = "https://archive.org/download/youtube-" + video_id + "/" + filename
-        ia_url_short = "https://archive.org/download/youtube-" + video_id + "/"
-        ac_url = None
+        IARCHIVEURL = current_app.config['IARCHIVEURL']
+        video_url = IARCHIVEURL + video_id + "/" + filename
+        video_url_short = IARCHIVEURL + video_id + "/"
         if "access-restricted-item" in item.metadata: raise Exception
         if "altcen_hosted" in item.metadata: raise Exception
     except:
-        ia_url =  None
         MYSERVER_URL = current_app.config['MYSERVER_URL']
-        ac_url = MYSERVER_URL + "/videos/" + video_id
+        video_url = MYSERVER_URL + "/videos/" + video_id
 
     if session.get('user') is not None:
         user = db_session.query(User).filter(User.email == session['user']['email']).one()
@@ -179,9 +178,9 @@ def watch():
         flag_modified(user, "watched")
         db_session.commit()
 
-    return render_template('video/video_item.html', ia_url=ia_url, ia_url_short=ia_url_short,\
+    return render_template('video/video_item.html', video_url=video_url, video_url_short=video_url_short,\
      video_id=video_id, channel=channel, video=video, videos=videos, cat_id=cat_id, tags=tags,\
-     ac_url=ac_url, playlist=playlist, userlist=userlist)
+     playlist=playlist, userlist=userlist)
 
 @bp.route('/embed/<video_id>')
 def embed(video_id):
@@ -194,15 +193,13 @@ def embed(video_id):
         fileitem = next(item for item in item.files if item["format"] == "JSON")
         filenamelong = (fileitem['name'])
         filename = filenamelong[:-10]
-        ia_url = "https://archive.org/download/youtube-" + video_id + "/" + filename
-        ia_url_short = "https://archive.org/download/youtube-" + video_id + "/"
-        ac_url = None
+        IARCHIVEURL = current_app.config['IARCHIVEURL']
+        video_url = IARCHIVEURL + video_id + "/" + filename
         if "access-restricted-item" in item.metadata: raise Exception
         if "altcen_hosted" in item.metadata: raise Exception
     except:
-        ia_url =  None
         MYSERVER_URL = current_app.config['MYSERVER_URL']
-        ac_url = MYSERVER_URL + "/videos/" + video_id
+        video_url = MYSERVER_URL + "/videos/" + video_id
 
     next_video = None
 
@@ -247,7 +244,7 @@ def embed(video_id):
                 except:
                     next_video = None
 
-    return render_template('video/video_embed.html', ia_url=ia_url, ac_url=ac_url, next_video=next_video, playlist=playlist, userlist=userlist)
+    return render_template('video/video_embed.html', video_url=video_url, next_video=next_video, playlist=playlist, userlist=userlist)
 
 
 @bp.route("/search", defaults={'page': 1})

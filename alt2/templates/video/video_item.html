@@ -115,6 +115,16 @@
             </div>
           </div>
           <div class="pure-u-1 pure-u-md-1-5">
+            <div class="h-box">
+            <form method="post" action="">
+              {% if playnext %}
+              <input type="checkbox" id="playnext" name="playnext" value="True" form="addtoplaylist" checked>
+              {% else %}
+              <input type="checkbox" id="playnext" name="playnext" value="False" form="addtoplaylist">
+              {% endif %}
+              <label for playnext>&nbsp;&nbsp;{{ gettext('AutoPlay Next Video') }} </label>
+            </form>
+            </div>
             {% for video in videos %}
             <div class="h-box">
               {% if playlist %}

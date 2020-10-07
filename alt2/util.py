@@ -20,8 +20,10 @@ def get_locale():
         session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys())
     return session['locale']
 
+
 def get_theme():
     return session.get('theme', 'light')
+
 
 def get_playnext():
     if 'playnext' in session:
@@ -30,12 +32,14 @@ def get_playnext():
         session['playnext'] = False
     return session['playnext']
 
+
 def get_looplist():
     if 'looplist' in session:
         return session['looplist']
     else:
         session['looplist'] = True
     return session['looplist']
+
 
 def get_navtabs():
     if 'navtabs' in session:

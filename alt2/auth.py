@@ -9,6 +9,7 @@ from captcha.image import ImageCaptcha
 from email_validator import validate_email, EmailNotValidError
 from datetime import timezone
 import datetime, os
+import json
 
 from .database import db_session
 from .models import User
@@ -271,3 +272,14 @@ def delete():
             flash(item_quoted + ' NOT deleted', 'error')
             return redirect(request.args.get('original_url', '/'))
     return render_template('widgets/widgets_confirm.html', message=message)
+
+
+@bp.route('/play-next', methods=['GET', 'POST'])
+@login_required
+def play_next():
+    if request.method == 'POST':
+        data = json.loads(request.data)
+        session['playnext'] = data['checked']
+        return json.dumps({'playnext': session['playnext']})
+    else:
+        return json.dumps({'playnext': session['playnext']})

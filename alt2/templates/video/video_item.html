@@ -33,6 +33,20 @@
 
 <meta name="lc:image" content="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['title'] | ia_fname ~ '-' ~ video['extractor_data'] ~ '.jpg' }}">
 
+<script type="application/javascript">
+  function togglePlayNext(event){
+    var checked = event.target.checked;
+    fetch('/auth/play-next', {
+      method: 'POST',
+      body: JSON.stringify({
+        'checked': checked
+      })
+    }).then(() => {
+      document.getElementById('video-iframe').contentWindow.postMessage(JSON.stringify({type: 'toggle-play-next', checked: checked}))
+    });
+  }
+</script>
+
 {% endblock %}
 {% block content %}
 
@@ -49,11 +63,11 @@
           padding-bottom: 56.25%">
 
           {% if playlist %}
-          <iframe src="{{ url_for('video.embed', video_id=video_id, playlist=playlist.hashid) }}"
+          <iframe id="video-iframe" src="{{ url_for('video.embed', video_id=video_id, playlist=playlist.hashid) }}"
           {% elif userlist %}
-          <iframe src="{{ url_for('video.embed', video_id=video_id, userlist=userlist) }}"      
+          <iframe id="video-iframe" src="{{ url_for('video.embed', video_id=video_id, userlist=userlist) }}"
           {% else %}
-          <iframe src="{{ url_for('video.embed', video_id=video_id) }}"
+          <iframe id="video-iframe" src="{{ url_for('video.embed', video_id=video_id) }}"
           {% endif %}
 
           scrolling="no" frameborder="0" allowfullscreen allow="autoplay;
@@ -118,9 +132,9 @@
             <div class="h-box">
             <form method="post" action="">
               {% if playnext %}
-              <input type="checkbox" id="playnext" name="playnext" value="True" form="addtoplaylist" checked>
+              <input type="checkbox" id="playnext" name="playnext" value="True" form="addtoplaylist" checked onchange="togglePlayNext(event);">
               {% else %}
-              <input type="checkbox" id="playnext" name="playnext" value="False" form="addtoplaylist" >
+              <input type="checkbox" id="playnext" name="playnext" value="False" form="addtoplaylist" onchange="togglePlayNext(event);">
               {% endif %}
               <label for playnext>&nbsp;&nbsp;{{ gettext('AutoPlay Next Video') }} </label>
             </form>
@@ -159,6 +173,5 @@
     </div>
   </div>
 </div>
-
 {% endblock %}
 

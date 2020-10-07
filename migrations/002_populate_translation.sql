@@ -4,4 +4,4 @@ INSERT INTO "translation"("varname", "en", "de", "es", "fr", "pt", "nl", "it", "
 INSERT INTO "translation"("varname", "en", "de", "es", "fr", "pt", "nl", "it", "se") VALUES ('navtab4', 'category', 'kategorie', 'categoría', 'catégorie', 'categoria', 'categorie', 'categoria', 'kategori');
 INSERT INTO "translation"("varname", "en", "de", "es", "fr", "pt", "nl", "it", "se") VALUES ('navtab5', 'settings', 'einstellungen', 'ajustes', 'paramètres', 'configurações', 'instellingen', 'impostazioni', 'inställningar');
 INSERT INTO "translation"("varname", "en", "de", "es", "fr", "pt", "nl", "it", "se") VALUES ('navtab6', 'user', 'benutzer', 'usuario', 'usager', 'usuário', 'gebruiker', 'utente', 'användare');
-INSERT INTO "translation"("varname", "en", "de", "es", "fr", "pt", "nl", "it", "se") VALUES ('navtab7', 'languages', 'sprachen', 'idiomas', 'langues', 'idiomas', 'sprog', 'lingue', 'språk');
+INSERT INTO "translation"("varname", "en", "de", "es", "fr", "pt", "nl", "it", "se") VALUES ('navtab7', 'language', 'sprachen', 'idiomas', 'langues', 'idiomas', 'sprog', 'lingue', 'språk');

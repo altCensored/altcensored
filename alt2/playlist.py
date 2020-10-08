@@ -119,7 +119,8 @@ def create():
         now = datetime.datetime.now(timezone.utc)
         empty_list = []
         playlist = Playlist (title=ftitle, description=fdescription, hashid=hashid,\
-         user_id=user_id, created=now, updated=now, public=fprivacy, view_counter=0, video_count=0, videos=empty_list)
+         user_id=user_id, created=now, updated=now, public=fprivacy, view_counter=0, \
+         video_count=0, videos=empty_list)
 
         db_session.add(playlist)
         db_session.commit()
@@ -166,7 +167,12 @@ def add_video_playlist():
     except:
         playlist.videos = [video.extractor_data]
 
-    playlist.featured_video = video_id
+    if not playlist.featured_video:
+        playlist.featured_video = {
+        "extractor_data": video_id,
+        "title": video.title
+        }
+
     flag_modified(playlist, "videos")
     db_session.commit()
 
@@ -184,10 +190,18 @@ def remove_video_playlist():
     if video.extractor_data in playlist.videos:
         playlist.videos = list(dict.fromkeys(playlist.videos))
         playlist.videos.remove(video.extractor_data)
-        if playlist.videos:
-            playlist.featured_video = playlist.videos[-1]
-        else:
+
+        if video_id == playlist.featured_video['extractor_data']:
             playlist.featured_video = None
+
+            if playlist.videos:
+                replacement_video_id = playlist.videos[0]
+                video = Mv_Video.query.get(replacement_video_id)
+                playlist.featured_video = {
+                "extractor_data": replacement_video_id,
+                "title": video.title
+                }
+
         db_session.commit()
 
     return redirect(request.args.get('original_url', '/'))

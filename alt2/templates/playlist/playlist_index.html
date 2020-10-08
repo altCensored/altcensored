@@ -62,8 +62,9 @@
           <a href="{{ url_for('playlist.item', playlist=playlist.hashid ) }}">
 
             <div class="thumbnail">
-              <img class="thumbnail" src="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ playlist.video.extractor_data ~ '/' ~ playlist.video.title | ia_fname ~ '-' ~ playlist.video.extractor_data ~ '.jpg' }}"onerror="this.onerror=null;this.src='{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ playlist.video.extractor_data ~ '/__ia_thumb.jpg' }}';" >
+              <img class="thumbnail" src="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ playlist.featured_video.extractor_data ~ '/' ~ playlist.featured_video.title | ia_fname ~ '-' ~ playlist.featured_video.extractor_data ~ '.jpg' }}"onerror="this.onerror=null;this.src='{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ playlist.featured_video.extractor_data ~ '/__ia_thumb.jpg' }}';" >
             </div>
+
 
             <p><b>{{ playlist.title }}</p></b></a>
             <p>{{ playlist.description | linkify | safe }}<p>
@@ -75,7 +76,6 @@
             <b>&nbsp;|&nbsp;</b>
             <i class='ion-ios-contact'  style="font-size: 20px"></i>
             <b>&nbsp;{{ playlist.user.username }}</b>
-        
           </a>
         </div>
       </div>

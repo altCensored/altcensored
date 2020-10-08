@@ -537,3 +537,18 @@ ul.share-buttons img{
 .pure-menu-item.selected {
   font-weight: bold;
 }
+
+.collapse{
+  cursor: pointer;
+  display: block;
+/*  background: #cdf; */
+}
+.collapse + input{
+  display: none; /* hide the checkboxes */
+}
+.collapse + input + div{
+  display:none;
+}
+.collapse + input:checked + div{
+  display:block;
+}

@@ -162,8 +162,11 @@ def add_video_playlist():
     playlist = Playlist.query.filter(Playlist.hashid == playlist_hashid).scalar()
     try:
         playlist.videos += [video.extractor_data]
+
     except:
         playlist.videos = [video.extractor_data]
+
+    playlist.featured_video = video_id
     flag_modified(playlist, "videos")
     db_session.commit()
 
@@ -181,6 +184,10 @@ def remove_video_playlist():
     if video.extractor_data in playlist.videos:
         playlist.videos = list(dict.fromkeys(playlist.videos))
         playlist.videos.remove(video.extractor_data)
+        if playlist.videos:
+            playlist.featured_video = playlist.videos[-1]
+        else:
+            playlist.featured_video = None
         db_session.commit()
 
     return redirect(request.args.get('original_url', '/'))

@@ -56,24 +56,27 @@
   <div class="pure-u-1 pure-u-md-2-24"></div>
   <div class="pure-u-1 pure-u-md-20-24">
     <div class="pure-g">
-      {% for playlist in playlists %}
+      {% for playlist in playlists if playlist.featured_video %}
       <div class="pure-u-1 pure-u-md-1-4">
         <div class="h-box">
           <a href="{{ url_for('playlist.item', playlist=playlist.hashid ) }}">
-            <b>{{ playlist.title }}</b></a>
-            <br>
-            <br>
-            Owner: {{ playlist.user.username }}
-            <br>
-            Descr: {{ playlist.description }}
-            <br>
-            Videos: {{ playlist.video_count }}
-            <br>
-            Views: {{ playlist.view_counter }}
-            <br>
-            Public: {{ playlist.public }}
+
+            <div class="thumbnail">
+              <img class="thumbnail" src="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ playlist.video.extractor_data ~ '/' ~ playlist.video.title | ia_fname ~ '-' ~ playlist.video.extractor_data ~ '.jpg' }}"onerror="this.onerror=null;this.src='{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ playlist.video.extractor_data ~ '/__ia_thumb.jpg' }}';" >
+            </div>
+
+            <p><b>{{ playlist.title }}</p></b></a>
+            <p>{{ playlist.description | linkify | safe }}<p>
+            <i class='ion-logo-youtube'  style="font-size: 20px"></i>
+            <b>&nbsp;{{ playlist.video_count }}</b>
+            <b>&nbsp;|&nbsp;</b>
+            <i class='ion-md-eye'  style="font-size: 20px"></i>
+            <b>&nbsp;{{ playlist.view_counter }}</b>
+            <b>&nbsp;|&nbsp;</b>
+            <i class='ion-ios-contact'  style="font-size: 20px"></i>
+            <b>&nbsp;{{ playlist.user.username }}</b>
+        
           </a>
-          <hr>
         </div>
       </div>
       {% endfor %}

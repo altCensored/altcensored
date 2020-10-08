@@ -83,15 +83,14 @@
           </a>
         </div>
         <div class="pure-u-1-2">
-          {% if not session['user'] %}
           <a href="{{ url_for('settings.index') }}" class="pure-menu-heading localization-menu">
             <img height="14px" src="{{ url_for('static', filename='flags/by_locale') }}/{{locale}}.svg" />
           </a>
-          {% else %}
+        </div>
+        <div class="pure-u-1-2">
           <a href="{{ url_for('user.index') }}" class="pure-menu-heading">
             <i class="icon ion-ios-contact"></i>
           </a>
-          {% endif %}
         </div>
 {#        <div class="pure-u-1-2">
           <a href="{{ url_for('language.index') }}" class="pure-menu-heading">

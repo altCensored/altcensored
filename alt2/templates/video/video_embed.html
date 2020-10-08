@@ -60,19 +60,23 @@ style="outline:none;
 
 <script nonce="{{ csp_nonce() }}" type="text/javascript">
   (function(){
+    {% if playnext %}
+    var autoplayEnabled = true;
+    {% else %}
     var autoplayEnabled = false;
+    {% endif %}
     var player = videojs('video-player');
     var nextVideoURL;
-      {% if next_video %}
-        autoplayEnabled = true;
-        {% if playlist %}
-          nextVideoURL = "/watch?v={{next_video}}&playlist={{playlist.hashid}}"
-        {% elif userlist %}
-          nextVideoURL = "/watch?v={{next_video}}&userlist={{userlist}}"
-        {% elif next_video %}
-          nextVideoURL = "/watch?v={{next_video}}"
-        {% endif %}
+    {% if next_video %}
+      {% if playlist %}
+        nextVideoURL = "/watch?v={{next_video}}&playlist={{playlist.hashid}}"
+      {% elif userlist %}
+        nextVideoURL = "/watch?v={{next_video}}&userlist={{userlist}}"
+      {% elif next_video %}
+        nextVideoURL = "/watch?v={{next_video}}"
       {% endif %}
+    {% endif %}
+    console.log("Next Video URL", nextVideoURL);
     var Button = videojs.getComponent('Button');
     var NextButton = videojs.extend(Button, {
       buildCSSClass () {
@@ -83,7 +87,9 @@ style="outline:none;
       }
     });
     videojs.registerComponent('NextButton', NextButton);
-    var nextButton = player.controlBar.addChild('NextButton', {}, 1);
+    if(autoplayEnabled && nextVideoURL){
+      var nextButton = player.controlBar.addChild('NextButton', {}, 1);
+    }
 
     player.on('ended', function(){
       if(nextVideoURL && autoplayEnabled){

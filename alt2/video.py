@@ -132,6 +132,7 @@ def watch():
         if "altcen_hosted" in item.metadata: raise Exception
     except:
         ia_url =  None
+        ia_url_short = None
         MYSERVER_URL = current_app.config['MYSERVER_URL']
         ac_url = MYSERVER_URL + "/videos/" + video_id
 

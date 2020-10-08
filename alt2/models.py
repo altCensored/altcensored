@@ -271,7 +271,6 @@ class User(Base):
     featured_playlist = Column(String, nullable=True)
     settings = Column(MutableDict.as_mutable(JSON))
 
-
     featured_video = Column(String, ForeignKey('mv_video.extractor_data'), nullable=True)
     video = relationship("Mv_Video", backref="altcen_user")
 
@@ -294,8 +293,11 @@ class Playlist(Base):
     public = Column(Boolean, nullable=False, default=True)
     view_counter = Column(Integer, nullable=True)
     user_id = Column(Integer, ForeignKey('altcen_user.id'), nullable=False)
+    featured_video = Column(String, ForeignKey('mv_video.extractor_data'), nullable=True)
 
     user = relationship("User", backref="playlist")
+
+    video = relationship("Mv_Video", backref="playlist")
 
     def __repr__(self):
         return '<Playlist %r>' % self.title

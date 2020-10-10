@@ -30,7 +30,8 @@
             &nbsp;
             <b> {{ playlist.title }}</b></a>
             {% else %}
-            <b>{{ gettext('HISTORY') }}</b>
+            <div class="pure-menu-heading selected">
+            {{ gettext('HISTORY') }}</div>
             {% endif %}
           </div>
         </div>

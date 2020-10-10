@@ -83,8 +83,11 @@
           </a>
         </div>
         <div class="pure-u-1-2">
-          <a href="{{ url_for('settings.index') }}" class="pure-menu-heading localization-menu">
+          <a href="{{ url_for('settings.index') }}" class="pure-menu-heading">
+            <i class="icon ion-ios-cog"></i>
+{#          <a href="{{ url_for('settings.index') }}" class="pure-menu-heading localization-menu">
             <img height="14px" src="{{ url_for('static', filename='flags/by_locale') }}/{{locale}}.svg" />
+#}
           </a>
         </div>
         <div class="pure-u-1-2">

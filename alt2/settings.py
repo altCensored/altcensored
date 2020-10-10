@@ -20,9 +20,16 @@ def username_exists(username):
     if db_session.query(User.username).filter(func.lower(User.username) == func.lower(username)).scalar() is not None:
         return True
 
-
-@bp.route('/', methods=['GET', 'POST'])
+@bp.route('/')
 def index():
+    videocount = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
+    delchannelcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
+
+    return render_template('settings/settings_index.html', videocount=videocount, delchannelcount=delchannelcount)
+
+
+@bp.route('/site', methods=['GET', 'POST'])
+def site():
     if session.get('locale') is None:
         get_locale()
     if session.get('theme') is None:
@@ -123,6 +130,6 @@ def index():
     navtab2_values.remove(session['navtabs']['navtab2'])
     navtab3_values.remove(session['navtabs']['navtab3'])
 
-    return render_template('settings/settings_index.html', videocount=videocount, \
+    return render_template('settings/settings_site.html', videocount=videocount, \
         delchannelcount=delchannelcount, locales=locales, themes=themes, \
         navtab1_values=navtab1_values, navtab2_values=navtab2_values, navtab3_values=navtab3_values)

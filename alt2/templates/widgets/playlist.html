@@ -1,20 +1,25 @@
 
 <div class="pure-g">
   <div class="pure-u-1 pure-u-md-2-24"></div>
-  <div class="pure-u-1 pure-u-md-20-24">
+  <div class="pure-u-1 pure-u-md-18-24">
     <div class="pure-g h-box">
-      <div class="pure-u-1-2">
+      <div class="pure-u-16-24">
         <div class="pure-u-1 pure-md-1-1">
-          <i class='ion-md-list'  style="font-size: 24px"></i>
-          &nbsp;<b>{{ playlist.title }}</b>
+            {% if session.user and session.user.id == playlist.user_id %}
+            <a href="{{ url_for('user.playlist') }}">
+                <i class='ion-md-list'  style="font-size: 24px"></i></a>
+            {% else %}
+            <i class='ion-md-list'  style="font-size: 24px"></i>
+            {% endif %}
+          &nbsp;<b>Playlist: {{ playlist.title }}</b>
           <br>
           <br>
         </div>
       </div>
-      <div class="pure-u-1-2">
+      <div class="pure-u-8-24">
         <div class="pure-u-1 pure-md-1-1" style="text-align:right">
           {% if session.user and session.user.id == playlist.user_id %}
-          <a href="{{ url_for('playlist.edit', playlist=playlist.id ) }}">
+          <a href="{{ url_for('playlist.edit', playlist=playlist.id, original_url=current_url ) }}">
             <i class='ion-md-create' style="font-size: 24px"></i></a>
             &nbsp;&nbsp;
             <a href="{{ url_for('playlist.delete', playlist=playlist.id, original_url=current_url ) }}">
@@ -24,7 +29,7 @@
       </div>
       <div class="pure-u-1-1">
         <div class="pure-u-1 pure-md-1-1">
-          <i class='ion-logo-youtube'  style="font-size: 20px"></i>
+          <i class='ion-logo-youtube' style="font-size: 20px"></i>
           <b>&nbsp;{{ videocount }}</b>
           <b>&nbsp;|&nbsp;</b>
           <i class='ion-md-eye'  style="font-size: 20px"></i>
@@ -48,21 +53,23 @@
             <b>{{ playlist.user.username }}</b>
           {% endif %}
           <br><br>
-          {{ playlist.description }}     
+
         </div>
       </div>
-      <div class="pure-u-1-2">
+      <div class="pure-u-16-24">
         <div class="pure-u-1 pure-md-1-1">
+            {{ playlist.description }}
         </div>
       </div>
-      <div class="pure-u-1-2">
+      <div class="pure-u-8-24">
         <div class="pure-u-1 pure-md-1-1" style="text-align:right">
           {% if session.user and button and (session.user.id == playlist.user_id) %}
             <a href="{{ url_for('playlist.item', playlist=playlist.hashid, original_url=current_url ) }}">
             <i class='ion-md-remove' style="font-size: 24px"></i></a>
           {% elif session.user and (session.user.id == playlist.user_id) %}
             <a href="{{ url_for('playlist.item', playlist=playlist.hashid, original_url=current_url, button='add_video' ) }}">
-            <i class='ion-md-add' style="font-size: 24px"></i></a>
+            <i class='ion-md-add-circle-outline' style="font-size: 24px"></i>
+                <i class='ion-logo-youtube'  style="font-size: 20px"></i></a>
           {% endif %}
 
         </div>

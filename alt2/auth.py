@@ -1,24 +1,24 @@
-from flask import (
-    Blueprint, redirect, request, current_app, session, render_template, flash, url_for
-)
-from sqlalchemy.orm.exc import NoResultFound
-from sqlalchemy import func
-from flask_babelplus import lazy_gettext
-from werkzeug.security import check_password_hash, generate_password_hash
-from captcha.image import ImageCaptcha
-from email_validator import validate_email, EmailNotValidError
-from datetime import timezone
-import datetime, os
+import datetime
 import json
+from datetime import timezone
 
+from email_validator import validate_email, EmailNotValidError
+from flask import (
+    Blueprint, redirect, request, session, render_template, flash, url_for
+)
+from flask_babelplus import lazy_gettext
+from sqlalchemy import func
+from sqlalchemy.orm.exc import NoResultFound
+from werkzeug.security import check_password_hash, generate_password_hash
+
+from . import util
 from .database import db_session
 from .models import User
-from . import util
-from .util import ( 
-    get_locale, get_theme, get_navtabs, get_navtabs_index, send_welcome_email, 
-    send_forgot_password_email, generate_confirmation_token, confirm_token, 
+from .util import (
+    get_locale, get_theme, get_navtabs, get_navtabs_index, send_welcome_email,
+    send_forgot_password_email, generate_confirmation_token, confirm_token,
     login_required, generate_random, create_captcha
-    )
+)
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -156,6 +156,11 @@ def login():
                 generate_captcha()
                 flash('Captcha not correct', 'error')
                 return redirect(url_for('auth.login'))
+
+            if util.contains_profanity(username):
+                flash('Profanity not allowed', 'error')
+                return redirect(url_for('auth.login'))
+
             user = register_user(email, password, username)
             send_confirm_email(email)
             session['register_email'] = None
@@ -165,7 +170,7 @@ def login():
 
         if user_and_password_is_valid(email, password):
             user = db_session.query(User).filter(User.email==email).one()
-            session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public, email_verified=user.email_verified)
+            session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public)
             newSettings = dict(user.settings)
             session['locale'] = newSettings['locale']
             session['theme'] = newSettings['theme']

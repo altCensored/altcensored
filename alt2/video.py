@@ -1,14 +1,14 @@
 from flask import (
-    Blueprint, flash, redirect, render_template, request, url_for,
-    send_from_directory, make_response, session, current_app )
-from werkzeug.exceptions import abort
+    Blueprint, render_template, request, make_response, session, current_app)
+from internetarchive import get_item
 from sqlalchemy import func, text, case
 from sqlalchemy.orm.attributes import flag_modified
-from internetarchive import get_item
+from werkzeug.exceptions import abort
+
 from .database import db_session
 from .models import Mv_Video, Mv_Channel, Mv_Category, User, Playlist
 from .pagination import Pagination
-from . import util
+from .util import set_session
 
 bp = Blueprint('video', __name__ )
 
@@ -16,8 +16,8 @@ PER_PAGE = 24
 
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
-
 def index(page):
+    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'latest'
     videocount = db_session.query(func.count(Mv_Video.id)).scalar()

@@ -13,29 +13,25 @@
   <div class="pure-u-1 pure-u-md-2-24"></div>
   <div class="pure-u-1 pure-u-md-20-24">
     <div class="pure-g h-box">
-      <div class="pure-u-1-3">
+      <div class="pure-u-12-24">
         <div class="pure-u-1 pure-md-1-2">
         {% if session.user %}
           <a href="{{ url_for('user.item', username=session.user.username) }}">
           <b>{{ session.user.username }}</b></a>
         {% endif %}
         </div>
+
         <div class="pure-u-1 pure-md-1-2">
           <i class='ion-ios-contacts'  style="font-size: 24px"></i>
           <b>&nbsp;{{ usercount | commafy }}</b>
         </div>
       </div>
-      <div class="pure-u-1-3" style="text-align:center;">
-        <div class="pure-u-1 pure-md-1-2">
+      <div class="pure-u-6-24" style="text-align:center;">
+          <div class="pure-u-1 pure-md-1-1">
         </div>
-        <div class="pure-u-1 pure-md-1-2">
-        {% if session.user %}
-          <a href="{{ url_for('settings.index') }}?original_url={{ current_url }}"}}">
-          <i class='ion-md-create' style="font-size: 24px"></i></a>
-        {% endif %}
-        </div>
+
       </div>
-      <div class="pure-u-1-3" style="text-align:right;">
+      <div class="pure-u-6-24" style="text-align:right;">
         <div class="pure-u-1 pure-md-1-2">
           <a href="{{ url_for('user.index') }}" class="pure-menu-item {{'selected' if order == 'newest' }}">
           {{ gettext('newest') }}</a>

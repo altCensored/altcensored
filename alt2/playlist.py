@@ -10,6 +10,7 @@ from datetime import timezone
 from .database import db_session
 from .models import User, Playlist, Mv_Video, Counter
 from .pagination import Pagination
+from . import util
 from .util import login_required, str_to_bool, title_exists
 
 bp = Blueprint('playlist', __name__, url_prefix='/playlist')
@@ -21,7 +22,7 @@ PER_PAGE = 24
 def index(page):
     offset = ((int(page)-1) * PER_PAGE)
     order = request.args.get('order','newest')
-    playlistcount = Playlist.query.filter(Playlist.public).count()
+    playlistcount = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)).count()
 
     if session.get('user') is not None and order == session['user']['username']:
         user = User.query.filter(func.lower(User.username) == func.lower(order)).scalar()
@@ -33,10 +34,10 @@ def index(page):
         .order_by(Playlist.id.desc()).limit(PER_PAGE).offset(offset)
 
     elif order =='popular':
-        playlists = Playlist.query.filter(Playlist.public)\
+        playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
         .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
     else:
-        playlists = Playlist.query.filter(Playlist.public)\
+        playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
         .order_by(Playlist.id.desc()).limit(PER_PAGE).offset(offset)
 
     if not playlists and page != 1:
@@ -113,6 +114,15 @@ def create():
             flash('Title already exists', 'error')
             return redirect(url_for('playlist.create'))
 
+        if util.contains_profanity(ftitle):
+            flash('Profanity not allowed', 'error')
+            return redirect(url_for('playlist.create'))
+
+        if util.contains_profanity(fdescription):
+            flash('Profanity not allowed', 'error')
+            return redirect(url_for('playlist.create'))
+
+
         hashids = Hashids(min_length=22)
         hashid = 'AC' + hashids.encode(random.getrandbits(104))
 
@@ -127,7 +137,7 @@ def create():
 
         return redirect(url_for('playlist.item', playlist=hashid))
         
-    return render_template('playlist/playlist_create_edit.html')
+    return render_template('playlist/playlist_item_create_edit.html')
 
 
 @bp.route('/edit/<playlist>', methods=['GET', 'POST'])
@@ -140,18 +150,27 @@ def edit(playlist):
         fdescription = request.form['description']        
         fprivacy = str_to_bool(request.form['privacy'])
 
+        if util.contains_profanity(ftitle):
+            flash('Profanity not allowed', 'error')
+            return redirect(url_for('playlist.create'))
+
+        if util.contains_profanity(fdescription):
+            flash('Profanity not allowed', 'error')
+            return redirect(request.args.get('original_url', '/'))
+
         if ftitle != playlist.title and title_exists(ftitle):
             flash('Title already exists', 'error')
             return redirect(url_for('playlist.create'))
 
         now = datetime.datetime.now(timezone.utc)
+        playlist.updated = now
         playlist.title = ftitle
         playlist.description = fdescription
         playlist.public = fprivacy
         db_session.commit()
         return redirect(url_for('playlist.item', playlist=playlist.hashid))
 
-    return render_template('playlist/playlist_create_edit.html', playlist=playlist)
+    return render_template('playlist/playlist_item_create_edit.html', playlist=playlist)
 
 
 @bp.route('/add_video_playlist')
@@ -225,6 +244,6 @@ def delete(playlist):
             return redirect(url_for('playlist.index'))
         else:
             flash('Playlist ' + item_quoted + ' NOT removed', 'error')
-            return redirect(url_for('playlist.index'))
+            return redirect(url_for('user.playlist', playlist=playlist))
 
     return render_template('widgets/widgets_confirm.html', message=message)

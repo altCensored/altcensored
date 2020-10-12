@@ -3,7 +3,7 @@
 
 {% endblock %}
 {% block content %}
-{% with active_nav='user' %}
+{% with active_nav='settings' %}
     {% include "widgets/navtabs.html" %}
 {% endwith %}
 
@@ -31,7 +31,7 @@
             <b> {{ playlist.title }}</b></a>
             {% else %}
             <div class="pure-menu-heading selected">
-            {{ gettext('HISTORY') }}</div>
+            {{ gettext('history') }}</div>
             {% endif %}
           </div>
         </div>

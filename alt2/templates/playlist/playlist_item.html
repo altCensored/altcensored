@@ -5,9 +5,15 @@
 
 {% block content %}
 
-{% with active_nav='playlist' %}
-    {% include "widgets/navtabs.html" %}
-{% endwith %}
+    {% if session.user and session.user.id == playlist.user_id %}
+    {% with active_nav='settings' %}
+        {% include "widgets/navtabs.html" %}
+    {% endwith %}
+    {%  else %}
+        {% with active_nav='playlist' %}
+            {% include "widgets/navtabs.html" %}
+        {% endwith %}
+    {% endif %}
 
 <br>
 

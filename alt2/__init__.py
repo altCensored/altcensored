@@ -89,10 +89,17 @@ def create_app(test_config=None):
     @app.template_filter('hourminsec')
     def secs_to_HMS2(secs):
         if secs < 3600:
-            return time.strftime('%-M:%S', time.gmtime(secs))
+#            return time.strftime('%-M:%S', time.gmtime(secs))
+            m, s = divmod(secs, 60)
+            h, m = divmod(m, 60)
+            return ('{:0>2}:{:0>2}'.format(m, s)).lstrip("0")
+
         else:
-            return time.strftime('%-H:%M:%S', time.gmtime(secs))
- 
+#            return time.strftime('%-H:%M:%S', time.gmtime(secs))
+            m, s = divmod(secs, 60)
+            h, m = divmod(m, 60)
+            return ('{}:{:0>2}:{:0>2}'.format(h, m, s)).lstrip("0")
+
     @app.template_filter('ia_fname')
     def ia_fname(video_title):
         video_title = video_title.replace(':',' -').replace("’",'_')

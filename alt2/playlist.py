@@ -192,6 +192,8 @@ def add_video_playlist():
         "title": video.title
         }
 
+    now = datetime.datetime.now(timezone.utc)
+    playlist.updated = now
     flag_modified(playlist, "videos")
     db_session.commit()
 
@@ -221,6 +223,8 @@ def remove_video_playlist():
                 "title": video.title
                 }
 
+        now = datetime.datetime.now(timezone.utc)
+        playlist.updated = now
         db_session.commit()
 
     return redirect(request.args.get('original_url', '/'))

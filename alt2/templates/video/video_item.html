@@ -33,20 +33,6 @@
 
 <meta name="lc:image" content="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['title'] | ia_fname ~ '-' ~ video['extractor_data'] ~ '.jpg' }}">
 
-<script type="application/javascript">
-  function togglePlayNext(event){
-    var checked = event.target.checked;
-    fetch('/auth/play-next', {
-      method: 'POST',
-      body: JSON.stringify({
-        'checked': checked
-      })
-    }).then(() => {
-      document.getElementById('video-iframe').contentWindow.postMessage(JSON.stringify({type: 'toggle-play-next', checked: checked}))
-    });
-  }
-</script>
-
 {% endblock %}
 {% block content %}
 
@@ -173,5 +159,19 @@
     </div>
   </div>
 </div>
-{% endblock %}
 
+<script type="application/javascript">
+  function togglePlayNext(event){
+    var checked = event.target.checked;
+    fetch('play-next', {
+      method: 'POST',
+      body: JSON.stringify({
+        'checked': checked
+      })
+    }).then(() => {
+      document.getElementById('video-iframe').contentWindow.postMessage(JSON.stringify({type: 'toggle-play-next', checked: checked}))
+    });
+  }
+</script>
+
+{% endblock %}

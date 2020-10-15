@@ -9,6 +9,7 @@ from .database import db_session
 from .models import Mv_Video, Mv_Channel, Mv_Category, User, Playlist
 from .pagination import Pagination
 from .util import set_session
+import json
 
 bp = Blueprint('video', __name__ )
 
@@ -150,7 +151,7 @@ def watch():
     else:
         videos = Mv_Video.query.filter_by(ytc_id=ytc_id).order_by(Mv_Video.published.desc(),\
             Mv_Video.extractor_data.desc()).limit(PER_PAGE)
-        playlist = None
+#        playlist = None
 
     try:
         item = get_item('youtube-' + video_id)
@@ -421,3 +422,13 @@ def search_popular(page):
     else:
         return render_template('video/video_search.html', videos=videos, pagination=pagination, \
             rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount)
+
+
+@bp.route('/play-next', methods=['GET', 'POST'])
+def play_next():
+    if request.method == 'POST':
+        data = json.loads(request.data)
+        session['playnext'] = data['checked']
+        return json.dumps({'playnext': session['playnext']})
+    else:
+        return json.dumps({'playnext': session['playnext']})

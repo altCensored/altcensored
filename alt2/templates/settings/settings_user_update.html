@@ -1,76 +1,76 @@
 {% extends 'base.html' %}
 {% block head %}
 
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@altcensored">
-<meta name="twitter:creator" content="@altcensored">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@altcensored">
+    <meta name="twitter:creator" content="@altcensored">
 
-<meta property="og:description" content="'we show what they hide'">
-<meta property="og:type" content="article">
-<meta property="og:image" content="https://{{ config['MYSERVER_NAME'] }}/logo_clip.gif">
-<meta property="og:url" content="https://{{ config['MYSERVER_NAME'] }}">
-<meta property="og:title" content="{{ session.videocount | viewdisplay }}+ Limited State/Deleted Videos; {{ session.delchannelcount | viewdisplay }} Deleted Channels">
+    <meta property="og:description" content="'we show what they hide'">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://{{ config['MYSERVER_NAME'] }}/logo_clip.gif">
+    <meta property="og:url" content="https://{{ config['MYSERVER_NAME'] }}">
+    <meta property="og:title" content="{{ session.videocount | viewdisplay }}+ Limited State/Deleted Videos; {{ session.delchannelcount | viewdisplay }} Deleted Channels">
 
 {% endblock %}
 {% block content %}
 
-{% with active_nav='settings' %}
-    {% include "widgets/navtabs.html" %}
-{% endwith %}
+    {% with active_nav='settings' %}
+        {% include "widgets/navtabs.html" %}
+    {% endwith %}
     <br>
     <br>
 
-<div class="pure-g">
-  <div class="pure-u-1 pure-u-md-2-24"></div>
-  <div class="pure-u-1 pure-u-md-20-24">
-      <div class="pure-g h-box">
-          <div class="pure-u-1-3">
-              <div class="pure-u-1 pure-md-1-1">
-                  <i class='ion-ios-contact' style="font-size: 24px"></i></a>
-                  <a href="{{ url_for('user.item', username=session.user.username) }}">
-                      <b>User</b></a>
-              </div>
-          </div>
-      </div>
-      <div class="h-box">
-        <form class="pure-form pure-form-aligned" name=user method="post">
-            <fieldset>
-                <div class="pure-control-group">
-                  <label for="Username"> {{ gettext('Username') }}:</label>
-                  {% if session.user.username %}
-                    <input type="text" id="username" value="{{ session.user.username }}" name="username" maxlength="18">
-                  {% else %}
-                    <input type="text" id="username" placeholder="Username" name="username" maxlength="18">
-                  {% endif %}
+    <div class="pure-g">
+        <div class="pure-u-1 pure-u-md-2-24"></div>
+        <div class="pure-u-1 pure-u-md-20-24">
+            <div class="pure-g h-box">
+                <div class="pure-u-1-3">
+                    <div class="pure-u-1 pure-md-1-1">
+                        <i class='ion-ios-contact' style="font-size: 24px"></i></a>
+                        <a href="{{ url_for('user.item', username=session.user.username) }}">
+                            <b>User</b></a>
+                    </div>
                 </div>
-                <div class="pure-control-group">
-                  <label for="Description"> {{ gettext('Description') }}:</label>
-                  {% if session.user.description %}
-                    <input type="text" id="description" value="{{ session.user.description }}" name="description" size="30" maxlength="50">
-                  {% else %}
-                    <input type="text" id="description" placeholder="Description" name="description" size="30" maxlength="50">
-                  {% endif %}
-                </div>
-                <div class="pure-control-group">
-                  <label for="Public"> {{ gettext('User Public') }}:</label>
-                  <select name=public>
-                    <option value= "{{session.user.public}}" SELECTED>{{session.user.public}}</option>"
-                    {% if session.user.public %}
-                      <option value=False>False</option>"
-                    {% else %}
-                    <option value=True>True</option>"
-                    {% endif %}
-                  </select>
-                </div>
-              <div class="pure-controls">
-                <button class="pure-button" type="submit" name="submit" value="login">{{ gettext('Save') }}</button>
-              </div>
-            </fieldset>
-          </form>
+            </div>
+            <div class="h-box">
+                <form class="pure-form pure-form-aligned" name=user method="post">
+                    <fieldset>
+                        <div class="pure-control-group">
+                            <label for="Username"> {{ gettext('Username') }}:</label>
+                            {% if session.user.username %}
+                                <input type="text" id="username" value="{{ session.user.username }}" name="username" maxlength="18">
+                            {% else %}
+                                <input type="text" id="username" placeholder="Username" name="username" maxlength="18">
+                            {% endif %}
+                        </div>
+                        <div class="pure-control-group">
+                            <label for="Description"> {{ gettext('Description') }}:</label>
+                            {% if session.user.description %}
+                                <input type="text" id="description" value="{{ session.user.description }}" name="description" size="30" maxlength="50">
+                            {% else %}
+                                <input type="text" id="description" placeholder="Description" name="description" size="30" maxlength="50">
+                            {% endif %}
+                        </div>
+                        <div class="pure-control-group">
+                            <label for="Public"> {{ gettext('User Public') }}:</label>
+                            <select name=public>
+                                <option value= "{{session.user.public}}" SELECTED>{{session.user.public}}</option>"
+                                {% if session.user.public %}
+                                    <option value=False>False</option>"
+                                {% else %}
+                                    <option value=True>True</option>"
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="pure-controls">
+                            <button class="pure-button" type="submit" name="submit" value="login">{{ gettext('Save') }}</button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-</div> 
+    </div>
+    </div>
 
 {% endblock %}

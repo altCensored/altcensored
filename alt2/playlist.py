@@ -38,7 +38,7 @@ def index(page):
         .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
     else:
         playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
-        .order_by(Playlist.id.desc()).limit(PER_PAGE).offset(offset)
+        .order_by(Playlist.updated.desc()).limit(PER_PAGE).offset(offset)
 
     if not playlists and page != 1:
         abort(404)

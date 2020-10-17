@@ -7,6 +7,9 @@ from jinja2 import evalcontextfilter, Markup, escape
 from flask_babelplus import Babel, gettext, lazy_gettext
 from urllib.parse import quote_plus
 
+import timeago, datetime
+from datetime import timezone
+
 import bleach
 import unicodedata
 import math
@@ -141,6 +144,11 @@ def create_app(test_config=None):
 
     def page_not_found(e):
         return redirect(url_for('video.index'))
+
+    @app.template_filter('time_diff')
+    def time_diff(s):
+        now = datetime.datetime.now(timezone.utc) + datetime.timedelta(seconds=60 * 3.4)
+        return timeago.format(s, now)
 
     app.register_error_handler(404, page_not_found)
     app.register_error_handler(400, page_not_found)

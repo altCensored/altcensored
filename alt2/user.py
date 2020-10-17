@@ -3,6 +3,7 @@ from flask import (
 )
 from sqlalchemy import func, case
 from sqlalchemy.orm.attributes import flag_modified
+from werkzeug.exceptions import abort
 from flask_babelplus import lazy_gettext
 from .database import db_session
 from .models import User, Mv_Video, Playlist, Counter
@@ -27,8 +28,8 @@ def index(page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, usercount)
 
-    return render_template('user/user_index.html', 
-        pagination=pagination, usercount=usercount, users=users, order=order)
+    return render_template('user/user_index.html',
+                           pagination=pagination, usercount=usercount, users=users, order=order)
 
 
 @bp.route('/popular', defaults={'page': 1})
@@ -44,16 +45,31 @@ def popular(page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, usercount)
 
-    return render_template('user/user_index.html', 
-        pagination=pagination, usercount=usercount, users=users, order=order)
+    return render_template('user/user_index.html',
+                           pagination=pagination, usercount=usercount, users=users, order=order)
 
 
 @bp.route('/<username>')
 def item(username):
     user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
-    playlistcount = Playlist.query.filter(Playlist.public).filter(Playlist.user_id == user.id).count()
 
-    playlist = Playlist.query.filter(Playlist.user_id == user.id).order_by(Playlist.view_counter.desc()).first()
+    if not user.public and (session['user']['id'] != user.id):
+        abort(404)
+
+    if session.get('user') is not None and username == session['user']['username']:
+        playlistcount = Playlist.query.filter((Playlist.public),(Playlist.user_id == user.id)).count()
+        playlists = Playlist.query.filter((Playlist.public),(Playlist.user_id == user.id)) \
+            .join(User, Playlist.user_id == User.id) \
+            .filter(Playlist.user_id == user.id) \
+            .order_by(Playlist.id.desc())
+    else:
+        playlistcount = Playlist.query.filter((Playlist.public),(Playlist.user_id == user.id), \
+                                              (Playlist.featured_video.isnot(None))).count()
+        playlists = Playlist.query.filter((Playlist.public),(Playlist.user_id == user.id), \
+                                          (Playlist.featured_video.isnot(None))) \
+            .join(User, Playlist.user_id == User.id) \
+            .filter(Playlist.user_id == user.id) \
+            .order_by(Playlist.id.desc())
 
     if user.watched is None:
         historycount = 0
@@ -80,8 +96,8 @@ def item(username):
 
     if not username and page != 1:
         abort(404)
-    return render_template('user/user_item.html', user=user, playlistcount=playlistcount,\
-     historycount=historycount, watchlatercount=watchlatercount, playlist=playlist)
+    return render_template('user/user_item.html', user=user, playlistcount=playlistcount, \
+                           historycount=historycount, watchlatercount=watchlatercount, playlists=playlists)
 
 
 @bp.route('/history', defaults={'page': 1})
@@ -92,19 +108,19 @@ def history(page):
     playlist = request.args.get('playlist', None)
     user = User.query.filter(User.email == session['user']['email']).scalar()
     playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
-#    user.watched = list(dict.fromkeys(user.watched))
+    #    user.watched = list(dict.fromkeys(user.watched))
 
     try:
         ordering = case(
             {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(user.watched))))},
             value=Mv_Video.extractor_data
-         )
+        )
         videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(user.watched)).order_by(ordering).limit(PER_PAGE).offset(offset)
 
         videocount=len(user.watched)
-        pagination = Pagination(page, PER_PAGE, videocount)  
-        return render_template('user/user_history_index.html', pagination=pagination,\
-         videos=videos, videocount=videocount, playlist=playlist, watchlater=user.watchlater)
+        pagination = Pagination(page, PER_PAGE, videocount)
+        return render_template('user/user_history_index.html', pagination=pagination, \
+                               videos=videos, videocount=videocount, playlist=playlist, watchlater=user.watchlater)
     except:
         flash('History Empty', 'success')
         return redirect(request.args.get('original_url', '/'))
@@ -159,12 +175,12 @@ def watchlater(page):
         ordering = case(
             {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(user.watchlater))))},
             value=Mv_Video.extractor_data
-         )
+        )
         videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(user.watchlater)).order_by(ordering).limit(PER_PAGE).offset(offset)
         videocount=len(user.watchlater)
-        pagination = Pagination(page, PER_PAGE, videocount)  
+        pagination = Pagination(page, PER_PAGE, videocount)
         return render_template('user/user_watchlater_index.html', pagination=pagination, \
-            videos=videos, videocount=videocount, playlist=playlist, watchlater=user.watchlater)
+                               videos=videos, videocount=videocount, playlist=playlist, watchlater=user.watchlater)
     except:
         flash('No Watch Later Available', 'success')
         return redirect(request.args.get('original_url', '/'))
@@ -233,15 +249,15 @@ def playlist(page):
     playlistcount = Playlist.query.filter(Playlist.user_id == user.id).count()
 
     if order =='popular':
-        playlists = Playlist.query.filter(Playlist.user_id == session['user']['id'])\
-        .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
+        playlists = Playlist.query.filter(Playlist.user_id == session['user']['id']) \
+            .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
     else:
-        playlists = Playlist.query.filter(Playlist.user_id == session['user']['id'])\
-        .order_by(Playlist.id.desc()).limit(PER_PAGE).offset(offset)
+        playlists = Playlist.query.filter(Playlist.user_id == session['user']['id']) \
+            .order_by(Playlist.id.desc()).limit(PER_PAGE).offset(offset)
 
     if not playlists and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, playlistcount)
 
-    return render_template('user/user_playlist_index.html', 
-        pagination=pagination, playlistcount=playlistcount, playlists=playlists, order=order)
+    return render_template('user/user_playlist_index.html',
+                           pagination=pagination, playlistcount=playlistcount, playlists=playlists, order=order)

@@ -17,20 +17,20 @@
     {% with active_nav='settings' %}
         {% include "widgets/navtabs.html" %}
     {% endwith %}
-    <br>
-    <br>
+    <p>&nbsp;</p>
 
     <div class="pure-g">
         <div class="pure-u-1 pure-u-md-2-24"></div>
         <div class="pure-u-1 pure-u-md-20-24">
             <div class="pure-g h-box">
-                <div class="pure-u-1-3">
-                    <div class="pure-u-1 pure-md-1-1">
-                        <i class='ion-ios-contact' style="font-size: 24px"></i></a>
-                        <a href="{{ url_for('user.item', username=session.user.username) }}">
-                            <b>User</b></a>
-                    </div>
+
+                <div class="pure-u-1 pure-md-1-1">
+                    <a href="{{ url_for('user.item', username=session.user.username) }}">
+                        <i class='ion-ios-contact' style="font-size: 24px"></i>
+                        <b>User:</b></a>
+                    {{ session.user.username }}
                 </div>
+
             </div>
             <div class="h-box">
                 <form class="pure-form pure-form-aligned" name=user method="post">
@@ -62,15 +62,26 @@
                                 {% endif %}
                             </select>
                         </div>
+                        <div class="pure-control-group">
+                            <label for="Featured_Playlist"> {{ gettext('Featured Playlist') }}:</label>
+                            <select name=featured_playlist>
+                                {% if session.user.featured_playlist %}
+                                    <option value="{{ session.user.featured_playlist }}" SELECTED>{{ session.user.featured_playlist }}</option>"
+                                {% else %}
+                                    <option value="" SELECTED>{{ gettext('Select Playlist') }}</option>
+                                {% endif %}
+                                {% for playlist_title in playlist_titles %}
+                                    <option value="{{ playlist_title }}">{{ playlist_title }}</option>"
+                                {% endfor %}
+                            </select>
+                        </div>
                         <div class="pure-controls">
-                            <button class="pure-button" type="submit" name="submit" value="login">{{ gettext('Save') }}</button>
+                            <button class="pure-button" type="submit" name="submitvalue">{{ gettext('Update User') }}</button>
                         </div>
                     </fieldset>
                 </form>
             </div>
         </div>
-    </div>
-    </div>
     </div>
 
 {% endblock %}

@@ -7,11 +7,12 @@
                 <div class="pure-u-1 pure-md-1-1">
                     {% if session.user and session.user.id == playlist.user_id %}
                         <a href="{{ url_for('user.playlist') }}">
-                            <i class='ion-md-list'  style="font-size: 24px"></i></a>
+                            <i class='ion-md-list'  style="font-size: 24px"></i>
+                            Playlist:</a><b>{{ playlist.title }}</b>
                     {% else %}
                         <i class='ion-md-list'  style="font-size: 24px"></i>
+                        Playlist:<b>{{ playlist.title }}</b>
                     {% endif %}
-                    Playlist:<b>{{ playlist.title }}</b>
                     <br>
                     <br>
                 </div>

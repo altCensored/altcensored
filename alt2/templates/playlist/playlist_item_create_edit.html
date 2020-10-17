@@ -4,94 +4,69 @@
 {% endblock %}
 {% block content %}
 
-{% with active_nav='settings' %}
-    {% include "widgets/navtabs.html" %}
-{% endwith %}
+    {% with active_nav='settings' %}
+        {% include "widgets/navtabs.html" %}
+    {% endwith %}
 
-<br>
-<div class="pure-g">
-  <div class="pure-u-1 pure-u-md-2-24"></div>
-  <div class="pure-u-1 pure-u-md-20-24">
-      <div class="pure-g h-box">
-          <div class="pure-u-1-3">
-              <div class="pure-u-1 pure-md-1-1">
-                  <i class='ion-ios-contact' style="font-size: 24px"></i></a>
-                  <a href="{{ url_for('user.playlist') }}">
-                      <b>Playlist</b></a>
-              </div>
-          </div>
-      </div>
-        <div class="h-box">
-          <form class="pure-form pure-form-aligned" name="create_playlist" method="post">
-            <fieldset>
-              <div class="pure-control-group">
-                <label for="Title">{{ gettext('Title') }}:</label>
-                {% if playlist %}
-                <input type=text id=title value="{{ playlist.title  }}" name=title required maxlength="18">
-                {% else %}
-                <input type=text id=title placeholder="Title" name=title required maxlength="18">
-                {% endif %}
-              </div>
-              <div class="pure-control-group">
-                <label for="Description">{{ gettext('Description') }}:</label>
-                {% if playlist %}
-                <input type=text id=description value="{{ playlist.description  }}" name=description size="30" required maxlength="50">
-                {% else %}
-                <input type=text id=description placeholder="Description" name=description size="30" required maxlength="50">
-                {% endif %}
-              </div>
-              <div class="pure-control-group">
-                <label for="Privacy">{{ gettext('Privacy') }}:</label>
-                <select name=privacy>
-                  {% if playlist and playlist.public == false %}
-                  <option value=False SELECTED>Private</option>"
-                  <option value=True>Public</option>"
-                  {% else %}
-                  <option value=True SELECTED>Public</option>"
-                  <option value=False>Private</option>"
-                  {% endif %}    
-                </select>
-              </div>
-              <div class="pure-controls">
-                {% if playlist %}
-                <button class="pure-button" type="submit" name="submitvalue">{{ gettext('Update Playlist') }}</button>
-                {% else %}
-                <button class="pure-button" type="submit" name="submitvalue">{{ gettext('Create Playlist') }}</button>
-                {% endif %}    
-              </div>
-
-
-{#
-              <div class="pure-control-group">
-                <label for="Videos">
-                <i class='ion-md-add-circle' style="font-size: 24px"></i></a>
-                
-                {{ gettext('Videos') }}:</label>
-
-                <button class="pure-button" type="submit" name="submitvalue" value="history">
-                <i class='ion-md-done-all'  style="font-size: 24px"></i>
-                {{ gettext('History') }}
-                </button>
-
-                <button class="pure-button" type="submit" name="submitvalue" value="watchlater">
-                <i class='ion-md-time'  style="font-size: 24px"></i>
-                {{ gettext('WatchLater') }}
-                </button>
-
-                <button class="pure-button" type="submit" name="submitvalue" value="search">
-                <i class='ion-md-search'  style="font-size: 24px"></i>
-                {{ gettext('Search') }}
-                </button>
-              </div>
-#}
-
-              </div>
+    <p>&nbsp;</p>
+    <div class="pure-g">
+        <div class="pure-u-1 pure-u-md-2-24"></div>
+        <div class="pure-u-1 pure-u-md-20-24">
+            <div class="pure-g h-box">
+                <div class="pure-u-1 pure-md-1-1">
+                    <a href="{{ url_for('user.playlist') }}">
+                        <i class='ion-ios-contact' style="font-size: 24px"></i>
+                        <b>Playlist:</b></a>
+                    {% if playlist %}
+                        {{ playlist.title  }}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="h-box">
+                <form class="pure-form pure-form-aligned" name="create_playlist" method="post">
+                    <fieldset>
+                        <div class="pure-control-group">
+                            <label for="Title">{{ gettext('Title') }}:</label>
+                            {% if playlist %}
+                                <input type=text id=title value="{{ playlist.title  }}" name=title required maxlength="18">
+                            {% else %}
+                                <input type=text id=title placeholder="Title" name=title required maxlength="18">
+                            {% endif %}
+                        </div>
+                        <div class="pure-control-group">
+                            <label for="Description">{{ gettext('Description') }}:</label>
+                            {% if playlist %}
+                                <input type=text id=description value="{{ playlist.description  }}" name=description size="30" required maxlength="50">
+                            {% else %}
+                                <input type=text id=description placeholder="Description" name=description size="30" required maxlength="50">
+                            {% endif %}
+                        </div>
+                        <div class="pure-control-group">
+                            <label for="Public"> {{ gettext('Public') }}:</label>
+                            <select name=public>
+                                {% if playlist and playlist.public %}
+                                    <option value=True SELECTED>True</option>"
+                                    <option value=False>False</option>"
+                                {% else %}
+                                    <option value=False SELECTED>False</option>"
+                                    <option value=True>True</option>"
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="pure-controls">
+                            {% if playlist %}
+                                <button class="pure-button" type="submit" name="submitvalue">{{ gettext('Update Playlist') }}</button>
+                            {% else %}
+                                <button class="pure-button" type="submit" name="submitvalue">{{ gettext('Create Playlist') }}</button>
+                            {% endif %}
+                        </div>
+            </div>
             </fieldset>
-          </form>
+            </form>
         </div>
-      </div>
     </div>
-  </div>
-</div>   
+    </div>
+    </div>
+    </div>
 
 {% endblock %}

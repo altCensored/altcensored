@@ -7,7 +7,7 @@ from flask import (
 from sqlalchemy import func
 
 from .database import db_session
-from .models import Mv_Video, Mv_Channel, Translation, User
+from .models import Mv_Video, Mv_Channel, Translation, User, Playlist
 from . import util
 from .util import set_session
 
@@ -107,6 +107,7 @@ def update_user():
         fusername = request.form['username']
         fdescription = request.form['description']
         fpublic = util.str_to_bool(request.form['public'])
+        ffeatured_playlist = request.form.get('featured_playlist')
 
         if util.contains_profanity(fusername):
             flash('Profanity not allowed', 'error')
@@ -116,20 +117,39 @@ def update_user():
             return redirect(url_for('settings.update_user'))
 
         session['user'].pop('username', None)
-#        del session['user']['username']
         session['user']['username'] = fusername
         session['user']['description'] = fdescription
         session['user']['public'] = fpublic
-        session.modified = True
 
         user = User.query.get(session['user']['id'])
+
+        if ffeatured_playlist and session['user']['featured_playlist'] != ffeatured_playlist:
+            playlist = Playlist.query.filter(Playlist.title == ffeatured_playlist).scalar()
+
+            user.featured_video = playlist.featured_video
+            playlist.featured = True
+            session['user']['featured_playlist'] = ffeatured_playlist
+
+        session.modified = True
+
         now = datetime.datetime.now(timezone.utc)
         user.updated = now
         user.username = fusername
         user.description = fdescription
         user.public = fpublic
+
         db_session.commit()
 
         return redirect(url_for('settings.index'))
 
-    return render_template('settings/settings_user_update.html')
+    playlist_titles = db_session.query(Playlist).with_entities(getattr(Playlist, "title")) \
+        .filter((Playlist.public), (Playlist.user_id == session['user']['id'])).all()
+    playlist_titles = [r[0] for r in playlist_titles]
+    playlist_titles = list(playlist_titles)
+
+    try:
+        playlist_titles.remove(session['user']['featured_playlist'])
+    except:
+        pass
+
+    return render_template('settings/settings_user_update.html', playlist_titles=playlist_titles)

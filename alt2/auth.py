@@ -67,7 +67,7 @@ def username_exist(username):
         return True
 
 
-def register_user(email, password, username): 
+def register_user(email, password, username):
     if session.get('locale') is None:
         get_locale()
     if session.get('playnext') is None:
@@ -83,10 +83,10 @@ def register_user(email, password, username):
 
     now = datetime.datetime.now(timezone.utc)
     settings = {
-    "theme": session['theme'],
-    "locale": session['locale'],
-    "playnext": session['playnext'],
-    "looplist": session['looplist']
+        "theme": session['theme'],
+        "locale": session['locale'],
+        "playnext": session['playnext'],
+        "looplist": session['looplist']
     }
 
     user = User (
@@ -94,8 +94,8 @@ def register_user(email, password, username):
         updated=now, email_verified=False, view_counter = 0, \
         navtabs=[ session['navtabs']['navtab1'], session['navtabs']['navtab2'], session['navtabs']['navtab3'] ], \
         settings=settings, \
-        navtabs_index=[ session['navtabs_index']['navtab1'],session['navtabs_index']['navtab2'],session['navtabs_index']['navtab3'] ], 
-        )
+        navtabs_index=[ session['navtabs_index']['navtab1'],session['navtabs_index']['navtab2'],session['navtabs_index']['navtab3'] ],
+    )
     db_session.add(user)
     db_session.commit()
     return user
@@ -164,13 +164,16 @@ def login():
             user = register_user(email, password, username)
             send_confirm_email(email)
             session['register_email'] = None
-            session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public, email_verified=user.email_verified)
+            session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, \
+                                   public=user.public, email_verified=user.email_verified)
             flash('Confirmation email sent', 'success')
             return redirect(url_for('settings.index'))
 
         if user_and_password_is_valid(email, password):
             user = db_session.query(User).filter(User.email==email).one()
-            session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public)
+            dictFeaturedVideo = dict(user.featured_video)
+            session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public, featured_video)
+
             newSettings = dict(user.settings)
             session['locale'] = newSettings['locale']
             session['theme'] = newSettings['theme']
@@ -183,6 +186,9 @@ def login():
             session['navtabs_index']['navtab1'] = user.navtabs_index[0]
             session['navtabs_index']['navtab2'] = user.navtabs_index[1]
             session['navtabs_index']['navtab3'] = user.navtabs_index[2]
+
+            dictFeaturedVideo = dict(user.featured_video)
+
 
             if not user.email_verified:
                 send_confirm_email(email)
@@ -204,7 +210,8 @@ def confirm_email(token):
         return redirect(url_for('video.index'))
     user = db_session.query(User).filter(User.email==email).one()
     if user.email_verified:
-        session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public, email_verified=user.email_verified)
+        session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, \
+                               public=user.public, email_verified=user.email_verified)
         flash('Account already confirmed. Please login', 'success')
         return redirect(url_for('video.index'))
     else:
@@ -243,9 +250,9 @@ def logout():
     user = db_session.query(User).filter(User.email == session['user']['email']).one()
     user.updated = now
     user.settings = {
-    "theme": session['theme'],
-    "locale": session['locale'],
-    "playnext": session['playnext']
+        "theme": session['theme'],
+        "locale": session['locale'],
+        "playnext": session['playnext']
     }
 
     user.navtabs =  [ session['navtabs']['navtab1'], session['navtabs']['navtab2'], session['navtabs']['navtab3'] ]

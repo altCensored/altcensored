@@ -24,28 +24,19 @@ def index(page):
     order = request.args.get('order','newest')
     playlistcount = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)).count()
 
-    if session.get('user') is not None and order == session['user']['username']:
-        user = User.query.filter(func.lower(User.username) == func.lower(order)).scalar()
-
-        playlistcount = Playlist.query.filter(Playlist.public).filter(Playlist.user_id == user.id).count()
-        playlists = Playlist.query.filter(Playlist.public)\
-        .join(User,Playlist.user_id == User.id)\
-        .filter(User.username == order)\
-        .order_by(Playlist.id.desc()).limit(PER_PAGE).offset(offset)
-
-    elif order =='popular':
+    if order =='popular':
         playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
-        .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
+            .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
     else:
         playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
-        .order_by(Playlist.updated.desc()).limit(PER_PAGE).offset(offset)
+            .order_by(Playlist.updated.desc()).limit(PER_PAGE).offset(offset)
 
     if not playlists and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, playlistcount)
 
-    return render_template('playlist/playlist_index.html', 
-        pagination=pagination, playlistcount=playlistcount, playlists=playlists, order=order)
+    return render_template('playlist/playlist_index.html',
+                           pagination=pagination, playlistcount=playlistcount, playlists=playlists, order=order)
 
 
 @bp.route('/<playlist>', defaults={'page': 1})
@@ -83,7 +74,7 @@ def item(playlist,page):
         ordering = case(
             {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(playlist.videos))))},
             value=Mv_Video.extractor_data
-         )
+        )
         videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(playlist.videos)).order_by(ordering).limit(PER_PAGE).offset(offset)
         videocount = db_session.query(func.count(Mv_Video.id)).filter(Mv_Video.extractor_data.in_(playlist.videos)).scalar()
         pagination = Pagination(page, PER_PAGE, videocount)
@@ -97,8 +88,8 @@ def item(playlist,page):
     db_session.commit()
 
 
-    return render_template('playlist/playlist_item.html', playlist=playlist, timediff=timediff,\
-        videos=videos, videocount=videocount, pagination=pagination, watchlater=watchlater, button=button)
+    return render_template('playlist/playlist_item.html', playlist=playlist, timediff=timediff, \
+                           videos=videos, videocount=videocount, pagination=pagination, watchlater=watchlater, button=button)
 
 
 @bp.route('/create', methods=['GET', 'POST'])
@@ -106,8 +97,8 @@ def item(playlist,page):
 def create():
     if request.method == 'POST':
         ftitle = request.form['title']
-        fdescription = request.form['description']        
-        fprivacy = str_to_bool(request.form['privacy'])
+        fdescription = request.form['description']
+        fpublic = str_to_bool(request.form['public'])
         user_id = session['user']['id']
 
         if title_exists(ftitle):
@@ -128,15 +119,15 @@ def create():
 
         now = datetime.datetime.now(timezone.utc)
         empty_list = []
-        playlist = Playlist (title=ftitle, description=fdescription, hashid=hashid,\
-         user_id=user_id, created=now, updated=now, public=fprivacy, view_counter=0, \
-         video_count=0, videos=empty_list)
+        playlist = Playlist (title=ftitle, description=fdescription, hashid=hashid, \
+                             user_id=user_id, created=now, updated=now, public=fpublic, view_counter=0, \
+                             video_count=0, videos=empty_list)
 
         db_session.add(playlist)
         db_session.commit()
 
         return redirect(url_for('playlist.item', playlist=hashid))
-        
+
     return render_template('playlist/playlist_item_create_edit.html')
 
 
@@ -147,8 +138,8 @@ def edit(playlist):
 
     if request.method == 'POST':
         ftitle = request.form['title']
-        fdescription = request.form['description']        
-        fprivacy = str_to_bool(request.form['privacy'])
+        fdescription = request.form['description']
+        fpublic = str_to_bool(request.form['public'])
 
         if util.contains_profanity(ftitle):
             flash('Profanity not allowed', 'error')
@@ -166,7 +157,7 @@ def edit(playlist):
         playlist.updated = now
         playlist.title = ftitle
         playlist.description = fdescription
-        playlist.public = fprivacy
+        playlist.public = fpublic
         db_session.commit()
         return redirect(url_for('playlist.item', playlist=playlist.hashid))
 
@@ -188,8 +179,9 @@ def add_video_playlist():
 
     if not playlist.featured_video:
         playlist.featured_video = {
-        "extractor_data": video_id,
-        "title": video.title
+            "pl_title": playlist.title,
+            "extractor_data": video_id,
+            "title": video.title
         }
 
     now = datetime.datetime.now(timezone.utc)
@@ -219,8 +211,9 @@ def remove_video_playlist():
                 replacement_video_id = playlist.videos[0]
                 video = Mv_Video.query.get(replacement_video_id)
                 playlist.featured_video = {
-                "extractor_data": replacement_video_id,
-                "title": video.title
+                    "pl_title": playlist.title,
+                    "extractor_data": replacement_video_id,
+                    "title": video.title
                 }
 
         now = datetime.datetime.now(timezone.utc)

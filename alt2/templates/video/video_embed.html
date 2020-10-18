@@ -58,7 +58,7 @@ style="outline:none;
 
 <script src="{{ url_for('static', filename='js/video.min.js') }}"></script>
 
-<script nonce="{{ csp_nonce() }}" type="text/javascript">
+<script type="text/javascript">
   (function(){
     {% if playnext %}
     var autoplayEnabled = true;
@@ -72,7 +72,7 @@ style="outline:none;
         nextVideoURL = "/watch?v={{next_video}}&playlist={{playlist.hashid}}"
       {% elif userlist %}
         nextVideoURL = "/watch?v={{next_video}}&userlist={{userlist}}"
-      {% elif next_video %}
+      {% else %}
         nextVideoURL = "/watch?v={{next_video}}"
       {% endif %}
     {% endif %}

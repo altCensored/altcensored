@@ -208,7 +208,6 @@ def create_app(test_config=None):
         content_security_policy=csp,
         content_security_policy_nonce_in=['script-src'],
         feature_policy=feature_policy,
-        frame_options='ALLOW_FROM',
         frame_options_allow_from='*'
     )
         

@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, render_template, request, make_response, session, current_app)
+    Blueprint, render_template, request, make_response, session, current_app, flash)
 from internetarchive import get_item
 from sqlalchemy import func, text, case
 from sqlalchemy.orm.attributes import flag_modified
@@ -35,7 +35,7 @@ def index(page):
             watchlater=user.watchlater
 
     return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater, \
-     videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount )
+                           videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount )
 
 
 @bp.route('/feed', defaults={'page': 1})
@@ -51,10 +51,10 @@ def feed(page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)
     template = render_template('video/video_index.xml', pagination=pagination, videos=videos, \
-        videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, order=order)
+                               videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, order=order)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
-    return response    
+    return response
 
 
 @bp.route('/new', defaults={'page': 1})
@@ -68,9 +68,9 @@ def new(page):
     videos = Mv_Video.query.order_by(Mv_Video.published.desc(),Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset)
     if not videos and page != 1:
         abort(404)
-    pagination = Pagination(page, PER_PAGE, videocount)    
+    pagination = Pagination(page, PER_PAGE, videocount)
     return render_template('video/video_index.html', pagination=pagination, videos=videos, \
-        videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, order=order)
+                           videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, order=order)
 
 
 @bp.route('/old', defaults={'page': 1})
@@ -84,16 +84,16 @@ def old(page):
     videos = Mv_Video.query.order_by(Mv_Video.published.asc(),Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset)
     if not videos and page != 1:
         abort(404)
-    pagination = Pagination(page, PER_PAGE, videocount)    
+    pagination = Pagination(page, PER_PAGE, videocount)
     return render_template('video/video_index.html', pagination=pagination, videos=videos, \
-        videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, order=order)
+                           videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, order=order)
 
 
 @bp.route('/popular', defaults={'page': 1})
 @bp.route('/popular/page/<int:page>')
 def popular(page):
     offset = ((int(page)-1) * PER_PAGE)
-    order = 'popular'    
+    order = 'popular'
     videocount = db_session.query(func.count(Mv_Video.id)).scalar()
     channelcount = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
     delchannelcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
@@ -102,9 +102,9 @@ def popular(page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)
     return render_template('video/video_index.html', pagination=pagination, videos=videos, \
-        videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, order=order)
+                           videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, order=order)
 
- 
+
 @bp.route("/watch")
 def watch():
     video_id = request.args.get('v', None)
@@ -114,7 +114,7 @@ def watch():
     cat_name = video.category
     tagstring = video.tags
 
-    try:       
+    try:
         tags = tagstring.split(",")
     except:
         tags = None
@@ -129,7 +129,7 @@ def watch():
         ordering = case(
             {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(playlist.videos))))},
             value=Mv_Video.extractor_data
-         )
+        )
         videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(playlist.videos)).order_by(ordering)
 
     elif userlist == "history":
@@ -137,7 +137,7 @@ def watch():
         ordering = case(
             {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(user.watched))))},
             value=Mv_Video.extractor_data
-         )
+        )
         videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(user.watched)).order_by(ordering)
 
     elif userlist == "watchlater":
@@ -145,13 +145,14 @@ def watch():
         ordering = case(
             {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(user.watchlater))))},
             value=Mv_Video.extractor_data
-         )
+        )
         videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(user.watchlater)).order_by(ordering)
 
     else:
-        videos = Mv_Video.query.filter_by(ytc_id=ytc_id).order_by(Mv_Video.published.desc(),\
-            Mv_Video.extractor_data.desc()).limit(PER_PAGE)
-#        playlist = None
+        videos = Mv_Video.query.filter_by(ytc_id=ytc_id).order_by(Mv_Video.published.desc(), \
+                                                                  Mv_Video.extractor_data.desc()).limit(PER_PAGE)
+        playlist = None
+        userlist = None
 
     try:
         item = get_item('youtube-' + video_id)
@@ -179,9 +180,9 @@ def watch():
         flag_modified(user, "watched")
         db_session.commit()
 
-    return render_template('video/video_item.html', video_url=video_url, video_url_short=video_url_short,\
-     video_id=video_id, channel=channel, video=video, videos=videos, cat_id=cat_id, tags=tags,\
-     playlist=playlist, userlist=userlist)
+    return render_template('video/video_item.html', video_url=video_url, video_url_short=video_url_short, \
+                           video_id=video_id, channel=channel, video=video, videos=videos, cat_id=cat_id, tags=tags, \
+                           playlist=playlist, userlist=userlist)
 
 @bp.route('/embed/<video_id>')
 def embed(video_id):
@@ -230,18 +231,16 @@ def embed(video_id):
                 next_video = None
 
     else:
-        videos = db_session.query(Mv_Video.extractor_data).filter_by(ytc_id=video.ytc_id).order_by(Mv_Video.published.asc()).limit(PER_PAGE)
+        videos = db_session.query(Mv_Video.extractor_data).filter_by(ytc_id=video.ytc_id).order_by(Mv_Video.published.desc()).limit(PER_PAGE)
         if videos.count() > 1:
             videos_extractor = [r[0] for r in videos]
             videos_extractor_list = list(videos_extractor)
-            try:
-                idx = (videos_extractor_list).index(video.extractor_data)
-                listlen = len(videos_extractor_list)
-                next_video = (videos_extractor_list).pop(idx-1)
-                if not session.get('looplist') and idx == 0:
-                    next_video = None
-            except:
-                next_video = None
+
+            idx = (videos_extractor_list).index(video.extractor_data)
+            listlen = len(videos_extractor_list)
+            next_video = (videos_extractor_list).pop(idx-1)
+            if not session.get('looplist') and idx == 0:
+               next_video = None
 
     return render_template('video/video_embed.html', video_url=video_url, next_video=next_video, playlist=playlist, userlist=userlist)
 
@@ -257,31 +256,31 @@ def search(page):
 
     my_to_tsquery_video = text("mv_video.document @@ to_tsquery(:search)")
     my_ts_rank_video = text("ts_rank(mv_video.document, to_tsquery(:search)) DESC")
-    videos = db_session.query(Mv_Video).\
-        filter(my_to_tsquery_video).\
-        order_by(my_ts_rank_video).\
-        limit(PER_PAGE).offset(offset).\
+    videos = db_session.query(Mv_Video). \
+        filter(my_to_tsquery_video). \
+        order_by(my_ts_rank_video). \
+        limit(PER_PAGE).offset(offset). \
         params(search=search).all()
 
     my_to_tsquery_channel = text("Mv_Channel.document @@ to_tsquery(:search)")
     my_ts_rank_channel = text("ts_rank(Mv_Channel.document, to_tsquery(:search)) DESC")
-    channels = db_session.query(Mv_Channel).\
-        filter(my_to_tsquery_channel).\
-        order_by(my_ts_rank_channel).\
-        limit(24).\
+    channels = db_session.query(Mv_Channel). \
+        filter(my_to_tsquery_channel). \
+        order_by(my_ts_rank_channel). \
+        limit(24). \
         params(search=search).all()
 
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
     channelcount = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
     delchannelcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleteddate!='2001-01-01').scalar()
-    pagination = Pagination(page, PER_PAGE, videocount)   
+    pagination = Pagination(page, PER_PAGE, videocount)
 
     if videos is None:
         videos = Mv_Video.query.limit(24).all()
         return render_template('video/video_index.html', videos=videos)
     else:
         return render_template('video/video_search.html', videos=videos, pagination=pagination, \
-            rawsearch=rawsearch,  order=order, delchannelcount=delchannelcount, channels=channels, videocount=videocount)
+                               rawsearch=rawsearch,  order=order, delchannelcount=delchannelcount, channels=channels, videocount=videocount)
 
 
 @bp.route("/search/latest", defaults={'page': 1})
@@ -295,28 +294,28 @@ def search_latest(page):
 
     my_to_tsquery_video = text("mv_video.document @@ to_tsquery(:search)")
     my_ts_rank_video = text("ts_rank(mv_video.document, to_tsquery(:search)) DESC")
-    videos = db_session.query(Mv_Video).\
-        filter(my_to_tsquery_video).\
-        order_by(Mv_Video.id.desc()).\
-        limit(PER_PAGE).offset(offset).\
+    videos = db_session.query(Mv_Video). \
+        filter(my_to_tsquery_video). \
+        order_by(Mv_Video.id.desc()). \
+        limit(PER_PAGE).offset(offset). \
         params(search=search).all()
 
     my_to_tsquery_channel = text("Mv_Channel.document @@ to_tsquery(:search)")
     my_ts_rank_channel = text("ts_rank(Mv_Channel.document, to_tsquery(:search)) DESC")
-    channels = db_session.query(Mv_Channel).\
-        filter(my_to_tsquery_channel).\
-        limit(24).\
+    channels = db_session.query(Mv_Channel). \
+        filter(my_to_tsquery_channel). \
+        limit(24). \
         params(search=search).all()
 
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
-    pagination = Pagination(page, PER_PAGE, videocount)   
+    pagination = Pagination(page, PER_PAGE, videocount)
 
     if videos is None:
         videos = Mv_Video.query.limit(24).all()
         return render_template('video/video_index.html', videos=videos)
     else:
         return render_template('video/video_search.html', videos=videos, pagination=pagination, \
-            rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount)
+                               rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount)
 
 
 @bp.route("/search/new", defaults={'page': 1})
@@ -330,28 +329,28 @@ def search_new(page):
 
     my_to_tsquery_video = text("mv_video.document @@ to_tsquery(:search)")
     my_ts_rank_video = text("ts_rank(mv_video.document, to_tsquery(:search)) DESC")
-    videos = db_session.query(Mv_Video).\
-        filter(my_to_tsquery_video).\
-        order_by(Mv_Video.published.desc()).\
-        limit(PER_PAGE).offset(offset).\
+    videos = db_session.query(Mv_Video). \
+        filter(my_to_tsquery_video). \
+        order_by(Mv_Video.published.desc()). \
+        limit(PER_PAGE).offset(offset). \
         params(search=search).all()
 
     my_to_tsquery_channel = text("Mv_Channel.document @@ to_tsquery(:search)")
     my_ts_rank_channel = text("ts_rank(Mv_Channel.document, to_tsquery(:search)) DESC")
-    channels = db_session.query(Mv_Channel).\
-        filter(my_to_tsquery_channel).\
-        limit(24).\
+    channels = db_session.query(Mv_Channel). \
+        filter(my_to_tsquery_channel). \
+        limit(24). \
         params(search=search).all()
 
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
-    pagination = Pagination(page, PER_PAGE, videocount)   
+    pagination = Pagination(page, PER_PAGE, videocount)
 
     if videos is None:
         videos = Mv_Video.query.limit(24).all()
         return render_template('video/video_index.html', videos=videos)
     else:
         return render_template('video/video_search.html', videos=videos, pagination=pagination, \
-            rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount)
+                               rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount)
 
 
 @bp.route("/search/old", defaults={'page': 1})
@@ -365,28 +364,28 @@ def search_old(page):
 
     my_to_tsquery_video = text("mv_video.document @@ to_tsquery(:search)")
     my_ts_rank_video = text("ts_rank(mv_video.document, to_tsquery(:search)) DESC")
-    videos = db_session.query(Mv_Video).\
-        filter(my_to_tsquery_video).\
-        order_by(Mv_Video.published.asc()).\
-        limit(PER_PAGE).offset(offset).\
+    videos = db_session.query(Mv_Video). \
+        filter(my_to_tsquery_video). \
+        order_by(Mv_Video.published.asc()). \
+        limit(PER_PAGE).offset(offset). \
         params(search=search).all()
 
     my_to_tsquery_channel = text("Mv_Channel.document @@ to_tsquery(:search)")
     my_ts_rank_channel = text("ts_rank(Mv_Channel.document, to_tsquery(:search)) DESC")
-    channels = db_session.query(Mv_Channel).\
-        filter(my_to_tsquery_channel).\
-        limit(24).\
+    channels = db_session.query(Mv_Channel). \
+        filter(my_to_tsquery_channel). \
+        limit(24). \
         params(search=search).all()
 
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
-    pagination = Pagination(page, PER_PAGE, videocount)   
+    pagination = Pagination(page, PER_PAGE, videocount)
 
     if videos is None:
         videos = Mv_Video.query.limit(24).all()
         return render_template('video/video_index.html', videos=videos)
     else:
         return render_template('video/video_search.html', videos=videos, pagination=pagination, \
-            rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount)
+                               rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount)
 
 
 @bp.route("/search/popular", defaults={'page': 1})
@@ -400,28 +399,28 @@ def search_popular(page):
     order = 'popular'
     my_to_tsquery_video = text("mv_video.document @@ to_tsquery(:search)")
     my_ts_rank_video = text("ts_rank(mv_video.document, to_tsquery(:search)) DESC")
-    videos = db_session.query(Mv_Video).\
-        filter(my_to_tsquery_video).\
-        order_by(Mv_Video.yt_views.desc()).\
-        limit(PER_PAGE).offset(offset).\
+    videos = db_session.query(Mv_Video). \
+        filter(my_to_tsquery_video). \
+        order_by(Mv_Video.yt_views.desc()). \
+        limit(PER_PAGE).offset(offset). \
         params(search=search).all()
 
     my_to_tsquery_channel = text("Mv_Channel.document @@ to_tsquery(:search)")
     my_ts_rank_channel = text("ts_rank(Mv_Channel.document, to_tsquery(:search)) DESC")
-    channels = db_session.query(Mv_Channel).\
-        filter(my_to_tsquery_channel).\
-        limit(24).\
+    channels = db_session.query(Mv_Channel). \
+        filter(my_to_tsquery_channel). \
+        limit(24). \
         params(search=search).all()
 
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
-    pagination = Pagination(page, PER_PAGE, videocount)   
+    pagination = Pagination(page, PER_PAGE, videocount)
 
     if videos is None:
         videos = Mv_Video.query.limit(24).all()
         return render_template('video/video_index.html', videos=videos)
     else:
         return render_template('video/video_search.html', videos=videos, pagination=pagination, \
-            rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount)
+                               rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount)
 
 
 @bp.route('/play-next', methods=['GET', 'POST'])

@@ -171,8 +171,7 @@ def login():
 
         if user_and_password_is_valid(email, password):
             user = db_session.query(User).filter(User.email==email).one()
-            dictFeaturedVideo = dict(user.featured_video)
-            session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public, featured_video)
+            session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public)
 
             newSettings = dict(user.settings)
             session['locale'] = newSettings['locale']

@@ -58,7 +58,7 @@
 
           scrolling="no" frameborder="0" allowfullscreen allow="autoplay;
           encrypted-media" style="top: 0px; left: 0px; width: 100%; height: 100%; position: absolute;">
-            
+
           </iframe>
           </div>
           <h2>{{ video['title'] }}</h2>
@@ -89,7 +89,7 @@
               {% else %}
               <b>|</b>
               <a href=https://{{ config['MYSERVER_NAME'] }}/search?q={{tag|spaceplus}}>{{tag}}&nbsp;
-              </a>             
+              </a>
               {% endif %}
               {% else %}
               {% endif %}
@@ -159,6 +159,8 @@
     </div>
   </div>
 </div>
+
+
 
 <script type="application/javascript">
   function togglePlayNext(event){

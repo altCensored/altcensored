@@ -7,11 +7,11 @@
                 <div class="pure-u-1 pure-md-1-1">
                     {% if session.user and session.user.id == playlist.user_id %}
                         <a href="{{ url_for('user.playlist') }}">
-                            <i class='ion-md-list'  style="font-size: 24px"></i>
-                            Playlist:</a><b>{{ playlist.title }}</b>
+                            <i class='ion-md-list'  style="font-size: 24px"></i></a>
+                        </a><b>{{ playlist.title }}</b>
                     {% else %}
                         <i class='ion-md-list'  style="font-size: 24px"></i>
-                        Playlist:<b>{{ playlist.title }}</b>
+                        <b>{{ playlist.title }}</b>
                     {% endif %}
                     <br>
                     <br>
@@ -28,10 +28,10 @@
                     {% endif %}
                 </div>
             </div>
-
             <div class="pure-u-16-24">
                 <div class="pure-u-1 pure-md-1-1">
                     {{ playlist.description }}
+                    <p></p>
                 </div>
             </div>
             <div class="pure-u-8-24">
@@ -44,12 +44,9 @@
                             <i class='ion-md-add-circle-outline' style="font-size: 24px"></i>
                             <i class='ion-logo-youtube'  style="font-size: 20px"></i></a>
                     {% endif %}
-
                 </div>
             </div>
-
-            <p>&nbsp;</p>
-
+            <p></p>
             <div class="pure-u-1-1">
                 <div class="pure-u-1 pure-md-1-1">
                     <i class='ion-logo-youtube' style="font-size: 20px"></i>
@@ -81,7 +78,6 @@
                         {% endif %}
                     {% endif %}
                     <br>
-
                 </div>
             </div>
 

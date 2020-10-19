@@ -44,12 +44,12 @@
                         <div class="pure-control-group">
                             <label for="Public"> {{ gettext('Public') }}:</label>
                             <select name=public>
-                                {% if playlist and playlist.public %}
-                                    <option value=True SELECTED>True</option>"
-                                    <option value=False>False</option>"
-                                {% else %}
+                                {% if playlist and not playlist.public %}
                                     <option value=False SELECTED>False</option>"
                                     <option value=True>True</option>"
+                                {% else %}
+                                    <option value=True SELECTED>True</option>"
+                                    <option value=False>False</option>"
                                 {% endif %}
                             </select>
                         </div>

@@ -186,9 +186,6 @@ def login():
             session['navtabs_index']['navtab2'] = user.navtabs_index[1]
             session['navtabs_index']['navtab3'] = user.navtabs_index[2]
 
-            dictFeaturedVideo = dict(user.featured_video)
-
-
             if not user.email_verified:
                 send_confirm_email(email)
                 flash('Account not verified. Confirmation email resent', 'success')

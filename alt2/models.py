@@ -247,9 +247,6 @@ class Language(Base):
         self.lang_code = lang_code        
         self.lang_image_css = lang_image_css
 
-    def __repr__(self):
-        return '<Language %r>' % (self.lang_id)
-
 
 class User(Base):
     __tablename__ = 'altcen_user'
@@ -268,18 +265,10 @@ class User(Base):
     description = Column(String, nullable=True)
     public = Column(Boolean, nullable=False, default=False)
     view_counter = Column(Integer, nullable=True)
-    featured_playlist = Column(String, nullable=True)
     settings = Column(MutableDict.as_mutable(JSON))
-
-    featured_video =  Column(MutableDict.as_mutable(JSON))
-
-    featured_video_old = Column(String, ForeignKey('mv_video.extractor_data'), nullable=True)
-    video = relationship("Mv_Video", backref="altcen_user")
+    featured_playlist = Column(Integer)
 
     playlists = relationship("Playlist", cascade="all, delete-orphan")
-
-    def __repr__(self):
-        return '<User %r>' % self.username
 
 
 class Playlist(Base):
@@ -299,11 +288,6 @@ class Playlist(Base):
     featured = Column(Boolean)
 
     user = relationship("User", backref="playlist")
-
-#    video = relationship("Mv_Video", backref="playlist")
-
-    def __repr__(self):
-        return '<Playlist %r>' % self.title
 
 
 class Translation(Base):

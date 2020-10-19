@@ -38,15 +38,8 @@
   <link id="dark-reader" rel="stylesheet" href="{{ url_for('static', filename='css/dark.css') }}">
   {% endif %}
 
-  {#
-  <link href="https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/video-js.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/ionicons.min.css') }}">
-  #}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/ionicons.min.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/flag-icon.min.css') }}">
-
-
 
   {% block head %}
   {% endblock %}
@@ -85,26 +78,13 @@
         <div class="pure-u-1-2">
           <a href="{{ url_for('settings.index') }}" class="pure-menu-heading">
             <i class="icon ion-ios-cog"></i>
-{#          <a href="{{ url_for('settings.index') }}" class="pure-menu-heading localization-menu">
-            <img height="14px" src="{{ url_for('static', filename='flags/by_locale') }}/{{locale}}.svg" />
-#}
           </a>
         </div>
         <div class="pure-u-1-2">
           <a href="{{ url_for('user.index') }}" class="pure-menu-heading">
-            <i class="icon ion-ios-contacts"></i>
+            <i class="icon ion-ios-contact"></i>
           </a>
         </div>
-{#        <div class="pure-u-1-2">
-          <a href="{{ url_for('language.index') }}" class="pure-menu-heading">
-            <i class="icon ion-ios-book"></i>
-          </a>
-        </div>
-        <div class="pure-u-1-2">
-          <a href="{{ url_for('about.index') }}" class="pure-menu-heading">
-            {{ gettext('About') }}
-          </a>
-        </div>  #}
         <div class="pure-u-1-2">
           {% if not session['user'] %}
           <a href="{{ url_for('auth.login') }}" class="pure-menu-heading">

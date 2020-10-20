@@ -178,6 +178,7 @@ def add_video_playlist():
 
     if not playlist.featured_video:
         playlist.featured_video = {
+            "pl_id": playlist.id,
             "pl_title": playlist.title,
             "extractor_data": video_id,
             "title": video.title
@@ -210,6 +211,7 @@ def remove_video_playlist():
                 replacement_video_id = playlist.videos[0]
                 video = Mv_Video.query.get(replacement_video_id)
                 playlist.featured_video = {
+                    "pl_id": playlist.id,
                     "pl_title": playlist.title,
                     "extractor_data": replacement_video_id,
                     "title": video.title

@@ -86,12 +86,15 @@
                         {% for playlist in playlists %}
                             <div class="pure-u-1 pure-u-md-1-4">
                                 <a href="{{ url_for('playlist.item', playlist=playlist.hashid ) }}">
-                                    {% if playlist.featured_video%}
+                                    {% if playlist.featured_video %}
                                         <div class="thumbnail">
                                             <img class="thumbnail" src="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ playlist.featured_video.extractor_data ~ '/' ~ playlist.featured_video.title | ia_fname ~ '-' ~ playlist.featured_video.extractor_data ~ '.jpg' }}"onerror="this.onerror=null;this.src='{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ playlist.featured_video.extractor_data ~ '/__ia_thumb.jpg' }}';" >
                                         </div>
                                     {% endif %}
-                                    <p><b>{{ playlist.title }}</p></b></a>
+                                    <p><b>{{ playlist.title }}</b>
+                                {% if user.featured_playlist and user.featured_playlist.pl_id == playlist.id %}
+                                    &nbsp;&nbsp;<i class='ion-ios-star'  style="font-size: 20px"></i></a></p>
+                                {% endif %}
                                 <p>{{ playlist.description | linkify | safe }}<p>
                                 <i class='ion-logo-youtube'  style="font-size: 20px"></i>
                                 <b>{{ playlist.video_count }}</b>

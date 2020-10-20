@@ -116,21 +116,15 @@ def update_user():
             flash('Profanity not allowed', 'error')
             return redirect(url_for('settings.update_user'))
 
-        session['user'].pop('username', None)
         session['user']['username'] = fusername
         session['user']['description'] = fdescription
         session['user']['public'] = fpublic
+        session.modified = True
 
         user = User.query.get(session['user']['id'])
-
-        if ffeatured_playlist and session['user']['featured_playlist'] != ffeatured_playlist:
-            playlist = Playlist.query.filter(Playlist.title == ffeatured_playlist).scalar()
-
-            user.featured_video = playlist.featured_video
-            playlist.featured = True
-            session['user']['featured_playlist'] = ffeatured_playlist
-
-        session.modified = True
+        playlist = Playlist.query.filter(Playlist.title == ffeatured_playlist).scalar()
+        if playlist is not None and playlist.featured_video is not None:
+            user.featured_playlist = playlist.featured_video
 
         now = datetime.datetime.now(timezone.utc)
         user.updated = now
@@ -147,9 +141,14 @@ def update_user():
     playlist_titles = [r[0] for r in playlist_titles]
     playlist_titles = list(playlist_titles)
 
-    try:
-        playlist_titles.remove(session['user']['featured_playlist'])
-    except:
-        pass
+    user = User.query.get(session['user']['id'])
+    featured_playlist = None
 
-    return render_template('settings/settings_user_update.html', playlist_titles=playlist_titles)
+#    if user.featured_playlist is not None:
+#        featured_playlist = Playlist.query.filter(Playlist.title == user.featured_playlist.pl_title).scalar()
+#        try:
+#            playlist_titles.remove(featured_playlist.title)
+#        except:
+#            pass
+
+    return render_template('settings/settings_user_update.html', playlist_titles=playlist_titles, featured_playlist=featured_playlist)

@@ -87,7 +87,6 @@ def item(playlist,page):
     flag_modified(playlist, "video_count")
     db_session.commit()
 
-
     return render_template('playlist/playlist_item.html', playlist=playlist, timediff=timediff, \
                            videos=videos, videocount=videocount, pagination=pagination, watchlater=watchlater, button=button)
 

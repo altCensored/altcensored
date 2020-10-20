@@ -48,12 +48,12 @@
                     <div class="pure-u-1 pure-u-md-1-4">
                         <div class="h-box">
                             <a href="{{ url_for('user.item', username=user.username) }}">
-                            {% if user.playlist.0 and user.playlist.0.featured_video%}
-                                <div class="thumbnail">
-                                    <img class="thumbnail" src="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ user.playlist.0.featured_video.extractor_data ~ '/' ~ user.playlist.0.featured_video.title | ia_fname ~ '-' ~ user.playlist.0.featured_video.extractor_data ~ '.jpg' }}"onerror="this.onerror=null;this.src='{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ user.playlist.0.featured_video.extractor_data ~ '/__ia_thumb.jpg' }}';" >
-                                </div>
-                            {% endif %}
-                        <i class='ion-ios-contact' style="font-size: 24px"></i>
+                                {% if user.featured_playlist and user.featured_playlist.pl_title %}
+                                    <div class="thumbnail">
+                                        <img class="thumbnail" src="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ user.featured_playlist.extractor_data ~ '/' ~ user.featured_playlist.title | ia_fname ~ '-' ~ user.featured_playlist.extractor_data ~ '.jpg' }}"onerror="this.onerror=null;this.src='{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ user.featured_playlist.extractor_data ~ '/__ia_thumb.jpg' }}';" >
+                                    </div>
+                                {% endif %}
+                                <i class='ion-ios-contact' style="font-size: 24px"></i>
                                 <b>{{ user.username }}</b></a>
                             <p></p>
                             {{ user.description | linkify | safe }}
@@ -65,7 +65,7 @@
                                 <i class='ion-md-eye'  style="font-size: 20px"></i>
                                 <b>&nbsp;{{ user.view_counter }}</b>
                             </div>
-                        </p>
+                            </p>
                         </div>
                     </div>
                 {% endfor %}

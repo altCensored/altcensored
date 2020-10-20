@@ -30,7 +30,6 @@
                         <b>User:</b></a>
                     {{ session.user.username }}
                 </div>
-
             </div>
             <div class="h-box">
                 <form class="pure-form pure-form-aligned" name=user method="post">
@@ -65,12 +64,12 @@
                         <div class="pure-control-group">
                             <label for="Featured_Playlist"> {{ gettext('Featured Playlist') }}:</label>
                             <select name=featured_playlist>
-                                {% if session.user.featured_playlist %}
-                                    <option value="{{ session.user.featured_playlist }}" SELECTED>{{ session.user.featured_playlist }}</option>"
+                                {% if featured_playlist is not none %}
+                                    <option value="{{ featured_playlist }}" SELECTED>{{ featured_playlist }}</option>"
                                 {% else %}
                                     <option value="" SELECTED>{{ gettext('Select Playlist') }}</option>
                                 {% endif %}
-                                {% for playlist_title in playlist_titles %}
+                                 {% for playlist_title in playlist_titles %}
                                     <option value="{{ playlist_title }}">{{ playlist_title }}</option>"
                                 {% endfor %}
                             </select>

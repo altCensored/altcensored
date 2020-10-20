@@ -266,8 +266,7 @@ class User(Base):
     public = Column(Boolean, nullable=False, default=False)
     view_counter = Column(Integer, nullable=True)
     settings = Column(MutableDict.as_mutable(JSON))
-    featured_playlist = Column(Integer)
-
+    featured_playlist = Column(MutableDict.as_mutable(JSON))
     playlists = relationship("Playlist", cascade="all, delete-orphan")
 
 
@@ -285,9 +284,7 @@ class Playlist(Base):
     view_counter = Column(Integer, nullable=True)
     user_id = Column(Integer, ForeignKey('altcen_user.id'), nullable=False)
     featured_video =  Column(MutableDict.as_mutable(JSON))
-    featured = Column(Boolean)
-
-    user = relationship("User", backref="playlist")
+    user = relationship("User")
 
 
 class Translation(Base):

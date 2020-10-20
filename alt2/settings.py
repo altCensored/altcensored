@@ -144,11 +144,14 @@ def update_user():
     user = User.query.get(session['user']['id'])
     featured_playlist = None
 
-#    if user.featured_playlist is not None:
-#        featured_playlist = Playlist.query.filter(Playlist.title == user.featured_playlist.pl_title).scalar()
-#        try:
-#            playlist_titles.remove(featured_playlist.title)
-#        except:
-#            pass
+
+#    flash(ss,'success')
+
+    if user.featured_playlist is not None:
+        featured_playlist = (user.featured_playlist).get("pl_title")
+        try:
+            playlist_titles.remove(featured_playlist)
+        except:
+            pass
 
     return render_template('settings/settings_user_update.html', playlist_titles=playlist_titles, featured_playlist=featured_playlist)

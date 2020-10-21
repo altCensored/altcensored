@@ -144,9 +144,6 @@ def update_user():
     user = User.query.get(session['user']['id'])
     featured_playlist = None
 
-
-#    flash(ss,'success')
-
     if user.featured_playlist is not None:
         featured_playlist = (user.featured_playlist).get("pl_title")
         try:
@@ -154,4 +151,5 @@ def update_user():
         except:
             pass
 
+    flash(playlist_titles, 'success')
     return render_template('settings/settings_user_update.html', playlist_titles=playlist_titles, featured_playlist=featured_playlist)

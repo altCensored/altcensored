@@ -163,16 +163,22 @@ def edit(playlist):
     return render_template('playlist/playlist_item_create_edit.html', playlist=playlist)
 
 
-@bp.route('/add_video_playlist')
+@bp.route('/add_video_playlist', methods=['GET', 'POST'])
 @login_required
 def add_video_playlist():
-    playlist_hashid = request.args.get('playlist', None)
-    video_id = request.args.get('v', None)
+    if request.method == 'GET':
+        video_id = request.form['v']
+        playlist_title = request.form['playlist_title']
+        playlist = Playlist.query.filter(Playlist.title == playlist_title).scalar()
+    else:
+        video_id = request.args.get('v', None)
+        playlist_hashid = request.args.get('playlist', None)
+        playlist = Playlist.query.filter(Playlist.hashid == playlist_hashid).scalar()
+
     video = Mv_Video.query.get(video_id)
-    playlist = Playlist.query.filter(Playlist.hashid == playlist_hashid).scalar()
+
     try:
         playlist.videos += [video.extractor_data]
-
     except:
         playlist.videos = [video.extractor_data]
 
@@ -188,6 +194,9 @@ def add_video_playlist():
     playlist.updated = now
     flag_modified(playlist, "videos")
     db_session.commit()
+
+    if request.method == 'GET':
+        return redirect(url_for('video.watch', v=v ))
 
     return redirect(request.args.get('original_url', '/'))
 

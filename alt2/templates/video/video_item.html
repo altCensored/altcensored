@@ -73,13 +73,36 @@
               <a href="{{ video_url_short ~ 'youtube-' ~ video_id ~ '_archive.torrent' }}">
                 {{ gettext('Download Torrent') }}
               </a>
-              <br><br>
+              <p></p>
               YouTube {{ gettext('Views') }}:&nbsp;{{ video['yt_views']|commafy }}
               <br>
               {{ gettext('Category') }}:&nbsp;
               <a href="{{ url_for('category.item', cat_id = cat_id) }}">
                {{ video['category'] }}</a>
-              <br><br>
+              <p></p>
+
+                {% if session.user %}
+                    <form class="pure-form" method="get" action=""{{ url_for('playlist.add_video_playlist') }}">
+                        <input type="hidden" id="v" name="v" value="{{ video_id }}">
+                        <input type="hidden" id="original_url" name="original_url" value="{{ current_url }}">
+                        <fieldset>
+                            <div class="pure-control-group">
+                                <label for="AddtoPlaylist"></label>
+                                <select id="playlist_title" name="playlist_title" >
+                                    <option value="" SELECTED>{{ gettext('Select Playlist') }}</option>
+                                    {% for playlist_title in playlist_titles %}
+                                        <option value="{{ playlist_title }}">{{ playlist_title }}</option>"
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <p>
+                            <div class="pure-controls">
+                                <button class="pure-button" type="submit" name="submitvalue">{{ gettext('Add to Playlist') }}</button>
+                            </div></p>
+                        </fieldset>
+                    </form>
+                {% endif %}
+
               {% if tags is not none %}
               {% for tag in tags %}
               {% if loop.index is lt 13 %}

@@ -69,18 +69,14 @@
                   </a>
                 {% elif userlist == 'watchlater' %}
                   <a class="action" href="{{ url_for('user.remove_video_watchlater')}}?v={{video.extractor_data}}&original_url={{ current_url }}">
-                    <p class="watched"> <i class='ion-md-trash' style="font-size: 24px"></p></i>
+                    <p class="watch"> <i class='ion-md-trash' style="font-size: 24px"></p></i>
                   </a>
 
                 {% else%}
-                  {% if watchlater and (video.extractor_data in watchlater) %}
-                    <a class="action has-tooltip" href="{{ url_for('user.remove_video_watchlater')}}?v={{video.extractor_data}}&original_url={{ current_url }}"}}">
-                        <p class="watchlater"> <i class='ion-md-checkmark' style="font-size: 24px"> </i></p>
-                        <p class="tooltip">Remove from WatchLater</p>
-                    </a>
-                  {% else %}
-                    <a class="action has-tooltip" href="{{ url_for('user.add_video_watchlater')}}?v={{video.extractor_data}}&original_url={{ current_url }}"}}">
-                        <p class="watchlater"> <i class='ion-md-time' style="font-size: 24px"></i></p>
+                  {% if watchlater and (video.extractor_data not in watchlater) %}
+                    <a class="action has-tooltip" onclick="add_video_WatchLater('{{ video.extractor_data }}');">
+                        <p class="watchlater">
+                            <i id="{{ video.extractor_data }}" class="ion-md-time" style="font-size: 24px"></i></p>
                         <p class="tooltip">Add to WatchLater</p>
                     </a>
                   {% endif %}
@@ -116,3 +112,15 @@
     </div>
   </div>
 </div>
+
+<script type="application/javascript">
+  function add_video_WatchLater(vid){
+    fetch('{{ url_for('user.add_video_watchlater_post') }}', {
+      method: 'POST',
+      body: JSON.stringify({
+        'v': vid
+      })
+    });
+    document.getElementById(vid).className="ion-md-checkmark";
+  }
+</script>

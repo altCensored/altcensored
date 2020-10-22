@@ -9,7 +9,7 @@ from .database import db_session
 from .models import User, Mv_Video, Playlist, Counter
 from .pagination import Pagination
 from .util import login_required
-import datetime
+import datetime, json
 
 bp = Blueprint('user', __name__, url_prefix='/user' )
 
@@ -199,6 +199,25 @@ def add_video_watchlater():
     flag_modified(user, "watchlater")
     db_session.commit()
     return redirect(request.args.get('original_url', '/'))
+
+
+@bp.route('/add_video_watchlater_post', methods=['GET', 'POST'])
+@login_required
+def add_video_watchlater_post():
+    if request.method == 'POST':
+        data = json.loads(request.data)
+        v = data['v']
+        video = Mv_Video.query.get(v)
+        user = db_session.query(User).filter(User.email == session['user']['email']).one()
+        try:
+            user.watchlater += [video.extractor_data]
+        except:
+            user.watchlater = [video.extractor_data]
+        flag_modified(user, "watchlater")
+        db_session.commit()
+        return json.dumps({'v': v })
+    else:
+        return json.dumps({'v': v })
 
 
 @bp.route('/remove_video_watchlater')

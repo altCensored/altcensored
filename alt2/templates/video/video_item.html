@@ -82,7 +82,7 @@
               <p></p>
 
                 {% if session.user %}
-                    <form class="pure-form" method="get" action=""{{ url_for('playlist.add_video_playlist') }}">
+                    <form class="pure-form" method="post" action="{{ url_for('playlist.add_video_playlist') }}">
                         <input type="hidden" id="v" name="v" value="{{ video_id }}">
                         <input type="hidden" id="original_url" name="original_url" value="{{ current_url }}">
                         <fieldset>

@@ -187,11 +187,11 @@ def watch():
         flag_modified(user, "watched")
         db_session.commit()
 
-        playlists = db_session.query(Playlist).filter(Playlist.user_id == user.id)
+        plists = db_session.query(Playlist).filter(Playlist.user_id == user.id)
 
-        for playlist in playlists:
-            if video_id not in playlist.videos:
-                playlist_titles.append(playlist.title)
+        for plist in plists:
+            if video_id not in plist.videos:
+                playlist_titles.append(plist.title)
 
     return render_template('video/video_item.html', video_url=video_url, video_url_short=video_url_short, \
                            video_id=video_id, channel=channel, video=video, videos=videos, cat_id=cat_id, tags=tags, \
@@ -219,7 +219,7 @@ def embed(video_id):
 
     next_video = None
 
-    if playlist is not None:
+    if playlist:
         playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
         if len(playlist.videos) > 1:
             idx = (playlist.videos).index(video.extractor_data)

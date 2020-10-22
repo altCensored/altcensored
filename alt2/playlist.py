@@ -166,10 +166,11 @@ def edit(playlist):
 @bp.route('/add_video_playlist', methods=['GET', 'POST'])
 @login_required
 def add_video_playlist():
-    if request.method == 'GET':
+    if request.method == 'POST':
         video_id = request.form['v']
         playlist_title = request.form['playlist_title']
         playlist = Playlist.query.filter(Playlist.title == playlist_title).scalar()
+
     else:
         video_id = request.args.get('v', None)
         playlist_hashid = request.args.get('playlist', None)
@@ -195,8 +196,8 @@ def add_video_playlist():
     flag_modified(playlist, "videos")
     db_session.commit()
 
-    if request.method == 'GET':
-        return redirect(url_for('video.watch', v=v ))
+    if request.method == 'POST':
+        return redirect(url_for('video.watch', v=video_id ))
 
     return redirect(request.args.get('original_url', '/'))
 

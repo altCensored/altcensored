@@ -161,6 +161,10 @@ def login():
                 flash('Profanity not allowed', 'error')
                 return redirect(url_for('auth.login'))
 
+            if email_exist(email):
+                flash('Email taken', 'error')
+                return redirect(url_for('auth.login'))
+
             user = register_user(email, password, username)
             send_confirm_email(email)
             session['register_email'] = None

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:media="http://search.yahoo.com/mrss/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:media="http://search.yahoo.com/mrss/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:altcen="http://www.altcensored.com/ns/altcen/">>
     <channel>
       {% if order == 'deleted' %}
         <title>{{ config['MYSERVER_NAME_SHORT'] }}:Channels:Deleted</title>
@@ -52,8 +52,8 @@
                 {{ channel['ytc_description'] | linkify | safe | nl2br | truncate (1200) }}
                 ]]>
               </description>
-              <total_videos>{{ channel['total'] }}</total_videos>
-            <limited_removed_videos>{{ channel['limited'] }}</limited_removed_videos>
+              <altcen:total_videos>{{ channel['total'] }}</altcen:total_videos>
+              <altcen:limited_removed_videos>{{ channel['limited'] }}</altcen:limited_removed_videos>
               {% if channel['ytc_deleted'] %}
               <pubDate>{{ channel['ytc_deleteddate'].strftime('%a, %d %b %Y %T') }} EST</pubDate>
               {% else %}

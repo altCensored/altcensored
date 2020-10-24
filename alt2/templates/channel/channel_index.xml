@@ -38,12 +38,16 @@
                 <b>Limited/Deleted Videos: {{ channel['limited'] }}</b><br>
                 <b>Views: {{ channel['ytc_viewcount'] }}</b><br>
                 <b>Subscribers: {{ channel['ytc_subscribercount'] }}</b><br>
-                <b>Created Date: {{ channel['ytc_publishedat'].strftime('%b %e, %G') }}</b><br>
+                <b>Created: {{ channel['ytc_publishedat'].strftime('%b %e, %G') }}</b><br>
               {% if channel['ytc_deleted'] %}
-                  Deleted: {{ channel['ytc_deleteddate'].strftime('%b %e, %G') }}<br>
+                 <b>Deleted: {{ channel['ytc_deleteddate'].strftime('%b %e, %G') }}</b><br>
               {% endif %}
               <p>
                 {{ channel['ytc_description'] | linkify | safe | nl2br | truncate (1200) }} ]]>
+              </p>
+              <p></p>
+                <b>YouTube Channel ID: {{ channel['ytc_id'] }}</b><br>
+                <b>YouTube Channel URL: https://www.youtube.com/channel/{{ channel['ytc_id'] }}</b><br>
               </description>
             </item>
           {% endfor %}

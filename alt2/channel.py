@@ -13,6 +13,7 @@ from . import util
 bp = Blueprint('channel', __name__, url_prefix='/channel' )
 
 PER_PAGE = 24
+PER_PAGE_FEED = 60
 
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
@@ -36,7 +37,7 @@ def feed(page):
     order = 'latest'
     channelcount = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
-    channels = Mv_Channel.query.limit(PER_PAGE).offset(offset)
+    channels = Mv_Channel.query.limit(PER_PAGE_FEED).offset(offset)
     if not channels and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, channelcount)
@@ -113,7 +114,7 @@ def deleted_feed(page):
     order = 'deleted'
     channelcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
-    channels = Mv_Channel.query.filter(Mv_Channel.ytc_deleted).order_by(Mv_Channel.ytc_deleteddate.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset)
+    channels = Mv_Channel.query.filter(Mv_Channel.ytc_deleted).order_by(Mv_Channel.ytc_deleteddate.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE_FEED).offset(offset)
     if not channels and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, channelcount)

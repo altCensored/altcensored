@@ -35,22 +35,27 @@
                 </a>
                 <p>
                 <b>Total Videos: {{ channel['total'] }}</b><br>
-                <b>Limited/Deleted Videos: {{ channel['limited'] }}</b><br>
-                <b>Views: {{ channel['ytc_viewcount'] }}</b><br>
-                <b>Subscribers: {{ channel['ytc_subscribercount'] }}</b><br>
-                <b>Created Date: {{ channel['ytc_publishedat'].strftime('%b %e, %G') }}</b><br>
+                <b>Limited/Removed Videos: {{ channel['limited'] }}</b><br>
+                <b>Views:</b> {{ channel['ytc_viewcount'] }}</b>
+                <b>Subscribers:</b> {{ channel['ytc_subscribercount'] }}</b>
+                <b>Created Date:</b> {{ channel['ytc_publishedat'].strftime('%Y-%m-%d') }}</b>
               {% if channel['ytc_deleted'] %}
-                <b>Deleted Date: {{ channel['ytc_deleteddate'].strftime('%b %e, %G') }}</b><br>
+                <b>Deleted Date:</b> {{ channel['ytc_deleteddate'].strftime('%Y-%m-%d') }}</b>
               {% endif %}
               {% if channel['ytc_addeddate'] %}
-                 <b>Added to altCensored Date: {{ channel['ytc_addeddate'].strftime('%b %e, %G') }}</b><br>
+                 <b>Added to altCensored Date:</b> {{ channel['ytc_addeddate'].strftime('%Y-%m-%d') }}</b>
               {% endif %}
+                <b>YouTube Channel ID:</b> {{ channel['ytc_id'] }}</b><br>
+                <b>YouTube Channel URL:</b> https://www.youtube.com/channel/{{ channel['ytc_id'] }}
                 <p>
-                {{ channel['ytc_description'] | linkify | safe | nl2br | truncate (1200) }}
+                {{ channel['ytc_description'] | linkify | safe | nl2br | truncate (1200) }} ]]>
                 <p>
-                <b>YouTube Channel ID: {{ channel['ytc_id'] }}</b><br>
-                <b>YouTube Channel URL: https://www.youtube.com/channel/{{ channel['ytc_id'] }}</b> ]]>
               </description>
+              {% if channel['ytc_deleted'] %}
+              <pubDate>{{ channel['ytc_deleteddate'].strftime('%a, %d %b %Y %T') }} EST</pubDate>
+              {% else %}
+              <pubDate>{{ channel['ytc_addeddate'].strftime('%a, %d %b %Y %T') }} EST</pubDate>
+              {% endif %}
             </item>
           {% endfor %}
     </channel>

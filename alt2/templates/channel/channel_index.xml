@@ -41,7 +41,7 @@
                 <b>Subscribers:</b> {{ channel['ytc_subscribercount'] }}<br>
                 <b>Created Date:</b> {{ channel['ytc_publishedat'].strftime('%Y-%m-%d') }}<br>
               {% if channel['ytc_deleted'] %}
-                <b>Deleted Date:</b> {{ channel['ytc_deleteddate'].strftime('%Y-%m-%d') }}<br>
+                <b>Deleted Date:</b>{{ channel['ytc_deleteddate'].strftime('%Y-%m-%d') }}<br>
               {% endif %}
               {% if channel['ytc_addeddate'] %}
                  <b>Added to altCensored Date:</b> {{ channel['ytc_addeddate'].strftime('%Y-%m-%d') }}<br>
@@ -52,8 +52,17 @@
                 {{ channel['ytc_description'] | linkify | safe | nl2br | truncate (1200) }}
                 ]]>
               </description>
-              <altcen:total_videos>{{ channel['total'] }}</altcen:total_videos>
-              <altcen:limited_removed_videos>{{ channel['limited'] }}</altcen:limited_removed_videos>
+              <altcen:Total_Videos>{{ channel['total'] }}</altcen:Total_Videos>
+              <altcen:Limited_Removed_Videos>{{ channel['limited'] }}</altcen:Limited_Removed_Videos>
+              <altcen:Views>{{ channel['ytc_viewcount'] }}</altcen:Views>
+              <altcen:Subscribers>{{ channel['ytc_subscribercount'] }}</altcen:Subscribers>
+              <altcen:Created_Date>{{ channel['ytc_publishedat'] }}</altcen:Created_Date>
+              <altcen:Deleted_Date>{{ channel['ytc_deleteddate'] }}</altcen:Deleted_Date>
+              <altcen:Added_to_altCen_Date>{{ channel['ytc_addeddate'] }}</altcen:Added_to_altCen_Date>
+              <altcen:YouTube_Channel_ID>{{ channel['ytc_id'] }}</altcen:YouTube_Channel_ID>
+              <altcen:YouTube_Channel_URL>https://www.youtube.com/channel/{{ channel['ytc_id'] }}</altcen:YouTube_Channel_URL>
+              <altcen:SocialBlade_Channel_URL>https://socialblade.com/youtube/channel/{{ channel['ytc_id'] }}</altcen:SocialBlade_Channel_URL>
+              <altcen:Short_Description>{{ channel['ytc_description'] | linkify | safe | nl2br | truncate (35) }}</altcen:Short_Description>
               {% if channel['ytc_deleted'] %}
               <pubDate>{{ channel['ytc_deleteddate'].strftime('%a, %d %b %Y %T') }} EST</pubDate>
               {% else %}

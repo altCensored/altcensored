@@ -137,8 +137,8 @@ img.thumbnail {
   padding: 5px 15px;
   color: white;
   right: 19px;
-  top: 4px;
-  height: 19px;
+  top: -4px;
+  height: 18px;
   font-size: 12px;
 }
 

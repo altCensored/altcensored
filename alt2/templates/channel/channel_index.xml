@@ -62,7 +62,7 @@
               <altcen:YouTube_Channel_ID>{{ channel['ytc_id'] }}</altcen:YouTube_Channel_ID>
               <altcen:YouTube_Channel_URL>https://www.youtube.com/channel/{{ channel['ytc_id'] }}</altcen:YouTube_Channel_URL>
               <altcen:SocialBlade_Channel_URL>https://socialblade.com/youtube/channel/{{ channel['ytc_id'] }}</altcen:SocialBlade_Channel_URL>
-              <altcen:Short_Description>{{ channel['ytc_description'] | linkify | safe | nl2br | truncate (35) }}</altcen:Short_Description>
+              <altcen:Short_Description> <![CDATA[ {{ channel['ytc_description'] | linkify | safe | nl2br | truncate (35) }} ]]> </altcen:Short_Description>
               {% if channel['ytc_deleted'] %}
               <pubDate>{{ channel['ytc_deleteddate'].strftime('%a, %d %b %Y %T') }} EST</pubDate>
               {% else %}

@@ -108,6 +108,7 @@ img.thumbnail {
   top: -0.7em;
 }
 
+
 .watchlater {
   z-index: 100;
   position: absolute;
@@ -116,16 +117,9 @@ img.thumbnail {
   font-size: 16px;
   font-family: sans-serif;
   right: 0.2em;
-  top: -0.7em;
+  top: -0.5em;
 }
 
-
-.watchlater {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 19px;
-}
 
 .has-tooltip .tooltip {
   display: none;

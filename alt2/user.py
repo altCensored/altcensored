@@ -1,15 +1,17 @@
 from flask import (
     Blueprint, session, render_template, flash, redirect, request, url_for
 )
-from sqlalchemy import func, case
+from sqlalchemy import func, case, select
 from sqlalchemy.orm.attributes import flag_modified
+from sqlalchemy.orm import load_only
 from werkzeug.exceptions import abort
 from flask_babelplus import lazy_gettext
 from .database import db_session
 from .models import User, Mv_Video, Playlist, Counter
 from .pagination import Pagination
+from . import util
 from .util import login_required
-import datetime, json
+import datetime, json, random
 
 bp = Blueprint('user', __name__, url_prefix='/user' )
 
@@ -57,19 +59,22 @@ def item(username):
         abort(404)
 
     if session.get('user') is not None and username == session['user']['username']:
-        playlistcount = Playlist.query.filter((Playlist.public),(Playlist.user_id == user.id)).count()
+#        playlistcount = Playlist.query.filter((Playlist.public),(Playlist.user_id == user.id)).count()
         playlists = Playlist.query.filter((Playlist.public),(Playlist.user_id == user.id)) \
             .join(User, Playlist.user_id == User.id) \
             .filter(Playlist.user_id == user.id) \
             .order_by(Playlist.id.desc())
+        playlistcount = playlists.count()
+
     else:
-        playlistcount = Playlist.query.filter((Playlist.public),(Playlist.user_id == user.id), \
-                                              (Playlist.featured_video.isnot(None))).count()
+#        playlistcount = Playlist.query.filter((Playlist.public),(Playlist.user_id == user.id), \
+#                                              (Playlist.featured_video.isnot(None))).count()
         playlists = Playlist.query.filter((Playlist.public),(Playlist.user_id == user.id), \
                                           (Playlist.featured_video.isnot(None))) \
             .join(User, Playlist.user_id == User.id) \
             .filter(Playlist.user_id == user.id) \
             .order_by(Playlist.id.desc())
+        playlistcount = playlists.count()
 
     if user.watched is None:
         historycount = 0
@@ -246,11 +251,12 @@ def clear_watchlater():
         submitvalue = request.form['submitvalue']
         if submitvalue == 'yes':
             user = db_session.query(User).filter(User.email == session['user']['email']).one()
-            user.watchlater = None
+            user.watchlater.clear()
             flag_modified(user, "watchlater")
             db_session.commit()
             flash('WatchLater Cleared', 'success')
-            return redirect(request.args.get('original_url', '/'))
+            return redirect(url_for('user.item', username=session['user']['username']))
+
         else:
             flash('WatchLater Not Cleared', 'error')
             return redirect(request.args.get('original_url', '/'))

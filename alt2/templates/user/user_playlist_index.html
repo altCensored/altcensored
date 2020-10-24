@@ -62,10 +62,9 @@
                                     </div>
                                 {% endif %}
                                 <p><b>{{ playlist.title }}</b></a>
-                            {% if playlist.featured%}
-                                &nbsp;&nbsp;&nbsp;
-                                <i class='ion-ios-star'  style="font-size: 20px"></i>
-                            {% endif %}
+                                {% if playlist.user.featured_playlist and playlist.user.featured_playlist.pl_id == playlist.id %}
+                                    &nbsp;&nbsp;<i class='ion-ios-star'  style="font-size: 20px"></i></a></p>
+                                {% endif %}
                             </p>
 
                             <p>{{ playlist.description | linkify | safe }}<p>

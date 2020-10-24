@@ -69,15 +69,15 @@
                   </a>
                 {% elif userlist == 'watchlater' %}
                   <a class="action" href="{{ url_for('user.remove_video_watchlater')}}?v={{video.extractor_data}}&original_url={{ current_url }}">
-                    <p class="watch"> <i class='ion-md-trash' style="font-size: 24px"></p></i>
+                    <p class="watched"> <i class='ion-md-trash' style="font-size: 24px"></p></i>
                   </a>
 
                 {% else%}
-                  {% if watchlater and (video.extractor_data not in watchlater) %}
+                  {% if not watchlater or (watchlater and video.extractor_data not in watchlater) %}
                     <a class="action has-tooltip" onclick="add_video_WatchLater('{{ video.extractor_data }}');">
                         <p class="watchlater">
                             <i id="{{ video.extractor_data }}" class="ion-md-time" style="font-size: 24px"></i></p>
-                        <p class="tooltip">Add to WatchLater</p>
+                        <p id="ttip{{ video.extractor_data }}" class="tooltip">Add to WatchLater</p>
                     </a>
                   {% endif %}
                 {% endif %}
@@ -121,6 +121,9 @@
         'v': vid
       })
     });
+    var ttip = "ttip"
+    var ttipid = ttip.concat(vid);
     document.getElementById(vid).className="ion-md-checkmark";
+{#    document.getElementById(ttipid).className=""; #}
   }
 </script>

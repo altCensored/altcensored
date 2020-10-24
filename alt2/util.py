@@ -61,6 +61,28 @@ def get_navtabs_perm():
     navtabs_perm = dict(rowtuple)
     return navtabs_perm
 
+def get_videocount():
+    if 'videocount' in session:
+        return session['videocount']
+    else:
+        session['videocount'] = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
+    return session['videocount']
+
+def get_channelcount():
+    if 'channelcount' in session:
+        return session['channelcount']
+    else:
+        session['channelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
+    return session['channelcount']
+
+def get_delchannelcount():
+    if 'delchannelcount' in session:
+        return session['delchannelcount']
+    else:
+        session['delchannelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
+    return session['delchannelcount']
+
+
 def set_session() -> object:
     """
     :rtype: object
@@ -108,11 +130,15 @@ def set_session() -> object:
         rowtuple = tuple(row)
         session['navtabs_perm'] = dict(rowtuple)
 
-
     if 'videocount' in session:
         pass
     else:
         session['videocount'] = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
+
+    if 'channelcount' in session:
+        pass
+    else:
+        session['channelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
 
     if 'delchannelcount' in session:
         pass

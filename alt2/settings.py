@@ -151,5 +151,4 @@ def update_user():
         except:
             pass
 
-    flash(playlist_titles, 'success')
     return render_template('settings/settings_user_update.html', playlist_titles=playlist_titles, featured_playlist=featured_playlist)

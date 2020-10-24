@@ -68,19 +68,6 @@ def username_exist(username):
 
 
 def register_user(email, password, username):
-    if session.get('locale') is None:
-        get_locale()
-    if session.get('playnext') is None:
-        get_playnext()
-    if session.get('looplist') is None:
-        get_looplist()
-    if session.get('theme') is None:
-        session['theme'] = get_theme()
-    if session.get('navtabs') is None:
-        get_navtabs()
-    if session.get('navtabs_index') is None:
-        get_navtabs_index()
-
     now = datetime.datetime.now(timezone.utc)
     settings = {
         "theme": session['theme'],
@@ -118,6 +105,7 @@ def send_reset_password_email(email):
 @bp.route('/login', methods=['GET', 'POST'])
 @bp.route('/', methods=['GET', 'POST'])
 def login():
+    util.set_session()
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']

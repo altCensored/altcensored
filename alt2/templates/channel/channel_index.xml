@@ -33,19 +33,20 @@
                    src="{{ channel['ytc_thumbnailurl'] | reverse | replace('88','671', 1) | reverse  }}" >
                   </style>
                 </a>
-                <p><b>Total Videos: {{ channel['total'] }}</b></p>
-                <p><b>Limited/Deleted Videos: {{ channel['limited'] }}</b></p>
-                <p><b>Views: {{ channel['ytc_viewcount'] }}</b></p>
-                <p><b>Subscribers: {{ channel['ytc_subscribercount'] }}</b></p>
-                <p><b>Created Date: {{ channel['ytc_publishedat'].strftime('%b %e, %G') }}</b></p>
+                <p>
+                <b>Total Videos: {{ channel['total'] }}</b><br>
+                <b>Limited/Deleted Videos: {{ channel['limited'] }}</b><br>
+                <b>Views: {{ channel['ytc_viewcount'] }}</b><br>
+                <b>Subscribers: {{ channel['ytc_subscribercount'] }}</b><br>
+                <b>Created Date: {{ channel['ytc_publishedat'].strftime('%b %e, %G') }}</b><br>
               {% if channel['ytc_deleted'] %}
-              <pubDate>{{ channel['ytc_deleteddate'].strftime('%a, %d %b %Y %T') }} EST</pubDate>
-                  Deleted: {{ channel['ytc_deleteddate'].strftime('%b %e, %G') }}
-              {% else %}
-              <pubDate>{{ channel['ytc_publisheddate'].strftime('%a, %d %b %Y %T') }} EST</pubDate>
+                  Deleted: {{ channel['ytc_deleteddate'].strftime('%b %e, %G') }}<br>
               {% endif %}
-                {{ channel['ytc_description'] | linkify | safe | nl2br | truncate (1200) }} ]]>
-                </description>
+              </p>
+              <p>
+                {{ channel['ytc_description'] | linkify | safe | nl2br | truncate (1200) }} ]]></description>
+              </p>
+              </description>
             </item>
           {% endfor %}
     </channel>

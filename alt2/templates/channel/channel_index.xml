@@ -52,6 +52,8 @@
                 {{ channel['ytc_description'] | linkify | safe | nl2br | truncate (1200) }}
                 ]]>
               </description>
+              <total_videos>{{ channel['total'] }}</total_videos>
+            <limited_removed_videos>{{ channel['limited'] }}</limited_removed_videos>
               {% if channel['ytc_deleted'] %}
               <pubDate>{{ channel['ytc_deleteddate'].strftime('%a, %d %b %Y %T') }} EST</pubDate>
               {% else %}

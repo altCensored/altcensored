@@ -40,16 +40,16 @@
                 <b>Subscribers: {{ channel['ytc_subscribercount'] }}</b><br>
                 <b>Created Date: {{ channel['ytc_publishedat'].strftime('%b %e, %G') }}</b><br>
               {% if channel['ytc_deleted'] %}
-                 <b>Deleted Date: {{ channel['ytc_deleteddate'].strftime('%b %e, %G') }}</b><br>
+                <b>Deleted Date: {{ channel['ytc_deleteddate'].strftime('%b %e, %G') }}</b><br>
               {% endif %}
               {% if channel['ytc_addeddate'] %}
                  <b>Added to altCensored Date: {{ channel['ytc_addeddate'].strftime('%b %e, %G') }}</b><br>
               {% endif %}
-              <p>
-                {{ channel['ytc_description'] | linkify | safe | nl2br | truncate (1200) }} ]]>
-              <p>
+                <p>
+                {{ channel['ytc_description'] | linkify | safe | nl2br | truncate (1200) }}
+                <p>
                 <b>YouTube Channel ID: {{ channel['ytc_id'] }}</b><br>
-                <b>YouTube Channel URL: https://www.youtube.com/channel/{{ channel['ytc_id'] }}</b><br>
+                <b>YouTube Channel URL: https://www.youtube.com/channel/{{ channel['ytc_id'] }}</b> ]]>
               </description>
             </item>
           {% endfor %}

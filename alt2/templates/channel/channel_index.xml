@@ -28,7 +28,8 @@
               <link>https://{{ config['MYSERVER_NAME'] }}{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}</link>
               <guid>https://{{ config['MYSERVER_NAME'] }}{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}</guid>
               <description>
-                <![CDATA[<a href="https://{{ config['MYSERVER_NAME'] }}{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}">
+                <![CDATA[
+                <a href="https://{{ config['MYSERVER_NAME'] }}{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}">
                   <img 
                    src="{{ channel['ytc_thumbnailurl'] | reverse | replace('88','671', 1) | reverse  }}" >
                   </style>
@@ -36,20 +37,20 @@
                 <p>
                 <b>Total Videos: {{ channel['total'] }}</b><br>
                 <b>Limited/Removed Videos: {{ channel['limited'] }}</b><br>
-                <b>Views:</b> {{ channel['ytc_viewcount'] }}</b>
-                <b>Subscribers:</b> {{ channel['ytc_subscribercount'] }}</b>
-                <b>Created Date:</b> {{ channel['ytc_publishedat'].strftime('%Y-%m-%d') }}</b>
+                <b>Views:</b> {{ channel['ytc_viewcount'] }}<br>
+                <b>Subscribers:</b> {{ channel['ytc_subscribercount'] }}<br>
+                <b>Created Date:</b> {{ channel['ytc_publishedat'].strftime('%Y-%m-%d') }}<br>
               {% if channel['ytc_deleted'] %}
-                <b>Deleted Date:</b> {{ channel['ytc_deleteddate'].strftime('%Y-%m-%d') }}</b>
+                <b>Deleted Date:</b> {{ channel['ytc_deleteddate'].strftime('%Y-%m-%d') }}<br>
               {% endif %}
               {% if channel['ytc_addeddate'] %}
-                 <b>Added to altCensored Date:</b> {{ channel['ytc_addeddate'].strftime('%Y-%m-%d') }}</b>
+                 <b>Added to altCensored Date:</b> {{ channel['ytc_addeddate'].strftime('%Y-%m-%d') }}<br>
               {% endif %}
-                <b>YouTube Channel ID:</b> {{ channel['ytc_id'] }}</b><br>
+                <b>YouTube Channel ID:</b> {{ channel['ytc_id'] }}<br>
                 <b>YouTube Channel URL:</b> https://www.youtube.com/channel/{{ channel['ytc_id'] }}
                 <p>
-                {{ channel['ytc_description'] | linkify | safe | nl2br | truncate (1200) }} ]]>
-                <p>
+                {{ channel['ytc_description'] | linkify | safe | nl2br | truncate (1200) }}
+                ]]>
               </description>
               {% if channel['ytc_deleted'] %}
               <pubDate>{{ channel['ytc_deleteddate'].strftime('%a, %d %b %Y %T') }} EST</pubDate>

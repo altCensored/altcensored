@@ -3,7 +3,6 @@ from flask import (
 )
 from sqlalchemy import func, case, select
 from sqlalchemy.orm.attributes import flag_modified
-from sqlalchemy.orm import load_only
 from werkzeug.exceptions import abort
 from flask_babelplus import lazy_gettext
 from .database import db_session
@@ -11,7 +10,7 @@ from .models import User, Mv_Video, Playlist, Counter
 from .pagination import Pagination
 from . import util
 from .util import login_required
-import datetime, json, random
+import datetime, json
 
 bp = Blueprint('user', __name__, url_prefix='/user' )
 

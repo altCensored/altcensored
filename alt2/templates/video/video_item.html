@@ -96,6 +96,9 @@
                                     {% for playlist_title in playlist_titles %}
                                         <option value="{{ playlist_title }}">{{ playlist_title }}</option>"
                                     {% endfor %}
+                                {% if not_in_watchlater %}
+                                    <option value="watchlater">{{ gettext('WatchLater') }}</option>"
+                                {% endif %}
                                 </select>
                             </div>
                             <p>
@@ -105,10 +108,9 @@
                         </fieldset>
                     </form>
                   {% endif %}
-
               {% if tags is not none %}
-              {% for tag in tags %}
-              {% if loop.index is lt 13 %}
+                  {% for tag in tags %}
+                      {% if loop.index is lt 13 %}
               {% if loop.first %}
               <a href=https://{{ config['MYSERVER_NAME'] }}/search?q={{tag|spaceplus}}>
               {{tag}}&nbsp;</a>

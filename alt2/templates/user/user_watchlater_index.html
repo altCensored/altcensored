@@ -13,22 +13,20 @@
   <div class="pure-u-1 pure-u-md-2-24"></div>
   <div class="pure-u-1 pure-u-md-20-24">
     <div class="pure-g h-box">
-      <div class="pure-u-1-3">
+      <div class="pure-u-6-24">
         <div class="pure-u-1 pure-md-1-1">
           <i class='ion-md-time'  style="font-size: 24px"></i>
           <i class='ion-logo-rss' style="font-size: 21px"></i>
           <b>&nbsp;{{ videocount | commafy }}&nbsp;</b>
         </div>
       </div>
-      <div class="pure-u-1-3">
+      <div class="pure-u-12-24">
         <div class="pure-g" style="text-align:center;">
           <div class="pure-u-1 pure-md-1-1">
             {% if playlist %}
             <a href="{{ url_for('playlist.item', playlist=playlist.hashid ) }}">
-            <i class='ion-md-return-left' style="font-size: 24px"></i>
-            <i class='ion-md-list' style="font-size: 24px"></i>
-            &nbsp;
-            <b> {{ playlist.title }}</b></a>
+            <i class='ion-md-list' style="font-size: 24px"></i>&nbsp;
+            <b>{{ playlist.title }}</b></a>
             {% else %}
             <div class="pure-menu-heading selected">
             <b>{{ gettext('Watchlater') }}</b></div>
@@ -36,11 +34,13 @@
           </div>
         </div>
       </div>
-      <div class="pure-u-1-3">
+      <div class="pure-u-6-24">
         <div class="pure-g" style="text-align:right">
           <div class="pure-u-1 pure-md-1-1">
+            {% if not playlist %}
             <a href="{{ url_for('user.clear_watchlater') }}">
             <i class='ion-md-trash' style="font-size: 24px"></i></a>
+            {% endif %}
           </div>
         </div>
       </div>

@@ -58,7 +58,6 @@ def item(username):
         abort(404)
 
     if session.get('user') is not None and username == session['user']['username']:
-#        playlistcount = Playlist.query.filter((Playlist.public),(Playlist.user_id == user.id)).count()
         playlists = Playlist.query.filter((Playlist.public),(Playlist.user_id == user.id)) \
             .join(User, Playlist.user_id == User.id) \
             .filter(Playlist.user_id == user.id) \
@@ -66,8 +65,6 @@ def item(username):
         playlistcount = playlists.count()
 
     else:
-#        playlistcount = Playlist.query.filter((Playlist.public),(Playlist.user_id == user.id), \
-#                                              (Playlist.featured_video.isnot(None))).count()
         playlists = Playlist.query.filter((Playlist.public),(Playlist.user_id == user.id), \
                                           (Playlist.featured_video.isnot(None))) \
             .join(User, Playlist.user_id == User.id) \
@@ -162,7 +159,8 @@ def clear_history():
             flash('History Cleared', 'success')
         else:
             flash('History Not Cleared', 'error')
-        return redirect(request.args.get('original_url', '/'))
+        return redirect(url_for('user.item', username=session['user']['username']))
+
     return render_template('widgets/widgets_confirm.html', message=message)
 
 
@@ -258,7 +256,7 @@ def clear_watchlater():
 
         else:
             flash('WatchLater Not Cleared', 'error')
-            return redirect(request.args.get('original_url', '/'))
+            return redirect(url_for('user.item', username=session['user']['username']))
     return render_template('widgets/widgets_confirm.html', message=message)
 
 

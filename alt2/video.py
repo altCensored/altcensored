@@ -154,9 +154,6 @@ def watch():
         videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(user.watchlater)).order_by(ordering)
 
     else:
-#        videos = Mv_Video.query.filter(Mv_Video.ytc_id == video.ytc_id, Mv_Video.published <= video.published) \
-#            .order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE)
-
         videos = db_session.query(Mv_Video).filter(Mv_Video.ytc_id == video.ytc_id, Mv_Video.published <= video.published, Mv_Video.extractor_data != video_id) \
             .order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE)
 
@@ -187,6 +184,11 @@ def watch():
         flag_modified(user, "watched")
         db_session.commit()
 
+        if video_id not in user.watchlater:
+            not_in_watchlater = True
+        else:
+            not_in_watchlater = None
+
         plists = db_session.query(Playlist).filter(Playlist.user_id == user.id)
 
         for plist in plists:
@@ -195,7 +197,7 @@ def watch():
 
     return render_template('video/video_item.html', video_url=video_url, video_url_short=video_url_short, \
                            video_id=video_id, channel=channel, video=video, videos=videos, cat_id=cat_id, tags=tags, \
-                           playlist=playlist, userlist=userlist, playlist_titles=playlist_titles)
+                           playlist=playlist, userlist=userlist, not_in_watchlater=not_in_watchlater,  playlist_titles=playlist_titles)
 
 
 @bp.route('/embed/<video_id>')

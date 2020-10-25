@@ -178,6 +178,16 @@ def add_video_playlist():
 
     video = Mv_Video.query.get(video_id)
 
+    if playlist_title == 'watchlater':
+        user = User.query.get(session['user']['id'])
+        try:
+            user.watchlater += [video.extractor_data]
+        except:
+            user.watchlater = [video.extractor_data]
+        flag_modified(user, "watchlater")
+        db_session.commit()
+        return redirect(url_for('video.watch', v=video_id ))
+
     try:
         playlist.videos += [video.extractor_data]
     except:

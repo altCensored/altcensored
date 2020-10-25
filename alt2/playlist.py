@@ -168,17 +168,17 @@ def edit(playlist):
 def add_video_playlist():
     if request.method == 'POST':
         video_id = request.form['v']
-        playlist_title = request.form['playlist_title']
+        playlist_ident = request.form['playlist_title']
         playlist = Playlist.query.filter(Playlist.title == playlist_title).scalar()
 
     else:
         video_id = request.args.get('v', None)
-        playlist_hashid = request.args.get('playlist', None)
-        playlist = Playlist.query.filter(Playlist.hashid == playlist_hashid).scalar()
+        playlist_ident = request.args.get('playlist', None)
+        playlist = Playlist.query.filter(Playlist.hashid == playlist_ident).scalar()
 
     video = Mv_Video.query.get(video_id)
 
-    if playlist_title == 'watchlater':
+    if playlist_ident == 'add_to_watchlater':
         user = User.query.get(session['user']['id'])
         try:
             user.watchlater += [video.extractor_data]

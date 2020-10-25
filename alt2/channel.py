@@ -13,7 +13,7 @@ from . import util
 bp = Blueprint('channel', __name__, url_prefix='/channel' )
 
 PER_PAGE = 24
-PER_PAGE_FEED = 60
+PER_PAGE_FEED = 61
 
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')

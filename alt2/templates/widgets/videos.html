@@ -123,7 +123,9 @@
     });
     var ttip = "ttip"
     var ttipid = ttip.concat(vid);
-    document.getElementById(vid).className="ion-md-checkmark";
-{#    document.getElementById(ttipid).className=""; #}
+    var watchlaterIcon = document.getElementById(vid);
+    watchlaterIcon.className="ion-md-checkmark";
+    var tooltip = watchlaterIcon.parentNode.parentNode.querySelector('.tooltip');
+    tooltip.style.display = 'none';
   }
 </script>

@@ -169,7 +169,7 @@ def add_video_playlist():
     if request.method == 'POST':
         video_id = request.form['v']
         playlist_ident = request.form['playlist_title']
-        playlist = Playlist.query.filter(Playlist.title == playlist_title).scalar()
+        playlist = Playlist.query.filter(Playlist.title == playlist_ident).scalar()
 
     else:
         video_id = request.args.get('v', None)

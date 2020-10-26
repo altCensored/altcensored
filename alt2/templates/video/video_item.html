@@ -35,10 +35,6 @@
 {% endblock %}
 {% block content %}
 
-<noscript>
-  {% set jscript_disabled = 'True' %}
-</noscript>
-
 <div class="pure-g">
   <div class="pure-u-1 pure-u-md-2-24"></div>
   <div class="pure-u-1 pure-u-md-20-24">
@@ -50,15 +46,13 @@
           height: 0px;
           position: relative;
           padding-bottom: 56.25%">
-
-          {% if playlist %}
-          <iframe id="video-iframe" src="{{ url_for('video.embed', video_id=video_id, playlist=playlist.hashid) }}"
-          {% elif userlist %}
-          <iframe id="video-iframe" src="{{ url_for('video.embed', video_id=video_id, userlist=userlist) }}"
-          {% else %}
-          <iframe id="video-iframe" src="{{ url_for('video.embed', video_id=video_id) }}"
-          {% endif %}
-
+                  {% if playlist %}
+                      <iframe id="video-iframe" src="{{ url_for('video.embed', video_id=video_id, playlist=playlist.hashid) }}"
+                  {% elif userlist %}
+                      <iframe id="video-iframe" src="{{ url_for('video.embed', video_id=video_id, userlist=userlist) }}"
+                  {% else %}
+                      <iframe id="video-iframe" src="{{ url_for('video.embed', video_id=video_id) }}"
+                  {% endif %}
           scrolling="no" frameborder="0" allowfullscreen allow="autoplay;
           encrypted-media" style="top: 0px; left: 0px; width: 100%; height: 100%; position: absolute;">
 
@@ -143,21 +137,18 @@
             </div>
           </div>
           <div class="pure-u-1 pure-u-md-1-5">
-            <div class="h-box">
-            <form method="post" action="">
-
-            {% if not jscript_disabled %}
-              {% if playnext %}
-              <input type="checkbox" id="playnext" name="playnext" value="True" form="addtoplaylist" checked onchange="togglePlayNext(event);">
-              {% else %}
-              <input type="checkbox" id="playnext" name="playnext" value="False" form="addtoplaylist" onchange="togglePlayNext(event);">
-              {% endif %}
-              <label for playnext>&nbsp;&nbsp;{{ gettext('AutoPlay Next Video') }} </label>
-            {% endif %}
-
-            </form>
-            </div>
-
+              <div class="h-box">
+                <form method="post" action="">
+                    {% if playnext %}
+                          <input type="checkbox" id="playnext" name="playnext" value="True" form="addtoplaylist" \
+                            checked onchange="togglePlayNext(event);"
+                    {% else %}
+                          <input type="checkbox" id="playnext" name="playnext" value="False" form="addtoplaylist" \
+                            onchange="togglePlayNext(event);">
+                    {% endif %}
+                    <label for playnext>&nbsp;&nbsp;{{ gettext('AutoPlay Next Video') }} </label>
+                </form>
+              </div>
             {% for video in videos %}
             <div class="h-box">
               {% if playlist %}

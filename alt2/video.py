@@ -172,6 +172,8 @@ def watch():
         video_url = MYSERVER_URL + "/videos/" + video_id
 
     playlist_titles = []
+    not_in_watchlater = None
+
     if session.get('user') is not None:
         user = db_session.query(User).filter(User.email == session['user']['email']).one()
 
@@ -186,8 +188,6 @@ def watch():
 
         if video_id not in user.watchlater:
             not_in_watchlater = True
-        else:
-            not_in_watchlater = None
 
         plists = db_session.query(Playlist).filter(Playlist.user_id == user.id)
 

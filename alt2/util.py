@@ -8,7 +8,7 @@ from better_profanity import profanity
 from sqlalchemy import func, text, desc
 from captcha.image import ImageCaptcha
 from .database import db_session
-from .models import Translation, Playlist, Mv_Channel, Mv_Video
+from .models import Translation, Playlist, Mv_Channel, Mv_Video, User
 from . import config
 import functools, os, string, random
 
@@ -82,6 +82,19 @@ def get_delchannelcount():
         session['delchannelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
     return session['delchannelcount']
 
+def get_playlistcount():
+    if 'playlistcount' in session:
+        return session['playlistcount']
+    else:
+        session['playlistcount'] = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)).count()
+    return session['playlistcount']
+
+def get_usercount():
+    if 'usercount' in session:
+        return session['usercount']
+    else:
+        session['usercount'] = User.query.filter(User.public).count()
+    return session['usercount']
 
 def set_session() -> object:
     """
@@ -144,6 +157,16 @@ def set_session() -> object:
         pass
     else:
         session['delchannelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
+
+    if 'playlistcount' in session:
+        pass
+    else:
+        session['playlistcount'] = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)).count()
+
+    if 'usercount' in session:
+        pass
+    else:
+        session['usercount'] = User.query.filter(User.public).count()
 
 
 def send_welcome_email(email,content):

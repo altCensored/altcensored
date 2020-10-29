@@ -9,7 +9,7 @@ from .database import db_session
 from .models import User, Mv_Video, Playlist, Counter
 from .pagination import Pagination
 from . import util
-from .util import login_required
+from .util import login_required, set_session
 import datetime, json
 
 bp = Blueprint('user', __name__, url_prefix='/user' )
@@ -19,39 +19,26 @@ PER_PAGE = 24
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
 def index(page):
+    set_session()
     offset = ((int(page)-1) * PER_PAGE)
-    order = 'newest'
-    usercount = User.query.filter(User.public).count()
+    order = request.args.get('order','newest')
 
-    users = User.query.filter(User.public).order_by(User.id.desc()).limit(PER_PAGE).offset(offset)
+    if order =='popular':
+        users = User.query.filter(User.public).order_by(User.view_counter.desc()).limit(PER_PAGE).offset(offset)
+
+    else:
+        users = User.query.filter(User.public).order_by(User.id.desc()).limit(PER_PAGE).offset(offset)
 
     if not users and page != 1:
         abort(404)
-    pagination = Pagination(page, PER_PAGE, usercount)
+    pagination = Pagination(page, PER_PAGE, session['usercount'])
 
-    return render_template('user/user_index.html',
-                           pagination=pagination, usercount=usercount, users=users, order=order)
-
-
-@bp.route('/popular', defaults={'page': 1})
-@bp.route('/popular/page/<int:page>')
-def popular(page):
-    offset = ((int(page)-1) * PER_PAGE)
-    order = 'popular'
-    usercount = User.query.filter(User.public).count()
-
-    users = User.query.filter(User.public).order_by(User.view_counter.desc()).limit(PER_PAGE).offset(offset)
-
-    if not users and page != 1:
-        abort(404)
-    pagination = Pagination(page, PER_PAGE, usercount)
-
-    return render_template('user/user_index.html',
-                           pagination=pagination, usercount=usercount, users=users, order=order)
+    return render_template('user/user_index.html', pagination=pagination, users=users, order=order)
 
 
 @bp.route('/<username>')
 def item(username):
+    set_session()
     user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
 
     if not user.public and (session['user']['id'] != user.id):
@@ -107,7 +94,7 @@ def item(username):
 def history(page):
     offset = ((int(page)-1) * PER_PAGE)
     playlist = request.args.get('playlist', None)
-    user = User.query.filter(User.email == session['user']['email']).scalar()
+    user = User.query.filter(User.id == session['user']['id']).scalar()
     playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
     #    user.watched = list(dict.fromkeys(user.watched))
 
@@ -131,7 +118,7 @@ def history(page):
 @login_required
 def remove_video_history():
     video_id = request.args.get('v', None)
-    user = User.query.filter(User.email == session['user']['email']).scalar()
+    user = User.query.filter(User.id == session['user']['id']).scalar()
     video = Mv_Video.query.get(video_id)
     if video.extractor_data in user.watched:
         user.watched = list(dict.fromkeys(user.watched))
@@ -143,7 +130,7 @@ def remove_video_history():
 @bp.route('/clear_history', methods=['GET', 'POST'])
 @login_required
 def clear_history():
-    user = User.query.filter(User.email == session['user']['email']).scalar()
+    user = User.query.filter(User.id == session['user']['id']).scalar()
     if not user.watched:
         flash('History Empty', 'success')
         return redirect(request.args.get('original_url', '/'))
@@ -170,7 +157,7 @@ def clear_history():
 def watchlater(page):
     offset = ((int(page)-1) * PER_PAGE)
     playlist = request.args.get('playlist', None)
-    user = User.query.filter(User.email == session['user']['email']).scalar()
+    user = User.query.filter(User.id == session['user']['id']).scalar()
     playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
 
     try:
@@ -226,7 +213,7 @@ def add_video_watchlater_post():
 @login_required
 def remove_video_watchlater():
     video_id = request.args.get('v', None)
-    user = User.query.filter(User.email == session['user']['email']).scalar()
+    user = User.query.filter(User.id == session['user']['id']).scalar()
     video = Mv_Video.query.get(video_id)
     if video.extractor_data in user.watchlater:
         user.watchlater = list(dict.fromkeys(user.watchlater))
@@ -238,7 +225,7 @@ def remove_video_watchlater():
 @bp.route('/clear_watchlater', methods=['GET', 'POST'])
 @login_required
 def clear_watchlater():
-    user = User.query.filter(User.email == session['user']['email']).scalar()
+    user = User.query.filter(User.id == session['user']['id']).scalar()
     if not user.watchlater:
         flash('WatchLater Empty', 'success')
         return redirect(request.args.get('original_url', '/'))
@@ -266,7 +253,7 @@ def clear_watchlater():
 def playlist(page):
     offset = ((int(page)-1) * PER_PAGE)
     order = request.args.get('order','newest')
-    user = User.query.filter(User.email == session['user']['email']).scalar()
+    user = User.query.filter(User.id == session['user']['id']).scalar()
 
     playlistcount = Playlist.query.filter(Playlist.user_id == user.id).count()
 

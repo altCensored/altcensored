@@ -138,7 +138,9 @@ def create_app(test_config=None):
             navtabs_index=util.get_navtabs_index(),
             videocount=util.get_videocount(),
             channelcount=util.get_channelcount(),
-            delchannelcount=util.get_delchannelcount())
+            delchannelcount=util.get_delchannelcount(),
+            usercount=util.get_usercount(),
+            playlistcount = util.get_playlistcount())
 
     def has_no_empty_params(rule):
         defaults = rule.defaults if rule.defaults is not None else ()

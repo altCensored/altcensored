@@ -9,7 +9,6 @@ from .database import db_session
 from .models import Mv_Video, Mv_Channel, Mv_Category, User, Playlist
 from .pagination import Pagination
 from .util import set_session
-from datetime import date
 import json
 
 bp = Blueprint('video', __name__ )
@@ -26,21 +25,24 @@ def index(page):
     set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'latest'
-    videocount = db_session.query(func.count(Mv_Video.id)).scalar()
-    channelcount = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
-    delchannelcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
+
+#    videocount = db_session.query(func.count(Mv_Video.id)).scalar()
+#    channelcount = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
+#    delchannelcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
     videos = Mv_Video.query.order_by(Mv_Video.id.desc()).limit(PER_PAGE).offset(offset)
     if not videos and page != 1:
         abort(404)
-    pagination = Pagination(page, PER_PAGE, videocount)
+    pagination = Pagination(page, PER_PAGE, session['videocount'])
     watchlater = None
     if session.get('user') is not None:
-        user = User.query.filter(User.email == session['user']['email']).scalar()
+        user = User.query.filter(User.id == session['user']['id']).scalar()
         if user.watchlater:
             watchlater=user.watchlater
 
-    return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater, \
-                           videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount )
+#    return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater)
+#                           videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount )
+
+    return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater)
 
 
 @bp.route('/feed', defaults={'page': 1})
@@ -54,7 +56,7 @@ def feed(page):
     videos = Mv_Video.query.order_by(Mv_Video.id.desc()).limit(PER_PAGE).offset(offset)
     if not videos and page != 1:
         abort(404)
-    pagination = Pagination(page, PER_PAGE, videocount)
+    pagination = Pagination(page, PER_PAGE, session['videocount'])
     template = render_template('video/video_index.xml', pagination=pagination, videos=videos, \
                                videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, order=order)
     response = make_response(template)
@@ -73,7 +75,7 @@ def new(page):
     videos = Mv_Video.query.order_by(Mv_Video.published.desc(),Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset)
     if not videos and page != 1:
         abort(404)
-    pagination = Pagination(page, PER_PAGE, videocount)
+    pagination = Pagination(page, PER_PAGE, session['videocount'])
     return render_template('video/video_index.html', pagination=pagination, videos=videos, \
                            videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, order=order)
 
@@ -89,7 +91,7 @@ def old(page):
     videos = Mv_Video.query.order_by(Mv_Video.published.asc(),Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset)
     if not videos and page != 1:
         abort(404)
-    pagination = Pagination(page, PER_PAGE, videocount)
+    pagination = Pagination(page, PER_PAGE, session['videocount'])
     return render_template('video/video_index.html', pagination=pagination, videos=videos, \
                            videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, order=order)
 
@@ -105,7 +107,7 @@ def popular(page):
     videos = Mv_Video.query.order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset)
     if not videos and page != 1:
         abort(404)
-    pagination = Pagination(page, PER_PAGE, videocount)
+    pagination = Pagination(page, PER_PAGE, session['videocount'])
     return render_template('video/video_index.html', pagination=pagination, videos=videos, \
                            videocount=videocount, channelcount=channelcount, delchannelcount=delchannelcount, order=order)
 
@@ -138,7 +140,7 @@ def watch():
         videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(playlist.videos)).order_by(ordering)
 
     elif userlist == "history":
-        user = User.query.filter(User.email == session['user']['email']).scalar()
+        user = User.query.filter(User.id == session['user']['id']).scalar()
         ordering = case(
             {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(user.watched))))},
             value=Mv_Video.extractor_data
@@ -146,7 +148,7 @@ def watch():
         videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(user.watched)).order_by(ordering)
 
     elif userlist == "watchlater":
-        user = User.query.filter(User.email == session['user']['email']).scalar()
+        user = User.query.filter(User.id == session['user']['id']).scalar()
         ordering = case(
             {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(user.watchlater))))},
             value=Mv_Video.extractor_data
@@ -230,7 +232,7 @@ def embed(video_id):
                 next_video = None
 
     elif userlist == "history":
-        user = User.query.filter(User.email == session['user']['email']).scalar()
+        user = User.query.filter(User.id == session['user']['id']).scalar()
         if len(user.watched) > 1:
             idx = (user.watched).index(video.extractor_data)
             next_video = (user.watched).pop(idx-1)
@@ -238,7 +240,7 @@ def embed(video_id):
                 next_video = None
 
     elif userlist == "watchlater":
-        user = User.query.filter(User.email == session['user']['email']).scalar()
+        user = User.query.filter(User.id == session['user']['id']).scalar()
         print("Watch Later", user.watchlater)
         if len(user.watchlater) > 1:
             idx = (user.watchlater).index(video.extractor_data)
@@ -293,6 +295,11 @@ def search(page):
     channelcount = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
     delchannelcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleteddate!='2001-01-01').scalar()
     pagination = Pagination(page, PER_PAGE, videocount)
+
+    if session.get('user') is not None:
+        user = User.query.filter(User.id == session['user']['id']).scalar()
+        if user.watchlater:
+            watchlater=user.watchlater
 
     if videos is None:
         videos = Mv_Video.query.limit(24).all()

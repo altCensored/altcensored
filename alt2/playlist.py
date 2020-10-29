@@ -11,7 +11,7 @@ from .database import db_session
 from .models import User, Playlist, Mv_Video, Counter
 from .pagination import Pagination
 from . import util
-from .util import login_required, str_to_bool, title_exists
+from .util import login_required, str_to_bool, title_exists, set_session
 
 bp = Blueprint('playlist', __name__, url_prefix='/playlist')
 
@@ -20,9 +20,9 @@ PER_PAGE = 24
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
 def index(page):
+    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = request.args.get('order','newest')
-    playlistcount = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)).count()
 
     if order =='popular':
         playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
@@ -33,22 +33,23 @@ def index(page):
 
     if not playlists and page != 1:
         abort(404)
-    pagination = Pagination(page, PER_PAGE, playlistcount)
+
+    pagination = Pagination(page, PER_PAGE, session['playlistcount'])
 
     return render_template('playlist/playlist_index.html',
-                           pagination=pagination, playlistcount=playlistcount, playlists=playlists, order=order)
-
+                           pagination=pagination, playlists=playlists, order=order)
 
 @bp.route('/<playlist>', defaults={'page': 1})
 @bp.route('/<playlist>/page/<int:page>')
 def item(playlist,page):
+    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
     button = request.args.get('button', None)
 
     watchlater = None
     if session.get('user') is not None:
-        user = User.query.filter(User.email == session['user']['email']).scalar()
+        user = User.query.filter(User.id == session['user']['id']).scalar()
         if user.watchlater:
             watchlater=user.watchlater
 

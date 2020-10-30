@@ -23,20 +23,15 @@ def index(page):
     set_session()
     offset = ((int(page) - 1) * PER_PAGE)
     order = 'latest'
-
     videos = Mv_Video.query.order_by(Mv_Video.id.desc()).limit(PER_PAGE).offset(offset)
-
     if not videos and page != 1:
         abort(404)
-
     pagination = Pagination(page, PER_PAGE, session['videocount'])
     watchlater = None
-
     if session.get('user') is not None:
         user = User.query.filter(User.id == session['user']['id']).scalar()
         if user.watchlater:
             watchlater = user.watchlater
-
     return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater)
 
 
@@ -46,20 +41,15 @@ def new(page):
     set_session()
     offset = ((int(page) - 1) * PER_PAGE)
     order = 'newest'
-
     videos = Mv_Video.query.order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset)
-
     if not videos and page != 1:
         abort(404)
-
     pagination = Pagination(page, PER_PAGE, session['videocount'])
     watchlater = None
-
     if session.get('user') is not None:
         user = User.query.filter(User.id == session['user']['id']).scalar()
         if user.watchlater:
             watchlater = user.watchlater
-
     return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater)
 
 
@@ -68,20 +58,15 @@ def new(page):
 def popular(page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'popular'
-
     videos = Mv_Video.query.order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset)
-
     if not videos and page != 1:
         abort(404)
-
     pagination = Pagination(page, PER_PAGE, session['videocount'])
     watchlater = None
-
     if session.get('user') is not None:
         user = User.query.filter(User.id == session['user']['id']).scalar()
         if user.watchlater:
             watchlater = user.watchlater
-
     return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater)
 
 
@@ -280,7 +265,7 @@ def search(page):
     channels = db_session.query(Mv_Channel).\
         filter(my_to_tsquery_channel).\
         order_by(my_ts_rank_channel).\
-        limit(24).\
+        limit(CHANN_MAX_RESULT).\
         params(search=search).all()
 
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
@@ -315,7 +300,7 @@ def search_latest(page):
     my_ts_rank_channel = text("ts_rank(Mv_Channel.document, to_tsquery(:search)) DESC")
     channels = db_session.query(Mv_Channel).\
         filter(my_to_tsquery_channel).\
-        limit(24).\
+        limit(CHANN_MAX_RESULT).\
         params(search=search).all()
 
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
@@ -350,7 +335,7 @@ def search_new(page):
     my_ts_rank_channel = text("ts_rank(Mv_Channel.document, to_tsquery(:search)) DESC")
     channels = db_session.query(Mv_Channel).\
         filter(my_to_tsquery_channel).\
-        limit(24).\
+        limit(CHANN_MAX_RESULT).\
         params(search=search).all()
 
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
@@ -385,7 +370,7 @@ def search_popular(page):
     my_ts_rank_channel = text("ts_rank(Mv_Channel.document, to_tsquery(:search)) DESC")
     channels = db_session.query(Mv_Channel).\
         filter(my_to_tsquery_channel).\
-        limit(24).\
+        limit(CHANN_MAX_RESULT).\
         params(search=search).all()
 
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()

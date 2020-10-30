@@ -23,191 +23,111 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
 <meta name="altcen_meta_description" content="{% block description %}Limited Censored YouTube Video Channel: {{ channel['ytc_title'] }}: {{ channel['ytc_description'] }} (Created on {{ channel['ytc_publishedat'].strftime('%b %e, %G') }}){% endblock %}">
 
 {% endblock %}
+
 {% block content %}
-
-{% with active_nav='channel' %}
-    {% include "widgets/navtabs.html" %}
-{% endwith %}
-
-<br>
-
-  <div class="pure-g">
-    <div class="pure-u-1 pure-u-md-2-24"></div>
-      <div class="pure-u-1 pure-u-md-20-24">
-        <div class="pure-g">
-
-
-  <div class="pure-u-1 pure-u-md-1-2">
-    <div class="h-box">
-      <div class="pure-g">
-
-        <div class="pure-u-1-2">
-          <div class="thumbnail">
-            
-              <img class="thumbnail" src="{{ channel['ytc_thumbnailurl'] | reverse | replace('88','671', 1) | reverse  }}" >
-            
-          </div>
-        </div>
-
-        <div class="pure-u-1-2">
-          <div class=header_left>
-            <b>
-            &nbsp;{{ gettext('Limited') }}: {{ channel['limited']|commafy }}</b><br>
-            &nbsp;{{ gettext('Videos') }}: {{ channel['total']|commafy }}<br>
-            &nbsp;{{ gettext('Views') }}: {{ channel['ytc_viewcount']|commafy }}<br>
-            &nbsp;{{ gettext('Subscribers') }}: {{ channel['ytc_subscribercount']|commafy }}<br>
-            {% if channel['ytc_deleted'] %}
-            {% else %}
-            &nbsp;{{ gettext('Monitor') }}:
-              {% if channel.allow %}{{ gettext('True') }}<br>
-              {% else %}{{ gettext('False') }}<br>
-              {% endif %}
-            &nbsp;{{ gettext('Archive') }}:
-              {% if channel.ytc_archive %}{{ gettext('Full') }}<br>
-              {% elif channel.ytc_partarchive %}{{ gettext('Partial') }}<br>
-              {% else %}{{ gettext('None') }}<br>
-              {% endif %}
-            {% endif %}
-            &nbsp;<b><a style="width:100%;" href="https://www.youtube.com/channel/{{ channel['ytc_id'] }}" target="_blank">YouTube {{ gettext('Channel') }}</a></b><br>
-            &nbsp;<b><a style="width:100%;" href="https://www.socialblade.com/youtube/channel/{{ channel['ytc_id'] }}" target="_blank">SocialBlade {{ gettext('Stats') }}</a></b>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-
-  
-  <div class="pure-u-1">
-    <div class="h-box">
-
-      <b><a style="width:100%">
-          {{ channel['ytc_title'] }}</b>
-          <a href="{{ url_for('channel.item', ytc_id=channel['ytc_id']) ~ '/feed' }}">
-          <i class='ion-logo-rss' style="font-size: 21px"></i></a>
-
-        <br>
-        <br>
-    </div>
-
-  <div class="pure-g h-box">
-     <div class="pure-u-1-2">
-
-          <div class="pure-u-1 pure-md-1-3">
-          <b>{{ gettext('Created') }} {{ channel['ytc_publishedat'].strftime('%b %e, %G') }}</b>
-          </div>
-
-          <div class="pure-u-1 pure-md-1-3">
-           {% if channel['ytc_deleteddate']|datetimeformat == '2001' %}
-
-           {% else %}
-             <b><font color="red">{{ gettext('Deleted') }} {{ channel['ytc_deleteddate'].strftime('%b %e, %G') }}</font></b>
-           {% endif %}
-          </div>
-
-          <div class="pure-u-1 pure-md-1-3">
-          </div>
-  
-      </div>
-
-     <div class="pure-u-1-2">
-      <div class="pure-g" style="text-align:right">
-        {% if order == 'newest' %}
-          <div class="pure-u-1 pure-md-1-3">
-          <b>{{ gettext('newest') }}</a></b>
-          </div>
-          <div class="pure-u-1 pure-md-1-3">
-          <b><a href="{{ url_for('channel.item_old', ytc_id=channel['ytc_id']) }}">{{ gettext('oldest') }}</a></b>
-          </div>
-          <div class="pure-u-1 pure-md-1-3">
-          <b><a href="{{ url_for('channel.item_popular', ytc_id=channel['ytc_id']) }}">{{ gettext('popular') }}</a></b>
-          </div>
-        {% elif order == 'popular' %}
-          <div class="pure-u-1 pure-md-1-3">
-          <b><a href="{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}">{{ gettext('newest') }}</a></b>
-          </div>
-          <div class="pure-u-1 pure-md-1-3">
-          <b><a href="{{ url_for('channel.item_old', ytc_id=channel['ytc_id']) }}">{{ gettext('oldest') }}</a></b>
-          </div>
-          <div class="pure-u-1 pure-md-1-3">
-          <b>{{ gettext('popular') }}</a></b>
-          </div>
-        {% else %}
-          <div class="pure-u-1 pure-md-1-3">
-          <b><a href="{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}">{{ gettext('newest') }}</a></b>
-          </div>
-          <div class="pure-u-1 pure-md-1-3">
-          <b>{{ gettext('oldest') }}</a></b>
-          </div>
-          <div class="pure-u-1 pure-md-1-3">
-          <b><a href="{{ url_for('channel.item_popular', ytc_id=channel['ytc_id']) }}">{{ gettext('popular') }}</a></b>
-          </div>
-        {% endif %}
-      </div>
-    </div>
-  </div>
-
-<div class="h-box">
-
-        {% if channel['ytc_description']  is not none %}
-        {{ channel['ytc_description'] | linkify | safe | nl2br | truncate (1000) }}
-        {% else %}
-        {% endif %}
-</div>
-
-<div class="h-box">
- <hr>
-</div>
-</div>
-
-
-{% for video in videos %}
-  <div class="pure-u-1 pure-u-md-1-4">
-    <div class="h-box">
-
-      <a style="width:100%;" href="{{ url_for('video.watch', v=video['extractor_data']) }}">
-        <div class="thumbnail">
-
-
-          <img class="thumbnail" src="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['title'] | ia_fname ~ '-' ~ video['extractor_data'] ~ '.jpg' }}" onerror="this.onerror=null;this.src='{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}';" >
-          {% if video['duration']  is not none %}
-            <p class="length">{{ video['duration'] | hourminsec }}</p>
-            {% else %}
-          {% endif %}
-        </div>
-          </a>
-            <p><a class="action" href="{{ url_for('video.watch', v=video['extractor_data']) }}">{{ video['title'] }}</a></p>
-            <p>
-            <b><a style="width:100%;" href="{{ url_for('channel.item', ytc_id=video['ytc_id']) }}">{{ video['ytc_title'] }}</a></b>
-            </p>
-            <h5 class = "pure-g">
-            <div class="pure-u-2-3">
-            {{ gettext('Published') }} {{ video['published'].strftime('%b %e, %G') }}
+    {% with active_nav='channel' %}
+        {% include "widgets/navtabs.html" %}
+    {% endwith %}
+    <br>
+    <div class="pure-g">
+        <div class="pure-u-1 pure-u-md-2-24"></div>
+        <div class="pure-u-1 pure-u-md-20-24">
+          <div class="pure-u-1 pure-u-md-1-2">
+            <div class="h-box">
+              <div class="pure-g">
+                <div class="pure-u-1-2">
+                  <div class="thumbnail">
+                      <img class="thumbnail" src="{{ channel['ytc_thumbnailurl'] | reverse | replace('88','671', 1) | reverse  }}" >
+                      <a style="width:100%">
+                          <h3>{{ channel['ytc_title'] }}</a></h3>
+                  </div>
+                </div>
+                <div class="pure-u-1-2">
+                  <div class=header_left>
+                    <b>
+                    &nbsp;{{ gettext('Limited') }}: {{ channel['limited']|commafy }}</b><br>
+                    &nbsp;{{ gettext('Videos') }}: {{ channel['total']|commafy }}<br>
+                    &nbsp;{{ gettext('Views') }}: {{ channel['ytc_viewcount']|commafy }}<br>
+                    &nbsp;{{ gettext('Subscribers') }}: {{ channel['ytc_subscribercount']|commafy }}<br>
+                    {% if channel['ytc_deleted'] %}
+                    {% else %}
+                    &nbsp;{{ gettext('Monitor') }}:
+                    {% if channel.allow %}
+                        {{ gettext('True') }}<br>
+                    {% else %}
+                        {{ gettext('False') }}<br>
+                    {% endif %}
+                    &nbsp;{{ gettext('Archive') }}:
+                    {% if channel.ytc_archive %}
+                        {{ gettext('Full') }}<br>
+                    {% elif channel.ytc_partarchive %}
+                        {{ gettext('Partial') }}<br>
+                    {% else %}
+                        {{ gettext('None') }}<br>
+                    {% endif %}
+                    {% endif %}
+                    &nbsp;<b><a style="width:100%;" href="https://www.youtube.com/channel/{{ channel['ytc_id'] }}" target="_blank">YouTube {{ gettext('Channel') }}</a></b><br>
+                    &nbsp;<b><a style="width:100%;" href="https://www.socialblade.com/youtube/channel/{{ channel['ytc_id'] }}" target="_blank">SocialBlade {{ gettext('Stats') }}</a></b>
+                  <p></p>
+                      <b>&nbsp;{{ gettext('Created') }} {{ channel['ytc_publishedat'].strftime('%b %e, %G') }}</b><br>
+                       {% if channel['ytc_deleteddate']|datetimeformat == '2001' %}
+                       {% else %}
+                         <span style="color: red; ">
+                             <b>&nbsp;{{ gettext('Deleted') }} {{ channel['ytc_deleteddate'].strftime('%b %e, %G') }}</span></b>
+                       {% endif %}
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="pure-u-1-3" style="text-align:right">
-           {{ video['yt_views']|viewdisplay }} {{ gettext('views') }} 
           </div>
-      </div>
+        <div class="pure-u-1 pure-u-md-1-1">
+          {% if channel['ytc_description']  is not none %}
+            <div class="h-box">
+                      {{ channel['ytc_description'] | linkify | safe | nl2br | truncate (1000) }}
+            </div>
+          {% endif %}
+        <div class="pure-g h-box">
+            <div class="pure-u-10-24">
+                <div class="pure-u-1 pure-md-1-2">
+                </div>
+                <div class="pure-u-1 pure-md-1-2">
+                    <i class='ion-logo-youtube'  style="font-size: 24px"></i>
+                    <a href="{{ url_for('channel.item', ytc_id=channel['ytc_id']) ~ '/feed' }}">
+                        <i class='ion-logo-rss' style="font-size: 21px"></i>
+                    </a>
+                    <b>&nbsp;{{ videocount | commafy }}</b>
+                </div>
+            </div>
+            <div class="pure-u-4-24" style="text-align:center;">
+                <div class="pure-u-1 pure-md-1-1">
+                </div>
+            </div>
+            <div class="pure-u-10-24" style="text-align:right;">
+                <div class="pure-u-1 pure-md-1-2">
+                    <a href="{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}" class="pure-menu-item {{'selected' if order == 'newest' }}">
+                        {{ gettext('newest') }}</a>
+                </div>
+                <div class="pure-u-1 pure-md-1-2">
+                    <a href="{{ url_for('channel.item_popular', ytc_id=channel['ytc_id']) }}" class="pure-menu-item {{'selected' if order == 'popular' }}">
+                        {{ gettext('popular') }}</a>
+                </div>
+            </div>
+        </div>
+        <div class="h-box">
+            <hr>
+        </div>
+        </div>
     </div>
-  
-  {% endfor %}
 
-</div>
+    {% with video=video %}
+        {% include "widgets/videos.html" %}
+    {% endwith %}
 
-{% from "_helpers.html" import render_pagination %}
-<br>
-<div class="pure-g">
-      <div class="pure-u-1 pure-u-md-4-4">
-         <div class="h-box">
-          {{ render_pagination(pagination) }}
-         </div>
-      </div>
-
+    {% from "_helpers.html" import render_pagination %}
+    <div class="pure-u-1 pure-u-md-4-4">
+        <div class="h-box">
+            {{ render_pagination(pagination) }}
+        </div>
+    </div>
 
 {% endblock %}
-
-{#
-
-{% block title %}{{ channel['ytc_title'] }}{% endblock %}</a></b>
-#}

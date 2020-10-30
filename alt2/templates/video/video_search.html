@@ -86,8 +86,7 @@
             </div>
         </div>
     </div>
-    <p></p>
-    <p></p>
+
     <div class="pure-g">
         <div class="pure-u-1 pure-u-md-2-24"></div>
         <div class="pure-u-1 pure-u-md-20-24">
@@ -109,15 +108,15 @@
                 </div>
                 <div class="pure-u-10-24" style="text-align:right;">
                     <div class="pure-u-1 pure-md-1-3">
-                        <a href="{{ url_for('video.search',q=rawsearch,order='latest') }}" class="pure-menu-item {{'selected' if order == 'latest' }}">
+                        <a href="{{ url_for('video.search_latest',q=rawsearch) }}" class="pure-menu-item {{'selected' if order == 'latest' }}">
                             {{ gettext('latest') }}</a>
                     </div>
                     <div class="pure-u-1 pure-md-1-3">
-                        <a href="{{ url_for('video.search',q=rawsearch,order='newest') }}" class="pure-menu-item {{'selected' if order == 'newest' }}">
+                        <a href="{{ url_for('video.search_new',q=rawsearch) }}" class="pure-menu-item {{'selected' if order == 'newest' }}">
                             {{ gettext('newest') }}</a>
                     </div>
                     <div class="pure-u-1 pure-md-1-3">
-                        <a href="{{ url_for('video.search',q=rawsearch,order='popular') }}" class="pure-menu-item {{'selected' if order == 'popular' }}">
+                        <a href="{{ url_for('video.search_popular',q=rawsearch) }}" class="pure-menu-item {{'selected' if order == 'popular' }}">
                             {{ gettext('popular') }}</a>
                     </div>
                 </div>
@@ -165,7 +164,7 @@
 
 <div class=pagination>
   <center><h3>
-    {% if pagination.has_prev %} 
+    {% if pagination.has_prev %}
       <strong><a href="{{ url_for_other_page(pagination.page - 1)}}?q={{rawsearch}}">&lt;&lt;</a></strong>&nbsp;&nbsp;&nbsp;
     {% endif %}
 

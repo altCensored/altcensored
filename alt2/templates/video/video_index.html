@@ -57,15 +57,15 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/UCMLbmp5tcLxzahMLTmeM4lg/fee
                 </div>
                 <div class="pure-u-10-24" style="text-align:right;">
                     <div class="pure-u-1 pure-md-1-3">
-                        <a href="{{ url_for('video.index',order='latest') }}" class="pure-menu-item {{'selected' if order == 'latest' }}">
+                        <a href="{{ url_for('video.index') }}" class="pure-menu-item {{'selected' if order == 'latest' }}">
                             {{ gettext('latest') }}</a>
                     </div>
                     <div class="pure-u-1 pure-md-1-3">
-                        <a href="{{ url_for('video.index',order='newest') }}"  class="pure-menu-item {{'selected' if order == 'newest' }}">
+                        <a href="{{ url_for('video.new')}}" class="pure-menu-item {{'selected' if order == 'newest' }}">
                             {{ gettext('newest') }}</a>
                     </div>
                     <div class="pure-u-1 pure-md-1-3">
-                        <a href="{{ url_for('video.index',order='popular') }}"  class="pure-menu-item {{'selected' if order == 'popular' }}">
+                        <a href="{{ url_for('video.popular') }}" class="pure-menu-item {{'selected' if order == 'popular' }}">
                             {{ gettext('popular') }}</a>
                     </div>
                 </div>

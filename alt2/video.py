@@ -16,19 +16,60 @@ bp = Blueprint('video', __name__)
 PER_PAGE = 24
 CHANN_MAX_RESULT = 28
 
+
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
 def index(page):
     set_session()
     offset = ((int(page) - 1) * PER_PAGE)
-    order = request.args.get('order','latest')
+    order = 'latest'
 
-    if order =='newest':
-        videos = Mv_Video.query.order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset)
-    elif order =='popular':
-        videos = Mv_Video.query.order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset)
-    else:
-        videos = Mv_Video.query.order_by(Mv_Video.id.desc()).limit(PER_PAGE).offset(offset)
+    videos = Mv_Video.query.order_by(Mv_Video.id.desc()).limit(PER_PAGE).offset(offset)
+
+    if not videos and page != 1:
+        abort(404)
+
+    pagination = Pagination(page, PER_PAGE, session['videocount'])
+    watchlater = None
+
+    if session.get('user') is not None:
+        user = User.query.filter(User.id == session['user']['id']).scalar()
+        if user.watchlater:
+            watchlater = user.watchlater
+
+    return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater)
+
+
+@bp.route('/new', defaults={'page': 1})
+@bp.route('/new/page/<int:page>')
+def new(page):
+    set_session()
+    offset = ((int(page) - 1) * PER_PAGE)
+    order = 'newest'
+
+    videos = Mv_Video.query.order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset)
+
+    if not videos and page != 1:
+        abort(404)
+
+    pagination = Pagination(page, PER_PAGE, session['videocount'])
+    watchlater = None
+
+    if session.get('user') is not None:
+        user = User.query.filter(User.id == session['user']['id']).scalar()
+        if user.watchlater:
+            watchlater = user.watchlater
+
+    return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater)
+
+
+@bp.route('/popular', defaults={'page': 1})
+@bp.route('/popular/page/<int:page>')
+def popular(page):
+    offset = ((int(page)-1) * PER_PAGE)
+    order = 'popular'
+
+    videos = Mv_Video.query.order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset)
 
     if not videos and page != 1:
         abort(404)
@@ -217,52 +258,145 @@ def embed(video_id):
     return render_template('video/video_embed.html', video_url=video_url, next_video=next_video, playlist=playlist,
                            userlist=userlist)
 
-
 @bp.route("/search", defaults={'page': 1})
 @bp.route('/search/page/<int:page>')
 def search(page):
-    set_session()
-    offset = ((int(page) - 1) * PER_PAGE)
+    offset = ((int(page)-1) * PER_PAGE)
     rawsearch1 = request.args.get('q', None)
     rawsearch = rawsearch1.strip()
-    search = rawsearch.replace(" ", "&")
-    order = request.args.get('order','default')
-
-    my_to_tsquery_channel = text("Mv_Channel.document @@ to_tsquery(:search)")
-    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, to_tsquery(:search)) DESC")
+    search = rawsearch.replace(" " , "&")
+    order = 'default'
 
     my_to_tsquery_video = text("mv_video.document @@ to_tsquery(:search)")
     my_ts_rank_video = text("ts_rank(mv_video.document, to_tsquery(:search)) DESC")
+    videos = db_session.query(Mv_Video).\
+        filter(my_to_tsquery_video).\
+        order_by(my_ts_rank_video).\
+        limit(PER_PAGE).offset(offset).\
+        params(search=search).all()
 
-    channels = db_session.query(Mv_Channel).filter(my_to_tsquery_channel). \
-        order_by(my_ts_rank_channel).limit(CHANN_MAX_RESULT).params(search=search).all()
-
-    if order =='latest':
-        videos = db_session.query(Mv_Video).filter(my_to_tsquery_video). \
-            order_by(Mv_Video.id.desc()).limit(PER_PAGE).offset(offset).params(search=search).all()
-
-    elif order == 'newest':
-        videos = db_session.query(Mv_Video).filter(my_to_tsquery_video). \
-            order_by(Mv_Video.published.desc()).limit(PER_PAGE).offset(offset).params(search=search).all()
-
-    elif order =='popular':
-        videos = db_session.query(Mv_Video).filter(my_to_tsquery_video). \
-            order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset).params(search=search).all()
-
-    else:
-        videos = db_session.query(Mv_Video).filter(my_to_tsquery_video). \
-            order_by(my_ts_rank_video).limit(PER_PAGE).offset(offset).params(search=search).all()
+    my_to_tsquery_channel = text("Mv_Channel.document @@ to_tsquery(:search)")
+    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, to_tsquery(:search)) DESC")
+    channels = db_session.query(Mv_Channel).\
+        filter(my_to_tsquery_channel).\
+        order_by(my_ts_rank_channel).\
+        limit(24).\
+        params(search=search).all()
 
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
     pagination = Pagination(page, PER_PAGE, videocount)
 
     if videos is None:
-        videos = Mv_Video.query.limit(PER_PAGE).all()
+        videos = Mv_Video.query.limit(24).all()
         return render_template('video/video_index.html', videos=videos)
     else:
         return render_template('video/video_search.html', videos=videos, pagination=pagination, \
-                               rawsearch=rawsearch, order=order, channels=channels, videocount=videocount)
+            rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount)
 
+
+@bp.route("/search/latest", defaults={'page': 1})
+@bp.route('/search/latest/page/<int:page>')
+def search_latest(page):
+    offset = ((int(page)-1) * PER_PAGE)
+    rawsearch1 = request.args.get('q', None)
+    rawsearch = rawsearch1.strip()
+    search = rawsearch.replace(" " , "&")
+    order = 'latest'
+
+    my_to_tsquery_video = text("mv_video.document @@ to_tsquery(:search)")
+    my_ts_rank_video = text("ts_rank(mv_video.document, to_tsquery(:search)) DESC")
+    videos = db_session.query(Mv_Video).\
+        filter(my_to_tsquery_video).\
+        order_by(Mv_Video.id.desc()).\
+        limit(PER_PAGE).offset(offset).\
+        params(search=search).all()
+
+    my_to_tsquery_channel = text("Mv_Channel.document @@ to_tsquery(:search)")
+    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, to_tsquery(:search)) DESC")
+    channels = db_session.query(Mv_Channel).\
+        filter(my_to_tsquery_channel).\
+        limit(24).\
+        params(search=search).all()
+
+    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
+    pagination = Pagination(page, PER_PAGE, videocount)
+
+    if videos is None:
+        videos = Mv_Video.query.limit(24).all()
+        return render_template('video/video_index.html', videos=videos)
+    else:
+        return render_template('video/video_search.html', videos=videos, pagination=pagination, \
+            rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount)
+
+
+@bp.route("/search/new", defaults={'page': 1})
+@bp.route('/search/new/page/<int:page>')
+def search_new(page):
+    offset = ((int(page)-1) * PER_PAGE)
+    rawsearch1 = request.args.get('q', None)
+    rawsearch = rawsearch1.strip()
+    search = rawsearch.replace(" " , "&")
+    order = 'newest'
+
+    my_to_tsquery_video = text("mv_video.document @@ to_tsquery(:search)")
+    my_ts_rank_video = text("ts_rank(mv_video.document, to_tsquery(:search)) DESC")
+    videos = db_session.query(Mv_Video).\
+        filter(my_to_tsquery_video).\
+        order_by(Mv_Video.published.desc()).\
+        limit(PER_PAGE).offset(offset).\
+        params(search=search).all()
+
+    my_to_tsquery_channel = text("Mv_Channel.document @@ to_tsquery(:search)")
+    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, to_tsquery(:search)) DESC")
+    channels = db_session.query(Mv_Channel).\
+        filter(my_to_tsquery_channel).\
+        limit(24).\
+        params(search=search).all()
+
+    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
+    pagination = Pagination(page, PER_PAGE, videocount)
+
+    if videos is None:
+        videos = Mv_Video.query.limit(24).all()
+        return render_template('video/video_index.html', videos=videos)
+    else:
+        return render_template('video/video_search.html', videos=videos, pagination=pagination, \
+            rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount)
+
+
+@bp.route("/search/popular", defaults={'page': 1})
+@bp.route('/search/popular/page/<int:page>')
+def search_popular(page):
+    offset = ((int(page)-1) * PER_PAGE)
+    rawsearch1 = request.args.get('q', None)
+    rawsearch = rawsearch1.strip()
+    search = rawsearch.replace(" " , "&")
+
+    order = 'popular'
+    my_to_tsquery_video = text("mv_video.document @@ to_tsquery(:search)")
+    my_ts_rank_video = text("ts_rank(mv_video.document, to_tsquery(:search)) DESC")
+    videos = db_session.query(Mv_Video).\
+        filter(my_to_tsquery_video).\
+        order_by(Mv_Video.yt_views.desc()).\
+        limit(PER_PAGE).offset(offset).\
+        params(search=search).all()
+
+    my_to_tsquery_channel = text("Mv_Channel.document @@ to_tsquery(:search)")
+    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, to_tsquery(:search)) DESC")
+    channels = db_session.query(Mv_Channel).\
+        filter(my_to_tsquery_channel).\
+        limit(24).\
+        params(search=search).all()
+
+    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
+    pagination = Pagination(page, PER_PAGE, videocount)
+
+    if videos is None:
+        videos = Mv_Video.query.limit(24).all()
+        return render_template('video/video_index.html', videos=videos)
+    else:
+        return render_template('video/video_search.html', videos=videos, pagination=pagination, \
+            rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount)
 
 
 @bp.route('/play-next', methods=['GET', 'POST'])

@@ -1,14 +1,12 @@
 from flask import (
-    Blueprint, flash, redirect, render_template, request, url_for, make_response,
-    session
+    Blueprint, render_template, session, make_response, request
     )
 from werkzeug.exceptions import abort
 from sqlalchemy import func
-from sqlalchemy import desc
 from .database import db_session
 from .models import Mv_Video, Mv_Channel
 from .pagination import Pagination
-from . import util
+from .util import set_session
 
 bp = Blueprint('channel', __name__, url_prefix='/channel' )
 
@@ -18,16 +16,22 @@ PER_PAGE_FEED = 100
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
 def index(page):
+    set_session()
     offset = ((int(page)-1) * PER_PAGE)
-    order = 'latest'
-    channelcount = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
-    videocount = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
-    channels = Mv_Channel.query.limit(PER_PAGE).offset(offset)
+    order = request.args.get('order','latest')
+
+    if order =='newest':
+        channels = Mv_Channel.query.order_by(Mv_Channel.ytc_publishedat.desc(), Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset)
+    elif order =='popular':
+        channels = Mv_Channel.query.order_by(Mv_Channel.ytc_viewcount.desc()).limit(PER_PAGE).offset(offset)
+    else:
+        channels = Mv_Channel.query.limit(PER_PAGE).offset(offset)
+
     if not channels and page != 1:
         abort(404)
-    pagination = Pagination(page, PER_PAGE, channelcount)
-    return render_template('channel/channel_index.html', 
-        pagination=pagination, channels=channels, channelcount=channelcount, videocount=videocount, order=order)
+
+    pagination = Pagination(page, PER_PAGE, session['channelcount'])
+    return render_template('channel/channel_index.html', pagination=pagination, channels=channels, order=order)
 
 
 @bp.route('/feed', defaults={'page': 1})
@@ -35,14 +39,12 @@ def index(page):
 def feed(page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'latest'
-    channelcount = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
-    videocount = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
     channels = Mv_Channel.query.limit(PER_PAGE_FEED).offset(offset)
     if not channels and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, channelcount)
 
-    template = render_template('channel/channel_index.xml', pagination=pagination, channels=channels, channelcount=channelcount, videocount=videocount, order=order)
+    template = render_template('channel/channel_index.xml', pagination=pagination, channels=channels, order=order)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
     return response
@@ -52,14 +54,11 @@ def feed(page):
 def new(page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
-    channelcount = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
-    videocount = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
     channels = Mv_Channel.query.order_by(Mv_Channel.ytc_publishedat.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset)
     if not channels and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, channelcount)    
-    return render_template('channel/channel_index.html', 
-        pagination=pagination, channels=channels, channelcount=channelcount, videocount=videocount, order=order)
+    return render_template('channel/channel_index.html', pagination=pagination, channels=channels, order=order)
 
 
 @bp.route('/old', defaults={'page': 1})

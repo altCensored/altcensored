@@ -2,7 +2,7 @@ from flask import (Blueprint, render_template, session, make_response)
 from werkzeug.exceptions import abort
 from sqlalchemy import func
 from .database import db_session
-from .models import Mv_Video, Mv_Channel
+from .models import Mv_Video, Mv_Channel, User
 from .pagination import Pagination
 from .util import set_session
 

@@ -1,3 +1,5 @@
+{#  <script src="{{ url_for('static', filename='js/altcen.js') }}"></script>  #}
+
 <div class="pure-g">
   <div class="pure-u-1 pure-u-md-2-24"></div>
   <div class="pure-u-1 pure-u-md-20-24">
@@ -33,21 +35,17 @@
                       {% endif %}
                     {% else %} 
                       <a class="action" href="{{ url_for('playlist.remove_video_playlist')}}?v={{video.extractor_data}}&playlist={{playlist.hashid}}&original_url={{ current_url }}">
-                        <p class="watched"> <i class='ion-md-trash' style="font-size: 24px"></p></i>
+                          <p class="watched"> <i class='ion-md-trash' style="font-size: 24px"></i></p>
                       </a>
                     {% endif %}
                   {% else %}
-                    {% if watchlater and (video.extractor_data in watchlater) %}
-                      <a class="action has-tooltip" href="{{ url_for('user.remove_video_watchlater')}}?v={{video.extractor_data}}&original_url={{ current_url }}">
-                        <p class="watchlater"> <i class='ion-md-checkmark' style="font-size: 24px"> </i></p>
-                        <p class="tooltip">Remove from WatchLater</p>
-                      </a>
-                    {% else %}
-                      <a class="action has-tooltip" href="{{ url_for('user.add_video_watchlater')}}?v={{video.extractor_data}}&original_url={{ current_url }}">
-                          <p class="watchlater"> <i class='ion-md-time' style="font-size: 24px"></i></p>
-                          <p class="tooltip">Add to WatchLater</p>
-                      </a>
-                    {% endif %}
+                      {% if not watchlater or (watchlater and video.extractor_data not in watchlater) %}
+                        <a class="action has-tooltip" onclick="add_video_WatchLater('{{ video.extractor_data }}');">
+                            <p class="watchlater">
+                                <i id="{{ video.extractor_data }}" class="ion-md-time" style="font-size: 24px"></i></p>
+                            <p id="ttip{{ video.extractor_data }}" class="tooltip">Add to WatchLater</p>
+                        </a>
+                      {% endif %}
                   {% endif %}
                 {% elif userlist == 'history' %}
                   {% if not watchlater or (watchlater and video.extractor_data not in watchlater) %}
@@ -105,4 +103,37 @@
   </div>
 </div>
 
-<script src="{{ url_for('static', filename='js/altcen.js') }}"></script>
+
+<script type="application/javascript">
+  function add_video_WatchLater(vid){
+    fetch('{{ url_for('user.add_video_watchlater_post') }}', {
+      method: 'POST',
+      body: JSON.stringify({
+        'v': vid
+      })
+    });
+    var ttip = "ttip"
+    var ttipid = ttip.concat(vid);
+    var watchlaterIcon = document.getElementById(vid);
+    watchlaterIcon.className="ion-md-checkmark";
+    var tooltip = watchlaterIcon.parentNode.parentNode.querySelector('.tooltip');
+    tooltip.style.display = 'none';
+  }
+
+  function add_video_PlayList(vid, plist){
+    fetch('{{ url_for('playlist.add_video_playlist_post') }}', {
+      method: 'POST',
+      body: JSON.stringify({
+        'v': vid,
+        'p': plist
+      })
+    });
+    var ttip = "ttip"
+    var ttipid = ttip.concat(vid);
+    var playlistIcon = document.getElementById(vid);
+    playlistIcon.className="ion-md-checkmark";
+    var tooltip = playlistIcon.parentNode.parentNode.querySelector('.tooltip');
+    tooltip.style.display = 'none';
+  }
+
+</script>

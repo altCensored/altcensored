@@ -56,6 +56,7 @@ def new(page):
 @bp.route('/popular', defaults={'page': 1})
 @bp.route('/popular/page/<int:page>')
 def popular(page):
+    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'popular'
     videos = Mv_Video.query.order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset)
@@ -87,6 +88,7 @@ def feed(page):
 
 @bp.route("/watch")
 def watch():
+    set_session()
     video_id = request.args.get('v', None)
     playlist = request.args.get('playlist', None)
     userlist = request.args.get('userlist', None)
@@ -246,6 +248,7 @@ def embed(video_id):
 @bp.route("/search", defaults={'page': 1})
 @bp.route('/search/page/<int:page>')
 def search(page):
+    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     rawsearch1 = request.args.get('q', None)
     rawsearch = rawsearch1.strip()
@@ -271,12 +274,18 @@ def search(page):
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
     pagination = Pagination(page, PER_PAGE, videocount)
 
+    watchlater = None
+    if session.get('user') is not None:
+        user = User.query.filter(User.id == session['user']['id']).scalar()
+        if user.watchlater:
+            watchlater = user.watchlater
+
     if videos is None:
         videos = Mv_Video.query.limit(24).all()
         return render_template('video/video_index.html', videos=videos)
     else:
         return render_template('video/video_search.html', videos=videos, pagination=pagination, \
-            rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount)
+            rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount, watchlater=watchlater)
 
 
 @bp.route("/search/latest", defaults={'page': 1})
@@ -306,12 +315,18 @@ def search_latest(page):
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
     pagination = Pagination(page, PER_PAGE, videocount)
 
+    watchlater = None
+    if session.get('user') is not None:
+        user = User.query.filter(User.id == session['user']['id']).scalar()
+        if user.watchlater:
+            watchlater = user.watchlater
+
     if videos is None:
         videos = Mv_Video.query.limit(24).all()
         return render_template('video/video_index.html', videos=videos)
     else:
         return render_template('video/video_search.html', videos=videos, pagination=pagination, \
-            rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount)
+            rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount, watchlater=watchlater)
 
 
 @bp.route("/search/new", defaults={'page': 1})
@@ -341,12 +356,18 @@ def search_new(page):
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
     pagination = Pagination(page, PER_PAGE, videocount)
 
+    watchlater = None
+    if session.get('user') is not None:
+        user = User.query.filter(User.id == session['user']['id']).scalar()
+        if user.watchlater:
+            watchlater = user.watchlater
+
     if videos is None:
         videos = Mv_Video.query.limit(24).all()
         return render_template('video/video_index.html', videos=videos)
     else:
         return render_template('video/video_search.html', videos=videos, pagination=pagination, \
-            rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount)
+            rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount, watchlater=watchlater)
 
 
 @bp.route("/search/popular", defaults={'page': 1})
@@ -376,12 +397,18 @@ def search_popular(page):
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
     pagination = Pagination(page, PER_PAGE, videocount)
 
+    watchlater = None
+    if session.get('user') is not None:
+        user = User.query.filter(User.id == session['user']['id']).scalar()
+        if user.watchlater:
+            watchlater = user.watchlater
+
     if videos is None:
         videos = Mv_Video.query.limit(24).all()
         return render_template('video/video_index.html', videos=videos)
     else:
         return render_template('video/video_search.html', videos=videos, pagination=pagination, \
-            rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount)
+            rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount, watchlater=watchlater)
 
 
 @bp.route('/play-next', methods=['GET', 'POST'])

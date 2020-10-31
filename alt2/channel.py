@@ -43,13 +43,11 @@ def popular(page):
     set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'popular'
-    videocount = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
     channels = Mv_Channel.query.order_by(Mv_Channel.ytc_viewcount.desc()).limit(PER_PAGE).offset(offset)
     if not channels and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, session['channelcount'])
-    return render_template('channel/channel_index.html', 
-        pagination=pagination, channels=channels, videocount=videocount, order=order)
+    return render_template('channel/channel_index.html', pagination=pagination, channels=channels, order=order)
 
 
 @bp.route('/deleted', defaults={'page': 1})
@@ -144,13 +142,11 @@ def item(ytc_id,page):
     if not videos and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)
-
     watchlater = None
     if session.get('user') is not None:
         user = User.query.filter(User.id == session['user']['id']).scalar()
         if user.watchlater:
             watchlater = user.watchlater
-
     return render_template('channel/channel_item.html', pagination=pagination, channel=channel, videos=videos, videocount=videocount, order=order, watchlater=watchlater)
 
 
@@ -166,7 +162,12 @@ def item_popular(ytc_id,page):
     if not videos and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)
-    return render_template('channel/channel_item.html', pagination=pagination, channel=channel, videos=videos, videocount=videocount, order=order)
+    watchlater = None
+    if session.get('user') is not None:
+        user = User.query.filter(User.id == session['user']['id']).scalar()
+        if user.watchlater:
+            watchlater = user.watchlater
+    return render_template('channel/channel_item.html', pagination=pagination, channel=channel, videos=videos, videocount=videocount, order=order, watchlater=watchlater)
 
 
 @bp.route('/<ytc_id>/feed', defaults={'page': 1})

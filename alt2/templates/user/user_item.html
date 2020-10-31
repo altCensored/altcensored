@@ -101,9 +101,11 @@
                                 <img class="thumbnail" src="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ playlist.featured_video.extractor_data ~ '/' ~ playlist.featured_video.title | ia_fname ~ '-' ~ playlist.featured_video.extractor_data ~ '.jpg' }}"onerror="this.onerror=null;this.src='{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ playlist.featured_video.extractor_data ~ '/__ia_thumb.jpg' }}';" >
                             </div>
                         {% endif %}
-                            <p><b>{{ playlist.title }}</b></a>
+                        <i class='ion-md-list'  style="font-size: 24px"></i>
+                            <b>{{ playlist.title }}</b></a>
                         {% if user.featured_playlist and user.featured_playlist.pl_id == playlist.id %}
-                            &nbsp;&nbsp;<i class='ion-ios-star'  style="font-size: 16px"></i>
+                            <span style="color: red; ">
+                                &nbsp;&nbsp;<i class='ion-ios-star'  style="font-size: 16px"></i></span>
                         {% endif %}
                     <p>{{ playlist.description | linkify | safe }}<p>
                     <i class='ion-logo-youtube'  style="font-size: 20px"></i>

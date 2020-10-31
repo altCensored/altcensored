@@ -96,7 +96,6 @@ def history(page):
     playlist = request.args.get('playlist', None)
     user = User.query.filter(User.id == session['user']['id']).scalar()
     playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
-    #    user.watched = list(dict.fromkeys(user.watched))
 
     try:
         ordering = case(

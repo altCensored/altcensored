@@ -213,6 +213,63 @@ def add_video_playlist():
     return redirect(request.args.get('original_url', '/'))
 
 
+@bp.route('/add_video_playlist_post', methods=['GET', 'POST'])
+@login_required
+def add_video_playlist_post():
+    if request.method == 'POST':
+        data = json.loads(request.data)
+        v = data['v']
+        plist = data['plist']
+
+        flash(v, 'success')
+        flash(plist, 'success')
+
+        return redirect(request.args.get('original_url', '/'))
+
+        playlist_ident = request.form['playlist_title']
+        playlist = Playlist.query.filter(Playlist.title == playlist_ident).scalar()
+
+    else:
+        video_id = request.args.get('v', None)
+        playlist_ident = request.args.get('playlist', None)
+        playlist = Playlist.query.filter(Playlist.hashid == playlist_ident).scalar()
+
+    video = Mv_Video.query.get(video_id)
+
+    if playlist_ident == 'add_to_watchlater':
+        user = User.query.get(session['user']['id'])
+        try:
+            user.watchlater += [video.extractor_data]
+        except:
+            user.watchlater = [video.extractor_data]
+        flag_modified(user, "watchlater")
+        db_session.commit()
+        return redirect(url_for('video.watch', v=video_id ))
+
+    try:
+        playlist.videos += [video.extractor_data]
+    except:
+        playlist.videos = [video.extractor_data]
+
+    if not playlist.featured_video:
+        playlist.featured_video = {
+            "pl_id": playlist.id,
+            "pl_title": playlist.title,
+            "extractor_data": video_id,
+            "title": video.title
+        }
+
+    now = datetime.datetime.now(timezone.utc)
+    playlist.updated = now
+    flag_modified(playlist, "videos")
+    db_session.commit()
+
+    if request.method == 'POST':
+        return redirect(url_for('video.watch', v=video_id ))
+
+    return redirect(request.args.get('original_url', '/'))
+
+
 @bp.route('/remove_video_playlist')
 @login_required
 def remove_video_playlist():

@@ -1,14 +1,10 @@
-from flask import (
-    Blueprint, flash, redirect, render_template, request, url_for,
-    session
-    )
+from flask import ( Blueprint, render_template )
 from werkzeug.exceptions import abort
 from sqlalchemy import func
-from sqlalchemy import desc
 from .database import db_session
-from .models import Mv_Video, Mv_Category, Mv_Channel, Language
+from .models import Mv_Video, Mv_Category, Language
 from .pagination import Pagination
-from . import util
+from .util import set_session
 
 bp = Blueprint('category', __name__, url_prefix='/category' )
 
@@ -17,9 +13,9 @@ PER_PAGE = 24
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
 def index(page):
+    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     categorycount = db_session.query(func.count(Mv_Category.cat_id)).scalar()
-    videocount = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
     categories = Mv_Category.query.limit(PER_PAGE).offset(offset)
     if not categories and page != 1:
         abort(404)
@@ -28,12 +24,13 @@ def index(page):
     languages = Language.query.limit(PER_PAGE).offset(offset)
 
     return render_template('category/category_index.html', 
-        pagination=pagination, videocount=videocount, categories=categories, categorycount=categorycount)
+        pagination=pagination, categories=categories, categorycount=categorycount)
 
 
 @bp.route('/<cat_id>', defaults={'page': 1})
 @bp.route('/<cat_id>/page/<int:page>')
 def item(cat_id,page):
+    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'latest'
     category = Mv_Category.query.get(cat_id)
@@ -50,6 +47,7 @@ def item(cat_id,page):
 @bp.route('/<cat_id>/new', defaults={'page': 1})
 @bp.route('/<cat_id>/new/page/<int:page>')
 def item_new(cat_id,page):
+    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
     category = Mv_Category.query.get(cat_id)
@@ -66,6 +64,7 @@ def item_new(cat_id,page):
 @bp.route('/<cat_id>/old', defaults={'page': 1})
 @bp.route('/<cat_id>/old/page/<int:page>')
 def item_old(cat_id,page):
+    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'oldest'
     category = Mv_Category.query.get(cat_id)
@@ -82,6 +81,7 @@ def item_old(cat_id,page):
 @bp.route('/<cat_id>/popular', defaults={'page': 1})
 @bp.route('/<cat_id>/popular/page/<int:page>')
 def item_popular(cat_id,page):
+    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'popular'
     category = Mv_Category.query.get(cat_id)
@@ -98,6 +98,7 @@ def item_popular(cat_id,page):
 @bp.route('/<lang_code>', defaults={'page': 1})
 @bp.route('/<lang_code>/page/<int:page>')
 def lang_item(lang_code,page):
+    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'latest'
     language = Language.query.get(lang_code)

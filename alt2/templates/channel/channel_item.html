@@ -118,8 +118,9 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
         </div>
         </div>
     </div>
+    </div>
 
-    {% with video=video %}
+    {% with video=video, watchlater=watchlater %}
         {% include "widgets/videos.html" %}
     {% endwith %}
 

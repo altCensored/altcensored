@@ -17,7 +17,7 @@ from .models import User
 from .util import (
     get_locale, get_theme, get_navtabs, get_navtabs_index, send_welcome_email,
     send_forgot_password_email, generate_confirmation_token, confirm_token,
-    login_required, generate_random, create_captcha
+    login_required, generate_random, create_captcha, set_session
 )
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -105,6 +105,7 @@ def send_reset_password_email(email):
 @bp.route('/login', methods=['GET', 'POST'])
 @bp.route('/', methods=['GET', 'POST'])
 def login():
+    set_session()
     util.set_session()
     if request.method == 'POST':
         email = request.form['email']

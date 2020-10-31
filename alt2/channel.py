@@ -1,6 +1,4 @@
-from flask import (
-    Blueprint, render_template, session, make_response, request
-    )
+from flask import (Blueprint, render_template, session, make_response)
 from werkzeug.exceptions import abort
 from sqlalchemy import func
 from .database import db_session
@@ -146,7 +144,14 @@ def item(ytc_id,page):
     if not videos and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)
-    return render_template('channel/channel_item.html', pagination=pagination, channel=channel, videos=videos, videocount=videocount, order=order)
+
+    watchlater = None
+    if session.get('user') is not None:
+        user = User.query.filter(User.id == session['user']['id']).scalar()
+        if user.watchlater:
+            watchlater = user.watchlater
+
+    return render_template('channel/channel_item.html', pagination=pagination, channel=channel, videos=videos, videocount=videocount, order=order, watchlater=watchlater)
 
 
 @bp.route('/<ytc_id>/popular', defaults={'page': 1})

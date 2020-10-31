@@ -1,10 +1,8 @@
-from flask import (
-    Blueprint, flash, redirect, render_template, request, url_for,
-    send_from_directory, session )
+from flask import ( Blueprint, render_template )
 from werkzeug.exceptions import abort
-from sqlalchemy import func, text, desc
+from sqlalchemy import func, text
 from .database import db_session
-from .models import Mv_Video, Mv_Category, Mv_Channel, Language
+from .models import Mv_Video, Mv_Channel, Language
 from .pagination import Pagination
 from . import util
 
@@ -15,22 +13,21 @@ PER_PAGE = 24
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
 def index(page):
+    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     languagecount = db_session.query(func.count(Language.lang_id)).scalar()
-    videocount = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
     languages = Language.query.limit(PER_PAGE).offset(offset)
     if not languages and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, languagecount)
 
-    return render_template('language/language_index.html', 
-        pagination=pagination, videocount=videocount, languages=languages, languagecount=languagecount,
-        locale=util.get_locale())
+    return render_template('language/language_index.html', pagination=pagination, languages=languages, languagecount=languagecount, locale=util.get_locale())
 
 
 @bp.route('/<lang_code>', defaults={'page': 1})
 @bp.route('/<lang_code>/page/<int:page>')
 def item(lang_code,page):
+    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'latest'
 

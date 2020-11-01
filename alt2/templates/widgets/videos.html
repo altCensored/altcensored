@@ -43,7 +43,7 @@
                         <a class="action has-tooltip" onclick="add_video_WatchLater('{{ video.extractor_data }}');">
                             <p class="watchlater">
                                 <i id="{{ video.extractor_data }}" class="ion-md-time" style="font-size: 24px"></i></p>
-                            <p id="ttip{{ video.extractor_data }}" class="tooltip">Add to WatchLater</p>
+                            <p id="ttip{{ video.extractor_data }}" class="tooltip">{{ gettext('Add to WatchLater') }}</p>
                         </a>
                     {% endif %}
                   {% endif %}
@@ -52,7 +52,7 @@
                     <a class="action has-tooltip" onclick="add_video_WatchLater('{{ video.extractor_data }}');">
                         <p class="watchlater">
                             <i id="{{ video.extractor_data }}" class="ion-md-time" style="font-size: 24px"></i></p>
-                        <p id="ttip{{ video.extractor_data }}" class="tooltip">Add to WatchLater</p>
+                        <p id="ttip{{ video.extractor_data }}" class="tooltip">{{ gettext('Add to WatchLater') }}</p>
                     </a>
                   {% endif %}
                   <a class="action" href="{{ url_for('user.remove_video_history')}}?v={{video.extractor_data}}&original_url={{ current_url }}">
@@ -67,7 +67,7 @@
                     <a class="action has-tooltip" onclick="add_video_WatchLater('{{ video.extractor_data }}');">
                         <p class="watchlater">
                             <i id="{{ video.extractor_data }}" class="ion-md-time" style="font-size: 24px"></i></p>
-                        <p id="ttip{{ video.extractor_data }}" class="tooltip">Add to WatchLater</p>
+                        <p id="ttip{{ video.extractor_data }}" class="tooltip">{{ gettext('Add to WatchLater') }}</p>
                     </a>
                   {% endif %}
                 {% endif %}

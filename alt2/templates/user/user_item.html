@@ -47,7 +47,7 @@
                         <div class="pure-u-1 pure-md-1-1">
                             <a href="{{ url_for('user.history') }}">
                             <i class='ion-md-done-all'  style="font-size: 24px"></i>
-                            <b>History</b></a>
+                            <b>{{ gettext('History') }}</b></a>
                         </div>
                     </div>
                     <div class="pure-u-1-3">
@@ -58,7 +58,7 @@
                         <div class="pure-u-1 pure-md-1-1" style="text-align:right;">
                             <a href="{{ url_for('user.watchlater') }}">
                             <i class='ion-md-time'  style="font-size: 24px"></i>
-                            <b>WatchLater</b></a>
+                            <b>{{ gettext('WatchLater') }}</b></a>
                         </div>
                     </div>
                 {% endif %}
@@ -73,10 +73,10 @@
                         <b>&nbsp;|&nbsp;</b>
                         {% if user.public  %}
                             <i class='ion-md-globe'  style="font-size: 20px"></i>
-                            <b>Public</b>
+                            <b>{{ gettext('Public') }}</b>
                         {% else %}
                             <i class='ion-md-lock'  style="font-size: 20px"></i>
-                            <b>Private</b>
+                            <b>{{ gettext('Private') }}</b>
                         {% endif %}
                     </div>
                 </div>

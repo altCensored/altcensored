@@ -19,15 +19,15 @@
             <fieldset>
               {% if session.register_email %}
               <div class="pure-control-group">
-                <label for="email">Email:</label>
+                <label for="email">{{ gettext('Email') }}:</label>
                 <input name="email" id="email" value="{{ session.register_email }}" required>
               </div>
               <div class="pure-control-group">
-                <label for="password">Password:</label>
+                <label for="password">{{ gettext('Password') }}:</label>
                 <input type="password" name="password" id="password" placeholder="Password" required>
               </div>
               <div class="pure-control-group">
-                <label for="password">Username:</label>
+                <label for="username">{{ gettext('Username') }}:</label>
                 <input name="username" id="username" placeholder="Username" required>
               </div>
 
@@ -36,25 +36,25 @@
               </div>
 
               <div class="pure-control-group">
-                <label for="captcha">Captcha:</label>
+                <label for="captcha">{{ gettext('Captcha') }}:</label>
                 <input name="captcha" id="captcha" placeholder="Captcha" required>
               </div>
 
               <div class="pure-controls">
-                <button class="pure-button" type="submit" name="submitvalue" value="register">Register</button>
+                <button class="pure-button" type="submit" name="submitvalue" value="register">{{ gettext('Register') }}</button>
               </div>
               {% else %}
               <div class="pure-control-group">
-                <label for="email">Email:</label>
+                <label for="email">{{ gettext('Email') }}:</label>
                 <input name="email" id="email" placeholder="Email" required>
               </div>
               <div class="pure-control-group">
-                <label for="password">Password:</label>
+                <label for="password">{{ gettext('Password') }}:</label>
                 <input type="password" name="password" id="password" placeholder="Password">
               </div>
               <div class="pure-controls">
-                <button class="pure-button" type="submit" name="submitvalue" value="login">Sign In/Register</button>
-                <button class="pure-button" type="submit" name="submitvalue" value="reset">Reset Password</button>
+                <button class="pure-button" type="submit" name="submitvalue" value="login">{{ gettext('Sign In/Register') }}</button>
+                <button class="pure-button" type="submit" name="submitvalue" value="reset">{{ gettext('Reset Password') }}</button>
               </div>
               {% endif %}
             </fieldset>

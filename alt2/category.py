@@ -1,8 +1,8 @@
-from flask import ( Blueprint, render_template )
+from flask import ( Blueprint, render_template, session )
 from werkzeug.exceptions import abort
 from sqlalchemy import func
 from .database import db_session
-from .models import Mv_Video, Mv_Category, Language
+from .models import Mv_Video, Mv_Category, Language, User
 from .pagination import Pagination
 from .util import set_session
 
@@ -36,12 +36,18 @@ def item(cat_id,page):
     category = Mv_Category.query.get(cat_id)
     cat_name = category.cat_name
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter_by(category=cat_name).scalar()
-    videos = Mv_Video.query.filter_by(category=cat_name).limit(PER_PAGE).offset(offset)
+    videos = Mv_Video.query.filter_by(category=cat_name).order_by(Mv_Video.id.desc()).limit(PER_PAGE).offset(offset)
     if not videos and page != 1:
         abort(404)
-    pagination = Pagination(page, PER_PAGE, videocount)    
+    pagination = Pagination(page, PER_PAGE, videocount)
+    watchlater = None
+    if session.get('user') is not None:
+        user = User.query.filter(User.id == session['user']['id']).scalar()
+        if user.watchlater:
+            watchlater = user.watchlater
+
     return render_template('category/category_item.html', 
-        pagination=pagination, category=category, videos=videos, videocount=videocount, order=order)
+        pagination=pagination, category=category, videos=videos, videocount=videocount, order=order, watchlater=watchlater)
 
 
 @bp.route('/<cat_id>/new', defaults={'page': 1})
@@ -56,24 +62,13 @@ def item_new(cat_id,page):
     videos = Mv_Video.query.filter_by(category=cat_name).order_by(Mv_Video.published.desc()).limit(PER_PAGE).offset(offset)
     if not videos and page != 1:
         abort(404)
-    pagination = Pagination(page, PER_PAGE, videocount)    
-    return render_template('category/category_item.html', 
-        pagination=pagination, category=category, videos=videos, videocount=videocount, order=order)
+    pagination = Pagination(page, PER_PAGE, videocount)
+    watchlater = None
+    if session.get('user') is not None:
+        user = User.query.filter(User.id == session['user']['id']).scalar()
+        if user.watchlater:
+            watchlater = user.watchlater
 
-
-@bp.route('/<cat_id>/old', defaults={'page': 1})
-@bp.route('/<cat_id>/old/page/<int:page>')
-def item_old(cat_id,page):
-    set_session()
-    offset = ((int(page)-1) * PER_PAGE)
-    order = 'oldest'
-    category = Mv_Category.query.get(cat_id)
-    cat_name = category.cat_name
-    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter_by(category=cat_name).scalar()
-    videos = Mv_Video.query.filter_by(category=cat_name).order_by(Mv_Video.published.asc()).limit(PER_PAGE).offset(offset)
-    if not videos and page != 1:
-        abort(404)
-    pagination = Pagination(page, PER_PAGE, videocount)    
     return render_template('category/category_item.html', 
         pagination=pagination, category=category, videos=videos, videocount=videocount, order=order)
 
@@ -90,8 +85,14 @@ def item_popular(cat_id,page):
     videos = Mv_Video.query.filter_by(category=cat_name).order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset)
     if not videos and page != 1:
         abort(404)
-    pagination = Pagination(page, PER_PAGE, videocount)    
-    return render_template('category/category_item.html', 
+    pagination = Pagination(page, PER_PAGE, videocount)
+    watchlater = None
+    if session.get('user') is not None:
+        user = User.query.filter(User.id == session['user']['id']).scalar()
+        if user.watchlater:
+            watchlater = user.watchlater
+
+    return render_template('category/category_item.html',
         pagination=pagination, category=category, videos=videos, videocount=videocount, order=order)
 
 

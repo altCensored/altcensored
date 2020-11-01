@@ -22,6 +22,7 @@
         <div class="pure-u-1 pure-u-md-2-24"></div>
         <div class="pure-u-1 pure-u-md-20-24">
             <div class="pure-g">
+                {% if channels %}
                 {% for channel in channels %}
                     <div class="pure-u-1 pure-u-md-1-4">
                     <div class="h-box">
@@ -82,6 +83,7 @@
                         <br>
                     </div>
                 {% endfor %}
+                {% endif %}
                 </div>
             </div>
         </div>
@@ -91,34 +93,64 @@
         <div class="pure-u-1 pure-u-md-2-24"></div>
         <div class="pure-u-1 pure-u-md-20-24">
             <div class="pure-g h-box">
-                <div class="pure-u-10-24">
+                <div class="pure-u-6-24">
                     <div class="pure-u-1 pure-md-1-3">
                     </div>
                     <div class="pure-u-1 pure-md-1-3">
                     </div>
                     <div class="pure-u-1 pure-md-1-3">
                         <i class='ion-logo-youtube'  style="font-size: 24px"></i>
-                        <i class='ion-logo-rss' style="font-size: 21px"></i>
+                        <i class='ion-md-search' style="font-size: 21px"></i>
                         <b>&nbsp;{{ videocount | commafy }}</b>
                     </div>
                 </div>
-                <div class="pure-u-4-24" style="text-align:center;">
-                    <div class="pure-u-1 pure-md-1-1">
+                <div class="pure-u-12-24" style="text-align:center";>
+                    <div class="pure-u-1 pure-md-1-3">
+                    </div>
+                    <div class="pure-u-1 pure-md-1-3">
+                    </div>
+                    <div class="pure-u-1 pure-md-1-3">
+                    {% if playlist %}
+                        <a href="{{ url_for('playlist.item', playlist=playlist.hashid ) }}">
+                        <i class='ion-md-list' style="font-size: 24px"></i>&nbsp;
+                        <b>{{ playlist.title }}</b></a>
+                    {% endif %}
                     </div>
                 </div>
-                <div class="pure-u-10-24" style="text-align:right;">
-                    <div class="pure-u-1 pure-md-1-3">
-                        <a href="{{ url_for('video.search_latest',q=rawsearch) }}" class="pure-menu-item {{'selected' if order == 'latest' }}">
-                            {{ gettext('latest') }}</a>
-                    </div>
-                    <div class="pure-u-1 pure-md-1-3">
-                        <a href="{{ url_for('video.search_new',q=rawsearch) }}" class="pure-menu-item {{'selected' if order == 'newest' }}">
-                            {{ gettext('newest') }}</a>
-                    </div>
-                    <div class="pure-u-1 pure-md-1-3">
-                        <a href="{{ url_for('video.search_popular',q=rawsearch) }}" class="pure-menu-item {{'selected' if order == 'popular' }}">
-                            {{ gettext('popular') }}</a>
-                    </div>
+                <div class="pure-u-6-24" style="text-align:right;">
+
+                    {% if playlist %}
+
+                        <div class="pure-u-1 pure-md-1-3">
+                            <a href="{{ url_for('video.search_latest',q=rawsearch, playlist=playlist.hashid) }}" class="pure-menu-item {{'selected' if order == 'latest' }}">
+                                {{ gettext('latest') }}</a>
+                        </div>
+                        <div class="pure-u-1 pure-md-1-3">
+                            <a href="{{ url_for('video.search_new',q=rawsearch, playlist=playlist.hashid) }}" class="pure-menu-item {{'selected' if order == 'newest' }}">
+                                {{ gettext('newest') }}</a>
+                        </div>
+                        <div class="pure-u-1 pure-md-1-3">
+                            <a href="{{ url_for('video.search_popular',q=rawsearch, playlist=playlist.hashid) }}" class="pure-menu-item {{'selected' if order == 'popular' }}">
+                                {{ gettext('popular') }}</a>
+                        </div>
+
+                    {% else %}
+
+                        <div class="pure-u-1 pure-md-1-3">
+                            <a href="{{ url_for('video.search_latest',q=rawsearch) }}" class="pure-menu-item {{'selected' if order == 'latest' }}">
+                                {{ gettext('latest') }}</a>
+                        </div>
+                        <div class="pure-u-1 pure-md-1-3">
+                            <a href="{{ url_for('video.search_new',q=rawsearch) }}" class="pure-menu-item {{'selected' if order == 'newest' }}">
+                                {{ gettext('newest') }}</a>
+                        </div>
+                        <div class="pure-u-1 pure-md-1-3">
+                            <a href="{{ url_for('video.search_popular',q=rawsearch) }}" class="pure-menu-item {{'selected' if order == 'popular' }}">
+                                {{ gettext('popular') }}</a>
+                        </div>
+
+                    {% endif %}
+
                 </div>
             </div>
             <div class="h-box">
@@ -127,10 +159,15 @@
         </div>
     </div>
 
-    {% with video=video, watchlater=watchlater %}
-        {% include "widgets/videos.html" %}
-    {% endwith %}
-
+    {% if playlist %}
+        {% with video=video, watchlater=watchlater, playlist=playlist, userlist='search' %}
+            {% include "widgets/videos.html" %}
+        {% endwith %}
+    {% else %}
+        {% with video=video, watchlater=watchlater, playlist=playlist %}
+            {% include "widgets/videos.html" %}
+        {% endwith %}
+    {% endif %}
 
 <div class=pagination>
   <center><h3>

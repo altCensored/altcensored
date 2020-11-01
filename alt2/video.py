@@ -254,6 +254,7 @@ def search(page):
     rawsearch = rawsearch1.strip()
     search = rawsearch.replace(" " , "&")
     order = 'default'
+    playlist_ident = request.args.get('playlist', None)
 
     my_to_tsquery_video = text("mv_video.document @@ to_tsquery(:search)")
     my_ts_rank_video = text("ts_rank(mv_video.document, to_tsquery(:search)) DESC")
@@ -280,12 +281,15 @@ def search(page):
         if user.watchlater:
             watchlater = user.watchlater
 
-    if videos is None:
-        videos = Mv_Video.query.limit(24).all()
-        return render_template('video/video_index.html', videos=videos)
-    else:
-        return render_template('video/video_search.html', videos=videos, pagination=pagination, \
-            rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount, watchlater=watchlater)
+    playlist = None
+    if playlist_ident:
+        channels = None
+        playlist = Playlist.query.filter(Playlist.hashid == playlist_ident).scalar()
+
+    if not videos and page != 1:
+        abort(404)
+    return render_template('video/video_search.html', videos=videos, pagination=pagination, \
+            rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount, watchlater=watchlater, playlist=playlist)
 
 
 @bp.route("/search/latest", defaults={'page': 1})
@@ -296,6 +300,7 @@ def search_latest(page):
     rawsearch = rawsearch1.strip()
     search = rawsearch.replace(" " , "&")
     order = 'latest'
+    playlist_ident = request.args.get('playlist', None)
 
     my_to_tsquery_video = text("mv_video.document @@ to_tsquery(:search)")
     my_ts_rank_video = text("ts_rank(mv_video.document, to_tsquery(:search)) DESC")
@@ -321,12 +326,15 @@ def search_latest(page):
         if user.watchlater:
             watchlater = user.watchlater
 
-    if videos is None:
-        videos = Mv_Video.query.limit(24).all()
-        return render_template('video/video_index.html', videos=videos)
-    else:
-        return render_template('video/video_search.html', videos=videos, pagination=pagination, \
-            rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount, watchlater=watchlater)
+    playlist = None
+    if playlist_ident:
+        channels = None
+        playlist = Playlist.query.filter(Playlist.hashid == playlist_ident).scalar()
+
+    if not videos and page != 1:
+        abort(404)
+    return render_template('video/video_search.html', videos=videos, pagination=pagination, \
+            rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount, watchlater=watchlater, playlist=playlist)
 
 
 @bp.route("/search/new", defaults={'page': 1})
@@ -337,6 +345,7 @@ def search_new(page):
     rawsearch = rawsearch1.strip()
     search = rawsearch.replace(" " , "&")
     order = 'newest'
+    playlist_ident = request.args.get('playlist', None)
 
     my_to_tsquery_video = text("mv_video.document @@ to_tsquery(:search)")
     my_ts_rank_video = text("ts_rank(mv_video.document, to_tsquery(:search)) DESC")
@@ -362,12 +371,15 @@ def search_new(page):
         if user.watchlater:
             watchlater = user.watchlater
 
-    if videos is None:
-        videos = Mv_Video.query.limit(24).all()
-        return render_template('video/video_index.html', videos=videos)
-    else:
-        return render_template('video/video_search.html', videos=videos, pagination=pagination, \
-            rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount, watchlater=watchlater)
+    playlist = None
+    if playlist_ident:
+        channels = None
+        playlist = Playlist.query.filter(Playlist.hashid == playlist_ident).scalar()
+
+    if not videos and page != 1:
+        abort(404)
+    return render_template('video/video_search.html', videos=videos, pagination=pagination, \
+            rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount, watchlater=watchlater, playlist=playlist)
 
 
 @bp.route("/search/popular", defaults={'page': 1})
@@ -377,6 +389,7 @@ def search_popular(page):
     rawsearch1 = request.args.get('q', None)
     rawsearch = rawsearch1.strip()
     search = rawsearch.replace(" " , "&")
+    playlist_ident = request.args.get('playlist', None)
 
     order = 'popular'
     my_to_tsquery_video = text("mv_video.document @@ to_tsquery(:search)")
@@ -403,19 +416,23 @@ def search_popular(page):
         if user.watchlater:
             watchlater = user.watchlater
 
-    if videos is None:
-        videos = Mv_Video.query.limit(24).all()
-        return render_template('video/video_index.html', videos=videos)
-    else:
-        return render_template('video/video_search.html', videos=videos, pagination=pagination, \
-            rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount, watchlater=watchlater)
+    playlist = None
+    if playlist_ident:
+        channels = None
+        playlist = Playlist.query.filter(Playlist.hashid == playlist_ident).scalar()
+
+    if not videos and page != 1:
+        abort(404)
+    return render_template('video/video_search.html', videos=videos, pagination=pagination, \
+            rawsearch=rawsearch,  order=order, channels=channels, videocount=videocount, watchlater=watchlater, playlist=playlist)
 
 
 @bp.route('/play-next', methods=['GET', 'POST'])
 def play_next():
     if request.method == 'POST':
         data = json.loads(request.data)
-        session['playnext'] = data['checked']
+#        session['playnext'] = data['checked']
+        session['playnext'] = not session['playnext']
         return json.dumps({'playnext': session['playnext']})
     else:
         return json.dumps({'playnext': session['playnext']})

@@ -33,9 +33,9 @@
                             <p id="ttip{{ playlist.hashid }}" class="tooltip">Add to PlayList</p>
                         </a>
                       {% endif %}
-                    {% else %} 
+                    {% else %}
                       <a class="action" href="{{ url_for('playlist.remove_video_playlist')}}?v={{video.extractor_data}}&playlist={{playlist.hashid}}&original_url={{ current_url }}">
-                          <p class="watched"> <i class='ion-md-trash' style="font-size: 24px"></i></p>
+                        <p class="watched"> <i class='ion-md-trash' style="font-size: 24px"></p></i>
                       </a>
                     {% endif %}
                   {% else %}
@@ -45,7 +45,7 @@
                                 <i id="{{ video.extractor_data }}" class="ion-md-time" style="font-size: 24px"></i></p>
                             <p id="ttip{{ video.extractor_data }}" class="tooltip">Add to WatchLater</p>
                         </a>
-                      {% endif %}
+                    {% endif %}
                   {% endif %}
                 {% elif userlist == 'history' %}
                   {% if not watchlater or (watchlater and video.extractor_data not in watchlater) %}

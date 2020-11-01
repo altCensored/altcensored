@@ -21,8 +21,7 @@
                 <div class="pure-u-1 pure-md-1-1" style="text-align:right">
                     {% if session.user and session.user.id == playlist.user_id %}
                         <a href="{{ url_for('playlist.edit', playlist=playlist.id, original_url=current_url ) }}">
-                            <i class='ion-md-create' style="font-size: 24px"></i></a>
-                        &nbsp;&nbsp;
+                            <i class='ion-md-create' style="font-size: 24px"></i></a>&nbsp;&nbsp;
                         <a href="{{ url_for('playlist.delete', playlist=playlist.id, original_url=current_url ) }}">
                             <i class='ion-md-trash' style="font-size: 24px"></i></a>
                     {% endif %}
@@ -87,7 +86,7 @@
                 <style>
                     form { display: inline-block; //Or display: inline;}
                 </style>
-                <form action="{{ url_for('user.history', playlist=playlist.hashid, original_url=current_url ) }}" >
+                <p><form action="{{ url_for('user.history', playlist=playlist.hashid, original_url=current_url ) }}" >
                     <button class="pure-button" type="submit" name="playlist" value= {{ playlist.hashid }}>
                         <i class='ion-md-done-all'  style="font-size: 24px"></i>
                         {{ gettext('History') }}
@@ -98,6 +97,14 @@
                         <i class='ion-md-time'  style="font-size: 24px"></i>
                         {{ gettext('WatchLater') }}
                     </button>
+                </form></p>
+
+                <form class="pure-form" action="{{ url_for('video.search') }}" method="get">
+                  <fieldset>
+                    <input type="search" style="width:100%;" name="q" placeholder="{{ gettext('search') }}" results=5
+                           id=mySearch required value="">
+                    <input type="hidden" id="playlist" name="playlist" value={{ playlist.hashid }}>
+                  </fieldset>
                 </form>
             {% endif %}
             <hr>

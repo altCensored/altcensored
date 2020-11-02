@@ -118,7 +118,7 @@ def login():
                 return redirect(url_for('auth.login'))
             send_reset_password_email(email)
             reset_pw = lazy_gettext('Reset password email sent')
-            flash(reset_password, 'success')
+            flash(reset_pw, 'success')
             return redirect(url_for('video.index'))
 
         if not email_exist(email) and session.get('register_email') is None:

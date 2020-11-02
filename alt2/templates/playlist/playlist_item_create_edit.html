@@ -30,7 +30,7 @@
                             {% if playlist %}
                                 <input type=text id=title value="{{ playlist.title  }}" name=title required maxlength="18">
                             {% else %}
-                                <input type=text id=title placeholder="Title" name=title required maxlength="18">
+                                <input type=text id=title placeholder={{ gettext('Title') }} name=title required maxlength="18">
                             {% endif %}
                         </div>
                         <div class="pure-control-group">
@@ -38,7 +38,7 @@
                             {% if playlist %}
                                 <input type=text id=description value="{{ playlist.description  }}" name=description size="30" required maxlength="50">
                             {% else %}
-                                <input type=text id=description placeholder="Description" name=description size="30" required maxlength="50">
+                                <input type=text id=description placeholder={{ gettext('Description') }} name=description size="30" required maxlength="50">
                             {% endif %}
                         </div>
                         <div class="pure-control-group">

@@ -24,11 +24,11 @@
               </div>
               <div class="pure-control-group">
                 <label for="password">{{ gettext('Password') }}:</label>
-                <input type="password" name="password" id="password" placeholder="Password" required>
+                <input type="password" name="password" id="password" placeholder={{ gettext('Password') }} required>
               </div>
               <div class="pure-control-group">
                 <label for="username">{{ gettext('Username') }}:</label>
-                <input name="username" id="username" placeholder="Username" required>
+                <input name="username" id="username" placeholder={{ gettext('Username') }} required>
               </div>
 
               <div class="pure-controls">
@@ -50,7 +50,7 @@
               </div>
               <div class="pure-control-group">
                 <label for="password">{{ gettext('Password') }}:</label>
-                <input type="password" name="password" id="password" placeholder="Password">
+                <input type="password" name="password" id="password" placeholder={{ gettext('Password') }}>
               </div>
               <div class="pure-controls">
                 <button class="pure-button" type="submit" name="submitvalue" value="login">{{ gettext('Sign In/Register') }}</button>

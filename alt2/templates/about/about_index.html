@@ -86,93 +86,90 @@
           </p>
 
 
-<label class="collapse" for="_1"><b><u>Privacy Policy</b></u></label>
+<label class="collapse" for="_1"><b><u>{{ gettext('Privacy Policy') }}</b></u></label>
 <input id="_1" type="checkbox">
 <div>
-  
-    <p>This document discusses the collection, storage and removal of data on this website.</p>
 
-    <h4 id="ppolicy">Data you directly provide</h4>
-    <p>Data that you provide to the website for the purpose of its operation (e.g., an account name or password, or playlist) will be stored in the website's database until the user decides to remove it. This data will not be intentionally shared with anyone or anything.</p>
-    <p>Information stored about a registered user is limited to:</p>
+    <h4 id="ppolicy">{{ gettext('Data you directly provide') }}</h4>
+<p>{{ gettext('Data that you provide to the website for the purpose of its operation (e.g., an account name or password, or playlist) will be stored in \
+the websites database until the user decides to remove it. This data will not be intentionally shared with anyone or anything') }}.</p>
+<p>{{ gettext('Information stored about a registered user is limited to') }}:</p>
     <ul>
-{#        <li>a list of session tokens for remaining logged in across devices</li>
-        <li>the last time an account was updated (to provide accurate notifications)</li>
-        <li>a list of video IDs identifying notifications from a user's subscriptions</li>
-        <li>a list of channel UCIDs the user is subscribed to</li> #}
-        <li>a user ID (for persistent storage of preferences and playlists) and hashed password</li>
-        <li>a json object containing user preferences</li>
-        <li>a list of video IDs identifying watched videos</li>
+        <li>{{ gettext('a user ID (for persistent storage of preferences and playlists) and hashed password') }}</li>
+        <li>{{ gettext('a json object containing user preferences') }}</li>
+        <li>{{ gettext('a list of video IDs identifying watched videos') }}</li>
     </ul>
-    <p>Users can clear their watch history using the <a href="{{ url_for('user.clear_history') }}"><b><u>clear watch history</u></b></a> page.</p>
+    <p>{{ gettext('Users can clear their watch history using the ') }}<a href="{{ url_for('user.clear_history') }}"><b><u>{{ gettext('clear watch history') }}</u></b></a> page.</p>
 
-    <h4>Data you passively provide</h3>
-    <p>When you request any resource from this website (e.g., a page, font, or image) information about the request may be logged.</p>
-    <p>Information about a request is limited to:</p>
+    <h4>{{ gettext('Data you passively provide') }}</h3>
+    <p>{{ gettext('When you request any resource from this website (e.g., a page, font, or image) information about the request may be logged') }}.</p>
+    <p>{{ gettext('Information about a request is limited to') }}:</p>
     <ul>
-        <li>the time the request was made</li>
-        <li>the status code of the response</li>
-        <li>the method of the request</li>
-        <li>the requested URL</li>
-        <li>how long it took to complete the request.</li>
+        <li>{{ gettext('the time the request was made') }}</li>
+        <li>{{ gettext('the status code of the response') }}</li>
+        <li>{{ gettext('the method of the request') }}</li>
+        <li>{{ gettext('the requested URL') }}</li>
+        <li>{{ gettext('how long it took to complete the request') }}</li>
     </ul>
-    <p>No identifying information is logged, such as the visitor's cookie, user-agent, or full IP address (only the  first /24 bits are stored for geographical feedback). Here are a few lines as an example:</p>
+        <p>
+{{ gettext('No identifying information is logged, such as the visitors cookie, user-agent, or full IP address (only the  first /24 bits are stored for geographical feedback). \
+Here are a few lines as an example') }}:</p>
     <pre><code>114.119.148.0 - - [07/Oct/2020:13:03:31 +0000] "GET /watch?v=S-qr4J20H5M HTTP/1.1" 200 6602 "-" "-"rt=0.739 ua="unix:/run/gunicorn.sock" us="200" uct="0.000" uht="0.740" urt="0.740"
 157.55.39.0 - - [07/Oct/2020:13:03:31 +0000] "GET /watch?v=w6SIKdDmnz8 HTTP/1.1" 200 5156 "-" "-"rt=0.591 ua="unix:/run/gunicorn.sock" us="200" uct="0.000" uht="0.588" urt="0.588"</code></pre>
-    <p>This website does not store the visitor's user-agent or full IP address and does not use fingerprinting, advertisements, or tracking of any form.</p>
+    <p>{{ gettext('This website does not store the visitors user-agent or full IP address and does not use fingerprinting, advertisements, or tracking of any form') }}.</p>
 
 
-    <h4>Data stored in your browser</h3>
-    <p>This website uses browser cookies to authenticate registered users. This data consists of:</p>
+    <h4>{{ gettext('Data stored in your browser') }}</h3>
+    <p>{{ gettext('This website uses browser cookies to authenticate registered users. This data consists of') }}:</p>
     <ul>
-        <li>An account token to keep you logged into the website between visits, which is sent when any page is loaded while you are logged in</li>
+        <li>{{ gettext('An account token to keep you logged into the website between visits, which is sent when any page is loaded while you are logged in') }}</li>
     </ul>
-    <p>This website also provides an option to store site preferences (e.g., theme or locale) without an account. Using this feature will store a cookie in the visitor's browser containing their preferences. This cookie is sent on every request and does not contain any identifying information.</p>
-    <p>You can remove this data from your browser by logging out of this website, or by using your browser's cookie-related controls to delete the data.</p>
+<p>{{ gettext('This website also provides an option to store site preferences (e.g., theme or locale) without an account. Using this feature will store a cookie in \
+the visitors browser containing their preferences. This cookie is sent on every request and does not contain any identifying information') }}.</p>
+<p>{{ gettext('You can remove this data from your browser by logging out of this website, or by using your browsers cookie-related controls to delete the data') }}.</p>
 
-    <h4>Removal of data</h3>
-    <p>To remove data stored in your browser, you can log out of the website, or you can use your browser's cookie-related controls to delete the data.</p>
-    <p>To remove data that has been stored in the website's database, you can use the <a href="{{ url_for('auth.delete') }}"><u><b>delete my account</u></a></b> page.</p>
+<h4>{{ gettext('Removal of data') }}</h3>
+<p>{{ gettext('To remove data stored in your browser, you can log out of the website, or you can use your browsers cookie-related controls to delete the data') }}.</p>
+<p>{{ gettext('To remove data that has been stored in the websites database, you can use the ') }}
+<a href="{{ url_for('auth.delete') }}"><u><b>{{ gettext('delete my account</u></a></b> page') | safe }}.</p>
 </div>
 
 
-<label class="collapse" for="_2"><b><u>Frequently Asked Questions</b></u></label>
+<label class="collapse" for="_2"><b><u>{{ gettext('Frequently Asked Questions') }}</b></u></label>
 <input id="_2" type="checkbox">
 <div>
-     <h4>How can I find videos/channels?</h3>
-      <p>
-      The search bar at the top of every page is the best way to locate channels and videos. Use the minimum number of exact words. YouTube channel and video identifiers can also be used:
-      <a href = "https://www.altcensored.com/search?q=yN4Uu0OlmTg" target="_blank">
+<h4>{{ gettext('How can I find videos/channels?') }}</h3>
+<p>{{ gettext('The search bar at the top of every page is the best way to locate channels and videos. Use the minimum number of exact words. \
+YouTube channel and video identifiers can also be used') }}:</p>
+<a href = "https://www.altcensored.com/search?q=yN4Uu0OlmTg" target="_blank">
 <pre><code>
 <u>https://www.altcensored.com/search?q=yN4Uu0OlmTg</u></a>
 </code></pre>
     </p>
-     <h4>How can I upload my videos/channels?</h3>
-    <p>
-      We receive channel suggestions (preferably through <b>altCensored AT protonmail.com</b>) and add channels that have experienced, or are at-risk of experiencing:
+     <h4>{{ gettext('How can I upload my videos/channels?') }}</h3>
+    <p>{{ gettext('We receive channel suggestions (preferably through <b>altCensored AT protonmail.com</b>) and add channels that have experienced, or are at-risk of experiencing') }}:
       <ul>
-        <li>videos placed in 
+        <li>{{ gettext('videos placed in ') }}
         <a href = "https://support.google.com/youtube/answer/7458465" target="_blank">
-        <b>"<u>Limited State</u>"</b></a> or arbitrarily
+        <b>"<u>{{ gettext('Limited State') }}</u>"</b></a>{{ gettext(' or arbitrarily') }}
         <a href = "https://support.google.com/youtube/answer/2802167" target="_blank">
-        <b><u>age-restricted</u></b></a> by YouTube</li>
-        <li>videos removed or demonetized</li>
-        <li>channel demonetization</li>
+        <b><u>{{ gettext('age-restricted') }}</u></b></a> {{ gettext('by') }} YouTube</li>
+        <li>{{ gettext('videos removed or demonetized') }}</li>
+        <li>{{ gettext('channel demonetization') }}</li>
       </ul>
     </p>
-     <h4>How can I download videos/channels?</h3>
+     <h4>{{ gettext('How can I download videos/channels?') }}</h3>
       <ul>
-        <li>Download videos with "right mouse button click" inside the video window or use the "Download Torrent" link.</li>
-        <li>Channel and Video RSS Feeds contain torrent links to easily download multiple videos with an RSS feed capable torrent client such as
-        <a href = "https://www.qbittorrent.org/" target="_blank">
+        <li>{{ gettext('Download videos with "right mouse button click" inside the video window or use the "Download Torrent" link')  }}.</li>
+        <li>{{ gettext('Channel and Video RSS Feeds contain torrent links to easily download multiple videos with an RSS feed capable torrent client such as') }}
+         <a href = "https://www.qbittorrent.org/" target="_blank">
           <b><u>qBittorrent</u></b></a>.
          </li>
       </ul>
     </p>
     </p>
-     <h4>How can I embed videos?</h3>
-      <p>
-        Videos can be embedded (with or without iframes) using the same syntax as YouTube:
+     <h4>{{ gettext('How can I embed videos?') }}</h3>
+      <p>{{ gettext('Videos can be embedded (with or without iframes) using the same syntax as YouTube') }}:
         <a href = "https://www.youtube.com/embed/yN4Uu0OlmTg" target="_blank">
 <pre><code>
 <u>https://www.youtube.com/embed/yN4Uu0OlmTg</a></u>
@@ -203,17 +200,20 @@ src="https://www.altcensored.com/embed/yN4Uu0OlmTg">
       </td>
     </tr>
   </table>
-</p>
 </div>
+
+
+<a href="{{ url_for('static', filename='altCensored_Channel_Creator_Guide.pdf') }}" target="_blank" >
+<b><u>Channel Creator Guide</b></u></a>&nbsp;&nbsp;|&nbsp;&nbsp;
+<a href="{{ url_for('static', filename='altCensored_Press_Kit.pdf') }}" target="_blank" >
+<b><u>Press Kit</b></u></a>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>   
-<br>
-    <br>
 
+
+
+<p></p>
 {% endblock %}

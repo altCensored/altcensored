@@ -524,11 +524,11 @@ msgstr "Registrarse"
 
 #: templates/auth/auth_index.html:56
 msgid "Sign In/Register"
-msgstr "Sign In/Register"
+msgstr "Iniciar sesión/Registrarse"
 
 #: templates/auth/auth_index.html:57
 msgid "Reset Password"
-msgstr "Iniciar sesión/Registrarse"
+msgstr "Restablecer la contraseña"
 
 #: templates/auth/auth_reset_password.html:16
 msgid "Video"

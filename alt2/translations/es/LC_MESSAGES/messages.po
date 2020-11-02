@@ -104,23 +104,23 @@ msgstr "Historia No Borrada"
 
 #: user.py:177
 msgid "No WatchLater Available"
-msgstr "No Hay WatchLater"
+msgstr "No Hay VerDespues"
 
 #: user.py:234
 msgid "WatchLater Empty"
-msgstr "WatchLater Vacío"
+msgstr "VerDespues Vacío"
 
 #: user.py:237
 msgid "Clear WatchLater"
-msgstr "Borrar WatchLater"
+msgstr "Borrar VerDespues"
 
 #: user.py:246
 msgid "WatchLater Cleared"
-msgstr "WatchLater Borrada"
+msgstr "VerDespues Borrada"
 
 #: user.py:251
 msgid "WatchLater Not Cleared"
-msgstr "WatchLater No Borrada"
+msgstr "VerDespues No Borrada"
 
 #: templates/base.html:63 templates/widgets/playlist.html:104
 msgid "search"
@@ -884,7 +884,7 @@ msgstr "Configuraciones"
 #: templates/widgets/videos.html:46 templates/widgets/videos.html:55
 #: templates/widgets/videos.html:70
 msgid "Add to WatchLater"
-msgstr "Añadir a WatchLater"
+msgstr "Añadir a VerDespues"
 
 #: templates/widgets/widgets_confirm.html:22
 msgid "Yes"

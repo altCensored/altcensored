@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-11-02 14:36-0300\n"
+"POT-Creation-Date: 2020-11-02 16:19-0300\n"
 "PO-Revision-Date: 2020-06-16 19:19+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: de\n"
@@ -17,6 +17,82 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.8.0\n"
+
+#: auth.py:116
+msgid "User does not exist"
+msgstr "Benutzer existiert nicht"
+
+#: auth.py:120
+msgid "Reset password email sent"
+msgstr "Passwort zurücksetzen E-Mail gesendet"
+
+#: auth.py:131
+msgid "Username exists"
+msgstr "Benutzername existiert"
+
+#: auth.py:139
+msgid "Captcha not correct"
+msgstr "Captcha nicht korrekt"
+
+#: auth.py:148
+msgid "Email taken"
+msgstr "E-Mail genommen"
+
+#: auth.py:157
+msgid "Confirmation email sent"
+msgstr "Bestätigungs-E-Mail verschickt"
+
+#: auth.py:180
+msgid "Account not verified. Confirmation email resent"
+msgstr "Konto nicht verifiziert. Bestätigungs-E-Mail erneut gesendet"
+
+#: auth.py:186
+msgid "Email and password combination is invalid"
+msgstr "E-Mail und Passwort-Kombination ist ungültig"
+
+#: auth.py:196
+msgid "The confirmation link is invalid or has expired"
+msgstr "Der Bestätigungslink ist ungültig oder abgelaufen"
+
+#: auth.py:203
+msgid "Account already confirmed. Please login"
+msgstr "Konto bereits bestätigt. Bitte anmelden"
+
+#: auth.py:215
+msgid "Thank-you for confirming your account"
+msgstr "Vielen Dank für die Bestätigung Ihres Kontos"
+
+#: auth.py:224
+msgid "The reset password link is invalid or has expired"
+msgstr "Der Link zum Zurücksetzen des Passworts ist ungültig oder abgelaufen"
+
+#: auth.py:233
+msgid "Password has been updated"
+msgstr "Das Passwort wurde aktualisiert"
+
+#: auth.py:263
+msgid "Delete User "
+msgstr "Benutzer löschen "
+
+#: playlist.py:18
+msgid "Profanity forbidden"
+msgstr "Schimpfworte verboten"
+
+#: playlist.py:19
+msgid "Title exists"
+msgstr "Titel existiert"
+
+#: playlist.py:289
+msgid "Remove Playlist"
+msgstr "Playlist entfernen"
+
+#: user.py:136
+msgid "Clear History"
+msgstr "Geschichte löschen"
+
+#: user.py:231
+msgid "Clear WatchLater"
+msgstr "SpäterAnsehen löschen"
 
 #: templates/base.html:63 templates/widgets/playlist.html:104
 msgid "search"
@@ -400,23 +476,24 @@ msgstr "kanal-demonetisierung"
 
 #: templates/about/about_index.html:161
 msgid "How can I download videos/channels?"
-msgstr "Wie kann ich Videos/Kanäle herunterladen?
+msgstr "Wie kann ich Videos/Kanäle herunterladen"
 
 #: templates/about/about_index.html:163
 msgid ""
 "Download videos with \"right mouse button click\" inside the video window"
 " or use the \"Download Torrent\" link"
 msgstr ""
-"Videos mit \"rechter Maustaste\" innerhalb des Videofensters herunterladen"
-"oder benutzen Sie den Link \"Torrent herunterladen\""
+"Videos mit \"rechter Maustaste\" innerhalb des Videofensters "
+"herunterladenoder benutzen Sie den Link \"Torrent herunterladen\""
 
 #: templates/about/about_index.html:164
 msgid ""
 "Channel and Video RSS Feeds contain torrent links to easily download "
 "multiple videos with an RSS feed capable torrent client such as"
 msgstr ""
-"Kanal- und Video-RSS-Feeds enthalten Torrent-Links zum einfachen Herunterladen "
-"mehrere Videos mit einem RSS-Feed-fähigen Torrent-Client wie"
+"Kanal- und Video-RSS-Feeds enthalten Torrent-Links zum einfachen "
+"Herunterladen mehrere Videos mit einem RSS-Feed-fähigen Torrent-Client "
+"wie"
 
 #: templates/about/about_index.html:171
 msgid "How can I embed videos?"
@@ -427,8 +504,8 @@ msgid ""
 "Videos can be embedded (with or without iframes) using the same syntax as"
 " YouTube"
 msgstr ""
-"Videos können (mit oder ohne Iframes) mit derselben Syntax eingebettet werden wie"
-" YouTube"
+"Videos können (mit oder ohne Iframes) mit derselben Syntax eingebettet "
+"werden wie YouTube"
 
 #: templates/auth/auth_index.html:22 templates/auth/auth_index.html:48
 msgid "Email"
@@ -789,59 +866,3 @@ msgstr "Ja"
 msgid "No"
 msgstr "Nein"
 
-msgid "User does not exist"
-msgstr "Benutzer existiert nicht"
-
-msgid "Reset password email sent"
-msgstr "Passwort zurücksetzen E-Mail gesendet"
-
-msgid "Username exists"
-msgstr "Benutzername existiert"
-
-msgid "Captcha not correct"
-msgstr "Captcha nicht korrekt"
-
-msgid "Email taken"
-msgstr "E-Mail genommen"
-
-msgid "Confirmation email sent"
-msgstr "Bestätigungs-E-Mail verschickt"
-
-msgid "Account not verified. Confirmation email resent"
-msgstr "Konto nicht verifiziert. Bestätigungs-E-Mail erneut gesendet"
-
-msgid "Email and password combination is invalid"
-msgstr "E-Mail und Passwort-Kombination ist ungültig"
-
-msgid "The confirmation link is invalid or has expired"
-msgstr "Der Bestätigungslink ist ungültig oder abgelaufen"
-
-msgid "Account already confirmed. Please login"
-msgstr "Konto bereits bestätigt. Bitte anmelden"
-
-msgid "Thank-you for confirming your account"
-msgstr "Vielen Dank für die Bestätigung Ihres Kontos"
-
-msgid "The reset password link is invalid or has expired"
-msgstr "Der Link zum Zurücksetzen des Passworts ist ungültig oder abgelaufen"
-
-msgid "Password has been updated"
-msgstr "Das Passwort wurde aktualisiert"
-
-msgid "Delete User "
-msgstr "Benutzer löschen "
-
-msgid "Profanity forbidden"
-msgstr "Schimpfworte verboten"
-
-msgid "Title exists"
-msgstr "Titel existiert"
-
-msgid "Remove Playlist"
-msgstr "Playlist entfernen"
-
-msgid "Clear History"
-msgstr "Geschichte löschen"
-
-msgid "Clear WatchLater"
-msgstr "SpäterAnsehen löschen"

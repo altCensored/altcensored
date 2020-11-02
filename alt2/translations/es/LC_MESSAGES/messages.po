@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-11-02 14:36-0300\n"
+"POT-Creation-Date: 2020-11-02 16:19-0300\n"
 "PO-Revision-Date: 2020-06-24 15:39+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es\n"
@@ -18,17 +18,93 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.8.0\n"
 
+#: auth.py:116
+msgid "User does not exist"
+msgstr "El usuario no existe"
+
+#: auth.py:120
+msgid "Reset password email sent"
+msgstr "Restablecer la contraseña enviada por correo electrónico"
+
+#: auth.py:131
+msgid "Username exists"
+msgstr "Usuario existe"
+
+#: auth.py:139
+msgid "Captcha not correct"
+msgstr "Captcha no es correcto"
+
+#: auth.py:148
+msgid "Email taken"
+msgstr "Correo electrónico tomado"
+
+#: auth.py:157
+msgid "Confirmation email sent"
+msgstr "Email de confirmación enviado"
+
+#: auth.py:180
+msgid "Account not verified. Confirmation email resent"
+msgstr "Cuenta no verificada. Email de confirmación reenviado"
+
+#: auth.py:186
+msgid "Email and password combination is invalid"
+msgstr "Combinación de Email y contraseña es inválida"
+
+#: auth.py:196
+msgid "The confirmation link is invalid or has expired"
+msgstr "Enlace de confirmación no es válido o ha caducado"
+
+#: auth.py:203
+msgid "Account already confirmed. Please login"
+msgstr "Cuenta ya confirmada. Por favor, entra"
+
+#: auth.py:215
+msgid "Thank-you for confirming your account"
+msgstr "Gracias por confirmar su cuenta"
+
+#: auth.py:224
+msgid "The reset password link is invalid or has expired"
+msgstr "El enlace para restablecer la contraseña es inválido o ha caducado"
+
+#: auth.py:233
+msgid "Password has been updated"
+msgstr "La contraseña ha sido actualizada"
+
+#: auth.py:263
+msgid "Delete User "
+msgstr "Borrar Usuario "
+
+#: playlist.py:18
+msgid "Profanity forbidden"
+msgstr "Se prohíbe la blasfemia"
+
+#: playlist.py:19
+msgid "Title exists"
+msgstr "El título existe"
+
+#: playlist.py:289
+msgid "Remove Playlist"
+msgstr "Eliminar Playlist"
+
+#: user.py:136
+msgid "Clear History"
+msgstr "Borrar Historia"
+
+#: user.py:231
+msgid "Clear WatchLater"
+msgstr "Borrar WatchLater"
+
 #: templates/base.html:63 templates/widgets/playlist.html:104
 msgid "search"
 msgstr "buscar"
 
 #: templates/base.html:91
 msgid "Log In"
-msgstr ""
+msgstr "Entrar"
 
 #: templates/base.html:95
 msgid "Log Out"
-msgstr ""
+msgstr "Salir"
 
 #: templates/base.html:160
 msgid "Released under the"
@@ -40,7 +116,7 @@ msgstr "Sobre"
 
 #: templates/base.html:169
 msgid "Privacy"
-msgstr ""
+msgstr "Privacidad"
 
 #: templates/base.html:172
 msgid "FAQ"
@@ -165,11 +241,11 @@ msgstr "Enviar sugerencias de canales nuevos a"
 
 #: templates/about/about_index.html:89
 msgid "Privacy Policy"
-msgstr ""
+msgstr "Política de privacidad"
 
 #: templates/about/about_index.html:93
 msgid "Data you directly provide"
-msgstr ""
+msgstr "Datos que proporcionas directamente"
 
 #: templates/about/about_index.html:94
 msgid ""
@@ -178,66 +254,74 @@ msgid ""
 "websites database until the user decides to remove it. This data will not"
 " be intentionally shared with anyone or anything"
 msgstr ""
+"Los datos que proporcione al sitio web con el fin de su funcionamiento "
+"(por ejemplo, un nombre de cuenta o una contraseña, o una lista de reproducción) se almacenarán en la "
+"base de datos de los sitios web hasta que el usuario decida eliminarlos. "
+"compartirse intencionalmente con cualquier persona o cosa"
 
 #: templates/about/about_index.html:96
 msgid "Information stored about a registered user is limited to"
-msgstr ""
+msgstr "La información almacenada sobre un usuario registrado se limita a"
 
 #: templates/about/about_index.html:98
 msgid ""
 "a user ID (for persistent storage of preferences and playlists) and "
 "hashed password"
 msgstr ""
+"una identificación de usuario (para el almacenamiento permanente de preferencias y listas de reproducción) y "
+"una contraseña con hash"
 
 #: templates/about/about_index.html:99
 msgid "a json object containing user preferences"
-msgstr ""
+msgstr "un objeto json que contiene las preferencias del usuario"
 
 #: templates/about/about_index.html:100
 msgid "a list of video IDs identifying watched videos"
-msgstr ""
+msgstr "una lista de ID de video que identifican videos vistos"
 
 #: templates/about/about_index.html:102
 msgid "Users can clear their watch history using the "
-msgstr ""
+msgstr "Los usuarios pueden borrar su historial de reproducciones mediante el"
 
 #: templates/about/about_index.html:102
 msgid "clear watch history"
-msgstr ""
+msgstr "borrar historial de reproducciones"
 
 #: templates/about/about_index.html:104
 msgid "Data you passively provide"
-msgstr ""
+msgstr "Datos que proporciona pasivamente"
 
 #: templates/about/about_index.html:105
 msgid ""
 "When you request any resource from this website (e.g., a page, font, or "
 "image) information about the request may be logged"
 msgstr ""
+"Cuando solicita cualquier recurso de este sitio web (por ejemplo, una página, fuente o "
+"imagen), se puede registrar información sobre la solicitud"
 
 #: templates/about/about_index.html:106
 msgid "Information about a request is limited to"
-msgstr ""
+msgstr "La información sobre una solicitud se limita a"
 
 #: templates/about/about_index.html:108
 msgid "the time the request was made"
-msgstr ""
+msgstr "la hora en que se hizo la solicitud"
 
 #: templates/about/about_index.html:109
 msgid "the status code of the response"
-msgstr ""
+msgstr "la hora en que se hizo la solicitud"
 
 #: templates/about/about_index.html:110
 msgid "the method of the request"
-msgstr ""
+msgstr "el método de la solicitud"
 
 #: templates/about/about_index.html:111
 msgid "the requested URL"
-msgstr ""
+msgstr "la URL solicitada"
 
 #: templates/about/about_index.html:112
 msgid "how long it took to complete the request"
-msgstr ""
+msgstr "cuánto tiempo se tardó en completar la solicitud"
 
 #: templates/about/about_index.html:115
 msgid ""
@@ -245,28 +329,38 @@ msgid ""
 "agent, or full IP address (only the  first /24 bits are stored for "
 "geographical feedback). Here are a few lines as an example"
 msgstr ""
+"No se registra información de identificación, como la cookie de visitantes, el "
+"agente de usuario o la dirección IP completa (solo se almacenan los primeros / 24 bits para "
+"comentarios geográficos). Aquí hay algunas líneas como ejemplo"
+
 
 #: templates/about/about_index.html:119
 msgid ""
 "This website does not store the visitors user-agent or full IP address "
 "and does not use fingerprinting, advertisements, or tracking of any form"
 msgstr ""
+"Este sitio web no almacena el agente de usuario de los visitantes ni la dirección IP completa "
+"y no utiliza huellas dactilares, anuncios ni seguimiento de ningún tipo"
 
 #: templates/about/about_index.html:122
 msgid "Data stored in your browser"
-msgstr ""
+msgstr "Datos almacenados en su navegador"
 
 #: templates/about/about_index.html:123
 msgid ""
 "This website uses browser cookies to authenticate registered users. This "
 "data consists of"
 msgstr ""
+"Este sitio web utiliza cookies del navegador para autenticar a los usuarios registrados. Estos "
+"datos consisten en"
 
 #: templates/about/about_index.html:125
 msgid ""
 "An account token to keep you logged into the website between visits, "
 "which is sent when any page is loaded while you are logged in"
 msgstr ""
+"Un token de cuenta para mantenerlo conectado al sitio web entre visitas",
+"que se envía cuando se carga cualquier página mientras está conectado"
 
 #: templates/about/about_index.html:127
 msgid ""
@@ -275,6 +369,10 @@ msgid ""
 "cookie in the visitors browser containing their preferences. This cookie "
 "is sent on every request and does not contain any identifying information"
 msgstr ""
+"Este sitio web también ofrece una opción para almacenar las preferencias del sitio (por ejemplo,"
+"tema o configuración regional) sin una cuenta. El uso de esta función almacenará una "
+"cookie en el navegador de los visitantes que contiene sus preferencias. Esta cookie "
+"se envía con cada solicitud y no contiene ninguna información de identificación"
 
 #: templates/about/about_index.html:129
 msgid ""
@@ -282,34 +380,41 @@ msgid ""
 "website, or by using your browsers cookie-related controls to delete the "
 "data"
 msgstr ""
+"Puede eliminar estos datos de su navegador cerrando sesión en este "
+"sitio web, o utilizando los controles relacionados con las cookies de su navegador para eliminar los "
+"datos"
 
 #: templates/about/about_index.html:131
 msgid "Removal of data"
-msgstr ""
+msgstr "Eliminación de datos"
 
 #: templates/about/about_index.html:132
 msgid ""
 "To remove data stored in your browser, you can log out of the website, or"
 " you can use your browsers cookie-related controls to delete the data"
 msgstr ""
+"Para eliminar los datos almacenados en su navegador, puede cerrar sesión en el sitio web, o"
+" puede usar los controles relacionados con las cookies de su navegador para eliminar los datos"
 
 #: templates/about/about_index.html:133
 msgid ""
 "To remove data that has been stored in the websites database, you can use"
 " the "
 msgstr ""
+"Para eliminar datos que se han almacenado en la base de datos de sitios web, puede utilizar"
+" el "
 
 #: templates/about/about_index.html:134
 msgid "delete my account</u></a></b> page"
-msgstr ""
+msgstr "página eliminar mi cuenta </u> </a> </b>"
 
 #: templates/about/about_index.html:138
 msgid "Frequently Asked Questions"
-msgstr ""
+msgstr "Preguntas Frecuentes"
 
 #: templates/about/about_index.html:141
 msgid "How can I find videos/channels?"
-msgstr ""
+msgstr "¿Cómo puedo encontrar videos / canales?"
 
 #: templates/about/about_index.html:142
 msgid ""
@@ -317,10 +422,13 @@ msgid ""
 "channels and videos. Use the minimum number of exact words. YouTube "
 "channel and video identifiers can also be used"
 msgstr ""
+"La barra de búsqueda en la parte superior de cada página es la mejor manera de localizar"
+"canales y videos. Use la cantidad mínima de palabras exactas. YouTube "
+"También se pueden usar identificadores de canal y video"
 
 #: templates/about/about_index.html:149
 msgid "How can I upload my videos/channels?"
-msgstr ""
+msgstr "¿Cómo puedo subir mis videos/canales?"
 
 #: templates/about/about_index.html:150
 msgid ""
@@ -328,60 +436,69 @@ msgid ""
 "protonmail.com</b>) and add channels that have experienced, or are at-"
 "risk of experiencing"
 msgstr ""
+"Recibimos sugerencias de canales (preferiblemente a través de <b> altCensored AT "
+"protonmail.com </b>) y agregamos canales que han experimentado o están en "
+"riesgo de experimentar"
 
 #: templates/about/about_index.html:152
 msgid "videos placed in "
-msgstr ""
+msgstr "videos colocados en"
 
 #: templates/about/about_index.html:154
 msgid "Limited State"
-msgstr ""
+msgstr "Estado limitado"
 
 #: templates/about/about_index.html:154
 msgid " or arbitrarily"
-msgstr ""
+msgstr " o arbitrariamente"
 
 #: templates/about/about_index.html:156
 msgid "age-restricted"
-msgstr ""
+msgstr "con restricción de edad"
 
 #: templates/about/about_index.html:156
 msgid "by"
-msgstr ""
+msgstr "por"
 
 #: templates/about/about_index.html:157
 msgid "videos removed or demonetized"
-msgstr ""
+msgstr "videos eliminados o desmonetizados"
 
 #: templates/about/about_index.html:158
 msgid "channel demonetization"
-msgstr ""
+msgstr "desmonetización del canal"
 
 #: templates/about/about_index.html:161
 msgid "How can I download videos/channels?"
-msgstr ""
+msgstr "¿Cómo puedo descargar videos / canales?"
 
 #: templates/about/about_index.html:163
 msgid ""
 "Download videos with \"right mouse button click\" inside the video window"
 " or use the \"Download Torrent\" link"
 msgstr ""
+"Descarga videos con \"clic con el botón derecho del mouse \" dentro de la ventana de video"
+" o usa el enlace\" Descargar Torrent \ "
 
 #: templates/about/about_index.html:164
 msgid ""
 "Channel and Video RSS Feeds contain torrent links to easily download "
 "multiple videos with an RSS feed capable torrent client such as"
 msgstr ""
+"Las fuentes RSS de canales y videos contienen enlaces torrent para descargar fácilmente "
+"varios videos con un cliente de torrents compatible con fuentes RSS como"
 
 #: templates/about/about_index.html:171
 msgid "How can I embed videos?"
-msgstr ""
+msgstr "¿Cómo puedo insertar videos?"
 
 #: templates/about/about_index.html:172
 msgid ""
 "Videos can be embedded (with or without iframes) using the same syntax as"
 " YouTube"
 msgstr ""
+"Los videos se pueden incrustar (con o sin iframes) usando la misma sintaxis que"
+" YouTube"
 
 #: templates/auth/auth_index.html:22 templates/auth/auth_index.html:48
 msgid "Email"
@@ -390,12 +507,12 @@ msgstr ""
 #: templates/auth/auth_index.html:26 templates/auth/auth_index.html:27
 #: templates/auth/auth_index.html:52 templates/auth/auth_index.html:53
 msgid "Password"
-msgstr ""
+msgstr "Contraseña"
 
 #: templates/auth/auth_index.html:30 templates/auth/auth_index.html:31
 #: templates/settings/settings_user_update.html:38
 msgid "Username"
-msgstr ""
+msgstr "Nombre de usuario"
 
 #: templates/auth/auth_index.html:39
 msgid "Captcha"
@@ -403,15 +520,15 @@ msgstr ""
 
 #: templates/auth/auth_index.html:44
 msgid "Register"
-msgstr ""
+msgstr "Registrarse"
 
 #: templates/auth/auth_index.html:56
 msgid "Sign In/Register"
-msgstr ""
+msgstr "Sign In/Register"
 
 #: templates/auth/auth_index.html:57
 msgid "Reset Password"
-msgstr ""
+msgstr "Iniciar sesión/Registrarse"
 
 #: templates/auth/auth_reset_password.html:16
 msgid "Video"
@@ -429,11 +546,11 @@ msgstr "Categoría"
 
 #: templates/auth/auth_reset_password.html:50
 msgid "New Password"
-msgstr ""
+msgstr "Nueva contraseña"
 
 #: templates/auth/auth_reset_password.html:52
 msgid "Update Pasword"
-msgstr ""
+msgstr "Actualiza contraseña"
 
 #: templates/category/category_item.html:47
 #: templates/channel/channel_index.html:66
@@ -616,35 +733,35 @@ msgstr ""
 #: templates/playlist/playlist_item_create_edit.html:29
 #: templates/playlist/playlist_item_create_edit.html:33
 msgid "Title"
-msgstr ""
+msgstr "Título"
 
 #: templates/playlist/playlist_item_create_edit.html:37
 #: templates/playlist/playlist_item_create_edit.html:41
 #: templates/settings/settings_user_update.html:46
 msgid "Description"
-msgstr ""
+msgstr "Descripción"
 
 #: templates/playlist/playlist_item_create_edit.html:45
 #: templates/user/user_item.html:76 templates/user/user_playlist_index.html:79
 #: templates/widgets/playlist.html:63
 msgid "Public"
-msgstr ""
+msgstr "Público"
 
 #: templates/playlist/playlist_item_create_edit.html:58
 msgid "Update Playlist"
-msgstr ""
+msgstr "Actualizar Playlist"
 
 #: templates/playlist/playlist_item_create_edit.html:60
 msgid "Create Playlist"
-msgstr ""
+msgstr "Crear Playlist"
 
 #: templates/settings/settings_index.html:32
 msgid "Site"
-msgstr ""
+msgstr "Sitio"
 
 #: templates/settings/settings_index.html:40 templates/widgets/navtabs.html:56
 msgid "User"
-msgstr ""
+msgstr "Usuario"
 
 #: templates/settings/settings_site.html:55
 msgid "Language"
@@ -652,7 +769,7 @@ msgstr "Idioma"
 
 #: templates/settings/settings_site.html:64
 msgid "Theme"
-msgstr ""
+msgstr "Tema"
 
 #: templates/settings/settings_site.html:73
 msgid "AutoPlay"
@@ -660,11 +777,11 @@ msgstr ""
 
 #: templates/settings/settings_site.html:84
 msgid "Loop List"
-msgstr ""
+msgstr "Repita a Lista"
 
 #: templates/settings/settings_site.html:95
 msgid "Menu"
-msgstr ""
+msgstr "Menú"
 
 #: templates/settings/settings_site.html:116
 msgid "Save"
@@ -672,38 +789,38 @@ msgstr "Salvar"
 
 #: templates/settings/settings_user_update.html:54
 msgid "User Public"
-msgstr ""
+msgstr "Usuario Público"
 
 #: templates/settings/settings_user_update.html:65
 msgid "Featured Playlist"
-msgstr ""
+msgstr "Playlist Destacado"
 
 #: templates/settings/settings_user_update.html:70
 #: templates/video/video_item.html:89
 msgid "Select Playlist"
-msgstr ""
+msgstr "Seleccione Playlist"
 
 #: templates/settings/settings_user_update.html:78
 msgid "Update User"
-msgstr ""
+msgstr "Actualizar Usuario"
 
 #: templates/user/user_history_index.html:32
 msgid "history"
-msgstr ""
+msgstr "historia"
 
 #: templates/user/user_item.html:50 templates/widgets/playlist.html:92
 msgid "History"
-msgstr ""
+msgstr "Historia"
 
 #: templates/user/user_item.html:61
 #: templates/user/user_watchlater_index.html:32
 #: templates/video/video_item.html:94 templates/widgets/playlist.html:98
 msgid "WatchLater"
-msgstr ""
+msgstr "VerDespues"
 
 #: templates/user/user_item.html:79 templates/user/user_playlist_index.html:82
 msgid "Private"
-msgstr ""
+msgstr "Privado"
 
 #: templates/video/video_item.html:67
 msgid "View on"
@@ -715,7 +832,7 @@ msgstr "Descargar Torrent"
 
 #: templates/video/video_item.html:100 templates/widgets/videos.html:33
 msgid "Add to Playlist"
-msgstr ""
+msgstr "Añadir a Playlist"
 
 #: templates/video/video_item.html:134
 msgid "Published on"
@@ -723,274 +840,22 @@ msgstr "Publicado en"
 
 #: templates/video/video_item.html:149
 msgid "AutoPlay Next Video"
-msgstr ""
+msgstr "AutoPlay Siguiente Video"
 
 #: templates/widgets/navtabs.html:40
 msgid "Settings"
-msgstr ""
+msgstr "Configuraciones"
 
 #: templates/widgets/videos.html:46 templates/widgets/videos.html:55
 #: templates/widgets/videos.html:70
 msgid "Add to WatchLater"
-msgstr ""
+msgstr "Añadir a WatchLater"
 
 #: templates/widgets/widgets_confirm.html:22
 msgid "Yes"
-msgstr ""
+msgstr "Sí"
 
 #: templates/widgets/widgets_confirm.html:23
 msgid "No"
 msgstr ""
-
-#~ msgid "%(tab1)s"
-#~ msgstr "video"
-
-#~ msgid "%(tab2)s"
-#~ msgstr "canal"
-
-#~ msgid "%(tab3)s"
-#~ msgstr "categoria"
-
-#~ msgid "archived"
-#~ msgstr "archivado"
-
-#~ msgid "Nav Menu"
-#~ msgstr ""
-
-#~ msgid "Watch History"
-#~ msgstr ""
-
-#~ msgid "Clear Watch History"
-#~ msgstr ""
-
-#~ msgid "Watchlater"
-#~ msgstr ""
-
-#~ msgid "Add to PlayList"
-#~ msgstr ""
-
-#~ msgid "Remove playlist"
-#~ msgstr ""
-
-#~ msgid "User does not exist"
-#~ msgstr ""
-
-#~ msgid "Reset password email sent"
-#~ msgstr ""
-
-#~ msgid "Username exists"
-#~ msgstr ""
-
-#~ msgid "Captcha not correct"
-#~ msgstr ""
-
-#~ msgid "Email taken"
-#~ msgstr ""
-
-#~ msgid "Confirmation email sent"
-#~ msgstr ""
-
-#~ msgid "Account not verified. Confirmation email resent"
-#~ msgstr ""
-
-#~ msgid "Email and password combination is invalid"
-#~ msgstr ""
-
-#~ msgid "The confirmation link is invalid or has expired"
-#~ msgstr ""
-
-#~ msgid "Account already confirmed. Please login"
-#~ msgstr ""
-
-#~ msgid "Thank-you for confirming your account"
-#~ msgstr ""
-
-#~ msgid "The reset password link is invalid or has expired"
-#~ msgstr ""
-
-#~ msgid "Password has been updated"
-#~ msgstr ""
-
-#~ msgid "Delete User "
-#~ msgstr ""
-
-#~ msgid "Profanity forbidden"
-#~ msgstr ""
-
-#~ msgid "Title exists"
-#~ msgstr ""
-
-#~ msgid "Remove Playlist"
-#~ msgstr ""
-
-#~ msgid "Clear History"
-#~ msgstr ""
-
-#~ msgid "Clear WatchLater"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "Data that you provide to the "
-#~ "website for the purpose of its "
-#~ "operation (e.g., an account name or "
-#~ "password, or playlist) will be stored"
-#~ " in\n"
-#~ "        the websites database until the"
-#~ " user decides to remove it. This "
-#~ "data will not be intentionally shared"
-#~ " with anyone or anything."
-#~ msgstr ""
-
-#~ msgid ""
-#~ "Data that you provide to the "
-#~ "website for the purpose of its "
-#~ "operation (e.g., an account name or "
-#~ "password, or playlist) will be stored"
-#~ " in\n"
-#~ "the websites database until the user "
-#~ "decides to remove it. This data "
-#~ "will not be intentionally shared with"
-#~ " anyone or anything."
-#~ msgstr ""
-
-#~ msgid ""
-#~ "No identifying information is logged, "
-#~ "such as the visitors cookie, user-"
-#~ "agent, or full IP address (only "
-#~ "the  first /24 bits are stored for"
-#~ " geographical feedback).\n"
-#~ "        Here are a few lines as an example:"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "This website also provides an option "
-#~ "to store site preferences (e.g., theme"
-#~ " or locale) without an account. Using"
-#~ " this feature will store a cookie "
-#~ "in\n"
-#~ "    the visitors browser containing "
-#~ "their preferences. This cookie is sent"
-#~ " on every request and does not "
-#~ "contain any identifying information."
-#~ msgstr ""
-
-#~ msgid ""
-#~ "The search bar at the top of "
-#~ "every page is the best way to "
-#~ "locate channels and videos. Use the "
-#~ "minimum number of exact words.\n"
-#~ "      YouTube channel and video identifiers can also be used:"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "Data that you provide to the "
-#~ "website for the purpose of its "
-#~ "operation (e.g., an account name or "
-#~ "password, or playlist) will be stored"
-#~ " in the websites database until the"
-#~ " user decides to remove it. This "
-#~ "data will not be intentionally shared"
-#~ " with anyone or anything."
-#~ msgstr ""
-
-#~ msgid "Information stored about a registered user is limited to:"
-#~ msgstr ""
-
-#~ msgid "clear watch history</u></b></a> page."
-#~ msgstr ""
-
-#~ msgid ""
-#~ "When you request any resource from "
-#~ "this website (e.g., a page, font, "
-#~ "or image) information about the request"
-#~ " may be logged."
-#~ msgstr ""
-
-#~ msgid "Information about a request is limited to:"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "No identifying information is logged, "
-#~ "such as the visitors cookie, user-"
-#~ "agent, or full IP address (only "
-#~ "the  first /24 bits are stored for"
-#~ " geographical feedback). Here are a "
-#~ "few lines as an example:"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "This website does not store the "
-#~ "visitors user-agent or full IP "
-#~ "address and does not use fingerprinting,"
-#~ " advertisements, or tracking of any "
-#~ "form."
-#~ msgstr ""
-
-#~ msgid ""
-#~ "This website uses browser cookies to "
-#~ "authenticate registered users. This data "
-#~ "consists of:"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "This website also provides an option "
-#~ "to store site preferences (e.g., theme"
-#~ " or locale) without an account. Using"
-#~ " this feature will store a cookie "
-#~ "in the visitors browser containing their"
-#~ " preferences. This cookie is sent on"
-#~ " every request and does not contain"
-#~ " any identifying information."
-#~ msgstr ""
-
-#~ msgid ""
-#~ "You can remove this data from your"
-#~ " browser by logging out of this "
-#~ "website, or by using your browsers "
-#~ "cookie-related controls to delete the"
-#~ " data."
-#~ msgstr ""
-
-#~ msgid ""
-#~ "To remove data stored in your "
-#~ "browser, you can log out of the"
-#~ " website, or you can use your "
-#~ "browsers cookie-related controls to "
-#~ "delete the data."
-#~ msgstr ""
-
-#~ msgid "delete my account</u></a></b> page."
-#~ msgstr ""
-
-#~ msgid ""
-#~ "The search bar at the top of "
-#~ "every page is the best way to "
-#~ "locate channels and videos. Use the "
-#~ "minimum number of exact words. YouTube"
-#~ " channel and video identifiers can "
-#~ "also be used:"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "We receive channel suggestions (preferably "
-#~ "through <b>altCensored AT protonmail.com</b>) "
-#~ "and add channels that have experienced,"
-#~ " or are at-risk of experiencing:"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "Download videos with \"right mouse "
-#~ "button click\" inside the video window"
-#~ " or use the \"Download Torrent\" "
-#~ "link."
-#~ msgstr ""
-
-#~ msgid ""
-#~ "Videos can be embedded (with or "
-#~ "without iframes) using the same syntax"
-#~ " as YouTube:"
-#~ msgstr ""
-
-#~ msgid "clear watch history</u></b></a> page"
-#~ msgstr ""
 

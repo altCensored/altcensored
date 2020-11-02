@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-11-02 14:36-0300\n"
+"POT-Creation-Date: 2020-11-02 16:19-0300\n"
 "PO-Revision-Date: 2020-07-28 20:05+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: se\n"
@@ -17,6 +17,82 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.8.0\n"
+
+#: auth.py:116
+msgid "User does not exist"
+msgstr ""
+
+#: auth.py:120
+msgid "Reset password email sent"
+msgstr ""
+
+#: auth.py:131
+msgid "Username exists"
+msgstr ""
+
+#: auth.py:139
+msgid "Captcha not correct"
+msgstr ""
+
+#: auth.py:148
+msgid "Email taken"
+msgstr ""
+
+#: auth.py:157
+msgid "Confirmation email sent"
+msgstr ""
+
+#: auth.py:180
+msgid "Account not verified. Confirmation email resent"
+msgstr ""
+
+#: auth.py:186
+msgid "Email and password combination is invalid"
+msgstr ""
+
+#: auth.py:196
+msgid "The confirmation link is invalid or has expired"
+msgstr ""
+
+#: auth.py:203
+msgid "Account already confirmed. Please login"
+msgstr ""
+
+#: auth.py:215
+msgid "Thank-you for confirming your account"
+msgstr ""
+
+#: auth.py:224
+msgid "The reset password link is invalid or has expired"
+msgstr ""
+
+#: auth.py:233
+msgid "Password has been updated"
+msgstr ""
+
+#: auth.py:263
+msgid "Delete User "
+msgstr ""
+
+#: playlist.py:18
+msgid "Profanity forbidden"
+msgstr ""
+
+#: playlist.py:19
+msgid "Title exists"
+msgstr ""
+
+#: playlist.py:289
+msgid "Remove Playlist"
+msgstr ""
+
+#: user.py:136
+msgid "Clear History"
+msgstr ""
+
+#: user.py:231
+msgid "Clear WatchLater"
+msgstr ""
 
 #: templates/base.html:63 templates/widgets/playlist.html:104
 msgid "search"

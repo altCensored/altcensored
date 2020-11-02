@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-11-02 16:19-0300\n"
+"POT-Creation-Date: 2020-11-02 19:39-0300\n"
 "PO-Revision-Date: 2020-06-24 13:44+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -74,7 +74,7 @@ msgstr ""
 msgid "Delete User "
 msgstr ""
 
-#: playlist.py:18
+#: playlist.py:18 settings.py:112
 msgid "Profanity forbidden"
 msgstr ""
 
@@ -86,12 +86,40 @@ msgstr ""
 msgid "Remove Playlist"
 msgstr ""
 
-#: user.py:136
+#: user.py:112 user.py:135
+msgid "History Empty"
+msgstr ""
+
+#: user.py:138
 msgid "Clear History"
 msgstr ""
 
-#: user.py:231
+#: user.py:147
+msgid "History Cleared"
+msgstr ""
+
+#: user.py:150
+msgid "History Not Cleared"
+msgstr ""
+
+#: user.py:177
+msgid "No WatchLater Available"
+msgstr ""
+
+#: user.py:234
+msgid "WatchLater Empty"
+msgstr ""
+
+#: user.py:237
 msgid "Clear WatchLater"
+msgstr ""
+
+#: user.py:246
+msgid "WatchLater Cleared"
+msgstr ""
+
+#: user.py:251
+msgid "WatchLater Not Cleared"
 msgstr ""
 
 #: templates/base.html:63 templates/widgets/playlist.html:104
@@ -1068,5 +1096,11 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "clear watch history</u></b></a> page"
+#~ msgstr ""
+
+#~ msgid "Profanity not allowed"
+#~ msgstr ""
+
+#~ msgid "No Watch Later Available"
 #~ msgstr ""
 

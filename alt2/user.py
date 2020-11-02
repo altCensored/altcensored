@@ -109,7 +109,8 @@ def history(page):
         return render_template('user/user_history_index.html', pagination=pagination, \
                                videos=videos, videocount=videocount, playlist=playlist, watchlater=user.watchlater)
     except:
-        flash('History Empty', 'success')
+        hist_empty = lazy_gettext('History Empty')
+        flash(hist_empty, 'success')
         return redirect(request.args.get('original_url', '/'))
 
 
@@ -131,7 +132,8 @@ def remove_video_history():
 def clear_history():
     user = User.query.filter(User.id == session['user']['id']).scalar()
     if not user.watched:
-        flash('History Empty', 'success')
+        hist_empty = lazy_gettext('History Empty')
+        flash(hist_empty, 'success')
         return redirect(request.args.get('original_url', '/'))
     l_msg = lazy_gettext('Clear History')
     message = l_msg + ' ?'
@@ -142,9 +144,11 @@ def clear_history():
             user.watched = None
             flag_modified(user, "watched")
             db_session.commit()
-            flash('History Cleared', 'success')
+            hist_cleared = lazy_gettext('History Cleared')
+            flash(hist_cleared, 'success')
         else:
-            flash('History Not Cleared', 'error')
+            hist_not_cleared = lazy_gettext('History Not Cleared')
+            flash(hist_not_cleared, 'error')
         return redirect(url_for('user.item', username=session['user']['username']))
 
     return render_template('widgets/widgets_confirm.html', message=message)
@@ -170,7 +174,8 @@ def watchlater(page):
         return render_template('user/user_watchlater_index.html', pagination=pagination, \
                                videos=videos, videocount=videocount, playlist=playlist, watchlater=user.watchlater)
     except:
-        flash('No Watch Later Available', 'success')
+        no_watch = lazy_gettext('No WatchLater Available')
+        flash(no_watch, 'success')
         return redirect(request.args.get('original_url', '/'))
 
 
@@ -226,7 +231,8 @@ def remove_video_watchlater():
 def clear_watchlater():
     user = User.query.filter(User.id == session['user']['id']).scalar()
     if not user.watchlater:
-        flash('WatchLater Empty', 'success')
+        watch_empty = lazy_gettext('WatchLater Empty')
+        flash(watch_empty, 'success')
         return redirect(request.args.get('original_url', '/'))
     l_msg = lazy_gettext('Clear WatchLater')
     message = l_msg + ' ?'
@@ -237,11 +243,13 @@ def clear_watchlater():
             user.watchlater.clear()
             flag_modified(user, "watchlater")
             db_session.commit()
-            flash('WatchLater Cleared', 'success')
+            watch_clear = lazy_gettext('WatchLater Cleared')
+            flash(watch_clear, 'success')
             return redirect(url_for('user.item', username=session['user']['username']))
 
         else:
-            flash('WatchLater Not Cleared', 'error')
+            watch_not_clear = lazy_gettext('WatchLater Not Cleared')
+            flash(watch_not_clear, 'error')
             return redirect(url_for('user.item', username=session['user']['username']))
     return render_template('widgets/widgets_confirm.html', message=message)
 

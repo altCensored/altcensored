@@ -109,11 +109,13 @@ def update_user():
         fpublic = util.str_to_bool(request.form['public'])
         ffeatured_playlist = request.form.get('featured_playlist')
 
+        prof_none = lazy_gettext('Profanity forbidden')
+
         if util.contains_profanity(fusername):
-            flash('Profanity not allowed', 'error')
+            flash(prof_none, 'error')
             return redirect(url_for('settings.update_user'))
         if util.contains_profanity(fdescription):
-            flash('Profanity not allowed', 'error')
+            flash(prof_none, 'error')
             return redirect(url_for('settings.update_user'))
 
         session['user']['username'] = fusername

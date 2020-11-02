@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-11-02 16:19-0300\n"
+"POT-Creation-Date: 2020-11-02 19:39-0300\n"
 "PO-Revision-Date: 2020-06-16 19:19+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: de\n"
@@ -74,7 +74,7 @@ msgstr "Das Passwort wurde aktualisiert"
 msgid "Delete User "
 msgstr "Benutzer löschen "
 
-#: playlist.py:18
+#: playlist.py:18 settings.py:112
 msgid "Profanity forbidden"
 msgstr "Schimpfworte verboten"
 
@@ -86,13 +86,41 @@ msgstr "Titel existiert"
 msgid "Remove Playlist"
 msgstr "Playlist entfernen"
 
-#: user.py:136
+#: user.py:112 user.py:135
+msgid "History Empty"
+msgstr "Geschichte leer"
+
+#: user.py:138
 msgid "Clear History"
 msgstr "Geschichte löschen"
 
-#: user.py:231
+#: user.py:147
+msgid "History Cleared"
+msgstr "Verlauf gelöscht"
+
+#: user.py:150
+msgid "History Not Cleared"
+msgstr "Verlauf nicht gelöscht"
+
+#: user.py:177
+msgid "No WatchLater Available"
+msgstr "Keine Uhr später verfügbar"
+
+#: user.py:234
+msgid "WatchLater Empty"
+msgstr "WatchLater leer"
+
+#: user.py:237
 msgid "Clear WatchLater"
 msgstr "SpäterAnsehen löschen"
+
+#: user.py:246
+msgid "WatchLater Cleared"
+msgstr "WatchLater gelöscht"
+
+#: user.py:251
+msgid "WatchLater Not Cleared"
+msgstr "WatchLater nicht gelöscht"
 
 #: templates/base.html:63 templates/widgets/playlist.html:104
 msgid "search"
@@ -865,4 +893,3 @@ msgstr "Ja"
 #: templates/widgets/widgets_confirm.html:23
 msgid "No"
 msgstr "Nein"
-

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-11-02 16:19-0300\n"
+"POT-Creation-Date: 2020-11-02 19:39-0300\n"
 "PO-Revision-Date: 2020-06-24 15:39+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es\n"
@@ -74,7 +74,7 @@ msgstr "La contraseña ha sido actualizada"
 msgid "Delete User "
 msgstr "Borrar Usuario "
 
-#: playlist.py:18
+#: playlist.py:18 settings.py:112
 msgid "Profanity forbidden"
 msgstr "Se prohíbe la blasfemia"
 
@@ -86,13 +86,41 @@ msgstr "El título existe"
 msgid "Remove Playlist"
 msgstr "Eliminar Playlist"
 
-#: user.py:136
+#: user.py:112 user.py:135
+msgid "History Empty"
+msgstr "Historia Vacío"
+
+#: user.py:138
 msgid "Clear History"
 msgstr "Borrar Historia"
 
-#: user.py:231
+#: user.py:147
+msgid "History Cleared"
+msgstr "Historia Borrada"
+
+#: user.py:150
+msgid "History Not Cleared"
+msgstr "Historia No Borrada"
+
+#: user.py:177
+msgid "No WatchLater Available"
+msgstr "No Hay WatchLater"
+
+#: user.py:234
+msgid "WatchLater Empty"
+msgstr "WatchLater Vacío"
+
+#: user.py:237
 msgid "Clear WatchLater"
 msgstr "Borrar WatchLater"
+
+#: user.py:246
+msgid "WatchLater Cleared"
+msgstr "WatchLater Borrada"
+
+#: user.py:251
+msgid "WatchLater Not Cleared"
+msgstr "WatchLater No Borrada"
 
 #: templates/base.html:63 templates/widgets/playlist.html:104
 msgid "search"
@@ -255,9 +283,10 @@ msgid ""
 " be intentionally shared with anyone or anything"
 msgstr ""
 "Los datos que proporcione al sitio web con el fin de su funcionamiento "
-"(por ejemplo, un nombre de cuenta o una contraseña, o una lista de reproducción) se almacenarán en la "
-"base de datos de los sitios web hasta que el usuario decida eliminarlos. "
-"compartirse intencionalmente con cualquier persona o cosa"
+"(por ejemplo, un nombre de cuenta o una contraseña, o una lista de "
+"reproducción) se almacenarán en la base de datos de los sitios web hasta "
+"que el usuario decida eliminarlos. compartirse intencionalmente con "
+"cualquier persona o cosa"
 
 #: templates/about/about_index.html:96
 msgid "Information stored about a registered user is limited to"
@@ -268,8 +297,8 @@ msgid ""
 "a user ID (for persistent storage of preferences and playlists) and "
 "hashed password"
 msgstr ""
-"una identificación de usuario (para el almacenamiento permanente de preferencias y listas de reproducción) y "
-"una contraseña con hash"
+"una identificación de usuario (para el almacenamiento permanente de "
+"preferencias y listas de reproducción) y una contraseña con hash"
 
 #: templates/about/about_index.html:99
 msgid "a json object containing user preferences"
@@ -296,8 +325,9 @@ msgid ""
 "When you request any resource from this website (e.g., a page, font, or "
 "image) information about the request may be logged"
 msgstr ""
-"Cuando solicita cualquier recurso de este sitio web (por ejemplo, una página, fuente o "
-"imagen), se puede registrar información sobre la solicitud"
+"Cuando solicita cualquier recurso de este sitio web (por ejemplo, una "
+"página, fuente o imagen), se puede registrar información sobre la "
+"solicitud"
 
 #: templates/about/about_index.html:106
 msgid "Information about a request is limited to"
@@ -329,18 +359,19 @@ msgid ""
 "agent, or full IP address (only the  first /24 bits are stored for "
 "geographical feedback). Here are a few lines as an example"
 msgstr ""
-"No se registra información de identificación, como la cookie de visitantes, el "
-"agente de usuario o la dirección IP completa (solo se almacenan los primeros / 24 bits para "
-"comentarios geográficos). Aquí hay algunas líneas como ejemplo"
-
+"No se registra información de identificación, como la cookie de "
+"visitantes, el agente de usuario o la dirección IP completa (solo se "
+"almacenan los primeros / 24 bits para comentarios geográficos). Aquí hay "
+"algunas líneas como ejemplo"
 
 #: templates/about/about_index.html:119
 msgid ""
 "This website does not store the visitors user-agent or full IP address "
 "and does not use fingerprinting, advertisements, or tracking of any form"
 msgstr ""
-"Este sitio web no almacena el agente de usuario de los visitantes ni la dirección IP completa "
-"y no utiliza huellas dactilares, anuncios ni seguimiento de ningún tipo"
+"Este sitio web no almacena el agente de usuario de los visitantes ni la "
+"dirección IP completa y no utiliza huellas dactilares, anuncios ni "
+"seguimiento de ningún tipo"
 
 #: templates/about/about_index.html:122
 msgid "Data stored in your browser"
@@ -351,16 +382,17 @@ msgid ""
 "This website uses browser cookies to authenticate registered users. This "
 "data consists of"
 msgstr ""
-"Este sitio web utiliza cookies del navegador para autenticar a los usuarios registrados. Estos "
-"datos consisten en"
+"Este sitio web utiliza cookies del navegador para autenticar a los "
+"usuarios registrados. Estos datos consisten en"
 
 #: templates/about/about_index.html:125
 msgid ""
 "An account token to keep you logged into the website between visits, "
 "which is sent when any page is loaded while you are logged in"
 msgstr ""
-"Un token de cuenta para mantenerlo conectado al sitio web entre visitas",
-"que se envía cuando se carga cualquier página mientras está conectado"
+"Un token de cuenta para mantenerlo conectado al sitio web entre "
+"visitas\"que se envía cuando se carga cualquier página mientras está "
+"conectado"
 
 #: templates/about/about_index.html:127
 msgid ""
@@ -369,10 +401,11 @@ msgid ""
 "cookie in the visitors browser containing their preferences. This cookie "
 "is sent on every request and does not contain any identifying information"
 msgstr ""
-"Este sitio web también ofrece una opción para almacenar las preferencias del sitio (por ejemplo,"
-"tema o configuración regional) sin una cuenta. El uso de esta función almacenará una "
-"cookie en el navegador de los visitantes que contiene sus preferencias. Esta cookie "
-"se envía con cada solicitud y no contiene ninguna información de identificación"
+"Este sitio web también ofrece una opción para almacenar las preferencias "
+"del sitio (por ejemplo,tema o configuración regional) sin una cuenta. El "
+"uso de esta función almacenará una cookie en el navegador de los "
+"visitantes que contiene sus preferencias. Esta cookie se envía con cada "
+"solicitud y no contiene ninguna información de identificación"
 
 #: templates/about/about_index.html:129
 msgid ""
@@ -380,9 +413,9 @@ msgid ""
 "website, or by using your browsers cookie-related controls to delete the "
 "data"
 msgstr ""
-"Puede eliminar estos datos de su navegador cerrando sesión en este "
-"sitio web, o utilizando los controles relacionados con las cookies de su navegador para eliminar los "
-"datos"
+"Puede eliminar estos datos de su navegador cerrando sesión en este sitio "
+"web, o utilizando los controles relacionados con las cookies de su "
+"navegador para eliminar los datos"
 
 #: templates/about/about_index.html:131
 msgid "Removal of data"
@@ -393,16 +426,17 @@ msgid ""
 "To remove data stored in your browser, you can log out of the website, or"
 " you can use your browsers cookie-related controls to delete the data"
 msgstr ""
-"Para eliminar los datos almacenados en su navegador, puede cerrar sesión en el sitio web, o"
-" puede usar los controles relacionados con las cookies de su navegador para eliminar los datos"
+"Para eliminar los datos almacenados en su navegador, puede cerrar sesión "
+"en el sitio web, o puede usar los controles relacionados con las cookies "
+"de su navegador para eliminar los datos"
 
 #: templates/about/about_index.html:133
 msgid ""
 "To remove data that has been stored in the websites database, you can use"
 " the "
 msgstr ""
-"Para eliminar datos que se han almacenado en la base de datos de sitios web, puede utilizar"
-" el "
+"Para eliminar datos que se han almacenado en la base de datos de sitios "
+"web, puede utilizar el "
 
 #: templates/about/about_index.html:134
 msgid "delete my account</u></a></b> page"
@@ -422,9 +456,9 @@ msgid ""
 "channels and videos. Use the minimum number of exact words. YouTube "
 "channel and video identifiers can also be used"
 msgstr ""
-"La barra de búsqueda en la parte superior de cada página es la mejor manera de localizar"
-"canales y videos. Use la cantidad mínima de palabras exactas. YouTube "
-"También se pueden usar identificadores de canal y video"
+"La barra de búsqueda en la parte superior de cada página es la mejor "
+"manera de localizarcanales y videos. Use la cantidad mínima de palabras "
+"exactas. YouTube También se pueden usar identificadores de canal y video"
 
 #: templates/about/about_index.html:149
 msgid "How can I upload my videos/channels?"
@@ -436,9 +470,9 @@ msgid ""
 "protonmail.com</b>) and add channels that have experienced, or are at-"
 "risk of experiencing"
 msgstr ""
-"Recibimos sugerencias de canales (preferiblemente a través de <b> altCensored AT "
-"protonmail.com </b>) y agregamos canales que han experimentado o están en "
-"riesgo de experimentar"
+"Recibimos sugerencias de canales (preferiblemente a través de <b> "
+"altCensored AT protonmail.com </b>) y agregamos canales que han "
+"experimentado o están en riesgo de experimentar"
 
 #: templates/about/about_index.html:152
 msgid "videos placed in "
@@ -477,16 +511,17 @@ msgid ""
 "Download videos with \"right mouse button click\" inside the video window"
 " or use the \"Download Torrent\" link"
 msgstr ""
-"Descarga videos con \"clic con el botón derecho del mouse \" dentro de la ventana de video"
-" o usa el enlace\" Descargar Torrent \ "
+"Descarga videos con \"clic con el botón derecho del mouse \" dentro de la"
+" ventana de video o usa el enlace\" Descargar Torrent \\ "
 
 #: templates/about/about_index.html:164
 msgid ""
 "Channel and Video RSS Feeds contain torrent links to easily download "
 "multiple videos with an RSS feed capable torrent client such as"
 msgstr ""
-"Las fuentes RSS de canales y videos contienen enlaces torrent para descargar fácilmente "
-"varios videos con un cliente de torrents compatible con fuentes RSS como"
+"Las fuentes RSS de canales y videos contienen enlaces torrent para "
+"descargar fácilmente varios videos con un cliente de torrents compatible "
+"con fuentes RSS como"
 
 #: templates/about/about_index.html:171
 msgid "How can I embed videos?"
@@ -497,8 +532,8 @@ msgid ""
 "Videos can be embedded (with or without iframes) using the same syntax as"
 " YouTube"
 msgstr ""
-"Los videos se pueden incrustar (con o sin iframes) usando la misma sintaxis que"
-" YouTube"
+"Los videos se pueden incrustar (con o sin iframes) usando la misma "
+"sintaxis que YouTube"
 
 #: templates/auth/auth_index.html:22 templates/auth/auth_index.html:48
 msgid "Email"
@@ -858,4 +893,3 @@ msgstr "Sí"
 #: templates/widgets/widgets_confirm.html:23
 msgid "No"
 msgstr ""
-

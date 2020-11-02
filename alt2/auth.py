@@ -22,30 +22,25 @@ from .util import (
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-
 def find_user_by_email(email):
     try:
         return db_session.query(User).filter(User.email == email).one()
     except NoResultFound:
         return None
 
-
 def user_exists(email):
     return find_user_by_email(email) is not None
-
 
 def generate_captcha():
     session['myrandom'] = generate_random()
     session['mycaptcha'] = 'captcha_tmp.png'
     create_captcha(session['myrandom'], session['mycaptcha'])
 
-
 def user_and_password_is_valid(email, password):
     user = find_user_by_email(email)
     if not user:
         return False
     return check_password_hash(user.password, password)
-
 
 def validate_user_email(email):
     try:
@@ -54,18 +49,15 @@ def validate_user_email(email):
     except EmailNotValidError as e:
         return e
 
-
 def email_exist(email):
     if db_session.query(User.email).filter((User.email) == (email)).scalar() is not None:
         return True
-
 
 def username_exist(username):
     if username is None:
         return False
     if db_session.query(User.username).filter(func.lower(User.username) == func.lower(username)).scalar() is not None:
         return True
-
 
 def register_user(email, password, username):
     now = datetime.datetime.now(timezone.utc)
@@ -87,13 +79,11 @@ def register_user(email, password, username):
     db_session.commit()
     return user
 
-
 def send_confirm_email(email):
     token = generate_confirmation_token(email)
     confirm_url = url_for('auth.confirm_email', token=token, _external=True)
     html = render_template('auth/auth_activate.html', confirm_url=confirm_url)
     send_welcome_email(email, html)
-
 
 def send_reset_password_email(email):
     token = generate_confirmation_token(email)
@@ -123,10 +113,12 @@ def login():
 
         if submitvalue == 'reset':
             if not email_exist(email):
-                flash('User does not exist', 'error')
+                no_user = lazy_gettext('User does not exist')
+                flash(no_user, 'error')
                 return redirect(url_for('auth.login'))
             send_reset_password_email(email)
-            flash('Reset password email sent', 'success')
+            reset_pw = lazy_gettext('Reset password email sent')
+            flash(reset_password, 'success')
             return redirect(url_for('video.index'))
 
         if not email_exist(email) and session.get('register_email') is None:
@@ -136,22 +128,25 @@ def login():
 
         if username_exist(username):
             session['register_email'] = email
-            flash('Username exists', 'error')
+            user_does_exist = lazy_gettext('Username exists')
+            flash(user_does_exist, 'error')
             return redirect(url_for('auth.login'))
 
         if submitvalue == 'register':
             captcha = request.form['captcha']
             if captcha.casefold() != session['myrandom'].casefold():
                 generate_captcha()
-                flash('Captcha not correct', 'error')
+                captcha_wrong = lazy_gettext('Captcha not correct')
+                flash(captcha_wrong, 'error')
                 return redirect(url_for('auth.login'))
 
             if util.contains_profanity(username):
-                flash('Profanity not allowed', 'error')
+                flash(no_profanity, 'error')
                 return redirect(url_for('auth.login'))
 
             if email_exist(email):
-                flash('Email taken', 'error')
+                email_taken = lazy_gettext('Email taken')
+                flash(email_taken, 'error')
                 return redirect(url_for('auth.login'))
 
             user = register_user(email, password, username)
@@ -159,7 +154,8 @@ def login():
             session['register_email'] = None
             session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, \
                                    public=user.public, email_verified=user.email_verified)
-            flash('Confirmation email sent', 'success')
+            conf_email_sent = lazy_gettext('Confirmation email sent')
+            flash(conf_email_sent, 'success')
             return redirect(url_for('settings.index'))
 
         if user_and_password_is_valid(email, password):
@@ -181,12 +177,14 @@ def login():
 
             if not user.email_verified:
                 send_confirm_email(email)
-                flash('Account not verified. Confirmation email resent', 'success')
+                conf_email_resent = lazy_gettext('Account not verified. Confirmation email resent')
+                flash(conf_email_resent, 'success')
 
             return redirect(url_for('video.index'))
 
         else:
-            flash('Email and password combination is invalid', 'error')
+            email_pw_bad = lazy_gettext('Email and password combination is invalid')
+            flash(email_pw_bad, 'error')
 
     return render_template('/auth/auth_index.html')
 
@@ -195,13 +193,15 @@ def login():
 def confirm_email(token):
     email = confirm_token(token)
     if email == False:
-        flash('The confirmation link is invalid or has expired', 'error')
+        conf_bad = lazy_gettext('The confirmation link is invalid or has expired')
+        flash(conf_bad, 'error')
         return redirect(url_for('video.index'))
     user = db_session.query(User).filter(User.email==email).one()
     if user.email_verified:
         session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, \
                                public=user.public, email_verified=user.email_verified)
-        flash('Account already confirmed. Please login', 'success')
+        acct_conf = lazy_gettext('Account already confirmed. Please login')
+        flash(acct_conf, 'success')
         return redirect(url_for('video.index'))
     else:
         now = datetime.datetime.now(timezone.utc)
@@ -212,7 +212,8 @@ def confirm_email(token):
         db_session.commit()
         if session.get('user') is not None:
             session['user']['email_verified'] = True
-        flash('You have confirmed your account. Thanks!', 'success')
+        txs_conf = lazy_gettext('Thank-you for confirming your account')
+        flash(txs_conf, 'success')
     return redirect(url_for('video.index'))
 
 
@@ -220,7 +221,8 @@ def confirm_email(token):
 def reset_password(token):
     email = confirm_token(token)
     if email == False:
-        flash('The reset password link is invalid or has expired', 'error')
+        reset_bad = lazy_gettext('The reset password link is invalid or has expired')
+        flash(reset_bad, 'error')
         return redirect(url_for('video.index'))
     if request.method == 'GET':
         return render_template('auth/auth_reset_password.html', locale=util.get_locale(), token=token)
@@ -228,7 +230,8 @@ def reset_password(token):
         password = request.form['password']
         db_session.query(User).filter(User.email == email).update({"password": generate_password_hash(password),})
         db_session.commit()
-        flash('Password has been updated', 'success')
+        pw_updated = lazy_gettext('Password has been updated')
+        flash(pw_updated, 'success')
         return redirect(url_for('video.index'))
 
 

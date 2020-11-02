@@ -15,6 +15,9 @@ from .util import login_required, str_to_bool, title_exists, set_session
 
 bp = Blueprint('playlist', __name__, url_prefix='/playlist')
 
+no_profanity = lazy_gettext('Profanity forbidden')
+title_exist = lazy_gettext('Title exists')
+
 PER_PAGE = 24
 
 @bp.route('/', defaults={'page': 1})
@@ -102,15 +105,15 @@ def create():
         user_id = session['user']['id']
 
         if title_exists(ftitle):
-            flash('Title already exists', 'error')
+            flash(title_exist, 'error')
             return redirect(url_for('playlist.create'))
 
         if util.contains_profanity(ftitle):
-            flash('Profanity not allowed', 'error')
+            flash(no_profanity, 'error')
             return redirect(url_for('playlist.create'))
 
         if util.contains_profanity(fdescription):
-            flash('Profanity not allowed', 'error')
+            flash(no_profanity, 'error')
             return redirect(url_for('playlist.create'))
 
 
@@ -142,16 +145,16 @@ def edit(playlist):
         fpublic = str_to_bool(request.form['public'])
 
         if util.contains_profanity(ftitle):
-            flash('Profanity not allowed', 'error')
-            return redirect(url_for('playlist.create'))
+            flash(no_profanity, 'error')
+            return redirect(url_for('playlist.edit', playlist=playlist.id))
 
         if util.contains_profanity(fdescription):
-            flash('Profanity not allowed', 'error')
-            return redirect(request.args.get('original_url', '/'))
+            flash(no_profanity, 'error')
+            return redirect(url_for('playlist.edit', playlist=playlist.id))
 
         if ftitle != playlist.title and title_exists(ftitle):
-            flash('Title already exists', 'error')
-            return redirect(url_for('playlist.create'))
+            flash(title_exist, 'error')
+            return redirect(url_for('playlist.edit', playlist=playlist.id))
 
         now = datetime.datetime.now(timezone.utc)
         playlist.updated = now
@@ -242,9 +245,6 @@ def add_video_playlist_post():
         flag_modified(playlist, "videos")
         db_session.commit()
 
-#        flash(v, 'success')
-#        flash(p, 'success')
-
         return json.dumps({'v': v})
     else:
         return json.dumps({'v': v})
@@ -286,7 +286,7 @@ def remove_video_playlist():
 @login_required
 def delete(playlist):
     playlistobj = Playlist.query.get(playlist)
-    l_msg = lazy_gettext('Remove playlist')
+    l_msg = lazy_gettext('Remove Playlist')
     item_quoted = (f'"{playlistobj.title}"')
     message = l_msg + ' ' + item_quoted + '?'
 

@@ -51,13 +51,13 @@
                             {% endif %}
                         </div>
                         <div class="pure-control-group">
-                            <label for="Public"> {{ gettext('User Public') }}:</label>
+                            <label for="Public">{{ gettext('User Public') }}:</label>
                             <select name=public>
                                 <option value= "{{session.user.public}}" SELECTED>{{session.user.public}}</option>"
                                 {% if session.user.public %}
-                                    <option value=False>False</option>"
+                                    <option value=False>{{ gettext('False') }}</option>"
                                 {% else %}
-                                    <option value=True>True</option>"
+                                    <option value=True>{{ gettext('True') }}</option>"
                                 {% endif %}
                             </select>
                         </div>

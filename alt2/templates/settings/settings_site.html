@@ -74,9 +74,9 @@
                             <select name=playnext>
                                 <option value="{{session.playnext}}" SELECTED>{{session.playnext}}</option>"
                                 {% if session.playnext %}
-                                    <option value=False>False</option>"
+                                    <option value=False>{{ gettext('False') }}</option>"
                                 {% else %}
-                                    <option value=True>True</option>"
+                                    <option value=True>{{ gettext('True') }}</option>"
                                 {% endif %}
                             </select>
                         </div>
@@ -85,9 +85,9 @@
                             <select name=looplist>
                                 <option value="{{session.looplist}}" SELECTED>{{session.looplist}}</option>"
                                 {% if session.looplist %}
-                                    <option value=False>False</option>"
+                                    <option value=False>{{ gettext('False') }}</option>"
                                 {% else %}
-                                    <option value=True>True</option>"
+                                    <option value=True>{{ gettext('True') }}</option>"
                                 {% endif %}
                             </select>
                         </div>

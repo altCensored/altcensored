@@ -30,7 +30,7 @@
                         <a class="action has-tooltip" onclick="add_video_PlayList('{{ video.extractor_data }}','{{ playlist.hashid }}');">
                             <p class="watchlater">
                                 <i id="{{ video.extractor_data }}" class="ion-md-add" style="font-size: 24px"></i></p>
-                            <p id="ttip{{ playlist.hashid }}" class="tooltip">Add to PlayList</p>
+                            <p id="ttip{{ playlist.hashid }}" class="tooltip">{{ gettext('Add to Playlist') }}</p>
                         </a>
                       {% endif %}
                     {% else %}

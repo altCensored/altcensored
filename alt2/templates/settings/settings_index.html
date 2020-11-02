@@ -29,7 +29,7 @@
                     <div class="pure-u-1 pure-md-1-1">
                         <a href="{{ url_for('settings.update_site') }}">
                             <img height="22px" src="{{ url_for('static', filename='flags/by_locale') }}/{{locale}}.svg">
-                            <b>Site</b></a>
+                            <b>{{ gettext('Site') }}</b></a>
                     </div>
                 </div>
                 {% if session.user %}
@@ -37,14 +37,14 @@
                         <div class="pure-u-1 pure-md-1-1">
                             <a href="{{ url_for('user.item', username=session.user.username) }}">
                                 <i class='ion-ios-contact' style="font-size: 24px"></i>
-                                <b>User</b></a>
+                                <b>{{ gettext('User') }}</b></a>
                         </div>
                     </div>
                     <div class="pure-u-1-3" style="text-align:right;">
                         <div class="pure-u-1 pure-md-1-1">
                             <a href="{{ url_for('user.playlist') }}">
                                 <i class='ion-md-list' style="font-size: 24px"></i>
-                                <b>Playlist</b></a>
+                                <b>{{ gettext('Playlist') }}</b></a>
                         </div>
                     </div>
                 {% endif %}

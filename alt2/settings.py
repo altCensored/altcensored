@@ -5,7 +5,7 @@ from flask import (
     Blueprint, flash, redirect, render_template, request, url_for, current_app, session
 )
 from sqlalchemy import func
-
+from flask_babelplus import lazy_gettext
 from .database import db_session
 from .models import Mv_Video, Mv_Channel, Translation, User, Playlist
 from . import util

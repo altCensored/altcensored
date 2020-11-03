@@ -5,6 +5,7 @@ from .database import db_session
 from .models import Mv_Video, Mv_Channel, Language
 from .pagination import Pagination
 from . import util
+from .util import set_session
 
 bp = Blueprint('language', __name__, url_prefix='/language' )
 

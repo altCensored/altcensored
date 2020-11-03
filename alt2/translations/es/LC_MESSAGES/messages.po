@@ -285,7 +285,7 @@ msgstr ""
 "Los datos que proporcione al sitio web con el fin de su funcionamiento "
 "(por ejemplo, un nombre de cuenta o una contraseña, o una lista de "
 "reproducción) se almacenarán en la base de datos de los sitios web hasta "
-"que el usuario decida eliminarlos. compartirse intencionalmente con "
+"que el usuario decida eliminarlos. Estos datos no se compartirse intencionalmente con "
 "cualquier persona o cosa"
 
 #: templates/about/about_index.html:96
@@ -310,7 +310,7 @@ msgstr "una lista de ID de video que identifican videos vistos"
 
 #: templates/about/about_index.html:102
 msgid "Users can clear their watch history using the "
-msgstr "Los usuarios pueden borrar su historial de reproducciones mediante el"
+msgstr "Los usuarios pueden borrar su historial de reproducciones mediante el "
 
 #: templates/about/about_index.html:102
 msgid "clear watch history"
@@ -339,7 +339,7 @@ msgstr "la hora en que se hizo la solicitud"
 
 #: templates/about/about_index.html:109
 msgid "the status code of the response"
-msgstr "la hora en que se hizo la solicitud"
+msgstr "el código de estado de la respuesta"
 
 #: templates/about/about_index.html:110
 msgid "the method of the request"
@@ -458,7 +458,7 @@ msgid ""
 msgstr ""
 "La barra de búsqueda en la parte superior de cada página es la mejor "
 "manera de localizarcanales y videos. Use la cantidad mínima de palabras "
-"exactas. YouTube También se pueden usar identificadores de canal y video"
+"exactas. También se pueden usar los YouTube identificadores de canal y video"
 
 #: templates/about/about_index.html:149
 msgid "How can I upload my videos/channels?"
@@ -532,7 +532,7 @@ msgid ""
 "Videos can be embedded (with or without iframes) using the same syntax as"
 " YouTube"
 msgstr ""
-"Los videos se pueden incrustar (con o sin iframes) usando la misma "
+"Los videos se pueden insertar (con o sin iframes) usando la misma "
 "sintaxis que YouTube"
 
 #: templates/auth/auth_index.html:22 templates/auth/auth_index.html:48

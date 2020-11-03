@@ -165,7 +165,7 @@ def watch():
         flag_modified(user, "watched")
         db_session.commit()
 
-        if video_id not in user.watchlater:
+        if user.watchlater and (video_id not in user.watchlater):
             not_in_watchlater = True
 
         plists = db_session.query(Playlist).filter(Playlist.user_id == user.id)

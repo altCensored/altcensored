@@ -1,4 +1,7 @@
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, Interval
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, Interval, ARRAY, ForeignKey, BigInteger, JSON
+from sqlalchemy.orm import relationship, backref
+from sqlalchemy.ext.mutable import MutableDict
+
 from alt2.database import Base
 
 class Entity(Base):
@@ -244,5 +247,59 @@ class Language(Base):
         self.lang_code = lang_code        
         self.lang_image_css = lang_image_css
 
-    def __repr__(self):
-        return '<Language %r>' % (self.lang_id)
+
+class User(Base):
+    __tablename__ = 'altcen_user'
+    id = Column(Integer, primary_key=True, nullable=False)
+    email = Column(String, nullable=False)
+    email_verified = Column(Boolean, nullable=False, default=False)
+    password = Column(String, nullable=False)
+    watched = Column(ARRAY(String))
+    watchlater = Column(ARRAY(String))
+    created_date = Column(DateTime, nullable=True)
+    email_verified_date = Column(DateTime, nullable=True)
+    updated = Column(DateTime, nullable=True)
+    navtabs = Column(ARRAY(String))
+    navtabs_index = Column(ARRAY(String))
+    username = Column(String, nullable=True)
+    description = Column(String, nullable=True)
+    public = Column(Boolean, nullable=False, default=False)
+    view_counter = Column(Integer, nullable=True)
+    settings = Column(MutableDict.as_mutable(JSON))
+    featured_playlist = Column(MutableDict.as_mutable(JSON))
+    playlists = relationship("Playlist", cascade="all, delete-orphan")
+
+
+class Playlist(Base):
+    __tablename__ = 'playlist'
+    id = Column(Integer, primary_key=True, nullable=False)
+    hashid = Column(String, nullable=False)
+    title = Column(String, nullable=True)
+    description = Column(String, nullable=True)
+    videos = Column(ARRAY(Integer))
+    video_count = Column(Integer, nullable=True)
+    created = Column(DateTime, nullable=True)
+    updated = Column(DateTime, nullable=True)
+    public = Column(Boolean, nullable=False, default=True)
+    view_counter = Column(Integer, nullable=True)
+    user_id = Column(Integer, ForeignKey('altcen_user.id'), nullable=False)
+    featured_video =  Column(MutableDict.as_mutable(JSON))
+    user = relationship("User", backref="playlist")
+
+
+class Translation(Base):
+    __tablename__ = 'translation'
+    varname = Column(String, primary_key=True, nullable=False)
+    en = Column(String, nullable=False)
+    de = Column(String, nullable=True)
+    es = Column(String, nullable=True)
+    fr = Column(String, nullable=True)
+    pt = Column(String, nullable=True)
+    nl = Column(String, nullable=True)
+    it = Column(String, nullable=True)
+    se = Column(String, nullable=True)
+
+
+class Counter(Base):
+    __tablename__ = 'counter'
+    hash = Column(BigInteger, primary_key=True, nullable=False)

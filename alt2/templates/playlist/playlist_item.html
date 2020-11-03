@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+
+    {% if session.user and session.user.id == playlist.user_id %}
+    {% with active_nav='settings' %}
+        {% include "widgets/navtabs.html" %}
+    {% endwith %}
+    {%  else %}
+        {% with active_nav='playlist' %}
+            {% include "widgets/navtabs.html" %}
+        {% endwith %}
+    {% endif %}
+
+<br>
+
+{% with playlist=playlist %}
+    {% include "widgets/playlist.html" %}
+{% endwith %}
+
+{% with video=video, watchlater=watchlater, playlist=playlist %}
+    {% include "widgets/videos.html" %}
+{% endwith %}
+
+{% if pagination %}
+  {% with pagination=pagination %}
+      {% include "widgets/pagination.html" %}
+  {% endwith %}
+{% endif %}
+
+{% endblock %}

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<<<<<<< HEAD
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:media="http://search.yahoo.com/mrss/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:altcen="http://www.altcensored.com/ns/altcen/">>
+=======
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:media="http://search.yahoo.com/mrss/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:altcen="http://www.altcensored.com/ns/altcen/">
+>>>>>>> new_dev2
     <channel>
       {% if order == 'deleted' %}
         <title>{{ config['MYSERVER_NAME_SHORT'] }}:Channels:Deleted</title>
@@ -30,7 +34,11 @@
               <description>
                 <![CDATA[
                 <a href="https://{{ config['MYSERVER_NAME'] }}{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}">
+<<<<<<< HEAD
                   <img 
+=======
+                  <img
+>>>>>>> new_dev2
                    src="{{ channel['ytc_thumbnailurl'] | reverse | replace('88','671', 1) | reverse  }}" >
                   </style>
                 </a>
@@ -72,3 +80,4 @@
           {% endfor %}
     </channel>
 </rss>
+

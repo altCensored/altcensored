@@ -1,0 +1,139 @@
+{#  <script src="{{ url_for('static', filename='js/altcen.js') }}"></script>  #}
+
+<div class="pure-g">
+  <div class="pure-u-1 pure-u-md-2-24"></div>
+  <div class="pure-u-1 pure-u-md-20-24">
+    <div class="pure-g">
+      {% for video in videos %}
+      <div class="pure-u-1 pure-u-md-1-4">
+        <div class="h-box">
+          {% if playlist %}
+          <a style="width:100%;" href="{{ url_for('video.watch', v=video.extractor_data, playlist=playlist.hashid) }}">
+          {% elif userlist %}
+          <a style="width:100%;" href="{{ url_for('video.watch', v=video.extractor_data, userlist=userlist) }}">
+          {% else %}
+          <a style="width:100%;" href="{{ url_for('video.watch', v=video.extractor_data) }}">
+          {% endif %}
+            <div class="thumbnail">
+              <img class="thumbnail" src="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['title'] | ia_fname ~ '-' ~ video['extractor_data'] ~ '.jpg' }}"onerror="this.onerror=null;this.src='{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}';" >
+
+              {% if video['duration']  is not none %}
+                <p class="length">{{ video['duration'] | hourminsec }}</p>
+              {% else %}
+              {% endif %}
+
+              {% if session.user %}
+                {% if playlist %}
+                  {% if session.user.id == playlist.user_id %}
+                    {% if userlist  %}
+                      {% if userlist and (video.extractor_data not in playlist.videos) %}
+                        <a class="action has-tooltip" onclick="add_video_PlayList('{{ video.extractor_data }}','{{ playlist.hashid }}');">
+                            <p class="watchlater">
+                                <i id="{{ video.extractor_data }}" class="ion-md-add" style="font-size: 24px"></i></p>
+                            <p id="ttip{{ playlist.hashid }}" class="tooltip">{{ gettext('Add to Playlist') }}</p>
+                        </a>
+                      {% endif %}
+                    {% else %}
+                      <a class="action" href="{{ url_for('playlist.remove_video_playlist')}}?v={{video.extractor_data}}&playlist={{playlist.hashid}}&original_url={{ current_url }}">
+                        <p class="watched"> <i class='ion-md-trash' style="font-size: 24px"></p></i>
+                      </a>
+                    {% endif %}
+                  {% else %}
+                      {% if not watchlater or (watchlater and video.extractor_data not in watchlater) %}
+                        <a class="action has-tooltip" onclick="add_video_WatchLater('{{ video.extractor_data }}');">
+                            <p class="watchlater">
+                                <i id="{{ video.extractor_data }}" class="ion-md-time" style="font-size: 24px"></i></p>
+                            <p id="ttip{{ video.extractor_data }}" class="tooltip">{{ gettext('Add to WatchLater') }}</p>
+                        </a>
+                    {% endif %}
+                  {% endif %}
+                {% elif userlist == 'history' %}
+                  {% if not watchlater or (watchlater and video.extractor_data not in watchlater) %}
+                    <a class="action has-tooltip" onclick="add_video_WatchLater('{{ video.extractor_data }}');">
+                        <p class="watchlater">
+                            <i id="{{ video.extractor_data }}" class="ion-md-time" style="font-size: 24px"></i></p>
+                        <p id="ttip{{ video.extractor_data }}" class="tooltip">{{ gettext('Add to WatchLater') }}</p>
+                    </a>
+                  {% endif %}
+                  <a class="action" href="{{ url_for('user.remove_video_history')}}?v={{video.extractor_data}}&original_url={{ current_url }}">
+                    <p class="watched"> <i class='ion-md-trash' style="font-size: 24px"></p></i>
+                  </a>
+                {% elif userlist == 'watchlater' %}
+                  <a class="action" href="{{ url_for('user.remove_video_watchlater')}}?v={{video.extractor_data}}&original_url={{ current_url }}">
+                    <p class="watched"> <i class='ion-md-trash' style="font-size: 24px"></p></i>
+                  </a>
+                {% else%}
+                  {% if not watchlater or (watchlater and video.extractor_data not in watchlater) %}
+                    <a class="action has-tooltip" onclick="add_video_WatchLater('{{ video.extractor_data }}');">
+                        <p class="watchlater">
+                            <i id="{{ video.extractor_data }}" class="ion-md-time" style="font-size: 24px"></i></p>
+                        <p id="ttip{{ video.extractor_data }}" class="tooltip">{{ gettext('Add to WatchLater') }}</p>
+                    </a>
+                  {% endif %}
+                {% endif %}
+              {% endif %}
+            </div>
+          </a>
+          <p>
+            {% if playlist %}
+            <a style="width:100%;" href="{{ url_for('video.watch', v=video['extractor_data'], playlist=playlist.hashid) }}">
+            {% elif userlist %}
+            <a style="width:100%;" href="{{ url_for('video.watch', v=video['extractor_data'], userlist=userlist) }}">
+            {% else %}
+            <a style="width:100%;" href="{{ url_for('video.watch', v=video['extractor_data']) }}">
+            {% endif %}
+            {{ video['title'] }}</a>
+          </p>
+          <p>
+            <b><a style="width:100%;" href="{{ url_for('channel.item', ytc_id=video['ytc_id']) }}">
+            {{ video['ytc_title'] }}</a></b>
+          </p>
+          <h5 class = "pure-g">
+            <div class="pure-u-2-3">
+              {{ gettext('Published') }} {{ video['published'].strftime('%b %e, %G') }}
+            </div>
+            <div class="pure-u-1-3" style="text-align:right">
+              {{ video['yt_views']|viewdisplay }} {{ gettext('views') }}
+            </div>
+          </h5>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+
+<script type="application/javascript">
+  function add_video_WatchLater(vid){
+    fetch('{{ url_for('user.add_video_watchlater_post') }}', {
+      method: 'POST',
+      body: JSON.stringify({
+        'v': vid
+      })
+    });
+    var ttip = "ttip"
+    var ttipid = ttip.concat(vid);
+    var watchlaterIcon = document.getElementById(vid);
+    watchlaterIcon.className="ion-md-checkmark";
+    var tooltip = watchlaterIcon.parentNode.parentNode.querySelector('.tooltip');
+    tooltip.style.display = 'none';
+  }
+
+  function add_video_PlayList(vid, plist){
+    fetch('{{ url_for('playlist.add_video_playlist_post') }}', {
+      method: 'POST',
+      body: JSON.stringify({
+        'v': vid,
+        'p': plist
+      })
+    });
+    var ttip = "ttip"
+    var ttipid = ttip.concat(vid);
+    var playlistIcon = document.getElementById(vid);
+    playlistIcon.className="ion-md-checkmark";
+    var tooltip = playlistIcon.parentNode.parentNode.querySelector('.tooltip');
+    tooltip.style.display = 'none';
+  }
+
+</script>

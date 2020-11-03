@@ -14,50 +14,20 @@
 {% endblock %}
 {% block content %}
 
-  <div class="pure-g">
-    <div class="pure-u-1 pure-u-md-2-24"></div>
-      <div class="pure-u-1 pure-u-md-20-24">
-        <div class="pure-g h-box">
-          <div class="pure-u-1-4"></div>
-            <div class="pure-u-1 pure-u-md-1-2">
-              <div class="pure-g">
-                <div class="pure-u-1-3">
-                  <a href="{{ url_for('video.index') }}" style="text-align:center;" class="pure-menu-heading">
-                  {{ gettext('Video') }}
-                  </a>
-                </div>          
-                <div class="pure-u-1-3">
-                  <a href="{{ url_for('channel.index') }}" style="text-align:center;" class="pure-menu-heading">
-                    {{ gettext('Channel') }}
-                  </a>
-                </div>       
-                <div class="pure-u-1-3">
-                  <a href="{{ url_for('category.index') }}" style="text-align:center;" class="pure-menu-heading">
-                    {{ gettext('Category') }}
-                  </a>
-                </div>  
-              </div>
-            </div>
-          <div class="pure-u-1-4"></div>
-        </div>
-      </div>
-    <div class="pure-u-1 pure-u-md-2-24"></div>
-  </div>
-</div>
-</div>
+{% with active_nav='about' %}
+    {% include "widgets/navtabs.html" %}
+{% endwith %}
 
 <br>
 
-  <div class="pure-g">
-    <div class="pure-u-1 pure-u-md-2-24"></div>
-      <div class="pure-u-1 pure-u-md-20-24">
-        <div class="pure-g">
-
-            <div class="pure-u-1 pure-u-md-1-1">
-              <div class="h-box">
-
-                <p> 
-                  YouTube
+<div class="pure-g">
+  <div class="pure-u-1 pure-u-md-2-24"></div>
+  <div class="pure-u-1 pure-u-md-20-24">
+    <div class="pure-g">
+      <div class="pure-u-1 pure-u-md-1-1">
+        <div class="h-box">
+          <p>
+                YouTube
                   <u><b><a href = "https://youtube.googleblog.com/2017/08/an-update-on-our-commitment-to-fight.html" target="_blank">
                    {{ gettext('limits') }}</a></b></u>
                    {{ gettext('access to videos that are neither') }}
@@ -68,12 +38,12 @@
                    {{ gettext('Terms and Conditions') }}</a></b></u> {{ gettext('or') }}
                   <u><b><a href = "https://www.youtube.com/yt/about/policies/#community-guidelines" target="_blank">
                    {{ gettext('Community Guidelines') }}</a></b></u>.
-                </p>
-                <p>
+          </p>
+          <p>
                   <u><b><a href = "https://support.google.com/youtube/answer/7458465" target="_blank">{{ gettext('"Limited state" videos') }}</a></b></u>
                    {{ gettext('are placed behind a warning message, cannot be shared, monetized or easily found, and have likes, comments, view counts and suggested videos disabled') }}.
-                </p>
-                <p> 
+          </p>
+          <p> 
                   YouTube
                   <u><b><a href = "https://transparencyreport.google.com/youtube-policy/removals" target="_blank">
                    {{ gettext('removes') }}</a></b></u>
@@ -82,10 +52,10 @@
                    {{ gettext('ever-changing') }}</a></b></u> {{ gettext('and') }}
                   <u><b><a href = "http://archive.is/M5wUJ" target="_blank">
                    {{ gettext('arbitrarily enforced') }}</a></b></u>
-                   {{ gettext('Community Guidelines') }}</a></b></u>,
+                   {{ gettext('Community Guidelines') }},
                    {{ gettext('while Creators increasingly "self-censor" trying to avoid channel strikes and terminations') }}.
-                </p>
-                <p>
+          </p>
+          <p>
                   <b>altCensored.com</b>
                    {{ gettext('is an unbiased community catalog of') }}
                   <b><u><a href="{{ url_for('video.index') }}">
@@ -100,8 +70,8 @@
                   <b><u><a href="{{ url_for('channel.archived') }}">
                    {{ archchancount }}</a></b></u>
                    {{ gettext('are being archived in case of deletion') }}.
-                </p>
-                <p>
+          </p>
+          <p>
                   {{ gettext('Find videos and channels using the search bar') }}.
                   {{ gettext('Download videos with "right mouse button click" inside the video window or use the "Download Torrent" link. Channel and Video RSS Feeds') }}
                   ( 
@@ -109,18 +79,141 @@
                   )
                   {{ gettext('contain torrent links to easily download multiple videos') }}.
                   {{ gettext('Embed videos in any website exactly like YouTube') }}.
-                </p>
-                <p>
+          </p>
+          <p>
                   {{ gettext('Email new channel suggestions to') }}
-                  <b>altCensored@protonmail.com</b>.
-                </p>
+                  <b>altCensored AT protonmail.com</b>.
+          </p>
 
+
+<label class="collapse" for="_1"><b><u>{{ gettext('Privacy Policy') }}</b></u></label>
+<input id="_1" type="checkbox">
+<div>
+
+    <h4 id="ppolicy">{{ gettext('Data you directly provide') }}</h4>
+<p>{{ gettext('Data that you provide to the website for the purpose of its operation (e.g., an account name or password, or playlist) will be stored in \
+the websites database until the user decides to remove it. This data will not be intentionally shared with anyone or anything') }}.</p>
+<p>{{ gettext('Information stored about a registered user is limited to') }}:</p>
+    <ul>
+        <li>{{ gettext('a user ID (for persistent storage of preferences and playlists) and hashed password') }}</li>
+        <li>{{ gettext('a json object containing user preferences') }}</li>
+        <li>{{ gettext('a list of video IDs identifying watched videos') }}</li>
+    </ul>
+    <p>{{ gettext('Users can clear their watch history using the ') }}<a href="{{ url_for('user.clear_history') }}"><b><u>{{ gettext('clear watch history') }}</u></b></a> page.</p>
+
+    <h4>{{ gettext('Data you passively provide') }}</h3>
+    <p>{{ gettext('When you request any resource from this website (e.g., a page, font, or image) information about the request may be logged') }}.</p>
+    <p>{{ gettext('Information about a request is limited to') }}:</p>
+    <ul>
+        <li>{{ gettext('the time the request was made') }}</li>
+        <li>{{ gettext('the status code of the response') }}</li>
+        <li>{{ gettext('the method of the request') }}</li>
+        <li>{{ gettext('the requested URL') }}</li>
+        <li>{{ gettext('how long it took to complete the request') }}</li>
+    </ul>
+        <p>
+{{ gettext('No identifying information is logged, such as the visitors cookie, user-agent, or full IP address (only the  first /24 bits are stored for geographical feedback). \
+Here are a few lines as an example') }}:</p>
+    <pre><code>114.119.148.0 - - [07/Oct/2020:13:03:31 +0000] "GET /watch?v=S-qr4J20H5M HTTP/1.1" 200 6602 "-" "-"rt=0.739 ua="unix:/run/gunicorn.sock" us="200" uct="0.000" uht="0.740" urt="0.740"
+157.55.39.0 - - [07/Oct/2020:13:03:31 +0000] "GET /watch?v=w6SIKdDmnz8 HTTP/1.1" 200 5156 "-" "-"rt=0.591 ua="unix:/run/gunicorn.sock" us="200" uct="0.000" uht="0.588" urt="0.588"</code></pre>
+    <p>{{ gettext('This website does not store the visitors user-agent or full IP address and does not use fingerprinting, advertisements, or tracking of any form') }}.</p>
+
+
+    <h4>{{ gettext('Data stored in your browser') }}</h3>
+    <p>{{ gettext('This website uses browser cookies to authenticate registered users. This data consists of') }}:</p>
+    <ul>
+        <li>{{ gettext('An account token to keep you logged into the website between visits, which is sent when any page is loaded while you are logged in') }}</li>
+    </ul>
+<p>{{ gettext('This website also provides an option to store site preferences (e.g., theme or locale) without an account. Using this feature will store a cookie in \
+the visitors browser containing their preferences. This cookie is sent on every request and does not contain any identifying information') }}.</p>
+<p>{{ gettext('You can remove this data from your browser by logging out of this website, or by using your browsers cookie-related controls to delete the data') }}.</p>
+
+<h4>{{ gettext('Removal of data') }}</h3>
+<p>{{ gettext('To remove data stored in your browser, you can log out of the website, or you can use your browsers cookie-related controls to delete the data') }}.</p>
+<p>{{ gettext('To remove data that has been stored in the websites database, you can use the ') }}
+<a href="{{ url_for('auth.delete') }}"><u><b>{{ gettext('delete my account</u></a></b> page') | safe }}.</p>
+</div>
+
+
+<label class="collapse" for="_2"><b><u>{{ gettext('Frequently Asked Questions') }}</b></u></label>
+<input id="_2" type="checkbox">
+<div>
+<h4>{{ gettext('How can I find videos/channels?') }}</h3>
+<p>{{ gettext('The search bar at the top of every page is the best way to locate channels and videos. Use the minimum number of exact words. \
+YouTube channel and video identifiers can also be used') }}:</p>
+<a href = "https://www.altcensored.com/search?q=yN4Uu0OlmTg" target="_blank">
+<pre><code>
+<u>https://www.altcensored.com/search?q=yN4Uu0OlmTg</u></a>
+</code></pre>
+    </p>
+     <h4>{{ gettext('How can I upload my videos/channels?') }}</h3>
+    <p>{{ gettext('We receive channel suggestions (preferably through <b>altCensored AT protonmail.com</b>) and add channels that have experienced, or are at-risk of experiencing') }}:
+      <ul>
+        <li>{{ gettext('videos placed in ') }}
+        <a href = "https://support.google.com/youtube/answer/7458465" target="_blank">
+        <b>"<u>{{ gettext('Limited State') }}</u>"</b></a>{{ gettext(' or arbitrarily') }}
+        <a href = "https://support.google.com/youtube/answer/2802167" target="_blank">
+        <b><u>{{ gettext('age-restricted') }}</u></b></a> {{ gettext('by') }} YouTube</li>
+        <li>{{ gettext('videos removed or demonetized') }}</li>
+        <li>{{ gettext('channel demonetization') }}</li>
+      </ul>
+    </p>
+     <h4>{{ gettext('How can I download videos/channels?') }}</h3>
+      <ul>
+        <li>{{ gettext('Download videos with "right mouse button click" inside the video window or use the "Download Torrent" link')  }}.</li>
+        <li>{{ gettext('Channel and Video RSS Feeds contain torrent links to easily download multiple videos with an RSS feed capable torrent client such as') }}
+         <a href = "https://www.qbittorrent.org/" target="_blank">
+          <b><u>qBittorrent</u></b></a>.
+         </li>
+      </ul>
+    </p>
+    </p>
+     <h4>{{ gettext('How can I embed videos?') }}</h3>
+      <p>{{ gettext('Videos can be embedded (with or without iframes) using the same syntax as YouTube') }}:
+        <a href = "https://www.youtube.com/embed/yN4Uu0OlmTg" target="_blank">
+<pre><code>
+<u>https://www.youtube.com/embed/yN4Uu0OlmTg</a></u>
+<a href = "https://www.altcensored.com/embed/yN4Uu0OlmTg" target="_blank">
+<u>https://www.altcensored.com/embed/yN4Uu0OlmTg</a></u>
+
+&lt;iframe width="640" height="360"
+src="https://www.altcensored.com/embed/yN4Uu0OlmTg">
+&lt;/iframe&gt;
+</code></pre>
+</p>
+</div>
+
+<label class="collapse" for="_3"><b><u>JavaScript Licenses</b></u></label>
+<input id="_3" type="checkbox">
+<div>
+  <p>
+  <table class="pure-table" >
+    <tr>
+      <td>
+        <a href="{{ url_for('static', filename='js/video.min.js') }}" target="_blank" >video.min.js</a>
+      </td>
+      <td>
+        <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache-2.0-only</a>
+      </td>
+      <td>
+        <a href="https://github.com/videojs/video.js" target="_blank">source</a>
+      </td>
+    </tr>
+  </table>
+</div>
+
+
+<a href="{{ url_for('static', filename='altCensored_Channel_Creator_Guide.pdf') }}" target="_blank" >
+<b><u>Channel Creator Guide</b></u></a>&nbsp;&nbsp;|&nbsp;&nbsp;
+<a href="{{ url_for('static', filename='altCensored_Press_Kit.pdf') }}" target="_blank" >
+<b><u>Press Kit</b></u></a>
               </div>
             </div>
-
+          </div>
         </div>
       </div>
-    <div class="pure-u-1 pure-u-md-2-24"></div>
-  </div>   
 
+
+
+<p></p>
 {% endblock %}

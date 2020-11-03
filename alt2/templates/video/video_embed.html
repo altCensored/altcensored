@@ -3,14 +3,25 @@
 <head>
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/darktheme.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/video-js.min.css') }}">
 
+  <style>
+    .vjs-button.vjs-control.vjs-next-button {
+      position: relative;
+      font-size: 2.2em;
+      width: 2em;
+      cursor: pointer;
+    }
+    .vjs-big-play-button {
+      display: none !important;
+    }
+  </style>
 </head>
 
 <html>
+<body>
 
-{% if ia_url  is not none %}
-
-<video preload="auto" playsinline outline="none" controls
+<video id="video-player" class="video-js" preload="auto" playsinline outline="none" controls
 style="outline:none;
     background-color:#000;
     background-size:cover;
@@ -29,61 +40,77 @@ style="outline:none;
     width: 100%;
     overflow-wrap: break-word;
     word-wrap: break-word;"
-
-  poster="{{ ia_url }}.jpg">
-
+    data-setup='{"controls": true, "autoplay": true, "preload": "auto"}'
+    poster="{{ video_url }}.jpg">
   <source
-    src="{{ ia_url }}.mkv"
+    src="{{ video_url }}.mkv"
     type="video/mp4">
   <source
-    src="{{ ia_url }}.mp4"
+    src="{{ video_url }}.mp4"
     type="video/mp4">
   <source
-    src="{{ ia_url }}.ogv"
+    src="{{ video_url }}.ogv"
     type="video/ogg">
   <source
-    src="{{ ia_url }}.webm"
-    type=type='video/webm'>   
-
+    src="{{ video_url }}.webm"
+    type=type='video/webm'>
 </video>
 
-{% else %}
+<script src="{{ url_for('static', filename='js/video.min.js') }}"></script>
 
-<video preload="auto" playsinline outline="none" controls
-style="outline:none;
-    background-color:#000;
-    background-size:cover;
-    display: inline-block;
-    vertical-align: middle;
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
-    margin: 0;
-    padding: 0;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    overflow-wrap: break-word;
-    word-wrap: break-word;"
+<script type="text/javascript">
+  (function(){
+    {% if playnext %}
+    var autoplayEnabled = true;
+    {% else %}
+    var autoplayEnabled = false;
+    {% endif %}
+    var player = videojs('video-player');
+    var nextVideoURL;
+    {% if next_video %}
+      {% if playlist %}
+        nextVideoURL = "/watch?v={{next_video}}&playlist={{playlist.hashid}}"
+      {% elif userlist %}
+        nextVideoURL = "/watch?v={{next_video}}&userlist={{userlist}}"
+      {% else %}
+        nextVideoURL = "/watch?v={{next_video}}"
+      {% endif %}
+    {% endif %}
+    console.log("Next Video URL", nextVideoURL);
+    var Button = videojs.getComponent('Button');
+    var NextButton = videojs.extend(Button, {
+      buildCSSClass () {
+        return 'vjs-next-button vjs-icon-next-item vjs-button vjs-control';
+      },
+      handleClick(event){
+        window.parent.location = nextVideoURL;
+      }
+    });
+    videojs.registerComponent('NextButton', NextButton);
+    if(autoplayEnabled && nextVideoURL){
+      var nextButton = player.controlBar.addChild('NextButton', {}, 1);
+    }
 
-  poster="{{ ac_url }}.jpg">
+    player.on('ended', function(){
+      if(nextVideoURL && autoplayEnabled){
+        window.parent.location = nextVideoURL;
+      };
+    });
 
-  <source
-    src="{{ ac_url }}.mkv"
-    type="video/mp4">
-  <source
-    src="{{ ac_url }}.mp4"
-    type="video/mp4">
-  <source
-    src="{{ ac_url }}.ogv"
-    type="video/ogg">
-  <source
-    src="{{ ac_url }}.webm"
-    type=type='video/webm'>   
+    window.addEventListener('message', function(e) {
+      var msg = JSON.parse(e.data);
+      if(msg.type === 'toggle-play-next'){
+        var checked = msg.checked;
+        autoplayEnabled = checked;
+        if(!checked){
+          player.controlBar.removeChild(nextButton);
+        } else {
+          nextButton = player.controlBar.addChild('NextButton', {}, 1);
+        }
+      }
+    })
+  })();
+</script>
 
-</video>
-
-{% endif %}
+</body>
+</html>

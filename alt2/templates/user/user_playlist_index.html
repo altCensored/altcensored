@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+    {% with active_nav='settings' %}
+        {% include "widgets/navtabs.html" %}
+    {% endwith %}
+
+    <div class="pure-g">
+        <div class="pure-u-1 pure-u-md-2-24"></div>
+        <div class="pure-u-1 pure-u-md-20-24">
+            <div class="pure-g h-box">
+                <div class="pure-u-10-24">
+                    <div class="pure-u-1 pure-md-1-2">
+                    </div>
+                    <div class="pure-u-1 pure-md-1-2">
+                        <i class='ion-md-list'  style="font-size: 24px"></i>
+                        {{ gettext('Playlist') }}:
+                        <b>{{ playlistcount | commafy }}</b>&nbsp;
+                    </div>
+                </div>
+                <div class="pure-u-4-24" style="text-align:center;">
+                    <div class="pure-u-1 pure-md-1-2">
+                    </div>
+                    <div class="pure-u-1 pure-md-1-2">
+                        {% if session.user %}
+                            <a href="{{ url_for('playlist.create') }}">
+                                <i class='ion-md-add-circle-outline' style="font-size: 24px"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="pure-u-10-24" style="text-align:right;">
+                    <div class="pure-u-1 pure-md-1-2">
+                        <a href="{{ url_for('user.playlist',order='newest') }}" class="pure-menu-item {{'selected' if order == 'newest' }}">
+                            {{ gettext('newest') }}</a>
+                    </div>
+                    <div class="pure-u-1 pure-md-1-2">
+                        <a href="{{ url_for('user.playlist',order='popular') }}" class="pure-menu-item {{'selected' if order == 'popular' }}">
+                            {{ gettext('popular') }}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="h-box">
+                <hr>
+            </div>
+        </div>
+    </div>
+
+    <div class="pure-g">
+        <div class="pure-u-1 pure-u-md-2-24"></div>
+        <div class="pure-u-1 pure-u-md-20-24">
+            <div class="pure-g">
+                {% for playlist in playlists %}
+                    <div class="pure-u-1 pure-u-md-1-4">
+                        <div class="h-box">
+                            <a href="{{ url_for('playlist.item', playlist=playlist.hashid ) }}">
+                                {% if playlist.featured_video%}
+                                    <div class="thumbnail">
+                                        <img class="thumbnail" src="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ playlist.featured_video.extractor_data ~ '/' ~ playlist.featured_video.title | ia_fname ~ '-' ~ playlist.featured_video.extractor_data ~ '.jpg' }}"onerror="this.onerror=null;this.src='{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ playlist.featured_video.extractor_data ~ '/__ia_thumb.jpg' }}';" >
+                                    </div>
+                                {% endif %}
+                                <p><b>{{ playlist.title }}</b></a>
+                                {% if playlist.user.featured_playlist and playlist.user.featured_playlist.pl_id == playlist.id %}
+                                    &nbsp;&nbsp;<i class='ion-ios-star'  style="font-size: 20px"></i></a></p>
+                                {% endif %}
+                            </p>
+
+                            <p>{{ playlist.description | linkify | safe }}<p>
+                            <i class='ion-logo-youtube'  style="font-size: 20px"></i>
+                            <b>&nbsp;{{ playlist.video_count }}</b>
+                            <b>&nbsp;|&nbsp;</b>
+                            <i class='ion-md-eye'  style="font-size: 20px"></i>
+                            <b>&nbsp;{{ playlist.view_counter }}</b>
+                            <b>&nbsp;|&nbsp;</b>
+                            {% if playlist.public  %}
+                                <i class='ion-md-globe'  style="font-size: 20px"></i>
+                                <b>{{ gettext('Public') }}</b>
+                            {% else %}
+                                <i class='ion-md-lock'  style="font-size: 20px"></i>
+                                <b>{{ gettext('Private') }}</b>
+                            {% endif %}
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {% from "_helpers.html" import render_pagination %}
+    <div class="pure-u-1 pure-u-md-4-4">
+    <div class="pure-u-1 pure-u-md-4-4">
+        <div class="h-box">
+            {{ render_pagination(pagination) }}
+        </div>
+    </div>
+
+{% endblock %}

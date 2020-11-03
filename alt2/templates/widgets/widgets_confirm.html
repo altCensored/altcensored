@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block head %}
+
+{% endblock %}
+{% block content %}
+
+{% with active_nav='auth' %}
+    {% include "widgets/navtabs.html" %}
+{% endwith %}
+
+<br>
+<div class="pure-g">
+  <div class="pure-u-1 pure-u-md-2-24"></div>
+  <div class="pure-u-1 pure-u-md-20-24">
+    <div class="pure-g">
+      <div class="pure-u-1 pure-u-md-1-1">
+        <div class="h-box">
+          <form class="pure-form pure-form-aligned" method="post">
+            <fieldset>
+              <div class="pure-controls">
+                <label for="message">{{ message }}:&nbsp;</label>
+                <button class="pure-button" type="submit" name="submitvalue" value="yes">{{ gettext('Yes') }}</button>
+                <button class="pure-button" type="submit" name="submitvalue" value="no">{{ gettext('No') }}</button>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

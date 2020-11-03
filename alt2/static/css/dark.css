@@ -7,7 +7,8 @@ body,
 html,
 body,
 :not([style*="color:"]) {
-    color: rgb(186, 173, 148) !important;
+/*    color: rgb(186, 173, 148) !important;  */
+    color: rgb(205, 195, 177) !important; 
 }
 h1:not([style*="color:"]),
 h2:not([style*="color:"]),

@@ -4,7 +4,11 @@ from flask import Flask, send_from_directory, request, url_for, redirect, g, fla
 from flask_seasurf import SeaSurf
 from flask_talisman import Talisman
 from jinja2 import evalcontextfilter, Markup, escape
-from flask_babelplus import Babel, gettext, ngettext
+from flask_babelplus import Babel, gettext, lazy_gettext
+from urllib.parse import quote_plus
+
+import timeago, datetime
+from datetime import timezone
 
 import bleach
 import unicodedata
@@ -50,7 +54,6 @@ def create_app(test_config=None):
         if user is not None:
             return user.timezone 
 
-
     @app.template_filter('viewdisplay')
     def viewdisplay(views):
         if views < 1000:
@@ -73,7 +76,6 @@ def create_app(test_config=None):
         elif (views >= 10000000000) and (views < 1000000000000):
             return str(views // 1000000000) + 'B'
 
-
     @app.template_filter('commafy')
     def commafy(value):
         return "{:,}".format(value)
@@ -90,10 +92,17 @@ def create_app(test_config=None):
     @app.template_filter('hourminsec')
     def secs_to_HMS2(secs):
         if secs < 3600:
-            return time.strftime('%-M:%S', time.gmtime(secs))
+#            return time.strftime('%-M:%S', time.gmtime(secs))
+            m, s = divmod(secs, 60)
+            h, m = divmod(m, 60)
+            return ('{:0>2}:{:0>2}'.format(m, s)).lstrip("0")
+
         else:
-            return time.strftime('%-H:%M:%S', time.gmtime(secs))
- 
+#            return time.strftime('%-H:%M:%S', time.gmtime(secs))
+            m, s = divmod(secs, 60)
+            h, m = divmod(m, 60)
+            return ('{}:{:0>2}:{:0>2}'.format(h, m, s)).lstrip("0")
+
     @app.template_filter('ia_fname')
     def ia_fname(video_title):
         video_title = video_title.replace(':',' -').replace("’",'_')
@@ -117,6 +126,22 @@ def create_app(test_config=None):
             result = Markup(result)
         return result
 
+    @app.context_processor
+    def inject_context():
+        return dict(
+            locale=util.get_locale(),
+            theme=util.get_theme(),
+            playnext=util.get_playnext(),
+            looplist=util.get_looplist(),
+            current_url=quote_plus(request.url),
+            navtabs=util.get_navtabs(),
+            navtabs_index=util.get_navtabs_index(),
+            videocount=util.get_videocount(),
+            channelcount=util.get_channelcount(),
+            delchannelcount=util.get_delchannelcount(),
+            usercount=util.get_usercount(),
+            playlistcount = util.get_playlistcount())
+
     def has_no_empty_params(rule):
         defaults = rule.defaults if rule.defaults is not None else ()
         arguments = rule.arguments if rule.arguments is not None else ()
@@ -125,37 +150,36 @@ def create_app(test_config=None):
     def page_not_found(e):
         return redirect(url_for('video.index'))
 
+    @app.template_filter('time_diff')
+    def time_diff(s):
+        now = datetime.datetime.now(timezone.utc) + datetime.timedelta(seconds=60 * 3.4)
+        return timeago.format(s, now)
+
     app.register_error_handler(404, page_not_found)
     app.register_error_handler(400, page_not_found)
     app.register_error_handler(500, page_not_found)
 
-
-
-#
-# http://flask.pocoo.org/docs/1.0/patterns/sqlalchemy/
-#
     from .database import db_session
 
     @app.teardown_appcontext
     def shutdown_session(exception=None):
         db_session.remove()    
 
-    # apply the blueprints to the app
-    from . import video, channel, about, category, language, settings
+    from . import video, channel, about, category, language, settings, auth, subscription, playlist, theme, user
+
     app.register_blueprint(video.bp)
     app.register_blueprint(channel.bp)
     app.register_blueprint(about.bp)
     app.register_blueprint(category.bp)
     app.register_blueprint(language.bp)
     app.register_blueprint(settings.bp)
-    # app.register_blueprint(auth.bp)
-    # make url_for('index') == url_for('blog.index')
-    # in another app, you might define a separate main index here with
-    # app.route, while giving the blog blueprint a url_prefix, but for
-    # the tutorial the blog will be the main index
+    app.register_blueprint(auth.bp)
+    app.register_blueprint(subscription.bp)
+    app.register_blueprint(playlist.bp)
+    app.register_blueprint(theme.bp)
+    app.register_blueprint(user.bp)
+
     app.add_url_rule('/', endpoint='video.index', defaults={'page': 1})
-
-
 
 
 #    csrf = SeaSurf(app)
@@ -189,23 +213,14 @@ def create_app(test_config=None):
         content_security_policy=csp,
         content_security_policy_nonce_in=['script-src'],
         feature_policy=feature_policy,
-        frame_options='ALLOW_FROM',
         frame_options_allow_from='*'
     )
-
-
-#    @app.route('/favicon.ico')
-#    def favicon():
-#        return send_from_directory(os.path.join(app.root_path, 'static'),
-#                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
         
     def url_for_other_page(page):
         args = request.view_args.copy()
         args['page'] = page
         return url_for(request.endpoint, **args)
 
-
     app.jinja_env.globals['url_for_other_page'] = url_for_other_page
-
 
     return app

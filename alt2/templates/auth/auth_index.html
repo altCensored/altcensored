@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block head %}
+
+{% endblock %}
+{% block content %}
+
+{% with active_nav='user' %}
+    {% include "widgets/navtabs.html" %}
+{% endwith %}
+
+<br>
+<div class="pure-g">
+  <div class="pure-u-1 pure-u-md-2-24"></div>
+  <div class="pure-u-1 pure-u-md-20-24">
+    <div class="pure-g">
+      <div class="pure-u-1 pure-u-md-1-1">
+        <div class="h-box">
+          <form class="pure-form pure-form-aligned" method="post">
+            <fieldset>
+              {% if session.register_email %}
+              <div class="pure-control-group">
+                <label for="email">{{ gettext('Email') }}:</label>
+                <input name="email" id="email" value="{{ session.register_email }}" required>
+              </div>
+              <div class="pure-control-group">
+                <label for="password">{{ gettext('Password') }}:</label>
+                <input type="password" name="password" id="password" placeholder={{ gettext('Password') }} required>
+              </div>
+              <div class="pure-control-group">
+                <label for="username">{{ gettext('Username') }}:</label>
+                <input name="username" id="username" placeholder={{ gettext('Username') }} required>
+              </div>
+
+              <div class="pure-controls">
+                <img class="captcha" src="{{ url_for('static', filename = session.mycaptcha ) }}?{{ range(1, 101) | random }}" />
+              </div>
+
+              <div class="pure-control-group">
+                <label for="captcha">{{ gettext('Captcha') }}:</label>
+                <input name="captcha" id="captcha" placeholder="Captcha" required>
+              </div>
+
+              <div class="pure-controls">
+                <button class="pure-button" type="submit" name="submitvalue" value="register">{{ gettext('Register') }}</button>
+              </div>
+              {% else %}
+              <div class="pure-control-group">
+                <label for="email">{{ gettext('Email') }}:</label>
+                <input name="email" id="email" placeholder="Email" required>
+              </div>
+              <div class="pure-control-group">
+                <label for="password">{{ gettext('Password') }}:</label>
+                <input type="password" name="password" id="password" placeholder={{ gettext('Password') }}>
+              </div>
+              <div class="pure-controls">
+                <button class="pure-button" type="submit" name="submitvalue" value="login">{{ gettext('Sign In/Register') }}</button>
+                <button class="pure-button" type="submit" name="submitvalue" value="reset">{{ gettext('Reset Password') }}</button>
+              </div>
+              {% endif %}
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -5,7 +5,7 @@
 <meta name="keywords" content="{{ video['tags'] }}">
 
 <meta name="twitter:card" content="player">
-<meta name="twitter:image" content="{{ config.IPROXYTWBIG ~ ia_url ~ '.jpg' }}">
+<meta name="twitter:image" content="{{ config.IPROXYTWBIG ~ video_url ~ '.jpg' }}">
 <meta name="twitter:url" content="{{ config['MYSERVER_URL'] }}/watch?v={{ video_id }}">
 <meta name="twitter:player" content="{{ config['MYSERVER_URL'] }}/embed/{{ video_id }}">
 <meta name="twitter:player:width" content="1280">
@@ -15,14 +15,13 @@
 <meta name="twitter:title" content="{{ video['title'] }}">
 <meta name="twitter:description" content="{{ video['description'] }} (Published on {{ video['published'].strftime('%b %e, %G') }})">
 
-
 <meta property="og:site_name" content="{{ config['MYSERVER_NAME'] }}">
 <meta property="og:url" content="https://{{ config['MYSERVER_NAME'] }}/watch?v={{ video['extractor_data'] }}">
 <meta property="og:title" content="{{ video['title'] }}">
 <meta property="og:description" content="{{ video['description'] }} (Published on {{ video['published'].strftime('%b %e, %G') }})">
 <meta property="og:type" content="article">
-<meta property="og:image" content="{{ ia_url }}.jpg">
-<meta property="og:image:secure_url" content="{{ ia_url }}.jpg">
+<meta property="og:image" content="{{ video_url }}.jpg">
+<meta property="og:image:secure_url" content="{{ video_url }}.jpg">
 
 
 <meta name="altcen_title" content=
@@ -33,137 +32,170 @@
 
 <meta name="lc:image" content="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['title'] | ia_fname ~ '-' ~ video['extractor_data'] ~ '.jpg' }}">
 
-
 {% endblock %}
-
 {% block content %}
 
-  <div class="pure-g">
-    <div class="pure-u-1 pure-u-md-2-24"></div>
-      <div class="pure-u-1 pure-u-md-20-24">
-
-<div class="h-box">
-
-  <div style="left: 0px;
-  width: 100%;
-  height: 0px; 
-  position: relative; 
-  padding-bottom: 56.25%">
-
-    <iframe src="{{ config['MYSERVER_URL'] }}/embed/{{ video_id }}" 
-    scrolling="no" frameborder="0" allowfullscreen 
-    allow="autoplay; encrypted-media" 
-    style="top: 0px; left: 0px; width: 100%; height: 100%; position: absolute;">
-    </iframe>
-  </div>
-
-</div>
-
-<div class="pure-u-1 pure-u-md-1-1">
-  <div class="h-box">
-        <h2>{{ video['title'] }}</h2>
-  </div>
-</div>
-
-
 <div class="pure-g">
-    <div class="pure-u-1 pure-u-md-1-5">
-      <div class="h-box">
-
-    
-            <a href="https://www.youtube.com/watch?v={{ video['extractor_data'] }}" target="_blank">
-            {{ gettext('View on') }} YouTube<br>
-            <a href="{{ ia_url_short ~ 'youtube-' ~ video_id ~ '_archive.torrent' }}">
-            {{ gettext('Download Torrent') }}</a><br>
-            
-            
-            <p>YouTube {{ gettext('Views') }}:&nbsp;{{ video['yt_views']|commafy }}<br>
-            
-            {{ gettext('Category') }}:&nbsp;
-            <a href="{{ url_for('category.item', cat_id = cat_id) }}">
-              {{ video['category'] }}
-            </a><br><br>
-
-
-            {% if tags is not none %}
-              {% for tag in tags %}
-                {% if loop.index is lt 13 %}
-                  {% if loop.first %}
-                    <a href=https://{{ config['MYSERVER_NAME'] }}/search?q={{tag|spaceplus}}>
-                      {{tag}}&nbsp;</a>
+  <div class="pure-u-1 pure-u-md-2-24"></div>
+  <div class="pure-u-1 pure-u-md-20-24">
+    <div class="pure-g">
+      <div class="pure-u-1 pure-u-md-1-1">
+        <div class="h-box">
+          <div style="left: 0px;
+          width: 100%;
+          height: 0px;
+          position: relative;
+          padding-bottom: 56.25%">
+                  {% if playlist %}
+                      <iframe id="video-iframe" src="{{ url_for('video.embed', video_id=video_id, playlist=playlist.hashid) }}"
+                  {% elif userlist %}
+                      <iframe id="video-iframe" src="{{ url_for('video.embed', video_id=video_id, userlist=userlist) }}"
                   {% else %}
-                    <b>|</b>
-                    <a href=https://{{ config['MYSERVER_NAME'] }}/search?q={{tag|spaceplus}}>
-                      {{tag}}&nbsp;</a>             
+                      <iframe id="video-iframe" src="{{ url_for('video.embed', video_id=video_id) }}"
                   {% endif %}
-                {% else %}
-                {% endif %}               
+          scrolling="no" frameborder="0" allowfullscreen allow="autoplay;
+          encrypted-media" style="top: 0px; left: 0px; width: 100%; height: 100%; position: absolute;">
+
+          </iframe>
+          </div>
+          <h2>{{ video['title'] }}</h2>
+        </div>
+        <div class="pure-g">
+          <div class="pure-u-1 pure-u-md-1-5">
+            <div class="h-box">
+              <a href="https://www.youtube.com/watch?v={{ video['extractor_data'] }}" target="_blank">
+                {{ gettext('View on') }} YouTube
+              </a>
+              <br>
+              <a href="{{ video_url_short ~ 'youtube-' ~ video_id ~ '_archive.torrent' }}">
+                {{ gettext('Download Torrent') }}
+              </a>
+              <p></p>
+              YouTube {{ gettext('Views') }}:&nbsp;{{ video['yt_views']|commafy }}
+              <br>
+              {{ gettext('Category') }}:&nbsp;
+              <a href="{{ url_for('category.item', cat_id = cat_id) }}">
+               {{ video['category'] }}</a>
+              <p></p>
+
+                {% if session.user %}
+                    <form class="pure-form" method="post" action="{{ url_for('playlist.add_video_playlist') }}">
+                        <input type="hidden" id="v" name="v" value="{{ video_id }}">
+                        <input type="hidden" id="original_url" name="original_url" value="{{ current_url }}">
+                        <fieldset>
+                            <div class="pure-control-group">
+                                <label for="AddtoPlaylist"></label>
+                                <select id="playlist_title" name="playlist_title" >
+                                    <option value="" SELECTED>{{ gettext('Select Playlist') }}</option>
+                                    {% for playlist_title in playlist_titles %}
+                                        <option value="{{ playlist_title }}">{{ playlist_title }}</option>"
+                                    {% endfor %}
+                                {% if not_in_watchlater %}
+                                    <option value="add_to_watchlater">{{ gettext('WatchLater') }}</option>"
+                                {% endif %}
+                                </select>
+                            </div>
+                            <p>
+                            <div class="pure-controls">
+                                <button class="pure-button" type="submit" name="submitvalue">{{ gettext('Add to Playlist') }}</button>
+                            </div></p>
+                        </fieldset>
+                    </form>
+                  {% endif %}
+              {% if tags is not none %}
+                  {% for tag in tags %}
+                      {% if loop.index is lt 13 %}
+              {% if loop.first %}
+              <a href=https://{{ config['MYSERVER_NAME'] }}/search?q={{tag|spaceplus}}>
+              {{tag}}&nbsp;</a>
+              {% else %}
+              <b>|</b>
+              <a href=https://{{ config['MYSERVER_NAME'] }}/search?q={{tag|spaceplus}}>{{tag}}&nbsp;
+              </a>
+              {% endif %}
+              {% else %}
+              {% endif %}
               {% endfor %}
-            {% else %}
-            {% endif %}
-
-      </div>
-    </div>
-    <div class="pure-u-1 pure-u-md-3-5">
-      <div class="h-box">
-            <a href="{{ url_for('channel.item', ytc_id=video['ytc_id']) }}">
-            <img src="{{ channel['ytc_thumbnailurl'] }}" height="35" width="35"></a>&nbsp; &nbsp;
-            <h3 style="display:inline"><a href="{{ url_for('channel.item', ytc_id=video['ytc_id']) }}">{{ video['ytc_title'] }}</a></h3>&nbsp;
-            {% if channel['ytc_deleted'] %}
-             <img style="width:4%" 
-            class="thumbnail" src="https://{{ config['MYSERVER_NAME'] }}/x.gif">
-            </style>
-            {% else %}
-            {% endif %}
-
-            <h4>{{ gettext('Published on') }} {{ video['published'].strftime('%b %e, %G') }}</h4>
-            {{ video['description'] | linkify | safe | nl2br }}
-            <hr>
-     </div>
-    </div>
-    <div class="pure-u-1 pure-u-md-1-5">
-      <div class="h-box">
-          {% for video in videos %}
-
-
-           <a style="width:100%;" href="{{ url_for('video.watch', v=video['extractor_data']) }}">
-            <div class="thumbnail">
-
-
+              {% else %}
+              {% endif %}
+            </div>
+          </div>
+          <div class="pure-u-1 pure-u-md-3-5">
+            <div class="h-box">
+              <a href="{{ url_for('channel.item', ytc_id=video['ytc_id']) }}">
+                <img src="{{ channel['ytc_thumbnailurl'] }}" height="35" width="35"></a>&nbsp; &nbsp;
+                <h3 style="display:inline"><a href="{{ url_for('channel.item', ytc_id=video['ytc_id']) }}">{{ video['ytc_title'] }}
+              </a></h3>&nbsp;
+              {% if channel['ytc_deleted'] %}
+              <img style="width:4%" class="thumbnail" src="https://{{ config['MYSERVER_NAME'] }}/x.gif">
+              </style>
+              {% else %}
+              {% endif %}
+              <h4>{{ gettext('Published on') }} {{ video['published'].strftime('%b %e, %G') }}</h4>
+              {{ video['description'] | linkify | safe | nl2br }}
+              <hr>
+            </div>
+          </div>
+          <div class="pure-u-1 pure-u-md-1-5">
+              <div class="h-box">
+                <form method="post" action="">
+                    {% if playnext %}
+                          <input type="checkbox" id="playnext" name="playnext" value="True" form="addtoplaylist" \
+                            checked onchange="togglePlayNext(event);"
+                    {% else %}
+                          <input type="checkbox" id="playnext" name="playnext" value="False" form="addtoplaylist" \
+                            onchange="togglePlayNext(event);">
+                    {% endif %}
+                    <label for playnext>&nbsp;&nbsp;{{ gettext('AutoPlay Next Video') }} </label>
+                </form>
+              </div>
+            {% for video in videos %}
+            <div class="h-box">
+              {% if playlist %}
+              <a style="width:100%;" href="{{ url_for('video.watch', v=video['extractor_data'], playlist=playlist.hashid) }}">
+              {% elif userlist %}
+              <a style="width:100%;" href="{{ url_for('video.watch', v=video['extractor_data'], userlist=userlist) }}">
+              {% else %}
+              <a style="width:100%;" href="{{ url_for('video.watch', v=video['extractor_data']) }}">
+              {% endif %}
+              <div class="thumbnail">
                 <img class="thumbnail" src="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['title'] | ia_fname ~ '-' ~ video['extractor_data'] ~ '.jpg' }}" onerror="this.onerror=null;this.src='{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}';" >
-                
                 {% if video['duration']  is not none %}
-                  <p class="length">{{ video['duration'] | hourminsec }}</p>
+                <p class="length">{{ video['duration'] | hourminsec }}</p>
                 {% else %}
                 {% endif %}
+              </div>{{ video['title'] }}</a>
+              <h5 class="pure-g">
+                <div class="pure-u-14-24">
+                  <b>
+                    <a style="width:100%;" href="{{ url_for('channel.item', ytc_id=video['ytc_id']) }}">{{ video['ytc_title'] }}
+                    </a></b>
+                </div>
+                <div class="pure-u-10-24" style="text-align:right">
+                  <b>{{ video['yt_views']|viewdisplay }} {{ gettext('views') }}</b>
+                </div>
+              </h5>
             </div>
-
-
-            <a href="{{ url_for('video.watch', v=video['extractor_data']) }}">{{ video['title'] }}</a>
-            <p>
-
-
-                <h5 class="pure-g">
-                    <div class="pure-u-14-24">
-                     <b><a style="width:100%;" href="{{ url_for('channel.item', ytc_id=video['ytc_id']) }}">{{ video['ytc_title'] }}</a></b></p>
-                    </div>
-
-                    <div class="pure-u-10-24" style="text-align:right">
-                                
-                    <b>{{ video['yt_views']|viewdisplay }} {{ gettext('views') }}  </b>
-            
-                    </div>
-                 </h5>
-
-
-
-
-        {% endfor %}
+            {% endfor %}
+          </div>
+        </div>
       </div>
     </div>
+  </div>
 </div>
 
+<script type="application/javascript">
+  function togglePlayNext(event){
+    var checked = event.target.checked;
+    fetch('play-next', {
+      method: 'POST',
+      body: JSON.stringify({
+        'checked': checked
+      })
+    }).then(() => {
+      document.getElementById('video-iframe').contentWindow.postMessage(JSON.stringify({type: 'toggle-play-next', checked: checked}))
+    });
+  }
+</script>
 
 {% endblock %}
-
-     

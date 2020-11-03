@@ -93,7 +93,7 @@ img.thumbnail {
   padding: 2px;
   font-size: 16px;
   font-family: sans-serif;
-  right: 0.5em;
+  right: 0.2em;
   bottom: -0.5em;
 }
 
@@ -102,12 +102,44 @@ img.thumbnail {
   position: absolute;
   background-color: rgba(35, 35, 35, 0.75);
   color: #fff;
-  border-radius: 2px;
-  padding: 4px 8px 4px 8px;
   font-size: 16px;
   font-family: sans-serif;
   left: 0.2em;
   top: -0.7em;
+}
+
+
+.watchlater {
+  z-index: 100;
+  position: absolute;
+  background-color: rgba(35, 35, 35, 0.75);
+  color: #fff;
+  font-size: 16px;
+  font-family: sans-serif;
+  right: 0.2em;
+  top: -0.5em;
+}
+
+
+.has-tooltip .tooltip {
+  display: none;
+}
+
+.has-tooltip:hover .tooltip {
+  display: flex;
+}
+
+.tooltip {
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  background: rgba(35, 35, 35, 0.75);
+  padding: 5px 15px;
+  color: white;
+  right: 19px;
+  top: -4px;
+  height: 18px;
+  font-size: 12px;
 }
 
 /*
@@ -392,4 +424,125 @@ ul.share-buttons img{
 .localization-menu {
   position: relative;
   top: 1px;
+}
+
+/* flash starts */
+
+.flash-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.flash {
+  padding: 10px 25px;
+  margin: 0 auto;
+  font-weight: bold;
+  border-radius: 3px;
+}
+
+.flash.flash-error {
+  background: hsl(0,100%,97%);
+
+  color: red;
+  border: 1px solid red;
+}
+
+.flash.flash-success {
+  background: hsl(100,100%,97%);
+  border: 1px solid hsl(100,100%,40%);
+  color: hsl(100,70%,40%);
+}
+
+.flash.flash-success .flash-dismiss-button {
+  color: hsl(100,100%,30%);
+}
+
+.flash.flash-success .flash-dismiss-button:hover {
+  background: hsl(100,100%,90%);
+}
+
+.flash.flash-error .flash-dismiss-button {
+  color: hsl(0,100%,50%);
+}
+
+.flash.flash-error .flash-dismiss-button:hover {
+  background: hsl(0,100%,90%);
+}
+
+.flash-container {
+  display: flex;
+}
+
+.flash {
+  display: flex;
+  position: relative;
+}
+
+.flash-dismiss-button {
+  cursor: pointer;
+  position: relative;
+}
+
+.flash-dismiss-button:hover {
+  border-radius: 5px;
+}
+
+.flash-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flash-inner-container {
+  position: relative;
+}
+
+.flash-message {
+  margin-right: 10px;
+}
+
+.flash-dismiss-button {
+  cursor: pointer;
+  position: absolute;
+  right: 9px;
+  top: 15px;
+  z-index: 99;
+}
+
+.flash-dismiss-button:hover {
+  color: hsl(100,70%,20%);
+}
+
+.flash-dismiss-button:checked {
+  display: none;
+}
+
+.flash-dismiss-button:checked ~ div {
+  display: none;
+}
+
+.pure-menu-heading.selected {
+  font-weight: bold;
+}
+
+
+.pure-menu-item.selected {
+  font-weight: bold;
+}
+
+.collapse{
+  cursor: pointer;
+  display: block;
+/*  background: #cdf; */
+}
+.collapse + input{
+  display: none; /* hide the checkboxes */
+}
+.collapse + input + div{
+  display:none;
+}
+.collapse + input:checked + div{
+  display:block;
 }

@@ -124,7 +124,7 @@ def set_session() -> object:
         pass
     else:
 #        my_session = str(session['locale'])
-        row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, locale)).all()
+        row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, 'en')).all()
 #        row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, session['locale'])).all()
         rowtuple = tuple(row)
         session['navtabs'] = dict(rowtuple)

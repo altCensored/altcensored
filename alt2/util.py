@@ -16,7 +16,8 @@ def get_locale():
     if 'locale' in session:
         return session['locale']
     else:
-        session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys())
+        session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys(), default='en')
+#        session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys())
     return session['locale']
 
 def get_theme():
@@ -103,7 +104,8 @@ def set_session() -> object:
     if 'locale' in session:
         pass
     else:
-        session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys())
+#        session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys())
+        session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys(), default='en')
 
     if  'theme' in session:
         pass
@@ -123,6 +125,7 @@ def set_session() -> object:
     if 'navtabs' in session:
         pass
     else:
+        session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys(), default='en')
         row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, session['locale'])).all()
         rowtuple = tuple(row)
         session['navtabs'] = dict(rowtuple)

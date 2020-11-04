@@ -96,6 +96,7 @@ def watch():
     cat_name = video.category
     tagstring = video.tags
     session['first_vid_pub'] = video.published
+    session.modified = True
 
     try:
         tags = tagstring.split(",")

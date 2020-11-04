@@ -240,8 +240,11 @@ def embed(video_id):
             videos_extractor_list = [r[0] for r in videos]
             videos_extractor_list.reverse()
 
-            idx = (videos_extractor_list).index(video.extractor_data)
-            listlen = len(videos_extractor_list)
+            try:
+                idx = (videos_extractor_list).index(video.extractor_data)
+            except:
+                pass
+#            listlen = len(videos_extractor_list)
             next_video = (videos_extractor_list).pop(idx - 1)
             videos_extractor_list.remove(video_id)
             if not session.get('looplist') and idx == 0:

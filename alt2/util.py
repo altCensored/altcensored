@@ -140,7 +140,7 @@ def set_session() -> object:
     if 'navtabs_perm' in session:
         pass
     else:
-        session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys())
+        session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys(), default='en')
         row = db_session.query(Translation).with_entities(Translation.varname,
                                                           getattr(Translation, session['locale'])).all()
         rowtuple = tuple(row)

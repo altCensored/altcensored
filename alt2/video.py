@@ -246,7 +246,10 @@ def embed(video_id):
                 idx = len(videos_extractor_list)
 #            listlen = len(videos_extractor_list)
             next_video = (videos_extractor_list).pop(idx - 1)
-            videos_extractor_list.remove(video_id)
+            try:
+                videos_extractor_list.remove(video_id)
+            except:
+                pass
             if not session.get('looplist') and idx == 0:
                 next_video = None
 

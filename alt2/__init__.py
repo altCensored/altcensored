@@ -142,6 +142,11 @@ def create_app(test_config=None):
             usercount=util.get_usercount(),
             playlistcount = util.get_playlistcount())
 
+    @app.before_request
+    def before_req():
+        util.set_session()
+
+
     def has_no_empty_params(rule):
         defaults = rule.defaults if rule.defaults is not None else ()
         arguments = rule.arguments if rule.arguments is not None else ()

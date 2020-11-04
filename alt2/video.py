@@ -243,7 +243,7 @@ def embed(video_id):
             try:
                 idx = (videos_extractor_list).index(video.extractor_data)
             except:
-                pass
+                idx = len(videos_extractor_list)
 #            listlen = len(videos_extractor_list)
             next_video = (videos_extractor_list).pop(idx - 1)
             videos_extractor_list.remove(video_id)

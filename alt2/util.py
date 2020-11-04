@@ -123,8 +123,9 @@ def set_session() -> object:
     if 'navtabs' in session:
         pass
     else:
-        session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys())
-        row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, session['locale'])).all()
+        my_session = str(session['locale'])
+        row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, my_session)).all()
+#        row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, session['locale'])).all()
         rowtuple = tuple(row)
         session['navtabs'] = dict(rowtuple)
 

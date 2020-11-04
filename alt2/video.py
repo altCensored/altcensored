@@ -228,8 +228,12 @@ def embed(video_id):
                 next_video = None
 
     else:
-        videos = db_session.query(Mv_Video.extractor_data).filter(Mv_Video.ytc_id == video.ytc_id,
+        try:
+            videos = db_session.query(Mv_Video.extractor_data).filter(Mv_Video.ytc_id == video.ytc_id,
                                                                   Mv_Video.published <= session['first_vid_pub']) \
+            .order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE)
+        except:
+            videos = db_session.query(Mv_Video.extractor_data).filter(Mv_Video.ytc_id == video.ytc_id) \
             .order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE)
 
         if videos.count() > 1:

@@ -100,10 +100,10 @@ def set_session() -> object:
     """
     :rtype: object
     """
-    if 'locale' in session:
-        pass
-    else:
-        session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys())
+#    if 'locale' in session:
+#        pass
+#    else:
+#        session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys())
 
     if  'theme' in session:
         pass
@@ -123,8 +123,8 @@ def set_session() -> object:
     if 'navtabs' in session:
         pass
     else:
-        my_session = str(session['locale'])
-        row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, my_session)).all()
+#        my_session = str(session['locale'])
+        row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, locale)).all()
 #        row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, session['locale'])).all()
         rowtuple = tuple(row)
         session['navtabs'] = dict(rowtuple)

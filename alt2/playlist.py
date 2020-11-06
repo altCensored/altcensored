@@ -37,10 +37,11 @@ def index(page):
     if not playlists and page != 1:
         abort(404)
 
-    pagination = Pagination(page, PER_PAGE, session['playlistcount'])
+    playlistcount = playlists.count()
+    pagination = Pagination(page, PER_PAGE, playlistcount)
 
     return render_template('playlist/playlist_index.html',
-                           pagination=pagination, playlists=playlists, order=order)
+                           pagination=pagination, playlists=playlists, playlistcount=playlistcount, order=order)
 
 @bp.route('/<playlist>', defaults={'page': 1})
 @bp.route('/<playlist>/page/<int:page>')

@@ -175,8 +175,8 @@ def watch():
             if video_id not in plist.videos:
                 playlist_titles.append(plist.title)
 
-    return render_template('video/video_item.html', video_url=video_url, video_url_short=video_url_short, \
-                           video_id=video_id, channel=channel, video=video, videos=videos, cat_id=cat_id, tags=tags, \
+    return render_template('video/video_item.html', video_url=video_url, video_url_short=video_url_short,
+                           video_id=video_id, channel=channel, video=video, videos=videos, cat_id=cat_id, tags=tags,
                            playlist=playlist, userlist=userlist, not_in_watchlater=not_in_watchlater,
                            playlist_titles=playlist_titles)
 

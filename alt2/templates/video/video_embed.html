@@ -21,7 +21,7 @@
 <html>
 <body>
 
-<video id="video-player" class="video-js"
+<video id="video-player" class="video-js" preload="auto" playsinline outline="none" controls
 style="outline:none;
     background-color:#000;
     background-size:cover;
@@ -40,6 +40,7 @@ style="outline:none;
     width: 100%;
     overflow-wrap: break-word;
     word-wrap: break-word;"
+    data-setup='{"controls": true, "autoplay": true, "preload": "auto"}'
     poster="{{ video_url }}.jpg">
   <source
     src="{{ video_url }}.mkv"
@@ -54,6 +55,7 @@ style="outline:none;
     src="{{ video_url }}.webm"
     type=type='video/webm'>
 </video>
+
 
 <script src="{{ url_for('static', filename='js/video.min.js') }}"></script>
 

@@ -21,7 +21,7 @@
 <html>
 <body>
 
-<video id="video-player" preload="auto" playsinline outline="none" controls
+<video id="video-player" class="video-js" preload="auto" playsinline outline="none" controls
 style="outline:none;
     background-color:#000;
     background-size:cover;
@@ -40,11 +40,9 @@ style="outline:none;
     width: 100%;
     overflow-wrap: break-word;
     word-wrap: break-word;"
-
+    data-setup='{"controls": true, "autoplay": true, "preload": "auto"}'
     poster="{{ video_url }}.jpg">
-  <source
-    src="{{ video_url }}.mkv"
-    type="video/mp4">
+
   <source
     src="{{ video_url }}.mp4"
     type="video/mp4">
@@ -54,24 +52,67 @@ style="outline:none;
   <source
     src="{{ video_url }}.webm"
     type=type='video/webm'>
+
+  <source src="{{ video_url }}.mkv"
+          type="video/mp4">
 </video>
 
-<script nonce="{{ csp_nonce() }}" type="text/javascript">
-  document.getElementById('video-player').play();
-  {% if next_video %}
-    document.getElementById('video-player').addEventListener('ended', function(){
-    {% if playlist %}
-    window.parent.location = "/watch?v={{next_video}}&playlist={{playlist.hashid}}"
-    {% elif userlist %}
-    window.parent.location = "/watch?v={{next_video}}&userlist={{userlist}}"
+
+<script src="{{ url_for('static', filename='js/video.min.js') }}"></script>
+
+<script type="text/javascript">
+  (function(){
+    {% if playnext %}
+    var autoplayEnabled = true;
     {% else %}
-    window.parent.location = "/watch?v={{next_video}}"
+    var autoplayEnabled = false;
     {% endif %}
+    var player = videojs('video-player');
+    var nextVideoURL;
+    {% if next_video %}
+      {% if playlist %}
+        nextVideoURL = "/watch?v={{next_video}}&playlist={{playlist.hashid}}"
+      {% elif userlist %}
+        nextVideoURL = "/watch?v={{next_video}}&userlist={{userlist}}"
+      {% else %}
+        nextVideoURL = "/watch?v={{next_video}}"
+      {% endif %}
+    {% endif %}
+    console.log("Next Video URL", nextVideoURL);
+    var Button = videojs.getComponent('Button');
+    var NextButton = videojs.extend(Button, {
+      buildCSSClass () {
+        return 'vjs-next-button vjs-icon-next-item vjs-button vjs-control';
+      },
+      handleClick(event){
+        window.parent.location = nextVideoURL;
+      }
     });
-  {% endif %}
+    videojs.registerComponent('NextButton', NextButton);
+    if(autoplayEnabled && nextVideoURL){
+      var nextButton = player.controlBar.addChild('NextButton', {}, 1);
+    }
+
+    player.on('ended', function(){
+      if(nextVideoURL && autoplayEnabled){
+        window.parent.location = nextVideoURL;
+      };
+    });
+
+    window.addEventListener('message', function(e) {
+      var msg = JSON.parse(e.data);
+      if(msg.type === 'toggle-play-next'){
+        var checked = msg.checked;
+        autoplayEnabled = checked;
+        if(!checked){
+          player.controlBar.removeChild(nextButton);
+        } else {
+          nextButton = player.controlBar.addChild('NextButton', {}, 1);
+        }
+      }
+    })
+  })();
 </script>
-
-
 
 </body>
 </html>

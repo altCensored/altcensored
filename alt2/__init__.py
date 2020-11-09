@@ -193,12 +193,12 @@ def create_app(test_config=None):
             'data:',
             '\'self\'',
             '*',
-    ],
-        'worker-src': [
-            'unsafe-inline',
-            '\'self\'',
-            'blob:',
     ]
+#        'worker-src': [
+#            'unsafe-inline',
+#            '\'self\'',
+#            'blob:',
+#    ],
 #        'script-src': [
 #            'unsafe-inline',
 #            '\'self\'',
@@ -209,13 +209,12 @@ def create_app(test_config=None):
         'geolocation': '\'none\''
     }
 
-    talisman = Talisman(
-        app,
-        content_security_policy=csp,
-        content_security_policy_nonce_in=['script-src'],
-        feature_policy=feature_policy,
-        frame_options_allow_from='*'
-    )
+    Talisman(app,
+             content_security_policy=csp,
+             content_security_policy_nonce_in=['script-src'],
+             feature_policy=feature_policy,
+             frame_options_allow_from='*'
+             )
         
     def url_for_other_page(page):
         args = request.view_args.copy()

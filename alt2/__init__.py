@@ -188,7 +188,6 @@ def create_app(test_config=None):
 #    csrf = SeaSurf(app)
 
     csp = {
-#        'default-src': '\'self\'',
         'img-src': [
             'data:',
             '\'self\'',
@@ -196,17 +195,12 @@ def create_app(test_config=None):
     ],
         'frame-ancestors': [
             '\'self\'',
-            'twitter.com',
+            '*.twitter.com',
+    ],
+        'script-src': [
+            '\'unsafe-inline\'',
+            '\'self\'',
     ]
-#        'worker-src': [
-#            'unsafe-inline',
-#            '\'self\'',
-#            'blob:',
-#    ],
-#        'script-src': [
-#            'unsafe-inline',
-#            '\'self\'',
-#    ]
     }
 
     feature_policy = {
@@ -215,7 +209,7 @@ def create_app(test_config=None):
 
     Talisman(app,
              content_security_policy=csp,
-             content_security_policy_nonce_in=['script-src'],
+#             content_security_policy_nonce_in=['script-src'],
              feature_policy=feature_policy,
              frame_options_allow_from='*'
              )

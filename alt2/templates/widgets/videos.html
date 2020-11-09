@@ -15,7 +15,9 @@
           <a style="width:100%;" href="{{ url_for('video.watch', v=video.extractor_data) }}">
           {% endif %}
             <div class="thumbnail">
-              <img class="thumbnail" src="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['title'] | ia_fname ~ '-' ~ video['extractor_data'] ~ '.jpg' }}"onerror="this.onerror=null;this.src='{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}';" >
+              <img class="thumbnail" src="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['title'] |
+               ia_fname ~ '-' ~ video['extractor_data'] ~ '.jpg' }}"
+                   onerror="this.onerror=null;this.src='{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}';" >
 
               {% if video['duration']  is not none %}
                 <p class="length">{{ video['duration'] | hourminsec }}</p>
@@ -104,7 +106,7 @@
 </div>
 
 
-<script type="application/javascript">
+<script nonce="{{ csp_nonce() }}" type="application/javascript">
   function add_video_WatchLater(vid){
     fetch('{{ url_for('user.add_video_watchlater_post') }}', {
       method: 'POST',

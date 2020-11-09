@@ -58,9 +58,9 @@ style="outline:none;
 </video>
 
 
-<script src="{{ url_for('static', filename='js/video.min.js') }}"></script>
+<script nonce="{{ csp_nonce() }}" src="{{ url_for('static', filename='js/video.min.js') }}"></script>
 
-<script type="text/javascript">
+<script nonce="{{ csp_nonce() }}" type="text/javascript">
   (function(){
     {% if playnext %}
     var autoplayEnabled = true;

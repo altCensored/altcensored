@@ -183,7 +183,7 @@
   </div>
 </div>
 
-<script type="application/javascript">
+<script nonce="{{ csp_nonce() }}" type="application/javascript">
   function togglePlayNext(event){
     var checked = event.target.checked;
     fetch('play-next', {

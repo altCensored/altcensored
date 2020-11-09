@@ -207,13 +207,13 @@ def create_app(test_config=None):
         'geolocation': '\'none\''
     }
 
-    Talisman(app,
-             content_security_policy=csp,
+#    Talisman(app,
+#             content_security_policy=csp,
 #             content_security_policy_nonce_in=['script-src'],
-             feature_policy=feature_policy,
-             frame_options='ALLOW_FROM',
-             frame_options_allow_from='*'
-             )
+#             feature_policy=feature_policy,
+#             frame_options='ALLOW_FROM',
+#             frame_options_allow_from='*'
+#             )
         
     def url_for_other_page(page):
         args = request.view_args.copy()

@@ -193,6 +193,10 @@ def create_app(test_config=None):
             'data:',
             '\'self\'',
             '*',
+    ],
+        'frame-ancestors': [
+            '\'self\'',
+            'twitter.com',
     ]
 #        'worker-src': [
 #            'unsafe-inline',

@@ -209,7 +209,7 @@ def create_app(test_config=None):
         'geolocation': '\'none\''
     }
 
-    Talisman(
+    talisman = Talisman(
         app,
         content_security_policy=csp,
         content_security_policy_nonce_in=['script-src'],

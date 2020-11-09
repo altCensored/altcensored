@@ -193,12 +193,12 @@ def create_app(test_config=None):
             'data:',
             '\'self\'',
             '*',
+    ],
+        'worker-src': [
+            'unsafe-inline',
+            '\'self\'',
+            'blob:',
     ]
-#        'worker-src': [
-#            'unsafe-inline',
-#            '\'self\'',
-#            'blob:',
-#    ],           
 #        'script-src': [
 #            'unsafe-inline',
 #            '\'self\'',

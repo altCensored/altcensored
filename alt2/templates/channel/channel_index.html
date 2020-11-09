@@ -33,7 +33,7 @@
         <div class="pure-u-1 pure-u-md-2-24"></div>
         <div class="pure-u-1 pure-u-md-20-24">
             <div class="pure-g h-box">
-                <div class="pure-u-10-24">
+                <div class="pure-u-6-24">
                     <div class="pure-u-1 pure-md-1-3">
 
                         <a href="{{ url_for('channel.deleted') }}" class="pure-menu-item {{'selected' if order == 'deleted' }}">
@@ -56,11 +56,13 @@
                         <b>&nbsp;{{ channelcount | commafy }}</b>
                     </div>
                 </div>
-                <div class="pure-u-4-24" style="text-align:center;">
+                <div class="pure-u-12-24" style="text-align:center;">
                     <div class="pure-u-1 pure-md-1-1">
+                            <a href="{{ url_for('channel.table') }}" class="pure-menu-heading selected">
+                                <b>{{ gettext('Table') }}</b></a>
                     </div>
                 </div>
-                <div class="pure-u-10-24" style="text-align:right;">
+                <div class="pure-u-6-24" style="text-align:right;">
                     <div class="pure-u-1 pure-md-1-3">
                         <a href="{{ url_for('channel.index') }}" class="pure-menu-item {{'selected' if order == 'latest' }}">
                             {{ gettext('latest') }}</a>

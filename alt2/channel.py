@@ -1,10 +1,11 @@
-from flask import (Blueprint, render_template, session, make_response)
+from flask import (Blueprint, render_template, session, make_response, request, jsonify)
 from werkzeug.exceptions import abort
 from sqlalchemy import func
 from .database import db_session
 from .models import Mv_Video, Mv_Channel, User
 from .pagination import Pagination
 from .util import set_session
+from datatables import ColumnDT, DataTables
 
 bp = Blueprint('channel', __name__, url_prefix='/channel' )
 
@@ -22,6 +23,26 @@ def index(page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, session['channelcount'])
     return render_template('channel/channel_index.html', pagination=pagination, channels=channels, order=order)
+
+
+@bp.route('/table')
+def table():
+    return render_template('channel/channel_table.html')
+
+@bp.route('/data')
+def data():
+    columns = [
+        ColumnDT(Mv_Channel.ytc_title),
+        ColumnDT(Mv_Channel.total),
+        ColumnDT(Mv_Channel.limited),
+        ColumnDT(Mv_Channel.ytc_publishedat),
+        ColumnDT(Mv_Channel.ytc_deleteddate),
+    ]
+
+    query = db_session.query().select_from(Mv_Channel)
+    params = request.args.to_dict()
+    rowTable = DataTables(params, query, columns)
+    return jsonify(rowTable.output_result())
 
 
 @bp.route('/new', defaults={'page': 1})

@@ -27,10 +27,12 @@ def index(page):
 
 @bp.route('/table')
 def table():
-    return render_template('channel/channel_table.html')
+    data = request.args.get('data', 'data_all')
+    return render_template('channel/channel_table.html', data=data)
 
-@bp.route('/data')
-def data():
+
+@bp.route('/data_all')
+def data_all():
     columns = [
         ColumnDT(Mv_Channel.ytc_title),
         ColumnDT(Mv_Channel.ytc_id),
@@ -43,6 +45,25 @@ def data():
     ]
 
     query = db_session.query().select_from(Mv_Channel)
+    params = request.args.to_dict()
+    rowTable = DataTables(params, query, columns)
+    return jsonify(rowTable.output_result())
+
+
+@bp.route('/data_deleted')
+def data_deleted():
+    columns = [
+        ColumnDT(Mv_Channel.ytc_title),
+        ColumnDT(Mv_Channel.ytc_id),
+        ColumnDT(Mv_Channel.ytc_subscribercount),
+        ColumnDT(Mv_Channel.ytc_viewcount),
+        ColumnDT(Mv_Channel.total),
+        ColumnDT(Mv_Channel.limited),
+        ColumnDT(func.to_char(Mv_Channel.ytc_publishedat,'YYYY-mm-dd')),
+        ColumnDT(func.to_char(Mv_Channel.ytc_deleteddate,'YYYY-mm-dd')),
+    ]
+
+    query = db_session.query().select_from(Mv_Channel).filter(Mv_Channel.ytc_deleted)
     params = request.args.to_dict()
     rowTable = DataTables(params, query, columns)
     return jsonify(rowTable.output_result())

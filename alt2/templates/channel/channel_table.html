@@ -39,10 +39,10 @@
         <div class="h-box">
           <div class="row">
             <div class="col-lg-12">
-              <table id="channels" class="display compact nowrap" cellspacing="0" width="100%">
+              <table id="channels" class="display compact nowrap" width="100%">
                 <thead>
                   <tr>
-                    <th>Channel Name</th>
+                    <th>Name</th>
                     <th>Channel ID</th>
                     <th>Subs</th>
                     <th>Views</th>
@@ -74,18 +74,50 @@
         "processing": true,
         "serverSide": true,
         "ajax": "{{ url_for('channel.' + data) }}",
-        "responsive": true,
+
         "columnDefs": [
             {
                 "targets": [ 0 ],
-                "render": function ( data, type, row, meta ) {
-                    return '<a href="'+row[1]+'">'+data+'</a>';
+                "width": "30%",
+                "className": 'dt-left',
+                "render": function ( data, type, row ) {
+                    return data.length > 20 ?
+                    '<a href="'+row[1]+'">'+data.substr( 0, 20 ) +'…'+'</a>' :
+                        '<a href="'+row[1]+'">'+data+'</a>';
                 }
             },
             {
                 "targets": [ 1 ],
                 "visible": false,
                 "searchable": false
+            },
+            {
+                "targets": [ 2 ],
+                "className": 'dt-right',
+                "width": "13%"
+            },
+            {
+                "targets": [ 3 ],
+                "className": 'dt-right',
+                "width": "13%"
+            },
+            {
+                "targets": [ 4 ],
+                "className": 'dt-right',
+                "width": "7%"
+            },
+            {
+                "targets": [ 5 ],
+                "className": 'dt-right',
+                "width": "5%"
+            },
+            {
+                "targets": [ 6 ],
+                "width": "10%"
+            },
+            {
+                "targets": [ 7 ],
+                "width": "10%"
             }
         ]
       });

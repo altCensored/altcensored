@@ -40,7 +40,6 @@ def data():
         ColumnDT(Mv_Channel.limited),
         ColumnDT(func.to_char(Mv_Channel.ytc_publishedat,'YYYY-mm-dd')),
         ColumnDT(func.to_char(Mv_Channel.ytc_deleteddate,'YYYY-mm-dd')),
-
     ]
 
     query = db_session.query().select_from(Mv_Channel)

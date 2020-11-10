@@ -33,10 +33,14 @@ def table():
 def data():
     columns = [
         ColumnDT(Mv_Channel.ytc_title),
+        ColumnDT(Mv_Channel.ytc_id),
+        ColumnDT(Mv_Channel.ytc_subscribercount),
+        ColumnDT(Mv_Channel.ytc_viewcount),
         ColumnDT(Mv_Channel.total),
         ColumnDT(Mv_Channel.limited),
-        ColumnDT(Mv_Channel.ytc_publishedat),
-        ColumnDT(Mv_Channel.ytc_deleteddate),
+        ColumnDT(func.to_char(Mv_Channel.ytc_publishedat,'YYYY-mm-dd')),
+        ColumnDT(func.to_char(Mv_Channel.ytc_deleteddate,'YYYY-mm-dd')),
+
     ]
 
     query = db_session.query().select_from(Mv_Channel)

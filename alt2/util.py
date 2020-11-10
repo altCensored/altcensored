@@ -1,6 +1,6 @@
 from flask import (
     session, request, redirect, url_for, current_app
-    )
+)
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from itsdangerous import URLSafeTimedSerializer
@@ -17,11 +17,13 @@ def get_locale():
         return session['locale']
     else:
         session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys(), default='en')
-#        session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys())
+    #        session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys())
     return session['locale']
+
 
 def get_theme():
     return session.get('theme', 'light')
+
 
 def get_playnext():
     if 'playnext' in session:
@@ -30,6 +32,7 @@ def get_playnext():
         session['playnext'] = False
     return session['playnext']
 
+
 def get_looplist():
     if 'looplist' in session:
         return session['looplist']
@@ -37,30 +40,36 @@ def get_looplist():
         session['looplist'] = True
     return session['looplist']
 
+
 def get_navtabs():
     if 'navtabs' in session:
         return session['navtabs']
     else:
-        row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, session['locale'])).all()
+        row = db_session.query(Translation).with_entities(Translation.varname,
+                                                          getattr(Translation, session['locale'])).all()
         rowtuple = tuple(row)
         session['navtabs'] = dict(rowtuple)
     return session['navtabs']
+
 
 def get_navtabs_index():
     if 'navtabs_index' in session:
         return session['navtabs_index']
     else:
-        row = db_session.query(Translation).with_entities(Translation.varname,Translation.en).all()
+        row = db_session.query(Translation).with_entities(Translation.varname, Translation.en).all()
         rowtuple = tuple(row)
         session['navtabs_index'] = dict(rowtuple)
     return session['navtabs_index']
 
+
 def get_navtabs_perm():
     session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys())
-    row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, session['locale'])).all()
+    row = db_session.query(Translation).with_entities(Translation.varname,
+                                                      getattr(Translation, session['locale'])).all()
     rowtuple = tuple(row)
     navtabs_perm = dict(rowtuple)
     return navtabs_perm
+
 
 def get_videocount():
     if 'videocount' in session:
@@ -69,6 +78,7 @@ def get_videocount():
         session['videocount'] = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
     return session['videocount']
 
+
 def get_channelcount():
     if 'channelcount' in session:
         return session['channelcount']
@@ -76,12 +86,15 @@ def get_channelcount():
         session['channelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
     return session['channelcount']
 
+
 def get_delchannelcount():
     if 'delchannelcount' in session:
         return session['delchannelcount']
     else:
-        session['delchannelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
+        session['delchannelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).filter(
+            Mv_Channel.ytc_deleted).scalar()
     return session['delchannelcount']
+
 
 def set_session() -> object:
     """
@@ -90,10 +103,10 @@ def set_session() -> object:
     if 'locale' in session:
         pass
     else:
-#        session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys())
+        #        session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys())
         session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys(), default='en')
 
-    if  'theme' in session:
+    if 'theme' in session:
         pass
     else:
         session['theme'] = 'light'
@@ -112,14 +125,15 @@ def set_session() -> object:
         pass
     else:
         session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys(), default='en')
-        row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, session['locale'])).all()
+        row = db_session.query(Translation).with_entities(Translation.varname,
+                                                          getattr(Translation, session['locale'])).all()
         rowtuple = tuple(row)
         session['navtabs'] = dict(rowtuple)
 
     if 'navtabs_index' in session:
         pass
     else:
-        row = db_session.query(Translation).with_entities(Translation.varname,Translation.en).all()
+        row = db_session.query(Translation).with_entities(Translation.varname, Translation.en).all()
         rowtuple = tuple(row)
         session['navtabs_index'] = dict(rowtuple)
 
@@ -145,21 +159,22 @@ def set_session() -> object:
     if 'delchannelcount' in session:
         pass
     else:
-        session['delchannelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
+        session['delchannelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).filter(
+            Mv_Channel.ytc_deleted).scalar()
 
 
-def send_welcome_email(email,content):
+def send_welcome_email(email, content):
     message = Mail(
-    from_email='registration@altCensored.com',
-    to_emails=email,
-    subject='Welcome to altCensored.com! Confirm your Email for Full Access',
-    html_content=content)
+        from_email='registration@altCensored.com',
+        to_emails=email,
+        subject='Welcome to altCensored.com! Confirm your Email for Full Access',
+        html_content=content)
 
     sg = SendGridAPIClient(config.SENDGRID_API_KEY)
     sg.send(message)
 
 
-def send_forgot_password_email(email,content):
+def send_forgot_password_email(email, content):
     message = Mail(
         from_email='registration@altCensored.com',
         to_emails=email,
@@ -214,6 +229,7 @@ def login_required(view):
         if session.get('user') is None:
             return redirect(url_for('video.index'))
         return view(**kwargs)
+
     return wrapped_view
 
 
@@ -236,5 +252,7 @@ def create_captcha(myrandom, mycaptcha):
 
 def title_exists(ftitle):
     user_id = session['user']['id']
-    if db_session.query(Playlist.title).filter((Playlist.title) == (ftitle)).filter((Playlist.user_id) == (user_id)).scalar() is not None:
+    if db_session.query(Playlist.title).filter((Playlist.title) == (ftitle)).filter(
+            (Playlist.user_id) == (user_id)).scalar() is not None:
         return True
+

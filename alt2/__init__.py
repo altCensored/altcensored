@@ -56,7 +56,9 @@ def create_app(test_config=None):
 
     @app.template_filter('viewdisplay')
     def viewdisplay(views):
-        if views < 1000:
+        if views is None:
+            return 0
+        elif views < 1000:
             return views
         elif (views >= 1000) and (views < 10000):
             return str(math.floor((views / 1000)*10)/10) + 'K'

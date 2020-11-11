@@ -80,7 +80,10 @@ def create_app(test_config=None):
 
     @app.template_filter('commafy')
     def commafy(value):
-        return "{:,}".format(value)
+        if value is None:
+            return 0
+        else:
+            return "{:,}".format(value)
 
     @app.template_filter('spaceplus')
     def spaceplus(value):

@@ -40,8 +40,10 @@ def data_all():
         ColumnDT(Mv_Channel.ytc_viewcount),
         ColumnDT(Mv_Channel.total),
         ColumnDT(Mv_Channel.limited),
+        ColumnDT(Mv_Channel.archive),
         ColumnDT(func.to_char(Mv_Channel.ytc_publishedat,'YYYY-mm-dd')),
         ColumnDT(func.to_char(Mv_Channel.ytc_deleteddate,'YYYY-mm-dd')),
+        ColumnDT(func.to_char(Mv_Channel.ytc_addeddate, 'YYYY-mm-dd')),
     ]
 
     query = db_session.query().select_from(Mv_Channel)
@@ -59,8 +61,10 @@ def data_deleted():
         ColumnDT(Mv_Channel.ytc_viewcount),
         ColumnDT(Mv_Channel.total),
         ColumnDT(Mv_Channel.limited),
+        ColumnDT(Mv_Channel.archive),
         ColumnDT(func.to_char(Mv_Channel.ytc_publishedat,'YYYY-mm-dd')),
         ColumnDT(func.to_char(Mv_Channel.ytc_deleteddate,'YYYY-mm-dd')),
+        ColumnDT(func.to_char(Mv_Channel.ytc_addeddate, 'YYYY-mm-dd')),
     ]
 
     query = db_session.query().select_from(Mv_Channel).filter(Mv_Channel.ytc_deleted)

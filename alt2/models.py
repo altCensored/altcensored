@@ -1,6 +1,9 @@
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, Interval, ARRAY, ForeignKey, BigInteger, JSON
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship
 from sqlalchemy.ext.mutable import MutableDict
+from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.sql import case
+
 
 from alt2.database import Base
 
@@ -117,7 +120,7 @@ class Source(Base):
 
     def __repr__(self):
         return '<Source %r>' % (self.id)
- 
+
 
 class Mv_Video(Base):
     __tablename__ = 'mv_video'
@@ -176,6 +179,7 @@ class Mv_Channel(Base):
     ytc_addeddate = Column(DateTime, nullable=True)
     ytc_partarchive = Column(Boolean, nullable=False, default=False)
 
+
     def __init__(self, ytc_id=None, ytc_title=None):
         self.id = id
         self.ytc_id = ytc_id        
@@ -196,6 +200,10 @@ class Mv_Channel(Base):
   
     def __repr__(self):
         return '<Mv_Channel %r>' % (self.ytc_id)
+
+    @hybrid_property
+    def archive(self):
+        return self.ytc_archive | self.ytc_partarchive
 
 
 class Category(Base):

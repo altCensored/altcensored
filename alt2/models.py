@@ -175,6 +175,7 @@ class Mv_Channel(Base):
     ytc_deleted = Column(String, nullable=True)
     ytc_archive = Column(String, nullable=True)
     allow = Column(String, nullable=True)
+    delta = Column(DateTime, nullable=True)
     ytc_deleteddate = Column(DateTime, nullable=True)
     ytc_addeddate = Column(DateTime, nullable=True)
     ytc_partarchive = Column(Boolean, nullable=False, default=False)
@@ -197,7 +198,8 @@ class Mv_Channel(Base):
         self.ytc_deleteddate = ytc_deleteddate        
         self.ytc_addeddate = ytc_addeddate
         self.ytc_partarchive = ytc_partarchive
-  
+        self.delta = delta
+
     def __repr__(self):
         return '<Mv_Channel %r>' % (self.ytc_id)
 

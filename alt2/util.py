@@ -232,6 +232,15 @@ def login_required(view):
 
     return wrapped_view
 
+def admin_login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if session['user']['username'] != 'admin':
+            return redirect(url_for('video.index'))
+        return view(**kwargs)
+
+    return wrapped_view
+
 
 def username_exists(username):
     if username == session['user']['username']:

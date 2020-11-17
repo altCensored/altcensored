@@ -45,11 +45,14 @@
                     <th>Channel ID</th>
                     <th>Subs</th>
                     <th>Views</th>
-                    <th>Videos</th>
-                    <th>Censored</th>
-                    <th>Archived</th>
-                    <th>Created</th>
-                    <th>Deleted</th>
+                    <th>Vid</th>
+                    <th>Lim</th>
+                    <th>Mon</th>
+                    <th>Delta</th>
+                    <th>Part</th>
+                    <th>Full</th>
+                    <th>Creat</th>
+                    <th>Delet</th>
                     <th>Added</th>
                   </tr>
                 </thead>
@@ -74,17 +77,16 @@
       var table = $('#channels').DataTable({
         "processing": true,
         "serverSide": true,
-        "ajax": "{{ url_for('channel.' + data) }}",
+        "ajax": "{{ url_for('admin.' + data) }}",
 
         "columnDefs": [
             {
                 "targets": [ 0 ],
-                "width": "30%",
                 "className": 'dt-left',
                 "render": function ( data, type, row ) {
                     return data.length > 30 ?
                     '<a href="'+row[1]+'">'+data.substr( 0, 30 ) +'…'+'</a>' :
-                        '<a href="'+row[1]+'">'+data+'</a>';
+                        '<a href= "{{ config['MYSERVER_URL'] }}' + '/channel/' +row[1]+'">'+data+'</a>';
                 }
             },
             {
@@ -95,35 +97,26 @@
             {
                 "targets": [ 2 ],
                 "className": 'dt-right',
-                "width": "12%"
             },
             {
                 "targets": [ 3 ],
                 "className": 'dt-right',
-                "width": "12%"
             },
             {
                 "targets": [ 4 ],
                 "className": 'dt-right',
-                "width": "7%"
             },
             {
                 "targets": [ 5 ],
                 "className": 'dt-right',
-                "width": "7%"
             },
             {
                 "targets": [ 6 ],
                 "className": 'dt-center',
-                "width": "7%"
             },
             {
                 "targets": [ 7 ],
-                "width": "10%"
-            },
-            {
-                "targets": [ 8 ],
-                "width": "10%"
+                "className": 'dt-center',
             }
         ]
       });

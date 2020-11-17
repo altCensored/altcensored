@@ -20,8 +20,11 @@
             <div class="pure-g h-box">
                 <div class="pure-u-2-3">
                     <div class="pure-u-1 pure-md-1-1">
-                        <i class='ion-ios-contact' style="font-size: 24px"></i></a>
-                        <b>{{ user.username }}</b>
+                        {% if session.user and session.user.username == 'admin' %}
+                            <a href="{{ url_for('admin.table') }}">
+                        {% endif %}
+                            <i class='ion-ios-contact' style="font-size: 24px"></i></a>
+                            <b>{{ user.username }}</b>
                         <p></p>
                     </div>
                 </div>

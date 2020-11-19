@@ -8,16 +8,22 @@ from . import util
 
 bp = Blueprint('admin', __name__, url_prefix='/admin')
 
-@bp.route('/table')
+
+@bp.route('/')
 @util.admin_login_required
-def table():
+def index():
+    return render_template('admin/admin_index.html')
+
+@bp.route('/channel_table')
+@util.admin_login_required
+def channel_table():
     data = request.args.get('data', 'data_all')
-    return render_template('channel/channel_table_admin.html', data=data)
+    return render_template('admin/admin_channel_table.html', data=data)
 
 
-@bp.route('/data_all')
+@bp.route('/channel_data_all')
 @util.admin_login_required
-def data_all():
+def channel_data_all():
     columns = [
         ColumnDT(Mv_Channel.ytc_title),
         ColumnDT(Mv_Channel.ytc_id),
@@ -35,6 +41,28 @@ def data_all():
     ]
 
     query = db_session.query().select_from(Mv_Channel)
+    params = request.args.to_dict()
+    rowTable = DataTables(params, query, columns)
+    return jsonify(rowTable.output_result())
+
+
+@bp.route('/video_table')
+@util.admin_login_required
+def video_table():
+    ytc_id = request.args.get('ytc_id', 'UC7SeFWZYFmsm1tqWxfuOTPQ')
+    return render_template('admin/admin_video_table.html, ytc_id=ytc_id')
+
+
+@bp.route('/video_data')
+@util.admin_login_required
+def video_data():
+    ytc_id = request.args.get('ytc_id', 'UC7SeFWZYFmsm1tqWxfuOTPQ')
+    columns = [
+        ColumnDT(Mv_Video.extractor_data),
+        ColumnDT(Mv_Video.title),
+    ]
+
+    query = db_session.query().select_from(Mv_Video).filter_by(ytc_id=ytc_id)
     params = request.args.to_dict()
     rowTable = DataTables(params, query, columns)
     return jsonify(rowTable.output_result())

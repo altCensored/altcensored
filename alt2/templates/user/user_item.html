@@ -21,7 +21,7 @@
                 <div class="pure-u-2-3">
                     <div class="pure-u-1 pure-md-1-1">
                         {% if session.user and session.user.username == 'admin' %}
-                            <a href="{{ url_for('admin.table') }}">
+                            <a href="{{ url_for('admin.index') }}">
                         {% endif %}
                             <i class='ion-ios-contact' style="font-size: 24px"></i></a>
                             <b>{{ user.username }}</b>

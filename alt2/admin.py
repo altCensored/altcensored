@@ -2,7 +2,7 @@ from flask import (
     Blueprint, render_template, request, jsonify)
 from sqlalchemy import func
 from .database import db_session
-from .models import Mv_Video, Mv_Channel, User
+from .models import Mv_Channel, Entity, Source, Sources_to_Videos
 from datatables import ColumnDT, DataTables
 from . import util
 
@@ -50,19 +50,35 @@ def channel_data_all():
 @util.admin_login_required
 def video_table():
     ytc_id = request.args.get('ytc_id', 'UC7SeFWZYFmsm1tqWxfuOTPQ')
-    return render_template('admin/admin_video_table.html, ytc_id=ytc_id')
+    return render_template('admin/admin_video_table.html', ytc_id=ytc_id)
 
 
 @bp.route('/video_data')
 @util.admin_login_required
 def video_data():
     ytc_id = request.args.get('ytc_id', 'UC7SeFWZYFmsm1tqWxfuOTPQ')
+
     columns = [
-        ColumnDT(Mv_Video.extractor_data),
-        ColumnDT(Mv_Video.title),
+        ColumnDT(Entity.extractor_data),
+        ColumnDT(Entity.title),
+        ColumnDT(Entity.views),
+        ColumnDT(Entity.likes),
+        ColumnDT(Entity.dislikes),
+        ColumnDT(Entity.allow),
+        ColumnDT(Entity.sync_ia),
+        ColumnDT(Entity.exists_ia),
+        ColumnDT(Entity.yt_deleted),
+        ColumnDT(func.to_char(Entity.sync_iadate, 'YYYY-mm-dd')),
+        ColumnDT(func.to_char(Entity.addeddate, 'YYYY-mm-dd')),
     ]
 
-    query = db_session.query().select_from(Mv_Video).filter_by(ytc_id=ytc_id)
+#    query = db_session.query().select_from(Mv_Video).filter_by(ytc_id=ytc_id)
+    query = db_session.query().\
+        select_from(Entity). \
+        join(Sources_to_Videos). \
+        join(Source).\
+        filter(Source.ytc_id == ytc_id)
+
     params = request.args.to_dict()
     rowTable = DataTables(params, query, columns)
     return jsonify(rowTable.output_result())

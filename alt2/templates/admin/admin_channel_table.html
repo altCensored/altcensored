@@ -85,7 +85,7 @@
                 "className": 'dt-left',
                 "render": function ( data, type, row ) {
                     return data.length > 30 ?
-                    '<a href="'+row[1]+'">'+data.substr( 0, 30 ) +'…'+'</a>' :
+                    '<a href= "{{ config['MYSERVER_URL'] }}' + '/channel/' +row[1]+'">'+data.substr( 0, 30 ) +'…'+'</a>' :
                         '<a href= "{{ config['MYSERVER_URL'] }}' + '/channel/' +row[1]+'">'+data+'</a>';
                 }
             },
@@ -95,8 +95,13 @@
                 "searchable": false
             },
             {
-                "targets": [ 2 ],
+                "targets": [2],
                 "className": 'dt-right',
+                "render": function ( data, type, row ) {
+                    return data.length > 30 ?
+                    '<a href= "{{ url_for('admin.video_table') }}' + '?ytc_id=' +row[1]+'">'+data.substr( 0, 30 ) +'…'+'</a>' :
+                        '<a href= "{{ url_for('admin.video_table') }}' + '?ytc_id=' +row[1]+'">'+data+'</a>';
+                }
             },
             {
                 "targets": [ 3 ],

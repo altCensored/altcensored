@@ -1,8 +1,7 @@
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, Interval, ARRAY, ForeignKey, BigInteger, JSON
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, Interval, ARRAY, ForeignKey, BigInteger, JSON, Table
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy.sql import case
 
 
 from alt2.database import Base
@@ -120,6 +119,13 @@ class Source(Base):
 
     def __repr__(self):
         return '<Source %r>' % (self.id)
+
+
+Sources_to_Videos = Table(
+    'content', Base.metadata,
+    Column('source_id', Integer, ForeignKey('source.id')),
+    Column('video_id', Integer, ForeignKey('entity.id')),
+)
 
 
 class Mv_Video(Base):

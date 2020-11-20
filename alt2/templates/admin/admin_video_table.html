@@ -41,19 +41,17 @@
               <table id="videos" class="display compact nowrap" width="100%">
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Channel ID</th>
-                    <th>Subs</th>
-                    <th>Views</th>
-                    <th>Vid</th>
-                    <th>Lim</th>
-                    <th>Mon</th>
-                    <th>Delta</th>
-                    <th>Part</th>
-                    <th>Full</th>
-                    <th>Creat</th>
-                    <th>Delet</th>
-                    <th>Added</th>
+                    <th>Extractor</th>
+                    <th>Title</th>
+                    <th>View</th>
+                    <th>Like</th>
+                    <th>DisL</th>
+                    <th>Allow</th>
+                    <th>SyncIA</th>
+                    <th>ExisIA</th>
+                    <th>YTDele</th>
+                    <th>SynIADate</th>
+                    <th>AddedDate</th>
                   </tr>
                 </thead>
               <tbody></tbody>
@@ -77,47 +75,25 @@
       var table = $('#videos').DataTable({
         "processing": true,
         "serverSide": true,
-        "ajax": "{{ url_for('admin.video_data'}}",
-
+        "ajax": "{{ url_for('admin.video_data', ytc_id = ytc_id) }}",
         "columnDefs": [
+
             {
-                "targets": [ 0 ],
-                "className": 'dt-left',
+                "targets": [0],
+                "className": 'dt-right',
                 "render": function ( data, type, row ) {
-                    return data.length > 30 ?
-                    '<a href="'+row[1]+'">'+data.substr( 0, 30 ) +'…'+'</a>' :
-                        '<a href= "{{ config['MYSERVER_URL'] }}' + '/channel/' +row[1]+'">'+data+'</a>';
+                    return '<a href= "{{ url_for('video.watch') }}' + '?v=' +data+'">'+data+'</a>';
                 }
             },
+
             {
                 "targets": [ 1 ],
-                "visible": false,
-                "searchable": false
+                "render": function ( data, type, row ) {
+                    return data.length > 25 ?
+                    data.substr( 0, 25 ) +'…' :
+                        data;
+                }
             },
-            {
-                "targets": [ 2 ],
-                "className": 'dt-right',
-            },
-            {
-                "targets": [ 3 ],
-                "className": 'dt-right',
-            },
-            {
-                "targets": [ 4 ],
-                "className": 'dt-right',
-            },
-            {
-                "targets": [ 5 ],
-                "className": 'dt-right',
-            },
-            {
-                "targets": [ 6 ],
-                "className": 'dt-center',
-            },
-            {
-                "targets": [ 7 ],
-                "className": 'dt-center',
-            }
         ]
       });
     });

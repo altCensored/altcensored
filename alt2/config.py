@@ -7,6 +7,7 @@ SECURITY_PASSWORD_SALT=os.getenv('SECURITY_PASSWORD_SALT')
 MYSERVER_NAME_SHORT="altCensored"
 MYSERVER_NAME="altCensored.com"
 MYSERVER_URL="https://altCensored.com"
+MYSERVER_TEST_URL="https://altCensored.com"
 IARCHIVEURL="https://archive.org/download/youtube-"
 IPROXY="https://altcensored.com/ip/180x100/"
 IPROXYBIG="https://altcensored.com/ip/320x180/"

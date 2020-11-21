@@ -85,8 +85,8 @@
                 "className": 'dt-left',
                 "render": function ( data, type, row ) {
                     return data.length > 30 ?
-                    '<a href= "{{ config['MYSERVER_URL'] }}' + '/channel/' +row[1]+'">'+data.substr( 0, 30 ) +'…'+'</a>' :
-                        '<a href= "{{ config['MYSERVER_URL'] }}' + '/channel/' +row[1]+'">'+data+'</a>';
+                    '<a href= "https://www.youtube.com/channel/' +row[1]+'">'+data.substr( 0, 30 ) +'…'+'</a>' :
+                        '<a href= "https://www.youtube.com/channel/' +row[1]+'">'+data+'</a>';
                 }
             },
             {
@@ -98,18 +98,22 @@
                 "targets": [2],
                 "className": 'dt-right',
                 "render": function ( data, type, row ) {
-                    return data.length > 30 ?
-                    '<a href= "{{ url_for('admin.video_table') }}' + '?ytc_id=' +row[1]+'">'+data.substr( 0, 30 ) +'…'+'</a>' :
-                        '<a href= "{{ url_for('admin.video_table') }}' + '?ytc_id=' +row[1]+'">'+data+'</a>';
+                    return '<a href= "https://socialblade.com/youtube/channel/' +row[1]+'">'+data+'</a>';
                 }
             },
             {
                 "targets": [ 3 ],
                 "className": 'dt-right',
+                "render": function ( data, type, row ) {
+                    return '<a href= "{{ config['MYSERVER_URL'] }}' + '/channel/' +row[1]+'">'+data+'</a>';
+                }
             },
             {
                 "targets": [ 4 ],
                 "className": 'dt-right',
+                "render": function ( data, type, row ) {
+                    return '<a href= "{{ url_for('admin.video_table') }}' + '?ytc_id=' +row[1]+'">'+data+'</a>';
+                }
             },
             {
                 "targets": [ 5 ],

@@ -77,21 +77,29 @@
         "serverSide": true,
         "ajax": "{{ url_for('admin.video_data', ytc_id = ytc_id) }}",
         "columnDefs": [
-
             {
-                "targets": [0],
-                "className": 'dt-right',
+                "targets": [ 0 ],
+                "className": 'dt-left',
                 "render": function ( data, type, row ) {
-                    return '<a href= "{{ url_for('video.watch') }}' + '?v=' +data+'">'+data+'</a>';
+                    return data.length > 30 ?
+                    '<a href= "https://www.youtube.com/watch?v=' +row[0]+'">'+data.substr( 0, 30 ) +'…'+'</a>' :
+                        '<a href= "https://www.youtube.com/watch?v=' +row[0]+'">'+data+'</a>';
                 }
             },
-
             {
                 "targets": [ 1 ],
+                "className": 'dt-left',
                 "render": function ( data, type, row ) {
-                    return data.length > 25 ?
-                    data.substr( 0, 25 ) +'…' :
-                        data;
+                    return data.length > 45 ?
+                    '<a href= "https://archive.org/details/youtube-' +row[0]+'">'+data.substr( 0, 45 ) +'…'+'</a>' :
+                        '<a href= "https://archive.org/details/youtube-' +row[0]+'">'+data+'</a>';
+                }
+            },
+            {
+                "targets": [2],
+                "className": 'dt-left',
+                "render": function ( data, type, row ) {
+                    return '<a href= "{{ url_for('video.watch') }}' + '?v=' +row[0]+'">'+data+'</a>';
                 }
             },
         ]

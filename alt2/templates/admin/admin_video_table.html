@@ -44,14 +44,14 @@
                     <th>Extractor</th>
                     <th>Title</th>
                     <th>View</th>
-                    <th>Like</th>
-                    <th>DisL</th>
-                    <th>Allow</th>
-                    <th>SyncIA</th>
-                    <th>ExisIA</th>
-                    <th>YTDele</th>
-                    <th>SynIADate</th>
-                    <th>AddedDate</th>
+                    <th>Lik</th>
+                    <th>Dis</th>
+                    <th>All</th>
+                    <th>IAS</th>
+                    <th>IAE</th>
+                    <th>YTD</th>
+                    <th>SIADate</th>
+                    <th>AddDate</th>
                   </tr>
                 </thead>
               <tbody></tbody>
@@ -81,9 +81,7 @@
                 "targets": [ 0 ],
                 "className": 'dt-left',
                 "render": function ( data, type, row ) {
-                    return data.length > 30 ?
-                    '<a href= "https://www.youtube.com/watch?v=' +row[0]+'">'+data.substr( 0, 30 ) +'…'+'</a>' :
-                        '<a href= "https://www.youtube.com/watch?v=' +row[0]+'">'+data+'</a>';
+                    return '<a href= "https://www.youtube.com/watch?v=' +row[0]+'">'+data+'</a>';
                 }
             },
             {
@@ -102,6 +100,38 @@
                     return '<a href= "{{ url_for('video.watch') }}' + '?v=' +row[0]+'">'+data+'</a>';
                 }
             },
+            {
+                "targets": [ 3 ],
+                "className": 'dt-left',
+            },
+            {
+                "targets": [ 4 ],
+                "className": 'dt-left',
+            },
+            {
+                "targets": [ 5 ],
+                "className": 'dt-center',
+            },
+            {
+                "targets": [ 6 ],
+                "className": 'dt-center',
+            },
+            {
+                "targets": [ 7 ],
+                "className": 'dt-center',
+            },
+            {
+                "targets": [ 8 ],
+                "className": 'dt-center',
+            },
+            {
+                "targets": [ 9 ],
+                "className": 'dt-center',
+            },
+            {
+                "targets": [ 9 ],
+                "className": 'dt-center',
+            }
         ]
       });
     });

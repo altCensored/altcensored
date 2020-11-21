@@ -88,8 +88,8 @@
                 "targets": [ 1 ],
                 "className": 'dt-left',
                 "render": function ( data, type, row ) {
-                    return data.length > 45 ?
-                    '<a href= "https://archive.org/details/youtube-' +row[0]+'">'+data.substr( 0, 45 ) +'…'+'</a>' :
+                    return data.length > 32 ?
+                    '<a href= "https://archive.org/details/youtube-' +row[0]+'">'+data.substr( 0, 32 ) +'…'+'</a>' :
                         '<a href= "https://archive.org/details/youtube-' +row[0]+'">'+data+'</a>';
                 }
             },

@@ -4,6 +4,16 @@
 
 <meta name="twitter:card" content="summary">
 <meta name="twitter:site" content="@altcensored">
+<meta name="twitter:creator" content="@altcensored">
+
+<meta property="og:site_name" content="{{ config['MYSERVER_NAME'] }}">
+<meta property="og:url" content="https://{{ config['MYSERVER_NAME'] }}">
+<meta property="og:title" content="Playlist: '{{ playlist.title }}'">
+<meta property="og:description" content="{{ playlist.description | safe | nl2br }}">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://{{ config['MYSERVER_NAME'] }}/logo_clip.gif">
+<meta property="og:image:secure_url" content="https://{{ config['MYSERVER_NAME'] }}/logo_clip.gif">
+
 <meta name="twitter:title" content="Playlist:  ~ {{ playlist.title }} ~ '(User: ' ~ {{ playlist.user }} ~', Videos: ' ~ {{ videocount }} ')' }}">
 <meta name="twitter:description" content="{{ playlist.description | safe | nl2br | truncate (140) }}">
 

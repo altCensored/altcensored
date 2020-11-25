@@ -6,7 +6,7 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
 
 <meta name="twitter:card" content="summary">
 <meta name="twitter:site" content="@altcensored">
-<meta name="twitter:title" content="{{ channel['ytc_title'] ~ ' Channel ' ~ '(' ~ channel['limited'] ~' Limited Videos' ~ ')' }}">
+<meta name="twitter:title" content="{{ channel['ytc_title'] ~ ' Channel ' ~ '(' ~ channel['limited'] ~' Censored Videos' ~ ')' }}">
 <meta name="twitter:description" content="{{ channel['ytc_description'] | safe | nl2br | truncate (140) }}">
 
 
@@ -14,7 +14,7 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
 <meta property="og:url" content="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}">
 <meta property="og:image" content="{{ channel['ytc_thumbnailurl'] | replace('88','300')  }}">
 <meta property="og:image:secure_url" content="{{ channel['ytc_thumbnailurl'] | replace('88','300')  }}">
-<meta property="og:title" content="{{ channel['ytc_title'] ~ ' Channel ' ~ '(' ~ channel['limited'] ~' Limited Videos' ~ ')' }}">
+<meta property="og:title" content="{{ channel['ytc_title'] ~ ' Channel ' ~ '(' ~ channel['limited'] ~' Censored Videos' ~ ')' }}">
 
 <meta property="og:type" content="article">
 <meta property="og:description" content="{{ channel['ytc_description'] | safe | truncate (140) }}">

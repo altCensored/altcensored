@@ -8,7 +8,7 @@
 
 <meta property="og:site_name" content="{{ config['MYSERVER_NAME'] }}">
 <meta property="og:url" content="https://{{ config['MYSERVER_NAME'] }}">
-<meta property="og:title" content="Playlist: {{ playlist.title }}, User: {{ playlist.user.username }}">
+<meta property="og:title" content="Playlist '{{ playlist.title }}', User '{{ playlist.user.username }}'">
 <meta property="og:description" content="{{ playlist.description | safe | nl2br }} ({{ videocount}} Videos)">
 <meta property="og:type" content="article">
 <meta property="og:image" content="https://{{ config['MYSERVER_NAME'] }}/logo_clip.gif">

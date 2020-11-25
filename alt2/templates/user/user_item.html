@@ -10,7 +10,7 @@
 <meta property="og:url" content="https://{{ config['MYSERVER_NAME'] }}">
 
 <meta property="og:title" content="User '{{ user.username }}' ({{ playlistcount}} Playlists)">
-<meta property="og:description" content="{{ user.description | safe | nl2br }}">
+<meta property="og:description" content="{{ user.description }}">
 
 
 {% if user.featured_playlist and user.featured_playlist.pl_title %}

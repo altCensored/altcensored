@@ -12,14 +12,14 @@
 <meta property="og:title" content="Playlist '{{ playlist.title }}', User '{{ playlist.user.username }}'">
 <meta property="og:description" content="{{ playlist.description | safe | nl2br }} ({{ videocount}} Videos)">
 #}
-<meta property="og:title" content="Playlist '{{ playlist.title }}', ({{ videocount}} Videos)">
+<meta property="og:title" content="Playlist '{{ playlist.title }}' ({{ videocount}} Videos)">
 <meta property="og:description" content="{{ playlist.description | safe | nl2br }} (User '{{ playlist.user.username }}')">
 
     <meta property="og:type" content="article">
 
 {% if playlist.featured_video%}
     <meta property="og:image" content="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ playlist.featured_video.extractor_data ~ '/' ~ playlist.featured_video.title | ia_fname ~ '-' ~ playlist.featured_video.extractor_data ~ '.jpg' }}"onerror="this.onerror=null;this.src='{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ playlist.featured_video.extractor_data ~ '/__ia_thumb.jpg' }}';" >
-    <meta property="og:secure_url" content="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ playlist.featured_video.extractor_data ~ '/' ~ playlist.featured_video.title | ia_fname ~ '-' ~ playlist.featured_video.extractor_data ~ '.jpg' }}"onerror="this.onerror=null;this.src='{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ playlist.featured_video.extractor_data ~ '/__ia_thumb.jpg' }}';" >
+    <meta property="og:image:secure_url" content="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ playlist.featured_video.extractor_data ~ '/' ~ playlist.featured_video.title | ia_fname ~ '-' ~ playlist.featured_video.extractor_data ~ '.jpg' }}"onerror="this.onerror=null;this.src='{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ playlist.featured_video.extractor_data ~ '/__ia_thumb.jpg' }}';" >
 {% else %}
     <meta property="og:image" content="https://{{ config['MYSERVER_NAME'] }}/logo_clip.gif">
     <meta property="og:image:secure_url" content="https://{{ config['MYSERVER_NAME'] }}/logo_clip.gif">

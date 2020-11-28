@@ -49,14 +49,14 @@ def channel_data_all():
 @bp.route('/video_table')
 @util.admin_login_required
 def video_table():
-    ytc_id = request.args.get('ytc_id', 'UC7SeFWZYFmsm1tqWxfuOTPQ')
+    ytc_id = request.args.get('ytc_id', 'None')
     return render_template('admin/admin_video_table.html', ytc_id=ytc_id)
 
 
 @bp.route('/video_data')
 @util.admin_login_required
 def video_data():
-    ytc_id = request.args.get('ytc_id', 'UC7SeFWZYFmsm1tqWxfuOTPQ')
+    ytc_id = request.args.get('ytc_id', 'None')
 
     columns = [
         ColumnDT(Entity.extractor_data),
@@ -72,12 +72,15 @@ def video_data():
         ColumnDT(func.to_char(Entity.addeddate, 'YYYY-mm-dd')),
     ]
 
-#    query = db_session.query().select_from(Mv_Video).filter_by(ytc_id=ytc_id)
-    query = db_session.query().\
-        select_from(Entity). \
-        join(Sources_to_Videos). \
-        join(Source).\
-        filter(Source.ytc_id == ytc_id)
+    if ytc_id == "all":
+        query = db_session.query().select_from(Entity)
+
+    else:
+        query = db_session.query().\
+            select_from(Entity). \
+            join(Sources_to_Videos). \
+            join(Source).\
+            filter(Source.ytc_id == ytc_id)
 
     params = request.args.to_dict()
     rowTable = DataTables(params, query, columns)

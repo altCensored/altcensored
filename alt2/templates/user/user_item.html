@@ -7,14 +7,13 @@
 <meta name="twitter:creator" content="@altcensored">
 
 <meta property="og:site_name" content="{{ config['MYSERVER_NAME'] }}">
-<meta property="og:url" content="https://{{ config['MYSERVER_NAME'] }}">
+<meta property="og:url" content="https://{{ config['MYSERVER_NAME'] }} + '/user/' + {{ user.username }} ">
 
 <meta property="og:title" content="User '{{ user.username }}' ({{ playlistcount}} Playlists)">
 <meta property="og:description" content="{{ user.description }}">
 
-
 {% if user.featured_playlist and user.featured_playlist.pl_title %}
-    <meta property="og:image" content="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ user.featured_playlist.extractor_data ~ '/' ~ user.featured_playlist.title | ia_fname ~ '-' ~ user.featured_playlist.extractor_data ~ '.jpg' }}"onerror="this.onerror=null;this.src='{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ user.featured_playlist.extractor_data ~ '/__ia_thumb.jpg' }}';" >
+    <meta property="og:image" content="{{ config.IARCHIVEURL ~ user.featured_playlist.extractor_data ~ '/' ~ user.featured_playlist.title | ia_fname ~ '-' ~ user.featured_playlist.extractor_data ~ '.jpg' }}"onerror="this.onerror=null;this.src='{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ user.featured_playlist.extractor_data ~ '/__ia_thumb.jpg' }}';" >
     <meta property="og:image:secure_url" content="{{ config.IARCHIVEURL ~ user.featured_playlist.extractor_data ~ '/' ~ user.featured_playlist.title | ia_fname ~ '-' ~ user.featured_playlist.extractor_data ~ '.jpg' }}"onerror="this.onerror=null;this.src='{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ user.featured_playlist.extractor_data ~ '/__ia_thumb.jpg' }}';" >
 {% else %}
     <meta property="og:image" content="https://{{ config['MYSERVER_NAME'] }}/logo_clip.png">

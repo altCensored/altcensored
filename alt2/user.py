@@ -8,7 +8,6 @@ from flask_babelplus import lazy_gettext
 from .database import db_session
 from .models import User, Mv_Video, Playlist, Counter
 from .pagination import Pagination
-from . import util
 from .util import login_required, set_session
 import datetime, json
 
@@ -31,7 +30,7 @@ def index(page):
 
     if not users and page != 1:
         abort(404)
-    usercount = users.count()
+    usercount = session['usercount']
     pagination = Pagination(page, PER_PAGE, usercount)
 
     return render_template('user/user_index.html', pagination=pagination, users=users, usercount=usercount, order=order)

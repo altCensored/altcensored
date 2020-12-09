@@ -73,10 +73,12 @@
         </div>
     </div>
 
-{% if pagination %}
-  {% with pagination=pagination %}
-      {% include "widgets/pagination.html" %}
-  {% endwith %}
-{% endif %}
+    {% from "_helpers.html" import render_pagination %}
+
+    <div class="pure-u-1 pure-u-md-4-4">
+        <div class="h-box">
+            {{ render_pagination(pagination) }}
+        </div>
+    </div>
 
 {% endblock %}

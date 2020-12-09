@@ -37,7 +37,7 @@ def index(page):
     if not playlists and page != 1:
         abort(404)
 
-    playlistcount = playlists.count()
+    playlistcount = session['playlistcount']
     pagination = Pagination(page, PER_PAGE, playlistcount)
 
     return render_template('playlist/playlist_index.html',

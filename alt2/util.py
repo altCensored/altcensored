@@ -79,6 +79,14 @@ def get_videocount():
     return session['videocount']
 
 
+#def get_usercount():
+#    if 'usercount' in session:
+#        return session['usercount']
+#    else:
+#        session['usercount'] = db_session.query(func.count(User.public)).scalar()
+#    return session['usercount']
+
+
 def get_channelcount():
     if 'channelcount' in session:
         return session['channelcount']
@@ -150,6 +158,16 @@ def set_session() -> object:
         pass
     else:
         session['videocount'] = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
+
+    if 'usercount' in session:
+        pass
+    else:
+        session['usercount'] = db_session.query(func.count(User.id).filter(User.public)).scalar()
+
+    if 'playlistcount' in session:
+        pass
+    else:
+        session['playlistcount'] = db_session.query(func.count(Playlist.id).filter(Playlist.public).filter(Playlist.featured_video.isnot(None))).scalar()
 
     if 'channelcount' in session:
         pass

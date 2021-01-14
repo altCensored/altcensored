@@ -13,6 +13,14 @@
     <meta property="og:image:url" content="https://{{ config['MYSERVER_NAME'] }}/logo_clip.png">
     <meta property="og:image:secure_url" content="https://{{ config['MYSERVER_NAME'] }}/logo_clip.png">
 
+    {% if data == 'data_deleted' %}
+    <meta property="og:url" content="https://{{ config['MYSERVER_NAME'] }}/channel/table?data=data_deleted">
+    <meta property="og:title" content="{{ videocount | viewdisplay }}+ Censored YouTube Videos; {{ delchannelcount | viewdisplay }} Deleted Channels">
+
+    {% else %}
+    <meta property="og:url" content="https://{{ config['MYSERVER_NAME'] }}/channel/table">
+    <meta property="og:title" content="{{ videocount | viewdisplay }}+ Censored YouTube Videos; {{ channelcount | viewdisplay }}+ Channels">
+
 {% endblock %}
 
 {% block content %}

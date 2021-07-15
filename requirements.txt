@@ -49,3 +49,4 @@ tqdm==4.51.0
 urllib3==1.25.11
 webencodings==0.5.1
 Werkzeug==1.0.1
+wheel

@@ -7,4 +7,3 @@ cd /your/dir/alt2 # change to this dir
 export FLASK_APP=alt2
 export FLASK_ENV=development
 flask run --host=0.0.0.0 --port=80
-

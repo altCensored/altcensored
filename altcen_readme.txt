@@ -1,4 +1,4 @@
-# python venv has been used, needs to be readded, creating dir venv in this dir
+# python venv has been used, needs to be readded, creating dir venv in this dir.
 
 # start on ubuntu server with
 

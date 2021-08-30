@@ -1,6 +1,18 @@
 {% extends 'base.html' %}
 
 {% block head %}
+
+<meta name="twitter:card" content="summary_large_image" xmlns="http://www.w3.org/1999/html">
+<meta name="twitter:site" content="@altcensored">
+<meta name="twitter:creator" content="@altcensored">
+
+<meta property="og:site_name" content="{{ config['MYSERVER_NAME'] }}">
+<meta property="og:description" content="'we show what they hide'">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://{{ config['MYSERVER_NAME'] }}/logo_clip.png">
+<meta property="og:image:url" content="https://{{ config['MYSERVER_NAME'] }}/logo_clip.png">
+<meta property="og:image:secure_url" content="https://{{ config['MYSERVER_NAME'] }}/logo_clip.png">
+
 {% endblock %}
 
 {% block content %}

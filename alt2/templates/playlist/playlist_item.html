@@ -10,7 +10,7 @@
 <meta property="og:url" content="http://{{ config['MYSERVER_NAME'] }} + '/playlist/' + {{ playlist.hashid }} ">
 
 <meta property="og:title" content="Playlist '{{ playlist.title }}' ({{ videocount}} Videos)">
-<meta property="og:description" content="{{ playlist.description | safe | nl2br }} (User '{{ playlist.user.username }}')">
+<meta property="og:description" content="{{ playlist.description }} (User '{{ playlist.user.username }}')">
 
 <meta property="og:type" content="article">
 

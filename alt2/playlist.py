@@ -60,7 +60,7 @@ def item(playlist,page):
     ip = request.headers.get('X-Forwarded-For', request.remote_addr)
     header = request.headers.get('User-Agent')
     today = str(datetime.date.today())
-    myhash=hash(ip+header+today+str(playlist))
+    myhash = hash(ip+header+today+str(playlist.hashid))
 
     if Counter.query.filter(Counter.hash == myhash).scalar() is None:
         counter = Counter (hash=myhash)

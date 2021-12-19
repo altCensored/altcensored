@@ -26,11 +26,11 @@
                 </div>
                 <div class="pure-u-6-24" style="text-align:right;">
                     <div class="pure-u-1 pure-md-1-2">
-                        <a href="{{ url_for('user.index', order='newest') }}" class="pure-menu-item {{'selected' if order == 'newest' }}">
+                        <a href="{{ url_for('user.index') }}" class="pure-menu-item {{'selected' if order == 'newest' }}">
                             {{ gettext('newest') }}</a>
                     </div>
                     <div class="pure-u-1 pure-md-1-2">
-                        <a href="{{ url_for('user.index', order='popular') }}"class="pure-menu-item {{'selected' if order == 'popular' }}">
+                        <a href="{{ url_for('user.popular') }}"class="pure-menu-item {{'selected' if order == 'popular' }}">
                             {{ gettext('popular') }}</a>
                     </div>
                 </div>
@@ -73,12 +73,10 @@
         </div>
     </div>
 
-    {% from "_helpers.html" import render_pagination %}
-
-    <div class="pure-u-1 pure-u-md-4-4">
-        <div class="h-box">
-            {{ render_pagination(pagination) }}
-        </div>
-    </div>
+{% if pagination %}
+  {% with pagination=pagination %}
+      {% include "widgets/pagination.html" %}
+  {% endwith %}
+{% endif %}
 
 {% endblock %}

@@ -1,6 +1,5 @@
 from flask import (
-    Blueprint, session, render_template, flash, redirect, request, url_for
-)
+    Blueprint, session, render_template, flash, redirect, request, url_for)
 from sqlalchemy import func, case, select
 from sqlalchemy.orm.attributes import flag_modified
 from werkzeug.exceptions import abort
@@ -20,13 +19,8 @@ PER_PAGE = 24
 def index(page):
     set_session()
     offset = ((int(page)-1) * PER_PAGE)
-    order = request.args.get('order','newest')
-
-    if order =='popular':
-        users = User.query.filter(User.public).order_by(User.view_counter.desc()).limit(PER_PAGE).offset(offset)
-
-    else:
-        users = User.query.filter(User.public).order_by(User.id.desc()).limit(PER_PAGE).offset(offset)
+    order = 'newest'
+    users = User.query.filter(User.public).order_by(User.id.desc()).limit(PER_PAGE).offset(offset)
 
     if not users and page != 1:
         abort(404)
@@ -35,6 +29,20 @@ def index(page):
 
     return render_template('user/user_index.html', pagination=pagination, users=users, usercount=usercount, order=order)
 
+@bp.route('/popular', defaults={'page': 1})
+@bp.route('/popular/page/<int:page>')
+def popular(page):
+    set_session()
+    offset = ((int(page) - 1) * PER_PAGE)
+    order = 'popular'
+    users = User.query.filter(User.public).order_by(User.view_counter.desc()).limit(PER_PAGE).offset(offset)
+
+    if not users and page != 1:
+        abort(404)
+    usercount = session['usercount']
+    pagination = Pagination(page, PER_PAGE, usercount)
+
+    return render_template('user/user_index.html', pagination=pagination, users=users, usercount=usercount, order=order)
 
 @bp.route('/<username>')
 def item(username):

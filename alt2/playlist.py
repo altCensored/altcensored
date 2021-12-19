@@ -25,14 +25,27 @@ PER_PAGE = 24
 def index(page):
     set_session()
     offset = ((int(page)-1) * PER_PAGE)
-    order = request.args.get('order','newest')
-
-    if order =='popular':
-        playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
-            .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
-    else:
-        playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
+    order = 'newest'
+    playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
             .order_by(Playlist.updated.desc()).limit(PER_PAGE).offset(offset)
+
+    if not playlists and page != 1:
+        abort(404)
+
+    playlistcount = session['playlistcount']
+    pagination = Pagination(page, PER_PAGE, playlistcount)
+
+    return render_template('playlist/playlist_index.html',
+                           pagination=pagination, playlists=playlists, playlistcount=playlistcount, order=order)
+
+@bp.route('/popular', defaults={'page': 1})
+@bp.route('/popular/page/<int:page>')
+def popular(page):
+    set_session()
+    offset = ((int(page)-1) * PER_PAGE)
+    order = 'popular'
+    playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
+            .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
 
     if not playlists and page != 1:
         abort(404)

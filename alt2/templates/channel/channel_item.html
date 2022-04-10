@@ -7,7 +7,7 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
 <meta name="twitter:card" content="summary">
 <meta name="twitter:site" content="@altcensored">
 <meta name="twitter:title" content="{{ channel['ytc_title'] ~ ' Channel ' ~ '(' ~ channel['limited'] ~' Censored Videos' ~ ')' }}">
-<meta name="twitter:description" content="{{ channel['ytc_description'] | safe | truncate (140) }}">
+<meta name="twitter:description" content="{{ channel['ytc_description'] | truncate (140) }}">
 
 
 <meta property="og:site_name" content="{{ config['MYSERVER_NAME'] }}">

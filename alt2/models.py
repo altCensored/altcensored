@@ -332,6 +332,8 @@ class Mv_Playlist(Base):
     view_counter = Column(Integer, nullable=True)
     user_id = Column(Integer, ForeignKey('altcen_user.id'), nullable=False)
     featured_video =  Column(MutableDict.as_mutable(JSON))
+    user = relationship("User", backref="mv_playlist")
+
 
     def __init__(self, next=None, delta=None):
         self.id = id

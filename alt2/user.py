@@ -1,6 +1,6 @@
 from flask import (
     Blueprint, session, render_template, flash, redirect, request, url_for)
-from sqlalchemy import func, case, select
+from sqlalchemy import func, text, case, select
 from sqlalchemy.orm.attributes import flag_modified
 from werkzeug.exceptions import abort
 from flask_babelplus import lazy_gettext

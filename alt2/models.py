@@ -245,35 +245,6 @@ class Mv_Category(Base):
     def __repr__(self):
         return '<Mv_Category %r>' % (self.cat_id)
 
-class Mv_Playlist(Base):
-    __tablename__ = 'mv_playlist'
-    id = Column(Integer, primary_key=True, unique=True, nullable=False)
-    hashid = Column(String, unique=True, nullable=False)
-    title = Column(String, nullable=False)
-    description = Column(String, nullable=True)
-
-    def __init__(self, next=None, delta=None):
-        self.id = id
-        self.hashid = hashid
-        self.title = title
-        self.description = description
-
-    def __repr__(self):
-        return '<Mv_Playlist %r>' % (self.id)
-
-class Mv_Altcen_user(Base):
-    __tablename__ = 'mv_altcen_user'
-    id = Column(Integer, primary_key=True, unique=True, nullable=False)
-    username = Column(String, unique=True, nullable=False)
-    description = Column(String, nullable=True)
-
-    def __init__(self, next=None, delta=None):
-        self.id = id
-        self.username = username
-        self.description = description
-
-    def __repr__(self):
-        return '<Mv_Altcen_user %r>' % (self.id)
 
 class Language(Base):
     __tablename__ = 'language'
@@ -314,6 +285,22 @@ class User(Base):
     featured_playlist = Column(MutableDict.as_mutable(JSON))
     playlists = relationship("Playlist", cascade="all, delete-orphan")
 
+class Mv_Altcen_user(Base):
+    __tablename__ = 'mv_altcen_user'
+    id = Column(Integer, primary_key=True, nullable=False)
+    username = Column(String, nullable=True)
+    description = Column(String, nullable=True)
+    public = Column(Boolean, nullable=False, default=False)
+    view_counter = Column(Integer, nullable=True)
+    featured_playlist = Column(MutableDict.as_mutable(JSON))
+
+    def __init__(self, next=None, delta=None):
+        self.id = id
+        self.username = username
+        self.description = description
+
+    def __repr__(self):
+        return '<Mv_Altcen_user %r>' % (self.id)
 
 class Playlist(Base):
     __tablename__ = 'playlist'
@@ -331,6 +318,30 @@ class Playlist(Base):
     featured_video =  Column(MutableDict.as_mutable(JSON))
     user = relationship("User", backref="playlist")
 
+class Mv_Playlist(Base):
+    __tablename__ = 'mv_playlist'
+    id = Column(Integer, primary_key=True, nullable=False)
+    hashid = Column(String, nullable=False)
+    title = Column(String, nullable=True)
+    description = Column(String, nullable=True)
+    videos = Column(ARRAY(Integer))
+    video_count = Column(Integer, nullable=True)
+    created = Column(DateTime, nullable=True)
+    updated = Column(DateTime, nullable=True)
+    public = Column(Boolean, nullable=False, default=True)
+    view_counter = Column(Integer, nullable=True)
+    user_id = Column(Integer, ForeignKey('altcen_user.id'), nullable=False)
+    featured_video =  Column(MutableDict.as_mutable(JSON))
+    user = relationship("User", backref="mv_playlist")
+
+    def __init__(self, next=None, delta=None):
+        self.id = id
+        self.hashid = hashid
+        self.title = title
+        self.description = description
+
+    def __repr__(self):
+        return '<Mv_Playlist %r>' % (self.id)
 
 class Translation(Base):
     __tablename__ = 'translation'

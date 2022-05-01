@@ -280,15 +280,13 @@ def search(page):
     channels = db_session.query(Mv_Channel).\
         filter(my_to_tsquery_channel).\
         order_by(my_ts_rank_channel).\
-        limit(CHANN_MAX_RESULT).\
         params(search=search).all()
 
     my_to_tsquery_playlist = text("Mv_Playlist.document @@ to_tsquery(:search)")
     my_ts_rank_playlist = text("ts_rank(Mv_Playlist.document, to_tsquery(:search)) DESC")
-    playlists = db_session.query(Mv_Playlist).\
+    searchplaylists = db_session.query(Mv_Playlist).\
         filter(my_to_tsquery_playlist).\
         order_by(my_ts_rank_playlist).\
-        limit(PER_PAGE).offset(offset).\
         params(search=search).all()
 
     my_to_tsquery_altcen_user = text("Mv_Altcen_user.document @@ to_tsquery(:search)")
@@ -301,7 +299,7 @@ def search(page):
 
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
     channcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(my_to_tsquery_channel).params(search=search).scalar()
-    playlistcount = db_session.query(func.count(Mv_Playlist.id)).filter(my_to_tsquery_playlist).params(search=search).scalar()
+    searchplaylistcount = db_session.query(func.count(Mv_Playlist.id)).filter(my_to_tsquery_playlist).params(search=search).scalar()
     usercount = db_session.query(func.count(Mv_Altcen_user.id)).filter(my_to_tsquery_altcen_user).params(search=search).scalar()
 
     pagination = Pagination(page, PER_PAGE, videocount)
@@ -319,8 +317,9 @@ def search(page):
 
     if not videos and page != 1:
         abort(404)
-    return render_template('video/video_search.html', videos=videos, pagination=pagination, usercount=usercount, \
-                           channcount=channcount, playlistcount=playlistcount, rawsearch=rawsearch,\
+    return render_template('video/video_search.html', videos=videos, pagination=pagination, usercount=usercount,\
+                           channcount=channcount, searchplaylistcount=searchplaylistcount, rawsearch=rawsearch,\
+                           searchplaylists=searchplaylists, altcen_users=altcen_users,\
                            order=order, channels=channels, videocount=videocount, watchlater=watchlater, playlist=playlist)
 
 

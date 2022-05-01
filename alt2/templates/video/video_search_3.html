@@ -14,48 +14,19 @@
 {% endblock %}
 
 {% block content %}
-
-<div class="pure-g">
-  <div class="pure-u-1 pure-u-md-2-24"></div>
-  <div class="pure-u-1 pure-u-md-20-24">
-    <div class="pure-g h-box">
-      <div class="pure-u-1-4"></div>
-      <div class="pure-u-1 pure-u-md-1-2">
-        <div class="pure-g">
-          <div class="pure-u-1-2">
-              <a href="#" class="pure-menu-heading" style="text-align:left;">
-                  <i class='ion-logo-youtube'  style="font-size: 24px" ></i>
-                  <b>Video:{{ videocount | commafy }}</b></a>
-          </div>
-          <div class="pure-u-1-2">
-              <a href="{{ url_for('video.search_channel',q=rawsearch) }}" class="pure-menu-heading" style="text-align:right;">
-                  <i class='ion-ios-albums'  style="font-size: 24px"></i>
-                  Channel:{{ channcount | commafy }}</a>
-          </div>
-        <br>
-          <div class="pure-u-1-2">
-              <a href="#" class="pure-menu-heading" style="text-align:left;">
-                  <i class='ion-md-list'  style="font-size: 24px" ></i>
-                  Playlist:{{ playlistcount | commafy }}</a>
-          </div>
-          <div class="pure-u-1-2">
-              <a href="#" class="pure-menu-heading" style="text-align:right;">
-                  <i class='ion-ios-contact'  style="font-size: 24px"></i>
-                  User:{{ usercount | commafy }}</a></a>
-          </div>
-        </div>
-      </div>
-       <div class="pure-u-1-4"></div>
-    </div>
-  </div>
-</div>
-
-
+{% with active_nav='search' %}
+    {% include "widgets/navtabs.html" %}
+{% endwith %}
+<br>
     <div class="pure-g">
         <div class="pure-u-1 pure-u-md-2-24"></div>
         <div class="pure-u-1 pure-u-md-20-24">
             <div class="pure-g">
                 {% if channels %}
+                <details><summary>
+                <div class="navbar h-box">
+                    <div class="pure-u-1 pure-u-md-4-24">
+                        Channels</summary>
                 {% for channel in channels %}
                     <div class="pure-u-1 pure-u-md-1-4">
                     <div class="h-box">
@@ -117,6 +88,7 @@
                     </div>
                 {% endfor %}
                 {% endif %}
+                </details></div></div>
                 </div>
             </div>
         </div>

@@ -121,6 +121,13 @@ def login():
             flash(reset_pw, 'success')
             return redirect(url_for('video.index'))
 
+        if submitvalue == 'clear':
+            session['register_email'] = None
+            clear_text = lazy_gettext('Try again')
+            flash(clear_text, 'success')
+            return redirect(url_for('auth.login'))
+
+
         if not email_exist(email) and session.get('register_email') is None:
             session['register_email'] = email
             generate_captcha()

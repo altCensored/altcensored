@@ -205,7 +205,8 @@ def confirm_email(token):
         conf_bad = lazy_gettext('The confirmation link is invalid or has expired')
         flash(conf_bad, 'error')
         return redirect(url_for('video.index'))
-    user = db_session.query(User).filter(User.email==email).one()
+    user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
+
     if user.email_verified:
         session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, \
                                public=user.public, email_verified=user.email_verified)

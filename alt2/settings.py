@@ -107,6 +107,7 @@ def update_user():
         fusername = request.form['username']
         fdescription = request.form['description']
         fpublic = util.str_to_bool(request.form['public'])
+        femail_subscribed = util.str_to_bool(request.form['email_subscribed'])
         ffeatured_playlist = request.form.get('featured_playlist')
 
         prof_none = lazy_gettext('Profanity forbidden')
@@ -121,6 +122,7 @@ def update_user():
         session['user']['username'] = fusername
         session['user']['description'] = fdescription
         session['user']['public'] = fpublic
+        session['user']['email_subscribed'] = femail_subscribed
         session.modified = True
 
         user = User.query.get(session['user']['id'])
@@ -133,6 +135,7 @@ def update_user():
         user.username = fusername
         user.description = fdescription
         user.public = fpublic
+        user.email_subscribed = femail_subscribed
 
         db_session.commit()
 

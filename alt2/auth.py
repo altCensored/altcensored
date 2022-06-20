@@ -24,7 +24,8 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 def find_user_by_email(email):
     try:
-        return db_session.query(User).filter(User.email == email).one()
+        return db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
+
     except NoResultFound:
         return None
 
@@ -50,7 +51,7 @@ def validate_user_email(email):
         return e
 
 def email_exist(email):
-    if db_session.query(User.email).filter((User.email) == (email)).scalar() is not None:
+    if db_session.query(User.email).filter(func.lower(User.email) == func.lower(email)).scalar() is not None:
         return True
 
 def username_exist(username):
@@ -69,7 +70,7 @@ def register_user(email, password, username):
     }
 
     user = User (
-        email=email, password=generate_password_hash(password), username=username, description="", created_date=now, \
+        email=email.lower(), password=generate_password_hash(password), username=username, description="", created_date=now, \
         updated=now, email_verified=False, view_counter = 0, \
         navtabs=[ session['navtabs']['navtab1'], session['navtabs']['navtab2'], session['navtabs']['navtab3'] ], \
         settings=settings, \
@@ -166,7 +167,8 @@ def login():
             return redirect(url_for('settings.index'))
 
         if user_and_password_is_valid(email, password):
-            user = db_session.query(User).filter(User.email==email).one()
+            user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
+
             session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public)
 
             newSettings = dict(user.settings)

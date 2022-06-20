@@ -269,6 +269,7 @@ class User(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     email = Column(String, nullable=False)
     email_verified = Column(Boolean, nullable=False, default=False)
+    email_subscribed = Column(Boolean, nullable=False, default=True)
     password = Column(String, nullable=False)
     watched = Column(ARRAY(String))
     watchlater = Column(ARRAY(String))

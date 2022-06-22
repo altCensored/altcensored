@@ -191,6 +191,17 @@ def send_welcome_email(email, content):
     sg = SendGridAPIClient(config.SENDGRID_API_KEY)
     sg.send(message)
 
+def send_mass_email(email, content):
+    message = Mail(
+        from_email='admin@altCensored.com',
+        to_emails=email,
+        subject='News from altCensored.com',
+        html_content=content)
+
+    sg = SendGridAPIClient(config.SENDGRID_API_KEY)
+    sg.send(message)
+
+
 
 def send_forgot_password_email(email, content):
     message = Mail(
@@ -208,7 +219,7 @@ def generate_confirmation_token(email):
     return serializer.dumps(email, salt=config.SECURITY_PASSWORD_SALT)
 
 
-def confirm_token(token, expiration=3600):
+def confirm_token(token, expiration):
     serializer = URLSafeTimedSerializer(config.SECRET_KEY)
     try:
         email = serializer.loads(

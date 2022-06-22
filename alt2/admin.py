@@ -1,3 +1,7 @@
+import datetime
+from datetime import timezone
+from flask_babelplus import lazy_gettext
+
 from flask import (
     Blueprint, flash, redirect, render_template, request, session, url_for, jsonify)
 from sqlalchemy import func
@@ -6,16 +10,16 @@ from .models import Mv_Channel, User, Entity, Source, Sources_to_Videos
 from datatables import ColumnDT, DataTables
 from . import util
 from .util import (
-    send_welcome_email, generate_confirmation_token
+    confirm_token, send_mass_email, generate_confirmation_token
 )
 
 bp = Blueprint('admin', __name__, url_prefix='/admin')
 
-def send_confirm_email(email):
+def send_unsubscribe_email(email):
     token = generate_confirmation_token(email)
-    confirm_url = url_for('auth.confirm_email', token=token, _external=True)
-    html = render_template('auth/auth_activate.html', confirm_url=confirm_url)
-    send_welcome_email(email, html)
+    confirm_url = url_for('admin.unsubscribe_email', token=token, _external=True)
+    html = render_template('admin/admin_mass_email.html', confirm_url=confirm_url)
+    send_mass_email(email, html)
 
 @bp.route('/')
 @util.admin_login_required
@@ -94,7 +98,7 @@ def video_data():
     rowTable = DataTables(params, query, columns)
     return jsonify(rowTable.output_result())
 
-@bp.route('/emails_send', methods=['GET', 'POST'])
+@bp.route('/emails_send', methods=['GET','POST'])
 @util.admin_login_required
 def emails_send():
     if request.method == 'POST':
@@ -112,9 +116,36 @@ def emails_send():
             recipients = User.query.filter(User.email_subscribed).all()
             for recipient in recipients:
                 flash(recipient.email)
-                send_confirm_email(recipient.email)
+                send_unsubscribe_email(recipient.email)
 
         flash(recipientscount)
         return redirect(url_for('admin.index'))
 
     return render_template('admin/admin_emails_send.html')
+
+@bp.route('/confirm/<token>', methods=['GET', 'POST'])
+def unsubscribe_email(token):
+    email = confirm_token(token, None)
+    if email == False:
+        conf_bad = lazy_gettext('The unsubscribe link is invalid or has expired')
+        flash(conf_bad, 'error')
+        return redirect(url_for('video.index'))
+    user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
+
+    if not user.email_subscribed:
+        session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, \
+                               public=user.public, email_verified=user.email_verified, email_subscribed=user.email_subscribed)
+        acct_conf = user.email + lazy_gettext(' already unsubscribed.')
+        flash(acct_conf, 'success')
+        return redirect(url_for('video.index'))
+    else:
+        now = datetime.datetime.now(timezone.utc)
+        user.email_subscribed = False
+        user.updated = now
+        db_session.add(user)
+        db_session.commit()
+        if session.get('user') is not None:
+            session['user']['email_subscribed'] = False
+        txs_conf = user.email + lazy_gettext(' has been unsubscribed')
+        flash(txs_conf, 'success')
+    return redirect(url_for('video.index'))

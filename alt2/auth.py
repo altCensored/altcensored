@@ -200,7 +200,7 @@ def login():
 
 @bp.route('/confirm/<token>', methods=['GET', 'POST'])
 def confirm_email(token):
-    email = confirm_token(token)
+    email = confirm_token(token, 3600)
     if email == False:
         conf_bad = lazy_gettext('The confirmation link is invalid or has expired')
         flash(conf_bad, 'error')

@@ -135,8 +135,8 @@ def unsubscribe_email(token):
     if not user.email_subscribed:
         session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, \
                                public=user.public, email_verified=user.email_verified, email_subscribed=user.email_subscribed)
-        acct_conf = user.email + lazy_gettext(' already unsubscribed.')
-        flash(acct_conf, 'success')
+        acct_conf = user.email + lazy_gettext(' has already been unsubscribed.')
+        flash(acct_conf, 'error')
         return redirect(url_for('video.index'))
     else:
         now = datetime.datetime.now(timezone.utc)

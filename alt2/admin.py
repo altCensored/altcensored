@@ -1,7 +1,6 @@
 import datetime
 from datetime import timezone
 from flask_babelplus import lazy_gettext
-
 from flask import (
     Blueprint, flash, redirect, render_template, request, session, url_for, jsonify)
 from sqlalchemy import func
@@ -12,6 +11,8 @@ from . import util
 from .util import (
     confirm_token, send_mass_email, generate_confirmation_token
 )
+from werkzeug.utils import secure_filename
+
 
 bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -25,6 +26,7 @@ def send_unsubscribe_email(email):
 @util.admin_login_required
 def index():
     return render_template('admin/admin_index.html')
+
 
 @bp.route('/channel_table')
 @util.admin_login_required
@@ -98,9 +100,30 @@ def video_data():
     rowTable = DataTables(params, query, columns)
     return jsonify(rowTable.output_result())
 
-@bp.route('/emails_send', methods=['GET','POST'])
+
+@bp.route('/upload_email', methods=['GET', 'POST'])
 @util.admin_login_required
-def emails_send():
+def upload_email():
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # If the user does not select a file, the browser submits an
+        # empty file without a filename.
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return redirect(url_for('download_file', name=filename))
+
+
+@bp.route('/send_email', methods=['GET','POST'])
+@util.admin_login_required
+def send_email():
     global recipientscount
     if request.method == 'POST':
         email_status = (request.form['email_status'])
@@ -120,14 +143,15 @@ def emails_send():
                 send_unsubscribe_email(recipient.email)
 
         if email_status == 'admin':
-            recipientscount = '0'
+            recipientscount = '1'
             flash('admin@altcensored.com')
-            send_unsubscribe_email('admin@altcensored.com')
+#            send_unsubscribe_email('admin@altcensored.com')
 
         flash(recipientscount)
         return redirect(url_for('admin.index'))
 
     return render_template('admin/admin_emails_send.html')
+
 
 @bp.route('/confirm/<token>', methods=['GET', 'POST'])
 def unsubscribe_email(token):

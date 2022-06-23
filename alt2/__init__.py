@@ -140,10 +140,9 @@ def create_app(test_config=None):
             looplist=util.get_looplist(),
             current_url=quote_plus(request.url),
             navtabs=util.get_navtabs(),
-            navtabs_index=util.get_navtabs_index(),
-            videocount=util.get_videocount(),
+            navtabs_index=util.get_navtabs_index(),            videocount=util.get_videocount(),
 #            usercount=util.get_usercount(),
- #           playlistcount=util.get_playlistcount(),
+#            playlistcount=util.get_playlistcount(),
             channelcount=util.get_channelcount(),
             delchannelcount=util.get_delchannelcount())
 

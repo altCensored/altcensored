@@ -101,15 +101,16 @@ def video_data():
 @bp.route('/emails_send', methods=['GET','POST'])
 @util.admin_login_required
 def emails_send():
+    global recipientscount
     if request.method == 'POST':
         email_status = (request.form['email_status'])
-#        flash(email_status)
+        flash(email_status)
 
         if email_status == 'email_verified':
             recipientscount = db_session.query(func.count(User.id)).filter(User.email_verified).scalar()
-#            recipients = User.query.filter(User.email_verified).all()
-#            for recipient in recipients:
-#                flash(recipient.email)
+            recipients = User.query.filter(User.email_verified).all()
+            for recipient in recipients:
+                flash(recipient.email)
 
         if email_status == 'email_subscribed':
             recipientscount = db_session.query(func.count(User.id)).filter(User.email_subscribed).scalar()
@@ -117,6 +118,11 @@ def emails_send():
             for recipient in recipients:
                 flash(recipient.email)
                 send_unsubscribe_email(recipient.email)
+
+        if email_status == 'admin':
+            recipientscount = '0'
+            flash('admin@altcensored.com')
+            send_unsubscribe_email('admin@altcensored.com')
 
         flash(recipientscount)
         return redirect(url_for('admin.index'))

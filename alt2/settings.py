@@ -11,16 +11,11 @@ from .models import Mv_Video, Mv_Channel, Translation, User, Playlist
 from . import util
 from .util import set_session
 from .util import (
-    username_exists, set_session
+    email_exists, validate_user_email, username_exists, set_session, send_welcome_email,
+    send_confirm_email
 )
 
 bp = Blueprint('settings', __name__, url_prefix='/settings')
-
-def username_exists(username):
-    if username == session['user']['username']:
-        return False
-    if db_session.query(User.username).filter(func.lower(User.username) == func.lower(username)).scalar() is not None:
-        return True
 
 @bp.route('/')
 def index():
@@ -107,15 +102,28 @@ def update_site():
 @util.login_required
 def update_user():
     if request.method == 'POST':
+        femail = request.form['email']
         fusername = request.form['username']
         fdescription = request.form['description']
         fpublic = util.str_to_bool(request.form['public'])
         femail_subscribed = util.str_to_bool(request.form['email_subscribed'])
         ffeatured_playlist = request.form.get('featured_playlist')
+        email_changed = False
+
+        if session['user']['email'] != femail:
+            if email_exists(femail):
+                conf = lazy_gettext('Email exists')
+                flash(conf, 'error')
+                return redirect(url_for('settings.update_user'))
+            ret_val = validate_user_email(femail)
+            if ret_val is not None:
+                flash(str(ret_val), 'error')
+                return redirect(url_for('settings.update_user'))
+            email_changed = True
 
         if username_exists(fusername):
-            user_does_exist = lazy_gettext('Username exists')
-            flash(user_does_exist, 'error')
+            conf = lazy_gettext('Username exists')
+            flash(conf, 'error')
             return redirect(url_for('settings.update_user'))
 
         prof_none = lazy_gettext('Profanity forbidden')
@@ -126,6 +134,7 @@ def update_user():
             flash(prof_none, 'error')
             return redirect(url_for('settings.update_user'))
 
+        session['user']['email'] = femail
         session['user']['username'] = fusername
         session['user']['description'] = fdescription
         session['user']['public'] = fpublic
@@ -137,8 +146,15 @@ def update_user():
         if playlist is not None and playlist.featured_video is not None:
             user.featured_playlist = playlist.featured_video
 
+        if email_changed is True:
+            user.email_verified = False
+            send_confirm_email(femail)
+            conf_email_resent = lazy_gettext('New Email not verified. Confirmation email sent')
+            flash(conf_email_resent, 'success')
+
         now = datetime.datetime.now(timezone.utc)
         user.updated = now
+        user.email = femail
         user.username = fusername
         user.description = fdescription
         user.public = fpublic

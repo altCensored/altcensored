@@ -34,6 +34,16 @@
             <div class="h-box">
                 <form class="pure-form pure-form-aligned" name=user method="post">
                     <fieldset>
+
+                        <div class="pure-control-group">
+                            <label for="Email"> {{ gettext('Email') }}:</label>
+                            {% if session.user.email %}
+                                <input type="text" id="email" value="{{ session.user.email }}" name="email" maxlength="45">
+                            {% else %}
+                                <input type="text" id="email" placeholder="Email" name="email" maxlength="45">
+                            {% endif %}
+                        </div>
+
                         <div class="pure-control-group">
                             <label for="Username"> {{ gettext('Username') }}:</label>
                             {% if session.user.username %}

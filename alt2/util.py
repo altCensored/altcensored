@@ -1,5 +1,5 @@
 from flask import (
-    session, request, redirect, url_for, current_app
+    session, request, redirect, render_template, url_for, current_app
 )
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
@@ -10,6 +10,8 @@ from captcha.image import ImageCaptcha
 from .database import db_session
 from .models import Translation, Playlist, Mv_Channel, Mv_Video, User
 from . import config
+from email_validator import validate_email, EmailNotValidError
+
 import functools, os, string, random
 
 def get_locale():
@@ -77,14 +79,6 @@ def get_videocount():
     else:
         session['videocount'] = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
     return session['videocount']
-
-
-#def get_usercount():
-#    if 'usercount' in session:
-#        return session['usercount']
-#    else:
-#        session['usercount'] = db_session.query(func.count(User.public)).scalar()
-#    return session['usercount']
 
 
 def get_channelcount():
@@ -181,6 +175,13 @@ def set_session() -> object:
             Mv_Channel.ytc_deleted).scalar()
 
 
+def send_confirm_email(email):
+    token = generate_confirmation_token(email)
+    confirm_url = url_for('auth.confirm_email', token=token, _external=True)
+    html = render_template('auth/auth_activate.html', confirm_url=confirm_url)
+    send_welcome_email(email, html)
+
+
 def send_welcome_email(email, content):
     message = Mail(
         from_email='registration@altCensored.com',
@@ -269,6 +270,21 @@ def admin_login_required(view):
         return view(**kwargs)
 
     return wrapped_view
+
+
+def email_exists(email):
+    if email == session['user']['email']:
+        return False
+    if db_session.query(User.email).filter(func.lower(User.email) == func.lower(email)).scalar() is not None:
+        return True
+
+
+def validate_user_email(email):
+    try:
+        valid = validate_email(email)
+        email = valid.email
+    except EmailNotValidError as e:
+        return e
 
 
 def username_exists(username):

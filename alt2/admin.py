@@ -132,26 +132,38 @@ def emails_send():
 @bp.route('/confirm/<token>', methods=['GET', 'POST'])
 def unsubscribe_email(token):
     email = confirm_token(token, None)
+
+    if request.method == 'POST':
+        submitvalue = (request.form['submitvalue'])
+        emailvalue = (request.form['emailvalue'])
+
+        if submitvalue == 'unsubscribe':
+            user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
+            now = datetime.datetime.now(timezone.utc)
+            user.email_subscribed = False
+            user.updated = now
+            db_session.add(user)
+            db_session.commit()
+            if session.get('user') is not None:
+                session['user']['email_subscribed'] = False
+            txs_conf = user.email + lazy_gettext(' has been unsubscribed')
+            flash(txs_conf, 'success')
+
+        if submitvalue == 'cancel':
+            txs_conf = emailvalue + lazy_gettext(' has NOT been unsubscribed')
+            flash(txs_conf, 'error')
+
+        return redirect(url_for('video.index'))
+
     if email == False:
-        conf_bad = lazy_gettext('The unsubscribe link is invalid or has expired')
+        conf_bad = lazy_gettext('The unsubscribe link is invalid')
         flash(conf_bad, 'error')
         return redirect(url_for('video.index'))
-    user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
 
+    user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
     if not user.email_subscribed:
-        session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, \
-                               public=user.public, email_verified=user.email_verified, email_subscribed=user.email_subscribed)
         acct_conf = user.email + lazy_gettext(' has already been unsubscribed.')
         flash(acct_conf, 'error')
         return redirect(url_for('video.index'))
-    else:
-        now = datetime.datetime.now(timezone.utc)
-        user.email_subscribed = False
-        user.updated = now
-        db_session.add(user)
-        db_session.commit()
-        if session.get('user') is not None:
-            session['user']['email_subscribed'] = False
-        txs_conf = user.email + lazy_gettext(' has been unsubscribed')
-        flash(txs_conf, 'success')
-    return redirect(url_for('video.index'))
+
+    return render_template('admin/admin_email_unsubscribe.html', email=email)

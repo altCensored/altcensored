@@ -10,6 +10,9 @@ from .database import db_session
 from .models import Mv_Video, Mv_Channel, Translation, User, Playlist
 from . import util
 from .util import set_session
+from .util import (
+    username_exists, set_session
+)
 
 bp = Blueprint('settings', __name__, url_prefix='/settings')
 
@@ -110,8 +113,12 @@ def update_user():
         femail_subscribed = util.str_to_bool(request.form['email_subscribed'])
         ffeatured_playlist = request.form.get('featured_playlist')
 
-        prof_none = lazy_gettext('Profanity forbidden')
+        if username_exists(fusername):
+            user_does_exist = lazy_gettext('Username exists')
+            flash(user_does_exist, 'error')
+            return redirect(url_for('settings.update_user'))
 
+        prof_none = lazy_gettext('Profanity forbidden')
         if util.contains_profanity(fusername):
             flash(prof_none, 'error')
             return redirect(url_for('settings.update_user'))

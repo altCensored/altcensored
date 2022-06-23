@@ -132,38 +132,32 @@ def emails_send():
 @bp.route('/confirm/<token>', methods=['GET', 'POST'])
 def unsubscribe_email(token):
     email = confirm_token(token, None)
+    if email == False:
+        conf_bad = lazy_gettext('The unsubscribe link is invalid')
+        flash(conf_bad, 'error')
+        return redirect(url_for('video.index'))
+    else:
+        user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
+        if not user.email_subscribed:
+            acct_conf = user.email + lazy_gettext(' has already been unsubscribed.')
+            flash(acct_conf, 'error')
+            return redirect(url_for('video.index'))
 
+    l_msg = lazy_gettext('Unsubscribe ')
+    item_quoted = (f'"{email}"')
+    message = l_msg + ' ' + item_quoted + '?'
     if request.method == 'POST':
-        submitvalue = (request.form['submitvalue'])
-        emailvalue = (request.form['emailvalue'])
-
-        if submitvalue == 'unsubscribe':
+        submitvalue = request.form['submitvalue']
+        if submitvalue == 'yes':
             user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
             now = datetime.datetime.now(timezone.utc)
             user.email_subscribed = False
             user.updated = now
             db_session.add(user)
             db_session.commit()
-            if session.get('user') is not None:
-                session['user']['email_subscribed'] = False
-            txs_conf = user.email + lazy_gettext(' has been unsubscribed')
-            flash(txs_conf, 'success')
-
-        if submitvalue == 'cancel':
-            txs_conf = emailvalue + lazy_gettext(' has NOT been unsubscribed')
-            flash(txs_conf, 'error')
-
-        return redirect(url_for('video.index'))
-
-    if email == False:
-        conf_bad = lazy_gettext('The unsubscribe link is invalid')
-        flash(conf_bad, 'error')
-        return redirect(url_for('video.index'))
-
-    user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
-    if not user.email_subscribed:
-        acct_conf = user.email + lazy_gettext(' has already been unsubscribed.')
-        flash(acct_conf, 'error')
-        return redirect(url_for('video.index'))
-
-    return render_template('admin/admin_email_unsubscribe.html', email=email)
+            flash(item_quoted + ' was unsubscribed', 'success')
+            return redirect(url_for('video.index'))
+        else:
+            flash(item_quoted + ' NOT unsubscribed', 'error')
+            return redirect(request.args.get('original_url', '/'))
+    return render_template('widgets/widgets_confirm.html', message=message)

@@ -1,25 +1,39 @@
+import os
 import datetime
 from datetime import timezone
 from flask_babelplus import lazy_gettext
 from flask import (
-    Blueprint, flash, redirect, render_template, request, session, url_for, jsonify)
+    Blueprint, flash, redirect, render_template, request, session, url_for, current_app, jsonify)
 from sqlalchemy import func
 from .database import db_session
 from .models import Mv_Channel, User, Entity, Source, Sources_to_Videos
 from datatables import ColumnDT, DataTables
 from . import util
+from . import config
+
 from .util import (
     confirm_token, send_mass_email, generate_confirmation_token
 )
 from werkzeug.utils import secure_filename
 
-
 bp = Blueprint('admin', __name__, url_prefix='/admin')
+
+ALLOWED_EXTENSIONS = {'htm', 'html'}
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def send_unsubscribe_email(email):
     token = generate_confirmation_token(email)
     confirm_url = url_for('admin.unsubscribe_email', token=token, _external=True)
     html = render_template('admin/admin_mass_email.html', confirm_url=confirm_url)
+    send_mass_email(email, html)
+
+def send_unsubscribe_email2(email,htmlfile):
+    token = generate_confirmation_token(email)
+    confirm_url = url_for('admin.unsubscribe_email', token=token, _external=True)
+    html = render_template('newsletter/' + htmlfile, confirm_url=confirm_url)
     send_mass_email(email, html)
 
 @bp.route('/')
@@ -117,9 +131,12 @@ def upload_email():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('download_file', name=filename))
-
+            folder = current_app.root_path + config.UPLOAD_FOLDER
+            folder_file = folder + '/' + filename
+            file.save(os.path.join(folder, filename))
+            flash(folder_file + ' was uploaded')
+            return redirect(url_for('admin.index'))
+    return render_template('admin/admin_upload_email.html')
 
 @bp.route('/send_email', methods=['GET','POST'])
 @util.admin_login_required
@@ -127,7 +144,9 @@ def send_email():
     global recipientscount
     if request.method == 'POST':
         email_status = (request.form['email_status'])
-        flash(email_status)
+        htmlfile = (request.form['filename'])
+#        flash(email_status)
+#        flash(htmlfile)
 
         if email_status == 'email_verified':
             recipientscount = db_session.query(func.count(User.id)).filter(User.email_verified).scalar()
@@ -144,13 +163,13 @@ def send_email():
 
         if email_status == 'admin':
             recipientscount = '1'
-            flash('admin@altcensored.com')
-#            send_unsubscribe_email('admin@altcensored.com')
+            flash('email sent to admin@altcensored.com')
+            send_unsubscribe_email2('admin@altcensored.com', htmlfile)
 
         flash(recipientscount)
         return redirect(url_for('admin.index'))
 
-    return render_template('admin/admin_emails_send.html')
+    return render_template('admin/admin_send_email.html')
 
 
 @bp.route('/confirm/<token>', methods=['GET', 'POST'])

@@ -19,6 +19,4 @@ SUPPORTED_THEMES = {'light', 'dark'}
 BABEL_DEFAULT_LOCALE = 'en'
 BABEL_DEFAULT_TIMEZONE = 'UTC'
 
-UPLOAD_FOLDER = '/path/to/the/uploads'
-
-
+UPLOAD_FOLDER = '/templates/newsletter'

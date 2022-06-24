@@ -85,10 +85,10 @@
                   <b>altCensored AT protonmail.com</b>.
           </p>
 
+                <details><summary>
+<b><u>{{ gettext('Privacy Policy') }}</b></u>
+                </summary>
 
-<label class="collapse" for="_1"><b><u>{{ gettext('Privacy Policy') }}</b></u></label>
-<input id="_1" type="checkbox">
-<div>
 
     <h4 id="policy">{{ gettext('Data you directly provide') }}</h4>
 <p>{{ gettext('Data that you provide to the website for the purpose of its operation (e.g., an account name or password, or playlist) will be stored in \
@@ -134,11 +134,13 @@ the visitors browser containing their preferences. This cookie is sent on every 
 <p>{{ gettext('To remove data stored in your browser, you can log out of the website, or you can use your browsers cookie-related controls to delete the data') }}.</p>
 <p>{{ gettext('To remove data that has been stored in the websites database, you can use the ') }}
 <a href="{{ url_for('auth.delete') }}"><u><b>{{ gettext('delete my account</u></a></b> page') | safe }}.</p>
-</div>
+    </details>
 
 
-<label class="collapse" for="_2"><b><u>{{ gettext('Frequently Asked Questions') }}</b></u></label>
-<input id="_2" type="checkbox">
+<label class="collapse" for="_2">
+    <details><summary>
+    <b><u>{{ gettext('Frequently Asked Questions') }}</b></u>
+    </summary>
 <div>
 <h4>{{ gettext('How can I find videos/channels?') }}</h3>
 <p>{{ gettext('The search bar at the top of every page is the best way to locate channels and videos. Use the minimum number of exact words. \
@@ -182,11 +184,12 @@ YouTube channel and video identifiers can also be used') }}:</p>
 src="https://www.altcensored.com/embed/yN4Uu0OlmTg">
 &lt;/iframe&gt;
 </code></pre>
-</p>
-</div>
+    </details>
 
-<label class="collapse" for="_3"><b><u>JavaScript Licenses</b></u></label>
-<input id="_3" type="checkbox">
+
+            <details><summary>
+                <b><u>JavaScript Licenses</b></u>
+            </summary>
 <div>
   <p>
   <table class="pure-table" >
@@ -225,8 +228,9 @@ src="https://www.altcensored.com/embed/yN4Uu0OlmTg">
     </tr>
   </table>
 </div>
+            </details>
 
-
+<p>
 <a href="{{ url_for('static', filename='altCensored_Channel_Creator_Guide.pdf') }}" target="_blank" >
 <b><u>Channel Creator Guide</b></u></a>&nbsp;&nbsp;|&nbsp;&nbsp;
 <a href="{{ url_for('static', filename='altCensored_Press_Kit.pdf') }}" target="_blank" >

@@ -30,11 +30,11 @@ def send_unsubscribe_email(email):
     html = render_template('admin/admin_mass_email.html', confirm_url=confirm_url)
     send_mass_email(email, html)
 
-def send_unsubscribe_email2(email,htmlfile):
+def send_unsubscribe_email2(email, subject, htmlfile):
     token = generate_confirmation_token(email)
     confirm_url = url_for('admin.unsubscribe_email', token=token, _external=True)
     html = render_template('newsletter/' + htmlfile, confirm_url=confirm_url)
-    send_mass_email(email, html)
+    send_mass_email(email, subject, html)
 
 @bp.route('/')
 @util.admin_login_required
@@ -144,6 +144,7 @@ def send_email():
     global recipientscount
     if request.method == 'POST':
         email_status = (request.form['email_status'])
+        subject = (request.form['subject'])
         htmlfile = (request.form['filename'])
 #        flash(email_status)
 #        flash(htmlfile)
@@ -164,7 +165,7 @@ def send_email():
         if email_status == 'admin':
             recipientscount = '1'
             flash('email sent to admin@altcensored.com')
-            send_unsubscribe_email2('admin@altcensored.com', htmlfile)
+            send_unsubscribe_email2('admin@altcensored.com', subject, htmlfile)
 
         flash(recipientscount)
         return redirect(url_for('admin.index'))

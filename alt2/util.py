@@ -192,11 +192,11 @@ def send_welcome_email(email, content):
     sg = SendGridAPIClient(config.SENDGRID_API_KEY)
     sg.send(message)
 
-def send_mass_email(email, content):
+def send_mass_email(email, subject, content):
     message = Mail(
         from_email='admin@altCensored.com',
         to_emails=email,
-        subject='News from altCensored.com',
+        subject=subject,
         html_content=content)
 
     sg = SendGridAPIClient(config.SENDGRID_API_KEY)

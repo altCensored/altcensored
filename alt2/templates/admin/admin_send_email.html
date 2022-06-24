@@ -17,14 +17,20 @@
       <div class="pure-u-1 pure-u-md-1-1">
         <div class="h-box">
 
-            <h1>Choose recipients and enter file name</h1>
             <form method="post" enctype="multipart/form-data">
+                <label for="email_status">Recipients:</label>
                 <select name=email_status>
                      <option value=admin>admin</option>"
                      <option value=email_verified>verified</option>"
                      <option value=email_subscribed>subscribed</option>"
                 </select>
-                <input type="text" id="filename" name="filename"><br>
+                <br><br>
+                <label for="subject">subject:</label>
+                <input type="text" name="subject">
+                <br><br>
+                <label for="filename">filename:</label>
+                <input type="text" name="filename">
+                <br><br>
                 <input type="submit" value="Submit">
 
             </form>

@@ -237,7 +237,7 @@ def aws_bounce():
         msg_process(js['Message'], js['Timestamp'])
 
         with open('bounce.json', 'w') as f:
-            json.dump(request.headers, f)
+            json.dump(js, f)
 #        send_unsubscribe_email2('admin@altcensored.com', token, 'altcen3.html')
 
     return 'OK\n'

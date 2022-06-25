@@ -237,7 +237,24 @@ def aws_bounce():
     # subscribe to the SNS topic
     if hdr == 'SubscriptionConfirmation' and 'SubscribeURL' in js:
         r = requests.get(js['SubscribeURL'])
-        send_unsubscribe_email2('admin@altcensored.com', r, 'altcen3.html')
+
+    if hdr == 'Notification':
+        msg_process(js['Message'], js['Timestamp'])
+
+    return 'OK\n'
+
+@bp.route('/aws_complaint', methods = ['GET', 'POST', 'PUT'])
+def aws_complaint():
+    # AWS sends JSON with text/plain mimetype
+    try:
+        js = json.loads(request.data)
+    except:
+        pass
+
+    hdr = request.headers.get('X-Amz-Sns-Message-Type')
+    # subscribe to the SNS topic
+    if hdr == 'SubscriptionConfirmation' and 'SubscribeURL' in js:
+        r = requests.get(js['SubscribeURL'])
 
     if hdr == 'Notification':
         msg_process(js['Message'], js['Timestamp'])

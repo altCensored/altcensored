@@ -1,5 +1,8 @@
 import os
 import datetime
+import requests
+import json
+
 from datetime import timezone
 from flask_babelplus import lazy_gettext
 from flask import (
@@ -19,6 +22,13 @@ from werkzeug.utils import secure_filename
 bp = Blueprint('admin', __name__, url_prefix='/admin')
 
 ALLOWED_EXTENSIONS = {'htm', 'html'}
+
+def msg_process(msg, tstamp):
+    js = json.loads(msg)
+    msg = 'Region: {0} / Alarm: {1}'.format(
+        js['Region'], js['AlarmName']
+    )
+    # do stuff here, like calling your favorite SMS gateway API
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -215,8 +225,21 @@ def aws_bounce1(token):
     send_unsubscribe_email2('admin@altcensored.com', token, 'altcen3.html')
     return redirect(url_for('video.index'))
 
-@bp.route('/aws_bounce', methods=['POST'])
+@bp.route('/aws_bounce', methods = ['GET', 'POST', 'PUT'])
 def aws_bounce():
-    if request.method == 'POST':
-        request_data = request.get_json()
-        logging.info(request_data)
+    # AWS sends JSON with text/plain mimetype
+    try:
+        js = json.loads(request.data)
+    except:
+        pass
+
+    hdr = request.headers.get('X-Amz-Sns-Message-Type')
+    # subscribe to the SNS topic
+    if hdr == 'SubscriptionConfirmation' and 'SubscribeURL' in js:
+        r = requests.get(js['SubscribeURL'])
+        send_unsubscribe_email2('admin@altcensored.com', r, 'altcen3.html')
+
+    if hdr == 'Notification':
+        msg_process(js['Message'], js['Timestamp'])
+
+    return 'OK\n'

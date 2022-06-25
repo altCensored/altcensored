@@ -236,9 +236,13 @@ def aws_bounce():
     if hdr == 'Notification':
         msg_process(js['Message'], js['Timestamp'])
 
+        with open("test.txt", "w") as fo:
+            fo.write("This is Test Data")
+
         with open('bounce.json', 'w') as f:
             json.dump(js, f)
 #        send_unsubscribe_email2('admin@altcensored.com', token, 'altcen3.html')
+
 
     return 'OK\n'
 

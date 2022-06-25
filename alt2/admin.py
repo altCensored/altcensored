@@ -208,3 +208,15 @@ def unsubscribe_email(token):
             flash(conf, 'error')
             return redirect(request.args.get('original_url', '/'))
     return render_template('widgets/widgets_confirm.html', message=message)
+
+
+@bp.route('/aws_bounce/<token>', methods=['GET', 'POST'])
+def aws_bounce(token):
+    send_unsubscribe_email2('admin@altcensored.com', token, 'altcen3.html')
+    return redirect(url_for('video.index'))
+
+@bp.route('/aws_complaint/<token>', methods=['GET', 'POST'])
+def aws_complaint(token):
+    send_unsubscribe_email2('admin@altcensored.com', token, 'altcen3.html')
+    return redirect(url_for('video.index'))
+

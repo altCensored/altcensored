@@ -220,11 +220,6 @@ def unsubscribe_email(token):
     return render_template('widgets/widgets_confirm.html', message=message)
 
 
-@bp.route('/aws_bounce1/<token>', methods=['GET', 'POST'])
-def aws_bounce1(token):
-    send_unsubscribe_email2('admin@altcensored.com', token, 'altcen3.html')
-    return redirect(url_for('video.index'))
-
 @bp.route('/aws_bounce', methods = ['GET', 'POST', 'PUT'])
 def aws_bounce():
     # AWS sends JSON with text/plain mimetype
@@ -240,6 +235,10 @@ def aws_bounce():
 
     if hdr == 'Notification':
         msg_process(js['Message'], js['Timestamp'])
+
+        with open('bounce.json', 'w') as f:
+            json.dump(request.form, f)
+#        send_unsubscribe_email2('admin@altcensored.com', token, 'altcen3.html')
 
     return 'OK\n'
 

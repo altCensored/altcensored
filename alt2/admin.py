@@ -1,6 +1,5 @@
 import os
 import datetime
-import logging
 from datetime import timezone
 from flask_babelplus import lazy_gettext
 from flask import (
@@ -20,8 +19,6 @@ from werkzeug.utils import secure_filename
 bp = Blueprint('admin', __name__, url_prefix='/admin')
 
 ALLOWED_EXTENSIONS = {'htm', 'html'}
-logging.basicConfig(filename='requests.log', level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
-
 
 def allowed_file(filename):
     return '.' in filename and \

@@ -190,6 +190,9 @@ def unsubscribe_email(token):
     item_quoted = (f'"{email}"')
     message = l_msg + ' ' + item_quoted + '?'
 
+    with open("test.txt", "w") as fo:
+        fo.write("This is Test Data")
+
     if email == False:
         conf = lazy_gettext('The unsubscribe link is invalid')
         flash(conf, 'error')
@@ -222,6 +225,9 @@ def unsubscribe_email(token):
 
 @bp.route('/aws_bounce', methods = ['GET', 'POST', 'PUT'])
 def aws_bounce():
+    with open("test.txt", "w") as fo:
+        fo.write("This is Test Data")
+
     # AWS sends JSON with text/plain mimetype
     try:
         js = json.loads(request.data)
@@ -236,8 +242,7 @@ def aws_bounce():
     if hdr == 'Notification':
         msg_process(js['Message'], js['Timestamp'])
 
-        with open("test.txt", "w") as fo:
-            fo.write("This is Test Data")
+
 
         with open('bounce.json', 'w') as f:
             json.dump(js, f)

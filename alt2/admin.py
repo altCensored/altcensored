@@ -1,5 +1,6 @@
 import os
 import datetime
+import logging
 from datetime import timezone
 from flask_babelplus import lazy_gettext
 from flask import (
@@ -19,6 +20,8 @@ from werkzeug.utils import secure_filename
 bp = Blueprint('admin', __name__, url_prefix='/admin')
 
 ALLOWED_EXTENSIONS = {'htm', 'html'}
+logging.basicConfig(filename='requests.log', level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -210,13 +213,13 @@ def unsubscribe_email(token):
     return render_template('widgets/widgets_confirm.html', message=message)
 
 
-@bp.route('/aws_bounce/<token>', methods=['GET', 'POST'])
-def aws_bounce(token):
+@bp.route('/aws_bounce1/<token>', methods=['GET', 'POST'])
+def aws_bounce1(token):
     send_unsubscribe_email2('admin@altcensored.com', token, 'altcen3.html')
     return redirect(url_for('video.index'))
 
-@bp.route('/aws_complaint/<token>', methods=['GET', 'POST'])
-def aws_complaint(token):
-    send_unsubscribe_email2('admin@altcensored.com', token, 'altcen3.html')
-    return redirect(url_for('video.index'))
-
+@bp.route('/aws_bounce', methods=['POST'])
+def aws_bounce():
+    if request.method == 'POST':
+        request_data = request.get_json()
+        logging.info(request_data)

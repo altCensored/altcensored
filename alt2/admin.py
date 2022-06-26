@@ -30,6 +30,22 @@ def msg_process(msg, tstamp):
     )
     # do stuff here, like calling your favorite SMS gateway API
 
+    try:
+        with open('bounce1.json', 'w') as f:
+            json.dump(msg, f)
+    except:
+        pass
+
+    try:
+        with open('bounce2.json', 'w') as f:
+            json.dump(js, f)
+    except:
+        pass
+
+
+
+
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -238,9 +254,6 @@ def aws_bounce():
 
     if hdr == 'Notification':
         msg_process(js['Message'], js['Timestamp'])
-
-        with open('bounce.json', 'w') as f:
-            json.dump(js, f)
 
     return 'OK\n'
 

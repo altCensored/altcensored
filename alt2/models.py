@@ -270,6 +270,7 @@ class User(Base):
     email = Column(String, nullable=False)
     email_verified = Column(Boolean, nullable=False, default=False)
     email_subscribed = Column(Boolean, nullable=False, default=True)
+    email_action = Column(String, nullable=True)
     password = Column(String, nullable=False)
     watched = Column(ARRAY(String))
     watchlater = Column(ARRAY(String))

@@ -253,8 +253,12 @@ def aws_bounce():
         r = requests.get(js['SubscribeURL'])
 
     if hdr == 'Notification':
-        with open("test2.txt", "w") as fo:
+
+        with open("test3.txt", "w") as fo:
             fo.write("This is Test Data")
+
+        with open('file.json', 'w') as f:
+            json.dump(js, f)
 
         msg_process(js['Message'], js['Timestamp'])
 

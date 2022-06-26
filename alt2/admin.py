@@ -39,13 +39,15 @@ def send_unsubscribe_email2(email, subject, htmlfile):
     html = render_template('newsletter/' + htmlfile, confirm_url=confirm_url)
     send_mass_email(email, subject, html)
 
-def db_unsubscribe_email(email):
+def db_unsubscribe_email(email, action):
     user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
     now = datetime.datetime.now(timezone.utc)
     user.email_subscribed = False
+    user.email_action = action
     user.updated = now
     db_session.add(user)
     db_session.commit()
+
 
 @bp.route('/')
 @util.admin_login_required
@@ -245,7 +247,8 @@ def aws_bounce():
         msgjs = json.loads(msg)
 
         emailbounce = msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"]
-        db_unsubscribe_email(emailbounce)
+        action = 'ab' #unenforced code for aws bounce
+        db_unsubscribe_email(emailbounce, action)
 
 
 #        folder = current_app.root_path + config.UPLOAD_FOLDER

@@ -38,6 +38,11 @@ def send_unsubscribe_email2(email, subject, htmlfile):
     confirm_url = url_for('admin.unsubscribe_email', token=token, _external=True)
     html = render_template('newsletter/' + htmlfile, confirm_url=confirm_url)
     send_mass_email(email, subject, html)
+    user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
+    now = datetime.datetime.now(timezone.utc)
+    user.email_lastsent_date = now
+    db_session.add(user)
+    db_session.commit()
 
 def db_unsubscribe_email(email, action):
     user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()

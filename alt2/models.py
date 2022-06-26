@@ -276,6 +276,7 @@ class User(Base):
     watchlater = Column(ARRAY(String))
     created_date = Column(DateTime, nullable=True)
     email_verified_date = Column(DateTime, nullable=True)
+    email_lastsent_date = Column(DateTime, nullable=True)
     updated = Column(DateTime, nullable=True)
     navtabs = Column(ARRAY(String))
     navtabs_index = Column(ARRAY(String))

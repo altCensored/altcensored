@@ -234,6 +234,7 @@ def aws_bounce():
         pass
 
     hdr = request.headers.get('X-Amz-Sns-Message-Type')
+    content_type = request.headers.get('Content-Type')
     # subscribe to the SNS topic
     if hdr == 'SubscriptionConfirmation' and 'SubscribeURL' in js:
         r = requests.get(js['SubscribeURL'])
@@ -242,6 +243,7 @@ def aws_bounce():
 
         folder = current_app.root_path + config.UPLOAD_FOLDER
         myfile = 'bounce_report'
+
 
 #        recipients = [r["emailAddress"] for r in js["bounce"]["bouncedRecipients"]]
 #        awsbemail = recipients[0]
@@ -252,7 +254,7 @@ def aws_bounce():
         with open(os.path.join(folder, myfile), 'w') as fo:
 #            json.dump(js, fo)
 #            fo.write("emailAddress=" + awsbemail + "\n")
-            fo.write("type=" + js + "\n")
+            fo.write("type=" + content_type + "\n")
 
         send_unsubscribe_email2('admin@altcensored.com', 'bounce_report', myfile)
 

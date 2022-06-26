@@ -30,22 +30,6 @@ def msg_process(msg, tstamp):
     )
     # do stuff here, like calling your favorite SMS gateway API
 
-#    try:
-#        with open('bounce1.json', 'w') as f:
-#            json.dumps(msg, f)
-#    except:
-#        pass
-
-#    try:
-#        with open('bounce2.json', 'w') as f:
-#            json.dumps(js, f)
-#    except:
-#        pass
-
-
-
-
-
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -263,12 +247,12 @@ def aws_bounce():
 #        awsbemail = recipients[0]
 
         msg = requests.get(js['Message'])
-        type = msg["notificationType"]  # "Complaint" or "Bounce"
+#        type = msg["notificationType"]  # "Complaint" or "Bounce"
 
         with open(os.path.join(folder, myfile), 'w') as fo:
 #            json.dump(js, fo)
 #            fo.write("emailAddress=" + awsbemail + "\n")
-            fo.write("type=" + type + "\n")
+            fo.write("type=" + msg + "\n")
 
         send_unsubscribe_email2('admin@altcensored.com', 'bounce_report', myfile)
 

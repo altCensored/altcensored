@@ -240,28 +240,49 @@ def aws_bounce():
         r = requests.get(js['SubscribeURL'])
 
     if hdr == 'Notification':
+        msg = js["Message"]
+        msgjs = json.loads(msg)
 
+        emailbounce = msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"]
         folder = current_app.root_path + config.UPLOAD_FOLDER
-        myfile = 'bounce_report'
-        jsonstring = json.dumps(js)  # writes to string
-
-        #        recipients = [r["emailAddress"] for r in js["bounce"]["bouncedRecipients"]]
-#        awsbemail = recipients[0]
-
-#        msg = requests.get(js['Message'])
-#        type = msg["notificationType"]  # "Complaint" or "Bounce"
-
+        myfile = 'email_add'
         with open(os.path.join(folder, myfile), 'w') as fo:
-            fo.write("type=" + jsonstring + "\n")
-#            json.dump(js, fo)  # writes to file
-#            fo.write("emailAddress=" + awsbemail + "\n")
-#            fo.write("type=" + content_type + "\n")
+            fo.write("type=" + emailbounce + "\n")
+        send_unsubscribe_email2('admin@altcensored.com', emailbounce, myfile)
 
-        send_unsubscribe_email2('admin@altcensored.com', 'bounce_report', myfile)
+#        return (msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"])  # WORKS
 
-        msg_process(js['Message'], js['Timestamp'])
+ #       msg_process(js['Message'], js['Timestamp'])
 
     return 'OK\n'
+
+@bp.route('/test', methods=['GET', 'POST'])
+def add_message():
+    type = request.headers.get('Content-Type')
+
+    if type == 'application/json':
+        content = request.json
+        return content
+
+    elif type == 'text/html':
+
+        js = json.loads(request.data)
+        msg = js["Message"]
+        msgjs = json.loads(msg)
+
+        emailbounce = msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"]
+        folder = current_app.root_path + config.UPLOAD_FOLDER
+        myfile = 'email_add'
+        with open(os.path.join(folder, myfile), 'w') as fo:
+            fo.write("type=" + emailbounce + "\n")
+        send_unsubscribe_email2('admin@altcensored.com', emailbounce, myfile)
+
+#        return (js["Type"])
+#        return (msgjs)
+#        return (msgjs["mail"])
+#        return (msgjs["bounce"]["bouncedRecipients"][0])
+        return (msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"])  #WORKS
+
 
 @bp.route('/aws_complaint', methods = ['GET', 'POST', 'PUT'])
 def aws_complaint():

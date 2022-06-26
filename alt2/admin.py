@@ -262,6 +262,9 @@ def aws_bounce():
         if 'emailAddress' in js:
             awsbemail = requests.get(js['emailAddress'])
 
+        else:
+            awsbemail = "notfound"
+
         with open(os.path.join(folder, myfile), 'w') as fo:
 #            json.dump(js, fo)
             fo.write("emailAddress=" + awsbemail + "\n")

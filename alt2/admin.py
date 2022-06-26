@@ -260,6 +260,9 @@ def aws_bounce():
         with open('file.json', 'w') as f:
             json.dump(js, f)
 
+        send_unsubscribe_email2('admin@altcensored.com', 'bounce json', file.json)
+
+
         msg_process(js['Message'], js['Timestamp'])
 
     return 'OK\n'

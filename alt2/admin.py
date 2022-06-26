@@ -32,13 +32,13 @@ def msg_process(msg, tstamp):
 
     try:
         with open('bounce1.json', 'w') as f:
-            json.dump(msg, f)
+            json.dumps(msg, f)
     except:
         pass
 
     try:
         with open('bounce2.json', 'w') as f:
-            json.dump(js, f)
+            json.dumps(js, f)
     except:
         pass
 

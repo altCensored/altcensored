@@ -259,11 +259,8 @@ def aws_bounce():
         folder = current_app.root_path + config.UPLOAD_FOLDER
         myfile = 'bounce_report'
 
-        if 'emailAddress' in js:
-            awsbemail = requests.get(js['emailAddress'])
-
-        else:
-            awsbemail = "notfound"
+        recipients = [r["emailAddress"] for r in js["bounce"]["bouncedRecipients"]]
+        awsbemail = recipients[0]
 
         with open(os.path.join(folder, myfile), 'w') as fo:
 #            json.dump(js, fo)

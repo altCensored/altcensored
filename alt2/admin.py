@@ -279,7 +279,8 @@ def aws_complaint():
         msgjs = json.loads(msg)
 
         emailcomplaint = msgjs["complaint"]["complainedRecipients"][0]["emailAddress"]
-        db_unsubscribe_email(emailcomplaint)
+        action = 'ac' #unenforced code for aws complaint
+        db_unsubscribe_email(emailcomplaint, action)
 
     #        folder = current_app.root_path + config.UPLOAD_FOLDER
     #        myfile = 'email_add'

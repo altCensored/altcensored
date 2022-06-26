@@ -30,19 +30,20 @@ def msg_process(msg, tstamp):
     )
     # do stuff here, like calling your favorite SMS gateway API
 
-    try:
-        with open('bounce1.json', 'w') as f:
-            json.dumps(msg, f)
-    except:
-        pass
+#    try:
+#        with open('bounce1.json', 'w') as f:
+#            json.dumps(msg, f)
+#    except:
+#        pass
 
-    try:
-        with open('bounce2.json', 'w') as f:
-            json.dumps(js, f)
-    except:
-        pass
+#    try:
+#        with open('bounce2.json', 'w') as f:
+#            json.dumps(js, f)
+#    except:
+#        pass
 
-
+    with open("test2.txt", "w") as fo:
+       fo.write("This is Test Data")
 
 
 

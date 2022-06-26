@@ -235,7 +235,7 @@ def aws_bounce():
         pass
 
     hdr = request.headers.get('X-Amz-Sns-Message-Type')
-    content_type = request.headers.get('Content-Type')
+
     # subscribe to the SNS topic
     if hdr == 'SubscriptionConfirmation' and 'SubscribeURL' in js:
         r = requests.get(js['SubscribeURL'])
@@ -254,9 +254,38 @@ def aws_bounce():
 #            fo.write("type=" + emailbounce + "\n")
 #        send_unsubscribe_email2('admin@altcensored.com', emailbounce, myfile)
 
-
-
     return 'OK\n'
+
+
+@bp.route('/aws_complaint', methods = ['GET', 'POST'])
+def aws_complaint():
+    # AWS sends JSON with text/plain mimetype
+    try:
+        js = json.loads(request.data)
+    except:
+        pass
+
+    hdr = request.headers.get('X-Amz-Sns-Message-Type')
+
+    # subscribe to the SNS topic
+    if hdr == 'SubscriptionConfirmation' and 'SubscribeURL' in js:
+        r = requests.get(js['SubscribeURL'])
+
+    if hdr == 'Notification':
+        msg = js["Message"]
+        msgjs = json.loads(msg)
+
+#        emailcomplaint = msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"]
+#        db_unsubscribe_email(emailbounce)
+
+
+        folder = current_app.root_path + config.UPLOAD_FOLDER
+        myfile = 'json_complaint'
+        with open(os.path.join(folder, myfile), 'w') as f:
+            json.dump(js, f)
+
+        send_unsubscribe_email2('admin@altcensored.com', 'json_complaint', myfile)
+
 
 @bp.route('/test', methods=['GET', 'POST'])
 def add_message():
@@ -285,22 +314,3 @@ def add_message():
 #        return (msgjs["mail"])
 #        return (msgjs["bounce"]["bouncedRecipients"][0])
         return (msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"])  #WORKS
-
-
-@bp.route('/aws_complaint', methods = ['GET', 'POST', 'PUT'])
-def aws_complaint():
-    # AWS sends JSON with text/plain mimetype
-    try:
-        js = json.loads(request.data)
-    except:
-        pass
-
-    hdr = request.headers.get('X-Amz-Sns-Message-Type')
-    # subscribe to the SNS topic
-    if hdr == 'SubscriptionConfirmation' and 'SubscribeURL' in js:
-        r = requests.get(js['SubscribeURL'])
-
-    if hdr == 'Notification':
-        msg_process(js['Message'], js['Timestamp'])
-
-    return 'OK\n'

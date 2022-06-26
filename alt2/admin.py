@@ -225,9 +225,6 @@ def unsubscribe_email(token):
 
 @bp.route('/aws_bounce', methods = ['GET', 'POST', 'PUT'])
 def aws_bounce():
-    with open("test.txt", "w") as fo:
-        fo.write("This is Test Data")
-
     # AWS sends JSON with text/plain mimetype
     try:
         js = json.loads(request.data)
@@ -242,12 +239,8 @@ def aws_bounce():
     if hdr == 'Notification':
         msg_process(js['Message'], js['Timestamp'])
 
-
-
         with open('bounce.json', 'w') as f:
             json.dump(js, f)
-#        send_unsubscribe_email2('admin@altcensored.com', token, 'altcen3.html')
-
 
     return 'OK\n'
 

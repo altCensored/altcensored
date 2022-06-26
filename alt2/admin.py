@@ -206,8 +206,10 @@ def unsubscribe_email(token):
     item_quoted = (f'"{email}"')
     message = l_msg + ' ' + item_quoted + '?'
 
-    with open("test.txt", "w") as fo:
-        fo.write("This is Test Data")
+#        with open("test.txt", "w") as fo:
+#            fo.write("This is Test Data line1\n")
+#            fo.write("token=" + token + "\n")
+#            fo.write("lastline")
 
     if email == False:
         conf = lazy_gettext('The unsubscribe link is invalid')
@@ -254,18 +256,17 @@ def aws_bounce():
 
     if hdr == 'Notification':
 
-        with open("test3.txt", "w") as fo:
-            fo.write("This is Test Data")
-
         folder = current_app.root_path + config.UPLOAD_FOLDER
-        myfile = 'bounce_json'
+        myfile = 'bounce_report'
 
-        with open(os.path.join(folder, myfile), 'w') as f:
-#        with open('file.json', 'w') as f:
-            json.dump(js, f)
+        if 'emailAddress' in js:
+            awsbemail = requests.get(js['emailAddress'])
 
-        send_unsubscribe_email2('admin@altcensored.com', 'bounce json', myfile)
+        with open(os.path.join(folder, myfile), 'w') as fo:
+#            json.dump(js, fo)
+            fo.write("emailAddress=" + awsbemail + "\n")
 
+        send_unsubscribe_email2('admin@altcensored.com', 'bounce_report', myfile)
 
         msg_process(js['Message'], js['Timestamp'])
 

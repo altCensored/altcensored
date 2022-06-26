@@ -42,8 +42,7 @@ def msg_process(msg, tstamp):
 #    except:
 #        pass
 
-    with open("test2.txt", "w") as fo:
-       fo.write("This is Test Data")
+
 
 
 
@@ -254,6 +253,9 @@ def aws_bounce():
         r = requests.get(js['SubscribeURL'])
 
     if hdr == 'Notification':
+        with open("test2.txt", "w") as fo:
+            fo.write("This is Test Data")
+
         msg_process(js['Message'], js['Timestamp'])
 
     return 'OK\n'

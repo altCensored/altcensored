@@ -257,10 +257,13 @@ def aws_bounce():
         with open("test3.txt", "w") as fo:
             fo.write("This is Test Data")
 
-        with open('file.json', 'w') as f:
+        folder = current_app.root_path + config.UPLOAD_FOLDER
+
+        with open(os.path.join(folder, 'bounce_json'), 'w') as f:
+#        with open('file.json', 'w') as f:
             json.dump(js, f)
 
-        send_unsubscribe_email2('admin@altcensored.com', 'bounce json', file.json)
+        send_unsubscribe_email2('admin@altcensored.com', 'bounce json', bounce_json)
 
 
         msg_process(js['Message'], js['Timestamp'])

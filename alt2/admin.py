@@ -275,16 +275,16 @@ def aws_complaint():
         msg = js["Message"]
         msgjs = json.loads(msg)
 
-#        emailcomplaint = msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"]
-#        db_unsubscribe_email(emailbounce)
+        emailcomplaint = msgjs["complaint"]["complainedRecipients"][0]["emailAddress"]
+        db_unsubscribe_email(emailcomplaint)
 
+    #        folder = current_app.root_path + config.UPLOAD_FOLDER
+    #        myfile = 'email_add'
+    #        with open(os.path.join(folder, myfile), 'w') as fo:
+    #            fo.write("type=" + emailbounce + "\n")
+    #        send_unsubscribe_email2('admin@altcensored.com', emailbounce, myfile)
 
-        folder = current_app.root_path + config.UPLOAD_FOLDER
-        myfile = 'json_complaint'
-        with open(os.path.join(folder, myfile), 'w') as f:
-            json.dump(js, f)
-
-        send_unsubscribe_email2('admin@altcensored.com', 'json_complaint', myfile)
+    return 'OK\n'
 
 
 @bp.route('/test', methods=['GET', 'POST'])
@@ -301,16 +301,23 @@ def add_message():
         msg = js["Message"]
         msgjs = json.loads(msg)
 
-        emailbounce = msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"]
-        folder = current_app.root_path + config.UPLOAD_FOLDER
-        myfile = 'email_add'
-        with open(os.path.join(folder, myfile), 'w') as fo:
-            fo.write("type=" + emailbounce + "\n")
-        send_unsubscribe_email2('admin@altcensored.com', emailbounce, myfile)
-        db_unsubscribe_email(emailbounce)
+#        emailbounce = msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"]
+        emailcomplaint = msgjs["complaint"]["complainedRecipients"][0]["emailAddress"]
+
+#        folder = current_app.root_path + config.UPLOAD_FOLDER
+#        myfile = 'email_add'
+#        with open(os.path.join(folder, myfile), 'w') as fo:
+#            fo.write("type=" + emailbounce + "\n")
+#        send_unsubscribe_email2('admin@altcensored.com', emailbounce, myfile)
+#        db_unsubscribe_email(emailbounce)
 
 #        return (js["Type"])
+        return (msg)
+#        return (msg["notificationType"])
+
+#        return (msg["notificationType"])
 #        return (msgjs)
 #        return (msgjs["mail"])
 #        return (msgjs["bounce"]["bouncedRecipients"][0])
-        return (msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"])  #WORKS
+#        return (msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"])  #WORKS
+        return (emailcomplaint)  #WORKS

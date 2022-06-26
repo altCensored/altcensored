@@ -259,12 +259,16 @@ def aws_bounce():
         folder = current_app.root_path + config.UPLOAD_FOLDER
         myfile = 'bounce_report'
 
-        recipients = [r["emailAddress"] for r in js["bounce"]["bouncedRecipients"]]
-        awsbemail = recipients[0]
+#        recipients = [r["emailAddress"] for r in js["bounce"]["bouncedRecipients"]]
+#        awsbemail = recipients[0]
+
+        msg = requests.get(js['Message'])
+        type = msg["notificationType"]  # "Complaint" or "Bounce"
 
         with open(os.path.join(folder, myfile), 'w') as fo:
 #            json.dump(js, fo)
-            fo.write("emailAddress=" + awsbemail + "\n")
+#            fo.write("emailAddress=" + awsbemail + "\n")
+            fo.write("type=" + type + "\n")
 
         send_unsubscribe_email2('admin@altcensored.com', 'bounce_report', myfile)
 

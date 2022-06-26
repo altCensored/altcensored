@@ -23,13 +23,6 @@ bp = Blueprint('admin', __name__, url_prefix='/admin')
 
 ALLOWED_EXTENSIONS = {'htm', 'html'}
 
-def msg_process(msg, tstamp):
-    js = json.loads(msg)
-    msg = 'Region: {0} / Alarm: {1}'.format(
-        js['Region'], js['AlarmName']
-    )
-    # do stuff here, like calling your favorite SMS gateway API
-
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -45,6 +38,14 @@ def send_unsubscribe_email2(email, subject, htmlfile):
     confirm_url = url_for('admin.unsubscribe_email', token=token, _external=True)
     html = render_template('newsletter/' + htmlfile, confirm_url=confirm_url)
     send_mass_email(email, subject, html)
+
+def db_unsubscribe_email(email):
+    user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
+    now = datetime.datetime.now(timezone.utc)
+    user.email_subscribed = False
+    user.updated = now
+    db_session.add(user)
+    db_session.commit()
 
 @bp.route('/')
 @util.admin_login_required
@@ -244,15 +245,16 @@ def aws_bounce():
         msgjs = json.loads(msg)
 
         emailbounce = msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"]
-        folder = current_app.root_path + config.UPLOAD_FOLDER
-        myfile = 'email_add'
-        with open(os.path.join(folder, myfile), 'w') as fo:
-            fo.write("type=" + emailbounce + "\n")
-        send_unsubscribe_email2('admin@altcensored.com', emailbounce, myfile)
+        db_unsubscribe_email(emailbounce)
 
-#        return (msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"])  # WORKS
 
- #       msg_process(js['Message'], js['Timestamp'])
+#        folder = current_app.root_path + config.UPLOAD_FOLDER
+#        myfile = 'email_add'
+#        with open(os.path.join(folder, myfile), 'w') as fo:
+#            fo.write("type=" + emailbounce + "\n")
+#        send_unsubscribe_email2('admin@altcensored.com', emailbounce, myfile)
+
+
 
     return 'OK\n'
 
@@ -276,6 +278,7 @@ def add_message():
         with open(os.path.join(folder, myfile), 'w') as fo:
             fo.write("type=" + emailbounce + "\n")
         send_unsubscribe_email2('admin@altcensored.com', emailbounce, myfile)
+        db_unsubscribe_email(emailbounce)
 
 #        return (js["Type"])
 #        return (msgjs)

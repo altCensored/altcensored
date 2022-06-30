@@ -3,6 +3,7 @@ backports.csv==1.0.7
 bcrypt==3.2.0
 better-profanity==0.7.0
 bleach==3.2.1
+boto3==1.24.19
 captcha==0.3
 certifi==2020.11.8
 cffi==1.14.3

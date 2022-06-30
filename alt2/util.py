@@ -13,6 +13,8 @@ from . import config
 from email_validator import validate_email, EmailNotValidError
 
 import functools, os, string, random
+import boto3
+
 
 def get_locale():
     if 'locale' in session:
@@ -192,6 +194,7 @@ def send_welcome_email(email, content):
     sg = SendGridAPIClient(config.SENDGRID_API_KEY)
     sg.send(message)
 
+
 def send_mass_email(email, subject, content):
     message = Mail(
         from_email='admin@altCensored.com',
@@ -201,7 +204,6 @@ def send_mass_email(email, subject, content):
 
     sg = SendGridAPIClient(config.SENDGRID_API_KEY)
     sg.send(message)
-
 
 
 def send_forgot_password_email(email, content):
@@ -310,3 +312,24 @@ def title_exists(ftitle):
             (Playlist.user_id) == (user_id)).scalar() is not None:
         return True
 
+
+def send_ses_email(email, subject, html):
+    email = list((email,))
+    ses = boto3.client(
+        'ses',
+        region_name=config.SES_REGION_NAME,
+        aws_access_key_id=config.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=config.AWS_SECRET_ACCESS_KEY
+    )
+    sender=config.SES_EMAIL_SOURCE
+    ses.send_email(
+        Source=sender,
+        Destination={'ToAddresses': email},
+        Message={
+            'Subject': {'Data': subject},
+            'Body': {
+#                'Text': {'Data': text},
+                'Html': {'Data': html}
+            }
+        }
+    )

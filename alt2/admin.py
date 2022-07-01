@@ -193,7 +193,7 @@ def send_email():
             recipientscount = '1'
             email = 'admin@altcensored.com'
             flash('email sent to admin@altcensored.com')
-#            send_unsubscribe_email2(email, subject, htmlfile)
+            send_unsubscribe_email2(email, subject, htmlfile)
             send_unsubscribe_ses(email, subject, htmlfile)
 
         flash(recipientscount)

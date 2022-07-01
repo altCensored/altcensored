@@ -175,8 +175,6 @@ def send_email():
         email_status = (request.form['email_status'])
         subject = (request.form['subject'])
         htmlfile = (request.form['filename'])
-#        flash(email_status)
-#        flash(htmlfile)
 
         if email_status == 'email_verified':
             recipientscount = db_session.query(func.count(User.id)).filter(User.email_verified).scalar()
@@ -193,6 +191,7 @@ def send_email():
 
         if email_status == 'admin':
             recipientscount = '1'
+            email = 'admin@altcensored.com'
             flash('email sent to admin@altcensored.com')
 #            send_unsubscribe_email2(email, subject, htmlfile)
             send_unsubscribe_ses(email, subject, htmlfile)

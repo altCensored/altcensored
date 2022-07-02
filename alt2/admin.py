@@ -21,7 +21,7 @@ from werkzeug.utils import secure_filename
 
 bp = Blueprint('admin', __name__, url_prefix='/admin')
 
-ALLOWED_EXTENSIONS = {'htm', 'html'}
+ALLOWED_EXTENSIONS = {'htm', 'html', 'txt'}
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -155,9 +155,67 @@ def video_data():
     return jsonify(rowTable.output_result())
 
 
-@bp.route('/upload_email', methods=['GET', 'POST'])
+@bp.route('/send_mass_email', methods=['GET','POST'])
 @util.admin_login_required
-def upload_email():
+def send_mass_email():
+    jetlimit = 190
+    title = "Send via mjet: " + str(jetlimit)
+    global recipientscount
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # If the user does not select a file, the browser submits an
+        # empty file without a filename.
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            folder = current_app.root_path + config.UPLOAD_FOLDER
+#            folder_file = folder + '/' + filename
+            file.save(os.path.join(folder, filename))
+#            flash(folder_file + ' was uploaded')
+
+        email_status = (request.form['email_status'])
+        subject = (request.form['subject'])
+#        htmlfile = (request.form['filename'])
+
+        if email_status == 'email_verified':
+            recipientscount = db_session.query(func.count(User.id)).filter(User.email_verified).scalar()
+            recipients = User.query.filter(User.email_verified).all()
+            for recipient in recipients:
+                flash(recipient.email)
+
+        if email_status == 'email_subscribed':
+            recipientscount = db_session.query(func.count(User.id)).filter(User.email_subscribed).scalar()
+            recipients = User.query.filter(User.email_subscribed).all()
+            for recipient in recipients:
+                flash(recipient.email)
+                send_unsubscribe_ses(recipient.email, subject, filename)
+
+        if email_status == 'admin':
+            recipientscount = '1'
+            email = 'admin@altcensored.com'
+            flash('email sent to admin@altcensored.com')
+#            send_unsubscribe_email2(email, subject, filename)
+            send_unsubscribe_ses(email, subject, filename)
+#            send_unsubscribe_mj(email, subject, filename)
+
+#        flash(recipientscount)
+        return redirect(url_for('admin.index'))
+
+    return render_template('admin/admin_mass_email.html', title = title)
+
+
+@bp.route('/update_bounce', methods=['GET', 'POST'])
+@util.admin_login_required
+def update_bounce():
+    jetlimit = 190
+#    title = "Send via Jet: " + str(jetlimit)
+    title = "Upload and Process Bounce File"
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -174,44 +232,21 @@ def upload_email():
             folder = current_app.root_path + config.UPLOAD_FOLDER
             folder_file = folder + '/' + filename
             file.save(os.path.join(folder, filename))
-            flash(folder_file + ' was uploaded')
+#            flash(folder_file + ' was uploaded')
+
+            action = "sgrid_bounce"
+            with open(folder_file) as file:
+                for email in file:
+                    email = (email.rstrip())
+                    try:
+                        db_unsubscribe_email(email, action)
+                        flash(email)
+                    except:
+                        flash(email + ' NOT UNSUBSCRIBED')
+
             return redirect(url_for('admin.index'))
-    return render_template('admin/admin_upload_email.html')
 
-@bp.route('/send_email', methods=['GET','POST'])
-@util.admin_login_required
-def send_email():
-    global recipientscount
-    if request.method == 'POST':
-        email_status = (request.form['email_status'])
-        subject = (request.form['subject'])
-        htmlfile = (request.form['filename'])
-
-        if email_status == 'email_verified':
-            recipientscount = db_session.query(func.count(User.id)).filter(User.email_verified).scalar()
-            recipients = User.query.filter(User.email_verified).all()
-            for recipient in recipients:
-                flash(recipient.email)
-
-        if email_status == 'email_subscribed':
-            recipientscount = db_session.query(func.count(User.id)).filter(User.email_subscribed).scalar()
-            recipients = User.query.filter(User.email_subscribed).all()
-            for recipient in recipients:
-                flash(recipient.email)
-                send_unsubscribe_ses(recipient.email, subject, htmlfile)
-
-        if email_status == 'admin':
-            recipientscount = '1'
-            email = 'admin@altcensored.com'
-            flash('email sent to admin@altcensored.com')
-            send_unsubscribe_email2(email, subject, htmlfile)
-            send_unsubscribe_ses(email, subject, htmlfile)
-            send_unsubscribe_mj(email, subject, htmlfile)
-
-        flash(recipientscount)
-        return redirect(url_for('admin.index'))
-
-    return render_template('admin/admin_send_email.html')
+    return render_template('admin/admin_mass_email.html', title = title)
 
 
 @bp.route('/confirm/<token>', methods=['GET', 'POST'])
@@ -353,3 +388,29 @@ def add_message():
 #        return (msgjs["bounce"]["bouncedRecipients"][0])
 #        return (msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"])  #WORKS
         return (emailcomplaint)  #WORKS
+
+@bp.route('/test2')
+@util.admin_login_required
+def test2():
+    now = datetime.datetime.now(timezone.utc)
+    four_weeks_ago = now - datetime.timedelta(weeks=4)
+#    flash(four_weeks_ago)
+
+    users = db_session.query(User).filter((User.email_lastsent_date) > func.current_date() - 28).limit(5).all()
+    for user in users:
+        flash(user.email)
+
+    return render_template('admin/admin_index.html')
+
+@bp.route('/test3')
+@util.admin_login_required
+def test3():
+    folder = current_app.root_path + config.UPLOAD_FOLDER
+    fullfile = folder + '/' + 'test_bounces.txt'
+    action = "sgrid_bounce"
+    with open(fullfile) as file:
+        for email in file:
+            email = (email.rstrip())
+            flash(email)
+            db_unsubscribe_email(email,action)
+        return render_template('admin/admin_index.html')

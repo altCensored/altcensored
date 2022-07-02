@@ -196,16 +196,6 @@ def send_welcome_email(email, content):
     sg.send(message)
 
 
-def send_mass_email(email, subject, content):
-    message = Mail(
-        from_email='admin@altCensored.com',
-        to_emails=email,
-        subject=subject,
-        html_content=content)
-
-    sg = SendGridAPIClient(config.SENDGRID_API_KEY)
-    sg.send(message)
-
 
 def send_forgot_password_email(email, content):
     message = Mail(
@@ -314,48 +304,66 @@ def title_exists(ftitle):
         return True
 
 
-def send_ses_email(email, subject, html):
-    email = list((email,))
-    ses = boto3.client(
-        'ses',
-        region_name=config.SES_REGION_NAME,
-        aws_access_key_id=config.AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=config.AWS_SECRET_ACCESS_KEY
-    )
-    sender=config.SES_EMAIL_SOURCE
-    ses.send_email(
-        Source=sender,
-        Destination={'ToAddresses': email},
-        Message={
-            'Subject': {'Data': subject},
-            'Body': {
-#                'Text': {'Data': text},
-                'Html': {'Data': html}
-            }
-        }
-    )
+def send_sgrid_email(email, subject, content):
+    message = Mail(
+        from_email='admin@altCensored.com',
+        to_emails=email,
+        subject=subject,
+        html_content=content)
 
-def send_mj_email(email, subject, html):
-    mailjet = Client(auth=(config.MJ_API_KEY, config.MJ_API_SECRET), version='v3.1')
-    sender = "newsletter@altcensored.com"
-    data = {
-        'Messages': [
-            {
-                "From": {
-                    "Email": sender,
-#                    "Name": "Me"
-                },
-                "To": [
-                    {
-                        "Email": email,
-#                        "Name": "You"
-                    }
-                ],
-                "Subject": subject,
-#                "TextPart": "Greetings from Mailjet!",
-                "HTMLPart": html
-            }
-            ]
-            }
-    result = mailjet.send.create(data=data)
+    sg = SendGridAPIClient(config.SENDGRID_API_KEY)
+    sg.send(message)
 
+
+def send_all_mass_email(email, subject, html, service):
+    if service == 'sgrid':
+        message = Mail(
+            from_email='admin@altCensored.com',
+            to_emails=email,
+            subject=subject,
+            html_content=html)
+
+        sg = SendGridAPIClient(config.SENDGRID_API_KEY)
+        sg.send(message)
+
+    if service == 'aws':
+        email = list((email,))
+        ses = boto3.client(
+            'ses',
+            region_name=config.SES_REGION_NAME,
+            aws_access_key_id=config.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=config.AWS_SECRET_ACCESS_KEY
+        )
+        sender=config.SES_EMAIL_SOURCE
+        ses.send_email(
+            Source=sender,
+            Destination={'ToAddresses': email},
+            Message={
+                'Subject': {'Data': subject},
+                'Body': {
+                    'Html': {'Data': html}
+                }
+            }
+        )
+
+    if service == 'mjet':
+        mailjet = Client(auth=(config.MJ_API_KEY, config.MJ_API_SECRET), version='v3.1')
+        sender = "newsletter@altcensored.com"
+        data = {
+            'Messages': [
+                {
+                    "From": {
+                        "Email": sender,
+                        "Name": "altCensored"
+                    },
+                    "To": [
+                        {
+                            "Email": email,
+                        }
+                    ],
+                    "Subject": subject,
+                    "HTMLPart": html
+                }
+                ]
+                }
+        result = mailjet.send.create(data=data)

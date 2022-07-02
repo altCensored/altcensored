@@ -15,7 +15,7 @@ from . import util
 from . import config
 
 from .util import (
-    confirm_token, send_mass_email, generate_confirmation_token, send_ses_email, send_mj_email
+    confirm_token, send_all_mass_email, generate_confirmation_token
 )
 from werkzeug.utils import secure_filename
 
@@ -33,38 +33,18 @@ def send_unsubscribe_email(email):
     html = render_template('admin/admin_mass_email.html', confirm_url=confirm_url)
     send_mass_email(email, html)
 
-def send_unsubscribe_email2(email, subject, htmlfile):
+def send_mass_email(email, subject, filename, service):
     token = generate_confirmation_token(email)
     confirm_url = url_for('admin.unsubscribe_email', token=token, _external=True)
-    html = render_template('newsletter/' + htmlfile, confirm_url=confirm_url)
-    send_mass_email(email, subject, html)
+    html = render_template('newsletter/' + filename, confirm_url=confirm_url)
+    send_all_mass_email(email, subject, html, service)
+
     user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
     now = datetime.datetime.now(timezone.utc)
     user.email_lastsent_date = now
     db_session.add(user)
     db_session.commit()
 
-def send_unsubscribe_ses(email, subject, htmlfile):
-    token = generate_confirmation_token(email)
-    confirm_url = url_for('admin.unsubscribe_email', token=token, _external=True)
-    html = render_template('newsletter/' + htmlfile, confirm_url=confirm_url)
-    send_ses_email(email, subject, html)
-    user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
-    now = datetime.datetime.now(timezone.utc)
-    user.email_lastsent_date = now
-    db_session.add(user)
-    db_session.commit()
-
-def send_unsubscribe_mj(email, subject, htmlfile):
-    token = generate_confirmation_token(email)
-    confirm_url = url_for('admin.unsubscribe_email', token=token, _external=True)
-    html = render_template('newsletter/' + htmlfile, confirm_url=confirm_url)
-    send_mj_email(email, subject, html)
-    user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
-    now = datetime.datetime.now(timezone.utc)
-    user.email_lastsent_date = now
-    db_session.add(user)
-    db_session.commit()
 
 def db_unsubscribe_email(email, action):
     user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
@@ -155,11 +135,11 @@ def video_data():
     return jsonify(rowTable.output_result())
 
 
-@bp.route('/send_mass_email', methods=['GET','POST'])
+@bp.route('/mass_email', methods=['GET','POST'])
 @util.admin_login_required
-def send_mass_email():
+def mass_email():
     jetlimit = 190
-    title = "Send via mjet: " + str(jetlimit)
+    title = "Send Mass Email"
     global recipientscount
     if request.method == 'POST':
         # check if the post request has the file part
@@ -175,13 +155,11 @@ def send_mass_email():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             folder = current_app.root_path + config.UPLOAD_FOLDER
-#            folder_file = folder + '/' + filename
             file.save(os.path.join(folder, filename))
-#            flash(folder_file + ' was uploaded')
 
+        service = (request.form['service'])
         email_status = (request.form['email_status'])
         subject = (request.form['subject'])
-#        htmlfile = (request.form['filename'])
 
         if email_status == 'email_verified':
             recipientscount = db_session.query(func.count(User.id)).filter(User.email_verified).scalar()
@@ -200,11 +178,7 @@ def send_mass_email():
             recipientscount = '1'
             email = 'admin@altcensored.com'
             flash('email sent to admin@altcensored.com')
-#            send_unsubscribe_email2(email, subject, filename)
-            send_unsubscribe_ses(email, subject, filename)
-#            send_unsubscribe_mj(email, subject, filename)
-
-#        flash(recipientscount)
+            send_mass_email(email, subject, filename, service)
         return redirect(url_for('admin.index'))
 
     return render_template('admin/admin_mass_email.html', title = title)

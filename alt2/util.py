@@ -11,6 +11,7 @@ from .database import db_session
 from .models import Translation, Playlist, Mv_Channel, Mv_Video, User
 from . import config
 from email_validator import validate_email, EmailNotValidError
+from mailjet_rest import Client
 
 import functools, os, string, random
 import boto3
@@ -333,3 +334,28 @@ def send_ses_email(email, subject, html):
             }
         }
     )
+
+def send_mj_email(email, subject, html):
+    mailjet = Client(auth=(config.MJ_API_KEY, config.MJ_API_SECRET), version='v3.1')
+    sender = "newsletter@altcensored.com"
+    data = {
+        'Messages': [
+            {
+                "From": {
+                    "Email": sender,
+#                    "Name": "Me"
+                },
+                "To": [
+                    {
+                        "Email": email,
+#                        "Name": "You"
+                    }
+                ],
+                "Subject": subject,
+#                "TextPart": "Greetings from Mailjet!",
+                "HTMLPart": html
+            }
+            ]
+            }
+    result = mailjet.send.create(data=data)
+

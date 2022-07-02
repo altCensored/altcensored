@@ -15,7 +15,7 @@ from . import util
 from . import config
 
 from .util import (
-    confirm_token, send_mass_email, generate_confirmation_token, send_ses_email
+    confirm_token, send_mass_email, generate_confirmation_token, send_ses_email, send_mj_email
 )
 from werkzeug.utils import secure_filename
 
@@ -49,6 +49,17 @@ def send_unsubscribe_ses(email, subject, htmlfile):
     confirm_url = url_for('admin.unsubscribe_email', token=token, _external=True)
     html = render_template('newsletter/' + htmlfile, confirm_url=confirm_url)
     send_ses_email(email, subject, html)
+    user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
+    now = datetime.datetime.now(timezone.utc)
+    user.email_lastsent_date = now
+    db_session.add(user)
+    db_session.commit()
+
+def send_unsubscribe_mj(email, subject, htmlfile):
+    token = generate_confirmation_token(email)
+    confirm_url = url_for('admin.unsubscribe_email', token=token, _external=True)
+    html = render_template('newsletter/' + htmlfile, confirm_url=confirm_url)
+    send_mj_email(email, subject, html)
     user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
     now = datetime.datetime.now(timezone.utc)
     user.email_lastsent_date = now
@@ -195,6 +206,7 @@ def send_email():
             flash('email sent to admin@altcensored.com')
             send_unsubscribe_email2(email, subject, htmlfile)
             send_unsubscribe_ses(email, subject, htmlfile)
+            send_unsubscribe_mj(email, subject, htmlfile)
 
         flash(recipientscount)
         return redirect(url_for('admin.index'))

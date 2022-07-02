@@ -138,9 +138,8 @@ def video_data():
 @bp.route('/mass_email', methods=['GET','POST'])
 @util.admin_login_required
 def mass_email():
-    jetlimit = 190
     title = "Send Mass Email"
-    global recipientscount
+
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -157,28 +156,43 @@ def mass_email():
             folder = current_app.root_path + config.UPLOAD_FOLDER
             file.save(os.path.join(folder, filename))
 
+        sendlimit = 7
+        global recipientscount
         service = (request.form['service'])
         email_status = (request.form['email_status'])
         subject = (request.form['subject'])
 
         if email_status == 'email_verified':
-            recipientscount = db_session.query(func.count(User.id)).filter(User.email_verified).scalar()
-            recipients = User.query.filter(User.email_verified).all()
-            for recipient in recipients:
-                flash(recipient.email)
+            usercount = db_session.query(func.count(User.id)). \
+                filter(User.email_subscribed). \
+                filter(User.email_verified). \
+                scalar()
+            users = db_session.query(User). \
+                filter((User.email_lastsent_date) < func.current_date() - 28). \
+                filter(User.email_subscribed). \
+                filter(User.email_verified). \
+                limit(sendlimit).all()
 
         if email_status == 'email_subscribed':
-            recipientscount = db_session.query(func.count(User.id)).filter(User.email_subscribed).scalar()
-            recipients = User.query.filter(User.email_subscribed).all()
-            for recipient in recipients:
-                flash(recipient.email)
-                send_unsubscribe_ses(recipient.email, subject, filename)
+            usercount = db_session.query(func.count(User.id)). \
+                filter(User.email_subscribed). \
+                scalar()
+            users = db_session.query(User). \
+                filter((User.email_lastsent_date) < func.current_date() - 28). \
+                filter(User.email_subscribed). \
+                limit(sendlimit).all()
+
+            flash(usercount)
+            for user in users:
+#                send_mass_email(user.email, subject, filename, service)
+                flash(user.email)
 
         if email_status == 'admin':
-            recipientscount = '1'
+            usercount = '1'
             email = 'admin@altcensored.com'
-            flash('email sent to admin@altcensored.com')
             send_mass_email(email, subject, filename, service)
+            flash(email)
+
         return redirect(url_for('admin.index'))
 
     return render_template('admin/admin_mass_email.html', title = title)
@@ -188,7 +202,6 @@ def mass_email():
 @util.admin_login_required
 def update_bounce():
     jetlimit = 190
-#    title = "Send via Jet: " + str(jetlimit)
     title = "Upload and Process Bounce File"
     if request.method == 'POST':
         # check if the post request has the file part
@@ -206,7 +219,6 @@ def update_bounce():
             folder = current_app.root_path + config.UPLOAD_FOLDER
             folder_file = folder + '/' + filename
             file.save(os.path.join(folder, filename))
-#            flash(folder_file + ' was uploaded')
 
             action = "sgrid_bounce"
             with open(folder_file) as file:
@@ -287,13 +299,6 @@ def aws_bounce():
         action = 'ab' #unenforced code for aws bounce
         db_unsubscribe_email(emailbounce, action)
 
-
-#        folder = current_app.root_path + config.UPLOAD_FOLDER
-#        myfile = 'email_add'
-#        with open(os.path.join(folder, myfile), 'w') as fo:
-#            fo.write("type=" + emailbounce + "\n")
-#        send_unsubscribe_email2('admin@altcensored.com', emailbounce, myfile)
-
     return 'OK\n'
 
 
@@ -318,12 +323,6 @@ def aws_complaint():
         emailcomplaint = msgjs["complaint"]["complainedRecipients"][0]["emailAddress"]
         action = 'ac' #unenforced code for aws complaint
         db_unsubscribe_email(emailcomplaint, action)
-
-    #        folder = current_app.root_path + config.UPLOAD_FOLDER
-    #        myfile = 'email_add'
-    #        with open(os.path.join(folder, myfile), 'w') as fo:
-    #            fo.write("type=" + emailbounce + "\n")
-    #        send_unsubscribe_email2('admin@altcensored.com', emailbounce, myfile)
 
     return 'OK\n'
 
@@ -370,21 +369,24 @@ def test2():
     four_weeks_ago = now - datetime.timedelta(weeks=4)
 #    flash(four_weeks_ago)
 
-    users = db_session.query(User).filter((User.email_lastsent_date) > func.current_date() - 28).limit(5).all()
+    users = db_session.query(User). \
+        filter((User.email_lastsent_date) < func.current_date() - 28). \
+        filter(User.email_verified). \
+        filter(User.email_subscribed). \
+        limit(5).all()
+
     for user in users:
         flash(user.email)
 
+    recipientscount = db_session.query(func.count(User.id)). \
+        filter((User.email_lastsent_date) < func.current_date() - 28). \
+        filter(User.email_verified). \
+        filter(User.email_subscribed). \
+        scalar()
+
+    flash(recipientscount)
+
+#    filter(User.email_verified).filter(User.email_subscribed). \
+
     return render_template('admin/admin_index.html')
 
-@bp.route('/test3')
-@util.admin_login_required
-def test3():
-    folder = current_app.root_path + config.UPLOAD_FOLDER
-    fullfile = folder + '/' + 'test_bounces.txt'
-    action = "sgrid_bounce"
-    with open(fullfile) as file:
-        for email in file:
-            email = (email.rstrip())
-            flash(email)
-            db_unsubscribe_email(email,action)
-        return render_template('admin/admin_index.html')

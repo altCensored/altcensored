@@ -197,7 +197,7 @@ def mass_email():
         flash(usercount)
         app = current_app._get_current_object()
         for user in users:
-#            send_mass_email(user.email, subject, filename, service)
+            send_mass_email(user.email, subject, filename, service)
 #            Thread(target=send_mass_email, args=(app, user.email, subject, filename, service)).start()
             flash(user.email)
         return redirect(url_for('admin.index'))

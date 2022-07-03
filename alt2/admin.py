@@ -45,7 +45,6 @@ def send_mass_email(email, subject, filename, service):
     db_session.add(user)
     db_session.commit()
 
-
 def db_unsubscribe_email(email, action):
     user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
     now = datetime.datetime.now(timezone.utc)
@@ -156,7 +155,7 @@ def mass_email():
             folder = current_app.root_path + config.UPLOAD_FOLDER
             file.save(os.path.join(folder, filename))
 
-        sendlimit = 7
+        sendlimit = 90
         global recipientscount
         service = (request.form['service'])
         email_status = (request.form['email_status'])
@@ -182,16 +181,17 @@ def mass_email():
                 filter(User.email_subscribed). \
                 limit(sendlimit).all()
 
-            flash(usercount)
-            for user in users:
-#                send_mass_email(user.email, subject, filename, service)
-                flash(user.email)
-
         if email_status == 'admin':
             usercount = '1'
             email = 'admin@altcensored.com'
             send_mass_email(email, subject, filename, service)
             flash(email)
+            return redirect(url_for('admin.index'))
+
+        flash(usercount)
+        for user in users:
+            send_mass_email(user.email, subject, filename, service)
+            flash(user.email)
 
         return redirect(url_for('admin.index'))
 

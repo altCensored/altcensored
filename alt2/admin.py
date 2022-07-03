@@ -156,7 +156,7 @@ def mass_email():
             folder = current_app.root_path + config.UPLOAD_FOLDER
             file.save(os.path.join(folder, filename))
 
-        sendlimit = 20
+        sendlimit = 50
         global recipientscount
         service = (request.form['service'])
         email_status = (request.form['email_status'])

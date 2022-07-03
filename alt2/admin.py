@@ -158,7 +158,7 @@ def mass_email():
             folder = current_app.root_path + config.UPLOAD_FOLDER
             file.save(os.path.join(folder, filename))
 
-        sendlimit = 1
+        sendlimit = 5
         global recipientscount
         service = (request.form['service'])
         email_status = (request.form['email_status'])
@@ -184,6 +184,7 @@ def mass_email():
             users = db_session.query(User). \
                 filter((User.email_lastsent_date) < func.current_date() - 28). \
                 filter(User.email_subscribed). \
+                order_by(func.random()). \
                 limit(sendlimit).all()
 
         if email_status == 'admin':
@@ -196,7 +197,7 @@ def mass_email():
         flash(usercount)
         app = current_app._get_current_object()
         for user in users:
-            send_mass_email(user.email, subject, filename, service)
+#            send_mass_email(user.email, subject, filename, service)
 #            Thread(target=send_mass_email, args=(app, user.email, subject, filename, service)).start()
             flash(user.email)
         return redirect(url_for('admin.index'))

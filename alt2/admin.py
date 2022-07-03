@@ -158,7 +158,7 @@ def mass_email():
             folder = current_app.root_path + config.UPLOAD_FOLDER
             file.save(os.path.join(folder, filename))
 
-        sendlimit = 40
+        sendlimit = 50
         global recipientscount
         service = (request.form['service'])
         email_status = (request.form['email_status'])
@@ -207,7 +207,6 @@ def mass_email():
 @bp.route('/update_bounce', methods=['GET', 'POST'])
 @util.admin_login_required
 def update_bounce():
-    jetlimit = 190
     title = "Upload and Process Bounce File"
     if request.method == 'POST':
         # check if the post request has the file part

@@ -12,6 +12,8 @@ from sqlalchemy import func
 from .database import db_session
 from .models import Mv_Channel, User, Entity, Source, Sources_to_Videos
 from datatables import ColumnDT, DataTables
+from threading import Thread
+
 from . import util
 from . import config
 
@@ -156,7 +158,7 @@ def mass_email():
             folder = current_app.root_path + config.UPLOAD_FOLDER
             file.save(os.path.join(folder, filename))
 
-        sendlimit = 25
+        sendlimit = 40
         global recipientscount
         service = (request.form['service'])
         email_status = (request.form['email_status'])
@@ -192,10 +194,11 @@ def mass_email():
             return redirect(url_for('admin.index'))
 
         flash(usercount)
+        app = current_app._get_current_object()
         for user in users:
-            send_mass_email(user.email, subject, filename, service)
+#            send_mass_email(user.email, subject, filename, service)
+            Thread(target=send_mass_email, args=(app, user.email, subject, filename, service)).start()
             flash(user.email)
-
         return redirect(url_for('admin.index'))
 
     return render_template('admin/admin_mass_email.html', title = title)
@@ -388,3 +391,28 @@ def test2():
         time.sleep(1)
 
     return render_template('admin/admin_index.html')
+
+
+def background(app, msg):
+    app.logger.debug(msg)
+
+def background2(app, msg):
+    with app.app_context():
+        app.logger.debug(msg)
+
+@bp.route('/test3')
+@util.admin_login_required
+def test3():
+    msg = 'yes'
+    app = current_app._get_current_object()
+    Thread(target=background, args=(app, msg)).start()
+    return 'Hello, World!'
+
+@bp.route('/test4')
+@util.admin_login_required
+def test4():
+    msg = 'yes'
+    app = current_app._get_current_object()
+    Thread(target=background2, args=(app, msg)).start()
+    return 'Hello, World!'
+

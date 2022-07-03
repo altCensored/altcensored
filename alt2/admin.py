@@ -156,7 +156,7 @@ def mass_email():
             folder = current_app.root_path + config.UPLOAD_FOLDER
             file.save(os.path.join(folder, filename))
 
-        sendlimit = 50
+        sendlimit = 100
         global recipientscount
         service = (request.form['service'])
         email_status = (request.form['email_status'])
@@ -164,8 +164,9 @@ def mass_email():
 
         if email_status == 'email_verified':
             usercount = db_session.query(func.count(User.id)). \
-                filter(User.email_subscribed). \
+                filter((User.email_lastsent_date) < func.current_date() - 28). \
                 filter(User.email_verified). \
+                filter(User.email_subscribed). \
                 scalar()
             users = db_session.query(User). \
                 filter((User.email_lastsent_date) < func.current_date() - 28). \
@@ -175,6 +176,7 @@ def mass_email():
 
         if email_status == 'email_subscribed':
             usercount = db_session.query(func.count(User.id)). \
+                filter((User.email_lastsent_date) < func.current_date() - 28). \
                 filter(User.email_subscribed). \
                 scalar()
             users = db_session.query(User). \

@@ -2,6 +2,7 @@ import os
 import datetime
 import requests
 import json
+import time
 
 from datetime import timezone
 from flask_babelplus import lazy_gettext
@@ -155,7 +156,7 @@ def mass_email():
             folder = current_app.root_path + config.UPLOAD_FOLDER
             file.save(os.path.join(folder, filename))
 
-        sendlimit = 40
+        sendlimit = 20
         global recipientscount
         service = (request.form['service'])
         email_status = (request.form['email_status'])
@@ -366,17 +367,6 @@ def add_message():
 @util.admin_login_required
 def test2():
     now = datetime.datetime.now(timezone.utc)
-    four_weeks_ago = now - datetime.timedelta(weeks=4)
-#    flash(four_weeks_ago)
-
-    users = db_session.query(User). \
-        filter((User.email_lastsent_date) < func.current_date() - 28). \
-        filter(User.email_verified). \
-        filter(User.email_subscribed). \
-        limit(5).all()
-
-    for user in users:
-        flash(user.email)
 
     recipientscount = db_session.query(func.count(User.id)). \
         filter((User.email_lastsent_date) < func.current_date() - 28). \
@@ -384,9 +374,15 @@ def test2():
         filter(User.email_subscribed). \
         scalar()
 
-    flash(recipientscount)
+    users = db_session.query(User). \
+        filter((User.email_lastsent_date) < func.current_date() - 28). \
+        filter(User.email_verified). \
+        filter(User.email_subscribed). \
+        limit(5).all()
 
-#    filter(User.email_verified).filter(User.email_subscribed). \
+    flash(recipientscount)
+    for user in users:
+        flash(user.email)
+        time.sleep(1)
 
     return render_template('admin/admin_index.html')
-

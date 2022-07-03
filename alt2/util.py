@@ -334,7 +334,7 @@ def send_all_mass_email(email, subject, html, service):
             aws_access_key_id=config.AWS_ACCESS_KEY_ID,
             aws_secret_access_key=config.AWS_SECRET_ACCESS_KEY
         )
-        sender=config.SES_EMAIL_SOURCE
+        sender = config.SES_EMAIL_SOURCE
         ses.send_email(
             Source=sender,
             Destination={'ToAddresses': email},
@@ -343,7 +343,7 @@ def send_all_mass_email(email, subject, html, service):
                 'Body': {
                     'Html': {'Data': html}
                 }
-            }
+            },
         )
 
     if service == 'mjet':

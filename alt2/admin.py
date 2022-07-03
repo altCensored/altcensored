@@ -174,6 +174,7 @@ def mass_email():
                 filter((User.email_lastsent_date) < func.current_date() - 28). \
                 filter(User.email_subscribed). \
                 filter(User.email_verified). \
+                order_by(func.random()). \
                 limit(sendlimit).all()
 
         if email_status == 'email_subscribed':

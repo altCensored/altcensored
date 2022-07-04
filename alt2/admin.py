@@ -7,7 +7,7 @@ import time
 from datetime import timezone
 from flask_babelplus import lazy_gettext
 from flask import (
-    Blueprint, flash, redirect, render_template, request, session, url_for, current_app, jsonify)
+    Blueprint, flash, redirect, render_template, request, url_for, current_app, jsonify)
 from sqlalchemy import func
 from .database import db_session
 from .models import Mv_Channel, User, Entity, Source, Sources_to_Videos
@@ -199,7 +199,6 @@ def mass_email():
         app = current_app._get_current_object()
         for user in users:
             send_mass_email(user.email, subject, filename, service)
-#            Thread(target=send_mass_email, args=(app, user.email, subject, filename, service)).start()
             flash(user.email)
         return redirect(url_for('admin.index'))
 
@@ -249,11 +248,6 @@ def unsubscribe_email(token):
     item_quoted = (f'"{email}"')
     message = l_msg + ' ' + item_quoted + '?'
 
-#        with open("test.txt", "w") as fo:
-#            fo.write("This is Test Data line1\n")
-#            fo.write("token=" + token + "\n")
-#            fo.write("lastline")
-
     if email == False:
         conf = lazy_gettext('The unsubscribe link is invalid')
         flash(conf, 'error')
@@ -269,11 +263,8 @@ def unsubscribe_email(token):
         submitvalue = request.form['submitvalue']
         if submitvalue == 'yes':
             user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
-            now = datetime.datetime.now(timezone.utc)
-            user.email_subscribed = False
-            user.updated = now
-            db_session.add(user)
-            db_session.commit()
+            action = 'altc_unsub'  # unenforced code for unsubscribe link
+            db_unsubscribe_email(user.email, action)
             conf = item_quoted + lazy_gettext(' was unsubscribed')
             flash(conf, 'success')
             return redirect(url_for('video.index'))
@@ -303,7 +294,7 @@ def aws_bounce():
         msgjs = json.loads(msg)
 
         emailbounce = msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"]
-        action = 'ab' #unenforced code for aws bounce
+        action = 'aws_bounce' #unenforced code for aws bounce
         db_unsubscribe_email(emailbounce, action)
 
     return 'OK\n'
@@ -328,7 +319,7 @@ def aws_complaint():
         msgjs = json.loads(msg)
 
         emailcomplaint = msgjs["complaint"]["complainedRecipients"][0]["emailAddress"]
-        action = 'ac' #unenforced code for aws complaint
+        action = 'aws_complaint' #unenforced code for aws complaint
         db_unsubscribe_email(emailcomplaint, action)
 
     return 'OK\n'
@@ -408,6 +399,8 @@ def test3():
     app = current_app._get_current_object()
     Thread(target=background, args=(app, msg)).start()
     return 'Hello, World!'
+# works for single command (logger)
+
 
 @bp.route('/test4')
 @util.admin_login_required

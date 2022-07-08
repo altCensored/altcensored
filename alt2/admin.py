@@ -334,7 +334,7 @@ def aws_bounce():
             user = db_session.query(Email_list).filter(func.lower(Email_list.email) == func.lower(email)).one()
             tablename = 'Email_list'
 
-        db_unsubscribe_email(tablename, emailbounce, action)
+        db_unsubscribe_email(tablename, email, action)
 
     return 'OK\n'
 

@@ -331,7 +331,6 @@ def aws_bounce():
             user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
             tablename = 'User'
         else:
-            user = db_session.query(Email_list).filter(func.lower(Email_list.email) == func.lower(email)).one()
             tablename = 'Email_list'
 
         db_unsubscribe_email(tablename, email, action)
@@ -357,9 +356,16 @@ def aws_complaint():
         msg = js["Message"]
         msgjs = json.loads(msg)
 
-        emailcomplaint = msgjs["complaint"]["complainedRecipients"][0]["emailAddress"]
+        email = msgjs["complaint"]["complainedRecipients"][0]["emailAddress"]
         action = 'aws_complaint' #unenforced code for aws complaint
-        db_unsubscribe_email(emailcomplaint, action)
+
+        if email_exists(email):
+            user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
+            tablename = 'User'
+        else:
+            tablename = 'Email_list'
+
+        db_unsubscribe_email(tablename, email, action)
 
     return 'OK\n'
 

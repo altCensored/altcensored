@@ -2,7 +2,7 @@ import datetime
 import json
 from datetime import timezone
 
-from email_validator import validate_email, EmailNotValidError
+#from email_validator import validate_email, EmailNotValidError
 from flask import (
     Blueprint, redirect, request, session, render_template, flash, url_for
 )
@@ -15,8 +15,8 @@ from . import util
 from .database import db_session
 from .models import User
 from .util import (
-    get_locale, get_theme, get_navtabs, get_navtabs_index, send_welcome_email,
-    send_forgot_password_email, generate_confirmation_token, confirm_token,
+    get_locale, get_theme, get_navtabs, get_navtabs_index,
+    send_forgot_password_email, generate_confirmation_token, confirm_token, email_exists, validate_user_email,
     login_required, generate_random, create_captcha, set_session, send_confirm_email
 )
 
@@ -43,16 +43,6 @@ def user_and_password_is_valid(email, password):
         return False
     return check_password_hash(user.password, password)
 
-def validate_user_email(email):
-    try:
-        valid = validate_email(email)
-        email = valid.email
-    except EmailNotValidError as e:
-        return e
-
-def email_exist(email):
-    if db_session.query(User.email).filter(func.lower(User.email) == func.lower(email)).scalar() is not None:
-        return True
 
 def username_exist(username):
     if username is None:
@@ -108,7 +98,7 @@ def login():
             return redirect(url_for('auth.login'))
 
         if submitvalue == 'reset':
-            if not email_exist(email):
+            if not email_exists(email):
                 no_user = lazy_gettext('User does not exist')
                 flash(no_user, 'error')
                 return redirect(url_for('auth.login'))
@@ -124,7 +114,7 @@ def login():
             return redirect(url_for('auth.login'))
 
 
-        if not email_exist(email) and session.get('register_email') is None:
+        if not email_exists(email) and session.get('register_email') is None:
             session['register_email'] = email
             generate_captcha()
             return redirect(url_for('auth.login'))
@@ -147,7 +137,7 @@ def login():
                 flash(no_profanity, 'error')
                 return redirect(url_for('auth.login'))
 
-            if email_exist(email):
+            if email_exists(email):
                 email_taken = lazy_gettext('Email taken')
                 flash(email_taken, 'error')
                 return redirect(url_for('auth.login'))

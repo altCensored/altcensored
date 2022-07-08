@@ -196,7 +196,6 @@ def send_welcome_email(email, content):
     sg.send(message)
 
 
-
 def send_forgot_password_email(email, content):
     message = Mail(
         from_email='registration@altCensored.com',
@@ -266,8 +265,9 @@ def admin_login_required(view):
 
 
 def email_exists(email):
-    if email == session['user']['email']:
-        return False
+    if session.get('email') is not None:
+        if email == session['user']['email']:
+            return False
     if db_session.query(User.email).filter(func.lower(User.email) == func.lower(email)).scalar() is not None:
         return True
 

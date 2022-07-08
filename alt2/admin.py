@@ -13,6 +13,7 @@ from .database import db_session
 from .models import Mv_Channel, User, Entity, Source, Sources_to_Videos
 from datatables import ColumnDT, DataTables
 from threading import Thread
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from . import util
 from . import config
@@ -57,6 +58,15 @@ def db_unsubscribe_email(email, action):
     db_session.add(user)
     db_session.commit()
 
+def db_add_email(email, email_source):
+    now = datetime.datetime.now(timezone.utc)
+    username = email.split("@")[0]
+    user = User (
+        email=email.lower(), password=generate_password_hash("freespeech"), username=username, description="", created_date=now, \
+        updated=now, email_lastsent_date=now, email_verified=False, view_counter = 0, \
+    )
+    db_session.add(user)
+    db_session.commit()
 
 @bp.route('/')
 @util.admin_login_required
@@ -323,6 +333,63 @@ def aws_complaint():
         db_unsubscribe_email(emailcomplaint, action)
 
     return 'OK\n'
+
+
+@bp.route('/add_email', methods=['GET', 'POST'])
+@util.admin_login_required
+def add_email():
+    title = "Upload Emails File"
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # If the user does not select a file, the browser submits an
+        # empty file without a filename.
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            folder = current_app.root_path + config.UPLOAD_FOLDER
+            folder_file = folder + '/' + filename
+            file.save(os.path.join(folder, filename))
+
+            email_source = (request.form['email_source'])
+            flash(email_source)
+
+            with open(folder_file) as file:
+               for email in file:
+                    email = (email.rstrip())
+
+                    now = datetime.datetime.now(timezone.utc)
+                    username = email.split("@")[0]
+
+                    flash(username + ' ok')
+
+#                    user = User(
+#                        email=email.lower(), password=generate_password_hash("freespeech"), username=username, description="",
+#                        created_date=now, \
+#                        updated=now, email_lastsent_date=now, email_verified=False, view_counter=0, \
+#                        )
+
+                    flash(email + ' added ok')
+
+#                    db_session.add(user)
+#                    db_session.commit()
+
+#                    try:
+#                        db_add_email(email, email_source)
+#                        flash(email + ' ADDED')
+#                        db_unsubscribe_email(email, action)
+#                        flash(email)
+#                    except:
+#                        flash(email + ' NOT ADDED')
+
+            return redirect(url_for('admin.index'))
+
+    return render_template('admin/admin_mass_email.html', title = title)
 
 
 @bp.route('/test', methods=['GET', 'POST'])

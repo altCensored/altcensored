@@ -16,21 +16,26 @@
     <div class="pure-g">
       <div class="pure-u-1 pure-u-md-1-1">
         <div class="h-box">
-          <p>
+            <p>
               <a href="{{ url_for('admin.channel_table') }}">
                   Channels</a>
-          </p>
-          <p>
+            </p>
+            <p>
               <a href="{{ url_for('admin.video_table', ytc_id='all' ) }}">
                   Videos</a>
-          </p>
+            </p>
+            <p>
               <a href="{{ url_for('admin.mass_email') }}">
                   Send Mass Email</a>
-          </p>
+            </p>
+            <p>
               <a href="{{ url_for('admin.update_bounce') }}">
-                  Update Unsubscribe</a>
-          </p>
-
+                  Upload Bounce File</a>
+            </p>
+            <p>
+              <a href="{{ url_for('admin.add_email') }}">
+                  Upload Emails File</a>
+            </p>
         </div>
       </div>
     </div>

@@ -80,11 +80,6 @@ def register_user(email, password, username):
     db_session.commit()
     return user
 
-def send_confirm_email(email):
-    token = generate_confirmation_token(email)
-    confirm_url = url_for('auth.confirm_email', token=token, _external=True)
-    html = render_template('auth/auth_activate.html', confirm_url=confirm_url)
-    send_welcome_email(email, html)
 
 def send_reset_password_email(email):
     token = generate_confirmation_token(email)

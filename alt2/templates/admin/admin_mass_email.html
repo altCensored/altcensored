@@ -29,17 +29,26 @@
             <option value=sgrid>sgrid</option>"
           </select>
           <br><br>
-          <label for="email_status">Recipients:</label>
-          <select name=email_status>
+          <label for="recipients">Recipients:</label>
+          <select name=recipients>
             <option value=admin>admin</option>"
-            <option value=email_verified>verified</option>"
-            <option value=email_subscribed>subscribed</option>"
+            <option value=friends>friends</option>"
+            <option value=verified>verified</option>"
+            <option value=subscribed>subscribed</option>"
+          </select>
+          <br><br>
+          <label for="sendlimit"># of Recipients:</label>
+          <select name=sendlimit>
+            <option value=100>100</option>"
+            <option value=75>75</option>"
+            <option value=50>50</option>"
+            <option value=25>25</option>"
           </select>
           <br><br>
           <label for="subject">subject:</label>
           <input type="text" name="subject">
           <br><br>
-          <label for="email_source">Email Source:</label>
+          <label for="email_source">Email List Source:</label>
           <select name=email_source>
             <option value=friend>friend</option>"
             <option value=bought1>bought1</option>"

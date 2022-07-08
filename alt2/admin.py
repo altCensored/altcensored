@@ -19,7 +19,7 @@ from . import util
 from . import config
 
 from .util import (
-    confirm_token, send_all_mass_email, generate_confirmation_token, email_list_exists, validate_user_email
+    confirm_token, send_all_mass_email, generate_confirmation_token, email_exists, email_list_exists, validate_user_email
 )
 from werkzeug.utils import secure_filename
 
@@ -38,15 +38,22 @@ def send_mass_email(email, subject, filename, service):
     html = render_template('newsletter/' + filename, confirm_url=confirm_url)
     send_all_mass_email(email, subject, html, service)
 
-    user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
+    if email_exists(email):
+        user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
+    else:
+        user = db_session.query(Email_list).filter(func.lower(Email_list.email) == func.lower(email)).one()
+
     now = datetime.datetime.now(timezone.utc)
     user.email_lastsent_date = now
     db_session.add(user)
     db_session.commit()
 
 
-def db_unsubscribe_email(email, action):
-    user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
+def db_unsubscribe_email(tablename, email, action):
+    if tablename == 'User':
+        user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
+    else:
+        user = db_session.query(Email_list).filter(func.lower(Email_list.email) == func.lower(email)).one()
     now = datetime.datetime.now(timezone.utc)
     user.email_subscribed = False
     user.email_action = action
@@ -166,13 +173,12 @@ def mass_email():
             folder = current_app.root_path + config.UPLOAD_FOLDER
             file.save(os.path.join(folder, filename))
 
-        sendlimit = 100
-        global recipientscount
+        sendlimit = (request.form['sendlimit'])
         service = (request.form['service'])
-        email_status = (request.form['email_status'])
+        recipients = (request.form['recipients'])
         subject = (request.form['subject'])
 
-        if email_status == 'email_verified':
+        if recipients == 'verified':
             usercount = db_session.query(func.count(User.id)). \
                 filter((User.email_lastsent_date) < func.current_date() - 28). \
                 filter(User.email_verified). \
@@ -185,7 +191,7 @@ def mass_email():
                 order_by(func.random()). \
                 limit(sendlimit).all()
 
-        if email_status == 'email_subscribed':
+        if recipients == 'subscribed':
             usercount = db_session.query(func.count(User.id)). \
                 filter((User.email_lastsent_date) < func.current_date() - 28). \
                 filter(User.email_subscribed). \
@@ -196,7 +202,16 @@ def mass_email():
                 order_by(func.random()). \
                 limit(sendlimit).all()
 
-        if email_status == 'admin':
+        if recipients == 'friends':
+            usercount = db_session.query(func.count(Email_list.id)). \
+                filter((Email_list.email_lastsent_date) < func.current_date() - 28). \
+                scalar()
+            users = db_session.query(Email_list). \
+                filter((Email_list.email_lastsent_date) < func.current_date() - 28). \
+                order_by(func.random()). \
+                limit(sendlimit).all()
+
+        if recipients == 'admin':
             usercount = '1'
             email = 'admin@altcensored.com'
             send_mass_email(email, subject, filename, service)
@@ -204,7 +219,6 @@ def mass_email():
             return redirect(url_for('admin.index'))
 
         flash(usercount)
-        app = current_app._get_current_object()
         for user in users:
             send_mass_email(user.email, subject, filename, service)
             flash(user.email)
@@ -261,7 +275,11 @@ def unsubscribe_email(token):
         flash(conf, 'error')
         return redirect(url_for('video.index'))
     else:
-        user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
+        if email_exists(email):
+            user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
+        else:
+            user = db_session.query(Email_list).filter(func.lower(Email_list.email) == func.lower(email)).one()
+
         if not user.email_subscribed:
             conf = item_quoted + lazy_gettext(' has already been unsubscribed')
             flash(conf, 'error')
@@ -270,9 +288,14 @@ def unsubscribe_email(token):
     if request.method == 'POST':
         submitvalue = request.form['submitvalue']
         if submitvalue == 'yes':
-            user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
-            action = 'altc_unsub'  # unenforced code for unsubscribe link
-            db_unsubscribe_email(user.email, action)
+            if email_exists(email):
+                user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
+                tablename = 'User'
+            else:
+                user = db_session.query(Email_list).filter(func.lower(Email_list.email) == func.lower(email)).one()
+                tablename = 'Email_list'
+            action = 'altc_unsub'
+            db_unsubscribe_email(tablename, user.email, action)
             conf = item_quoted + lazy_gettext(' was unsubscribed')
             flash(conf, 'success')
             return redirect(url_for('video.index'))
@@ -301,9 +324,17 @@ def aws_bounce():
         msg = js["Message"]
         msgjs = json.loads(msg)
 
-        emailbounce = msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"]
+        email = msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"]
         action = 'aws_bounce' #unenforced code for aws bounce
-        db_unsubscribe_email(emailbounce, action)
+
+        if email_exists(email):
+            user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
+            tablename = 'User'
+        else:
+            user = db_session.query(Email_list).filter(func.lower(Email_list.email) == func.lower(email)).one()
+            tablename = 'Email_list'
+
+        db_unsubscribe_email(tablename, emailbounce, action)
 
     return 'OK\n'
 

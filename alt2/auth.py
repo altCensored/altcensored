@@ -25,17 +25,15 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 def find_user_by_email(email):
     try:
         return db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
-
     except NoResultFound:
         return None
 
-def user_exists(email):
-    return find_user_by_email(email) is not None
 
 def generate_captcha():
     session['myrandom'] = generate_random()
     session['mycaptcha'] = 'captcha_tmp.png'
     create_captcha(session['myrandom'], session['mycaptcha'])
+
 
 def user_and_password_is_valid(email, password):
     user = find_user_by_email(email)
@@ -49,6 +47,7 @@ def username_exist(username):
         return False
     if db_session.query(User.username).filter(func.lower(User.username) == func.lower(username)).scalar() is not None:
         return True
+
 
 def register_user(email, password, username):
     now = datetime.datetime.now(timezone.utc)

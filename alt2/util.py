@@ -254,6 +254,7 @@ def login_required(view):
 
     return wrapped_view
 
+
 def admin_login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):

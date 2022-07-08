@@ -363,3 +363,18 @@ class Translation(Base):
 class Counter(Base):
     __tablename__ = 'counter'
     hash = Column(BigInteger, primary_key=True, nullable=False)
+
+
+class Email_list(Base):
+    __tablename__ = 'email_list'
+    id = Column(Integer, primary_key=True, nullable=False)
+    email = Column(String, nullable=False)
+    username = Column(String, nullable=True)
+    firstname = Column(String, nullable=True)
+    lastname = Column(String, nullable=True)
+    email_source = Column(String, nullable=False)
+    email_subscribed = Column(Boolean, nullable=False, default=True)
+    email_action = Column(String, nullable=True)
+    created_date = Column(DateTime, nullable=True)
+    email_lastsent_date = Column(DateTime, nullable=True)
+

@@ -400,8 +400,10 @@ def add_email_list():
                     now = datetime.datetime.now(timezone.utc)
                     username = email.split("@")[0]
 
-                    if email_list_exists(email):
-                        flash(email + ' NOT ADDED, in list')
+                    if email_exists(email):
+                        flash(email + ' NOT ADDED, already in altcen_user')
+                    elif email_list_exists(email):
+                        flash(email + ' NOT ADDED, in email_list')
                     elif validate_user_email(email):
                         flash(email + ' NOT ADDED, invalid syntax')
                     else:

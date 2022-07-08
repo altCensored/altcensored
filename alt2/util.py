@@ -8,7 +8,7 @@ from better_profanity import profanity
 from sqlalchemy import func, text, desc
 from captcha.image import ImageCaptcha
 from .database import db_session
-from .models import Translation, Playlist, Mv_Channel, Mv_Video, User
+from .models import Translation, Playlist, Mv_Channel, Mv_Video, User, Email_list
 from . import config
 from email_validator import validate_email, EmailNotValidError
 from mailjet_rest import Client
@@ -270,6 +270,11 @@ def email_exists(email):
         if email == session['user']['email']:
             return False
     if db_session.query(User.email).filter(func.lower(User.email) == func.lower(email)).scalar() is not None:
+        return True
+
+
+def email_list_exists(email):
+    if db_session.query(Email_list.email).filter(func.lower(Email_list.email) == func.lower(email)).scalar() is not None:
         return True
 
 

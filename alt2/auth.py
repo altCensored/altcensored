@@ -1,8 +1,6 @@
 import datetime
 import json
 from datetime import timezone
-
-#from email_validator import validate_email, EmailNotValidError
 from flask import (
     Blueprint, redirect, request, session, render_template, flash, url_for
 )

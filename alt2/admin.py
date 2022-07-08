@@ -10,7 +10,7 @@ from flask import (
     Blueprint, flash, redirect, render_template, request, url_for, current_app, jsonify)
 from sqlalchemy import func
 from .database import db_session
-from .models import Mv_Channel, User, Entity, Source, Sources_to_Videos
+from .models import Mv_Channel, User, Entity, Source, Sources_to_Videos, Email_list
 from datatables import ColumnDT, DataTables
 from threading import Thread
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -19,7 +19,7 @@ from . import util
 from . import config
 
 from .util import (
-    confirm_token, send_all_mass_email, generate_confirmation_token
+    confirm_token, send_all_mass_email, generate_confirmation_token, email_list_exists, validate_user_email
 )
 from werkzeug.utils import secure_filename
 
@@ -31,11 +31,6 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def send_unsubscribe_email(email):
-    token = generate_confirmation_token(email)
-    confirm_url = url_for('admin.unsubscribe_email', token=token, _external=True)
-    html = render_template('admin/admin_mass_email.html', confirm_url=confirm_url)
-    send_mass_email(email, html)
 
 def send_mass_email(email, subject, filename, service):
     token = generate_confirmation_token(email)
@@ -49,6 +44,7 @@ def send_mass_email(email, subject, filename, service):
     db_session.add(user)
     db_session.commit()
 
+
 def db_unsubscribe_email(email, action):
     user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
     now = datetime.datetime.now(timezone.utc)
@@ -58,15 +54,17 @@ def db_unsubscribe_email(email, action):
     db_session.add(user)
     db_session.commit()
 
-def db_add_email(email, email_source):
+
+def db_add_email_list(email, email_source):
     now = datetime.datetime.now(timezone.utc)
     username = email.split("@")[0]
-    user = User (
-        email=email.lower(), password=generate_password_hash("freespeech"), username=username, description="", created_date=now, \
-        updated=now, email_lastsent_date=now, email_verified=False, view_counter = 0, \
+    user = Email_list (
+        email=email.lower(), username=username, email_source=email_source,  \
+        created_date=now, updated=now, email_lastsent_date=now, \
     )
     db_session.add(user)
     db_session.commit()
+
 
 @bp.route('/')
 @util.admin_login_required
@@ -335,9 +333,9 @@ def aws_complaint():
     return 'OK\n'
 
 
-@bp.route('/add_email', methods=['GET', 'POST'])
+@bp.route('/add_email_list', methods=['GET', 'POST'])
 @util.admin_login_required
-def add_email():
+def add_email_list():
     title = "Upload Emails File"
     if request.method == 'POST':
         # check if the post request has the file part
@@ -357,7 +355,6 @@ def add_email():
             file.save(os.path.join(folder, filename))
 
             email_source = (request.form['email_source'])
-            flash(email_source)
 
             with open(folder_file) as file:
                for email in file:
@@ -366,26 +363,13 @@ def add_email():
                     now = datetime.datetime.now(timezone.utc)
                     username = email.split("@")[0]
 
-                    flash(username + ' ok')
-
-#                    user = User(
-#                        email=email.lower(), password=generate_password_hash("freespeech"), username=username, description="",
-#                        created_date=now, \
-#                        updated=now, email_lastsent_date=now, email_verified=False, view_counter=0, \
-#                        )
-
-                    flash(email + ' added ok')
-
-#                    db_session.add(user)
-#                    db_session.commit()
-
-#                    try:
-#                        db_add_email(email, email_source)
-#                        flash(email + ' ADDED')
-#                        db_unsubscribe_email(email, action)
-#                        flash(email)
-#                    except:
-#                        flash(email + ' NOT ADDED')
+                    if email_list_exists(email):
+                        flash(email + ' NOT ADDED, in list')
+                    elif validate_user_email(email):
+                        flash(email + ' NOT ADDED, invalid syntax')
+                    else:
+                        db_add_email_list(email, email_source)
+                        flash(email + ' added')
 
             return redirect(url_for('admin.index'))
 

@@ -377,4 +377,6 @@ class Email_list(Base):
     email_action = Column(String, nullable=True)
     created_date = Column(DateTime, nullable=True)
     email_lastsent_date = Column(DateTime, nullable=True)
+    updated = Column(DateTime, nullable=True)
+
 

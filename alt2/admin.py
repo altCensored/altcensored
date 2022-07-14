@@ -13,11 +13,10 @@ from .database import db_session
 from .models import Mv_Channel, User, Entity, Source, Sources_to_Videos, Email_list
 from datatables import ColumnDT, DataTables
 from threading import Thread
-from werkzeug.security import check_password_hash, generate_password_hash
+
 
 from . import util
 from . import config
-
 from .util import (
     confirm_token, send_all_mass_email, generate_confirmation_token, email_exists, email_list_exists, validate_user_email
 )
@@ -26,6 +25,7 @@ from werkzeug.utils import secure_filename
 bp = Blueprint('admin', __name__, url_prefix='/admin')
 
 ALLOWED_EXTENSIONS = {'htm', 'html', 'txt'}
+
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -36,8 +36,8 @@ def send_mass_email(email, subject, filename, service):
     token = generate_confirmation_token(email)
     confirm_url = url_for('admin.unsubscribe_email', token=token, _external=True)
     html = render_template('newsletter/' + filename, confirm_url=confirm_url)
-    send_all_mass_email(email, subject, html, service)
-
+    Thread(target=send_all_mass_email, args=(email, subject, html, service)).start()
+#    send_all_mass_email(email, subject, html, service)
     if email_exists(email):
         user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
     else:
@@ -46,7 +46,7 @@ def send_mass_email(email, subject, filename, service):
     now = datetime.datetime.now(timezone.utc)
     user.email_lastsent_date = now
     db_session.add(user)
-    db_session.commit()
+#    db_session.commit()
 
 
 def db_unsubscribe_email(tablename, email, action):
@@ -64,10 +64,11 @@ def db_unsubscribe_email(tablename, email, action):
 
 def db_add_email_list(email, email_source):
     now = datetime.datetime.now(timezone.utc)
+    email_lastsent_date = datetime.datetime.now() - datetime.timedelta(30)
     username = email.split("@")[0]
     user = Email_list (
         email=email.lower(), username=username, email_source=email_source,  \
-        created_date=now, updated=now, email_lastsent_date=now, \
+        created_date=now, updated=now, email_lastsent_date=email_lastsent_date, \
     )
     db_session.add(user)
     db_session.commit()
@@ -222,6 +223,8 @@ def mass_email():
         for user in users:
             send_mass_email(user.email, subject, filename, service)
             flash(user.email)
+
+        db_session.commit()
         return redirect(url_for('admin.index'))
 
     return render_template('admin/admin_mass_email.html', title = title)
@@ -482,6 +485,7 @@ def background2(app, msg):
     with app.app_context():
         app.logger.debug(msg)
 
+
 @bp.route('/test3')
 @util.admin_login_required
 def test3():
@@ -499,4 +503,16 @@ def test4():
     app = current_app._get_current_object()
     Thread(target=background2, args=(app, msg)).start()
     return 'Hello, World!'
+
+@bp.route('/test5')
+@util.admin_login_required
+def test5():
+    now = datetime.datetime.now(timezone.utc)
+    start_date = datetime.datetime.now() - datetime.timedelta(30)
+    flash(now)
+    flash(start_date)
+#    flash(start_date)
+
+    return render_template('admin/admin_index.html')
+
 

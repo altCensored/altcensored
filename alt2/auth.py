@@ -49,6 +49,8 @@ def username_exist(username):
 
 def register_user(email, password, username):
     now = datetime.datetime.now(timezone.utc)
+    email_lastsent_date = datetime.datetime.now(timezone.utc) - datetime.timedelta(30)
+
     settings = {
         "theme": session['theme'],
         "locale": session['locale'],
@@ -58,7 +60,7 @@ def register_user(email, password, username):
 
     user = User (
         email=email.lower(), password=generate_password_hash(password), username=username, description="", created_date=now, \
-        updated=now, email_lastsent_date=now, email_verified=False, view_counter = 0, \
+        updated=now, email_lastsent_date=email_lastsent_date, email_verified=False, view_counter = 0, \
         navtabs=[ session['navtabs']['navtab1'], session['navtabs']['navtab2'], session['navtabs']['navtab3'] ], \
         settings=settings, \
         navtabs_index=[ session['navtabs_index']['navtab1'],session['navtabs_index']['navtab2'],session['navtabs_index']['navtab3'] ],

@@ -64,7 +64,7 @@ def db_unsubscribe_email(tablename, email, action):
 
 def db_add_email_list(email, email_source):
     now = datetime.datetime.now(timezone.utc)
-    email_lastsent_date = datetime.datetime.now() - datetime.timedelta(30)
+    email_lastsent_date = datetime.datetime.now(timezone.utc) - datetime.timedelta(30)
     username = email.split("@")[0]
     user = Email_list (
         email=email.lower(), username=username, email_source=email_source,  \

@@ -311,7 +311,7 @@ class Playlist(Base):
     hashid = Column(String, nullable=False)
     title = Column(String, nullable=True)
     description = Column(String, nullable=True)
-    videos = Column(ARRAY(Integer))
+    videos = Column(ARRAY(String))
     video_count = Column(Integer, nullable=True)
     created = Column(DateTime, nullable=True)
     updated = Column(DateTime, nullable=True)

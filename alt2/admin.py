@@ -507,12 +507,22 @@ def test4():
 @bp.route('/test5')
 @util.admin_login_required
 def test5():
-    now = datetime.datetime.now(timezone.utc)
-    start_date = datetime.datetime.now() - datetime.timedelta(30)
-    flash(now)
-    flash(start_date)
-#    flash(start_date)
+    recipientscount = db_session.query(func.count(User.id)). \
+        filter((User.email_lastsent_date) < func.current_date() - 28). \
+        filter(User.email_verified). \
+        filter(User.email_subscribed). \
+        filter(User.settings['locale'].as_string() == "en"). \
+        scalar()
+
+    users = db_session.query(User). \
+        filter((User.email_lastsent_date) < func.current_date() - 28). \
+        filter(User.email_verified). \
+        filter(User.email_subscribed). \
+        filter(User.settings['locale'].as_string() == "en"). \
+        limit(5).all()
+
+    flash(recipientscount)
+    for user in users:
+        flash(user.email)
 
     return render_template('admin/admin_index.html')
-
-

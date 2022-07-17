@@ -16,28 +16,26 @@
     <div class="pure-g">
       <div class="pure-u-1 pure-u-md-1-1">
         <div class="h-box">
-
         <h2>{{title}}</h2>
         <form method=post enctype=multipart/form-data>
           <input type=file name=file>
           <input type=submit value=Return>
-          <br><br>          <br><br>
+          <br><br>
+          <hr>
           <label for="service">Service:</label>
           <select name=service>
             <option value=aws>aws</option>"
             <option value=mjet>mjet</option>"
             <option value=sgrid>sgrid</option>"
           </select>
-          <br><br>
-          <label for="recipients">Recipients:</label>
+          <label for="recipients">Recips:</label>
           <select name=recipients>
             <option value=admin>admin</option>"
             <option value=friends>friends</option>"
             <option value=verified>verified</option>"
             <option value=subscribed>subscribed</option>"
           </select>
-          <br><br>
-          <label for="sendlimit"># of Recipients:</label>
+          <label for="sendlimit"># of Recips:</label>
           <select name=sendlimit>
             <option value=250>250</option>"
             <option value=200>200</option>"
@@ -47,10 +45,35 @@
             <option value=50>50</option>"
             <option value=25>25</option>"
           </select>
+          <label for="language">Language:</label>
+          <select name=language>
+            <option value=en>en</option>"
+            <option value=de>de</option>"
+            <option value=es>es</option>"
+            <option value=fr>fr</option>"
+            <option value=pt>pt</option>"
+            <option value=nl>nl</option>"
+            <option value=it>it</option>"
+            <option value=se>se</option>"
+          </select>
           <br><br>
           <label for="subject">subject:</label>
           <input type="text" name="subject">
+          <label for="dayslastsent">Days Last Sent:</label>
+          <select name=dayslastsent>
+            <option value=28>28</option>"
+            <option value=20>20</option>"
+            <option value=14>14</option>"
+            <option value=10>10</option>"
+            <option value=5>5</option>"
+          </select>
+          <label for="testonly">Test Only:</label>
+          <select name=testonly>
+            <option value=true>true</option>"
+            <option value=false>false</option>"
+          </select>
           <br><br>
+          <hr>
           <label for="email_source">Email List Source:</label>
           <select name=email_source>
             <option value=friend>friend</option>"

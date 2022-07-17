@@ -174,19 +174,24 @@ def mass_email():
             folder = current_app.root_path + config.UPLOAD_FOLDER
             file.save(os.path.join(folder, filename))
 
-        sendlimit = (request.form['sendlimit'])
         service = (request.form['service'])
         recipients = (request.form['recipients'])
+        sendlimit = (request.form['sendlimit'])
+        language = (request.form['language'])
         subject = (request.form['subject'])
+        dayslastsent = int((request.form['dayslastsent']))
+        testonly = (request.form['testonly'])
 
         if recipients == 'verified':
             usercount = db_session.query(func.count(User.id)). \
-                filter((User.email_lastsent_date) < func.current_date() - 28). \
+                filter((User.email_lastsent_date) < func.current_date() - dayslastsent). \
+                filter(User.settings['locale'].as_string() == language). \
                 filter(User.email_verified). \
                 filter(User.email_subscribed). \
                 scalar()
             users = db_session.query(User). \
-                filter((User.email_lastsent_date) < func.current_date() - 28). \
+                filter((User.email_lastsent_date) < func.current_date() - dayslastsent). \
+                filter(User.settings['locale'].as_string() == language). \
                 filter(User.email_subscribed). \
                 filter(User.email_verified). \
                 order_by(func.random()). \
@@ -194,11 +199,13 @@ def mass_email():
 
         if recipients == 'subscribed':
             usercount = db_session.query(func.count(User.id)). \
-                filter((User.email_lastsent_date) < func.current_date() - 28). \
+                filter((User.email_lastsent_date) < func.current_date() - dayslastsent). \
+                filter(User.settings['locale'].as_string() == language). \
                 filter(User.email_subscribed). \
                 scalar()
             users = db_session.query(User). \
-                filter((User.email_lastsent_date) < func.current_date() - 28). \
+                filter((User.email_lastsent_date) < func.current_date() - dayslastsent). \
+                filter(User.settings['locale'].as_string() == language). \
                 filter(User.email_subscribed). \
                 order_by(func.random()). \
                 limit(sendlimit).all()
@@ -220,9 +227,11 @@ def mass_email():
             return redirect(url_for('admin.index'))
 
         flash(usercount)
+        flash('test only : ' + testonly)
         for user in users:
-            send_mass_email(user.email, subject, filename, service)
-            flash(user.email)
+            if testonly == 'false':
+#                send_mass_email(user.email, subject, filename, service)
+                flash(user.email)
 
         db_session.commit()
         return redirect(url_for('admin.index'))
@@ -233,7 +242,7 @@ def mass_email():
 @bp.route('/update_bounce', methods=['GET', 'POST'])
 @util.admin_login_required
 def update_bounce():
-    title = "Upload and Process Bounce File"
+    title = "Upload altcen_user Bounce File"
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -376,7 +385,7 @@ def aws_complaint():
 @bp.route('/add_email_list', methods=['GET', 'POST'])
 @util.admin_login_required
 def add_email_list():
-    title = "Upload Emails File"
+    title = "Upload Email List File"
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:

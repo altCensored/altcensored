@@ -230,7 +230,7 @@ def mass_email():
         flash('test only : ' + testonly)
         for user in users:
             if testonly == 'false':
-#                send_mass_email(user.email, subject, filename, service)
+                send_mass_email(user.email, subject, filename, service)
                 flash(user.email)
 
         db_session.commit()

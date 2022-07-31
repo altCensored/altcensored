@@ -212,10 +212,10 @@ def mass_email():
 
         if recipients == 'friends':
             usercount = db_session.query(func.count(Email_list.id)). \
-                filter((Email_list.email_lastsent_date) < func.current_date() - 28). \
+                filter((Email_list.email_lastsent_date) < func.current_date() - dayslastsent). \
                 scalar()
             users = db_session.query(Email_list). \
-                filter((Email_list.email_lastsent_date) < func.current_date() - 28). \
+                filter((Email_list.email_lastsent_date) < func.current_date() - dayslastsent). \
                 order_by(func.random()). \
                 limit(sendlimit).all()
 

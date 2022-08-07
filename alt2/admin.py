@@ -247,21 +247,19 @@ def add_channel():
     if request.method == 'POST':
         channel_id = (request.form['channel_id'])
         archive_type = (request.form['archive_type'])
-        testonly = (request.form['testonly'])
 
         if archive_type == 'partial':
             if channel_partial_exists(channel_id):
-                flash(channel_id + ' already exist')
+                flash(channel_id + ' ALREADY EXIST')
             else:
                 flash(channel_id + ' has been added for partial archiving')
 
         if archive_type == 'full':
             channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
             if channel_full_exists(channel_url):
-                flash(channel_url + ' already exist')
+                flash(channel_url + ' ALREADY EXIST')
             else:
                 flash(channel_url + ' has been added for full archiving')
-
 
         return redirect(url_for('admin.index'))
 

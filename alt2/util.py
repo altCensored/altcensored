@@ -313,12 +313,25 @@ def title_exists(ftitle):
 def channel_partial_exists(channel_id):
     if db_session.query(Channels_part.ytc_id).filter((Channels_part.ytc_id) == (channel_id)).scalar() is not None:
         return True
+    else:
+        channel_part = Channels_part(ytc_id=channel_id)
+        db_session.add(channel_part)
+        db_session.commit()
 
 
 def channel_full_exists(channel_url):
     if db_session.query(Channels.url).filter((Channels.url) == (channel_url)).scalar() is not None:
         return True
+    else:
+        channel_full = Channels(url=channel_url)
+        db_session.add(channel_full)
+        db_session.commit()
 
+
+def channel_full_add(channel_url):
+    channel_full = Channels(url=channel_url)
+    db_session.add(channel_full)
+    db_session.commit()
 
 def send_sgrid_email(email, subject, content):
     message = Mail(

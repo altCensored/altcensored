@@ -18,7 +18,8 @@ from . import util
 from . import config
 from .util import (
     confirm_token, send_all_mass_email, generate_confirmation_token,
-    email_exists, email_list_exists, validate_user_email, channel_partial_exists, channel_full_exists
+    email_exists, email_list_exists, validate_user_email,
+    channel_partial_exists, channel_full_exists
 )
 from werkzeug.utils import secure_filename
 
@@ -250,16 +251,17 @@ def add_channel():
 
         if archive_type == 'partial':
             if channel_partial_exists(channel_id):
-                flash('exist')
+                flash(channel_id + ' already exist')
             else:
-                flash('does not exist')
+                flash(channel_id + ' has been added for partial archiving')
 
         if archive_type == 'full':
             channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
             if channel_full_exists(channel_url):
-                flash('exist')
+                flash(channel_url + ' already exist')
             else:
-                flash('does not exist')
+                flash(channel_url + ' has been added for full archiving')
+
 
         return redirect(url_for('admin.index'))
 

@@ -277,6 +277,22 @@ def update_bounce():
     return render_template('admin/admin_mass_email.html', title = title)
 
 
+@bp.route('/add_channel', methods=['GET', 'POST'])
+@util.admin_login_required
+def add_channel():
+    title = "Add Channel"
+    if request.method == 'POST':
+        channel_name = (request.form['channel_name'])
+        archive_type = (request.form['archive_type'])
+        testonly = (request.form['testonly'])
+
+        if archive_type == 'partial':
+            flash(channel_name)
+            return redirect(url_for('admin.index'))
+
+    return render_template('admin/admin_channels.html', title = title)
+
+
 @bp.route('/confirm/<token>', methods=['GET', 'POST'])
 def unsubscribe_email(token):
     email = confirm_token(token, None)

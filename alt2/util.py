@@ -8,7 +8,7 @@ from better_profanity import profanity
 from sqlalchemy import func, text, desc
 from captcha.image import ImageCaptcha
 from .database import db_session
-from .models import Translation, Playlist, Mv_Channel, Mv_Video, User, Email_list
+from .models import Translation, Playlist, Mv_Channel, Mv_Video, User, Email_list, Channels, Channels_part
 from . import config
 from email_validator import validate_email, EmailNotValidError
 from mailjet_rest import Client

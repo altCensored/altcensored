@@ -388,7 +388,7 @@ class Email_list(Base):
 
 class Channels(Base):
     __tablename__ = 'channels'
-    url = Column(String, nullable=False)
+    url = Column(String, primary_key=True, nullable=False)
     synched = Column(Boolean, nullable=True)
     working = Column(Boolean, nullable=True)
     syncdate = Column(DateTime, nullable=True)
@@ -396,7 +396,7 @@ class Channels(Base):
 
 class Channels_part(Base):
     __tablename__ = 'channels_part'
-    ytc_id = Column(String, nullable=False)
+    ytc_id = Column(String, primary_key=True, nullable=False)
     synched = Column(Boolean, nullable=True)
     working = Column(Boolean, nullable=True)
     syncdate = Column(DateTime, nullable=True)

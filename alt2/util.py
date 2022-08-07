@@ -310,6 +310,16 @@ def title_exists(ftitle):
         return True
 
 
+def channel_partial_exists(channel_id):
+    if db_session.query(Channels_part.ytc_id).filter((Channels_part.ytc_id) == (channel_id)).scalar() is not None:
+        return True
+
+
+def channel_full_exists(channel_url):
+    if db_session.query(Channels.url).filter((Channels.url) == (channel_url)).scalar() is not None:
+        return True
+
+
 def send_sgrid_email(email, subject, content):
     message = Mail(
         from_email='admin@altCensored.com',

@@ -14,11 +14,11 @@ from .models import Mv_Channel, User, Entity, Source, Sources_to_Videos, Email_l
 from datatables import ColumnDT, DataTables
 from threading import Thread
 
-
 from . import util
 from . import config
 from .util import (
-    confirm_token, send_all_mass_email, generate_confirmation_token, email_exists, email_list_exists, validate_user_email
+    confirm_token, send_all_mass_email, generate_confirmation_token,
+    email_exists, email_list_exists, validate_user_email, channel_partial_exists, channel_full_exists
 )
 from werkzeug.utils import secure_filename
 
@@ -37,7 +37,6 @@ def send_mass_email(email, subject, filename, service):
     confirm_url = url_for('admin.unsubscribe_email', token=token, _external=True)
     html = render_template('newsletter/' + filename, confirm_url=confirm_url)
     Thread(target=send_all_mass_email, args=(email, subject, html, service)).start()
-#    send_all_mass_email(email, subject, html, service)
     if email_exists(email):
         user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
     else:
@@ -46,7 +45,6 @@ def send_mass_email(email, subject, filename, service):
     now = datetime.datetime.now(timezone.utc)
     user.email_lastsent_date = now
     db_session.add(user)
-#    db_session.commit()
 
 
 def db_unsubscribe_email(tablename, email, action):
@@ -66,10 +64,10 @@ def db_add_email_list(email, email_source):
     now = datetime.datetime.now(timezone.utc)
     email_lastsent_date = datetime.datetime.now(timezone.utc) - datetime.timedelta(30)
     username = email.split("@")[0]
-    user = Email_list (
-        email=email.lower(), username=username, email_source=email_source,  \
+    user = Email_list(
+        email=email.lower(), username=username, email_source=email_source, \
         created_date=now, updated=now, email_lastsent_date=email_lastsent_date, \
-    )
+        )
     db_session.add(user)
     db_session.commit()
 
@@ -101,8 +99,8 @@ def channel_data_all():
         ColumnDT(func.to_char(Mv_Channel.delta, 'DDD')),
         ColumnDT(Mv_Channel.ytc_partarchive),
         ColumnDT(Mv_Channel.ytc_archive),
-        ColumnDT(func.to_char(Mv_Channel.ytc_publishedat,'YYYY-mm-dd')),
-        ColumnDT(func.to_char(Mv_Channel.ytc_deleteddate,'YYYY-mm-dd')),
+        ColumnDT(func.to_char(Mv_Channel.ytc_publishedat, 'YYYY-mm-dd')),
+        ColumnDT(func.to_char(Mv_Channel.ytc_deleteddate, 'YYYY-mm-dd')),
         ColumnDT(func.to_char(Mv_Channel.ytc_addeddate, 'YYYY-mm-dd')),
     ]
 
@@ -142,10 +140,10 @@ def video_data():
         query = db_session.query().select_from(Entity)
 
     else:
-        query = db_session.query().\
+        query = db_session.query(). \
             select_from(Entity). \
             join(Sources_to_Videos). \
-            join(Source).\
+            join(Source). \
             filter(Source.ytc_id == ytc_id)
 
     params = request.args.to_dict()
@@ -153,7 +151,7 @@ def video_data():
     return jsonify(rowTable.output_result())
 
 
-@bp.route('/mass_email', methods=['GET','POST'])
+@bp.route('/mass_email', methods=['GET', 'POST'])
 @util.admin_login_required
 def mass_email():
     title = "Send Mass Email"
@@ -238,7 +236,34 @@ def mass_email():
         db_session.commit()
         return redirect(url_for('admin.index'))
 
-    return render_template('admin/admin_mass_email.html', title = title)
+    return render_template('admin/admin_mass_email.html', title=title)
+
+
+@bp.route('/add_channel', methods=['GET', 'POST'])
+@util.admin_login_required
+def add_channel():
+    title = "Add Channel"
+    if request.method == 'POST':
+        channel_id = (request.form['channel_id'])
+        archive_type = (request.form['archive_type'])
+        testonly = (request.form['testonly'])
+
+        if archive_type == 'partial':
+            if channel_partial_exists(channel_id):
+                flash('exist')
+            else:
+                flash('does not exist')
+
+        if archive_type == 'full':
+            channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
+            if channel_full_exists(channel_url):
+                flash('exist')
+            else:
+                flash('does not exist')
+
+        return redirect(url_for('admin.index'))
+
+    return render_template('admin/admin_channels.html', title=title)
 
 
 @bp.route('/update_bounce', methods=['GET', 'POST'])
@@ -274,23 +299,7 @@ def update_bounce():
 
             return redirect(url_for('admin.index'))
 
-    return render_template('admin/admin_mass_email.html', title = title)
-
-
-@bp.route('/add_channel', methods=['GET', 'POST'])
-@util.admin_login_required
-def add_channel():
-    title = "Add Channel"
-    if request.method == 'POST':
-        channel_name = (request.form['channel_name'])
-        archive_type = (request.form['archive_type'])
-        testonly = (request.form['testonly'])
-
-        if archive_type == 'partial':
-            flash(channel_name)
-            return redirect(url_for('admin.index'))
-
-    return render_template('admin/admin_channels.html', title = title)
+    return render_template('admin/admin_mass_email.html', title=title)
 
 
 @bp.route('/confirm/<token>', methods=['GET', 'POST'])
@@ -336,7 +345,7 @@ def unsubscribe_email(token):
     return render_template('widgets/widgets_confirm.html', message=message)
 
 
-@bp.route('/aws_bounce', methods = ['GET', 'POST', 'PUT'])
+@bp.route('/aws_bounce', methods=['GET', 'POST', 'PUT'])
 def aws_bounce():
     # AWS sends JSON with text/plain mimetype
     try:
@@ -355,7 +364,7 @@ def aws_bounce():
         msgjs = json.loads(msg)
 
         email = msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"]
-        action = 'aws_bounce' #unenforced code for aws bounce
+        action = 'aws_bounce'  # unenforced code for aws bounce
 
         if email_exists(email):
             user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
@@ -368,7 +377,7 @@ def aws_bounce():
     return 'OK\n'
 
 
-@bp.route('/aws_complaint', methods = ['GET', 'POST'])
+@bp.route('/aws_complaint', methods=['GET', 'POST'])
 def aws_complaint():
     # AWS sends JSON with text/plain mimetype
     try:
@@ -387,7 +396,7 @@ def aws_complaint():
         msgjs = json.loads(msg)
 
         email = msgjs["complaint"]["complainedRecipients"][0]["emailAddress"]
-        action = 'aws_complaint' #unenforced code for aws complaint
+        action = 'aws_complaint'  # unenforced code for aws complaint
 
         if email_exists(email):
             user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
@@ -424,7 +433,7 @@ def add_email_list():
             email_source = (request.form['email_source'])
 
             with open(folder_file) as file:
-               for email in file:
+                for email in file:
                     email = (email.rstrip())
 
                     now = datetime.datetime.now(timezone.utc)
@@ -442,7 +451,7 @@ def add_email_list():
 
             return redirect(url_for('admin.index'))
 
-    return render_template('admin/admin_mass_email.html', title = title)
+    return render_template('admin/admin_mass_email.html', title=title)
 
 
 @bp.route('/test', methods=['GET', 'POST'])
@@ -459,26 +468,27 @@ def add_message():
         msg = js["Message"]
         msgjs = json.loads(msg)
 
-#        emailbounce = msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"]
+        #        emailbounce = msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"]
         emailcomplaint = msgjs["complaint"]["complainedRecipients"][0]["emailAddress"]
 
-#        folder = current_app.root_path + config.UPLOAD_FOLDER
-#        myfile = 'email_add'
-#        with open(os.path.join(folder, myfile), 'w') as fo:
-#            fo.write("type=" + emailbounce + "\n")
-#        send_unsubscribe_email2('admin@altcensored.com', emailbounce, myfile)
-#        db_unsubscribe_email(emailbounce)
+        #        folder = current_app.root_path + config.UPLOAD_FOLDER
+        #        myfile = 'email_add'
+        #        with open(os.path.join(folder, myfile), 'w') as fo:
+        #            fo.write("type=" + emailbounce + "\n")
+        #        send_unsubscribe_email2('admin@altcensored.com', emailbounce, myfile)
+        #        db_unsubscribe_email(emailbounce)
 
-#        return (js["Type"])
+        #        return (js["Type"])
         return (msg)
-#        return (msg["notificationType"])
+        #        return (msg["notificationType"])
 
-#        return (msg["notificationType"])
-#        return (msgjs)
-#        return (msgjs["mail"])
-#        return (msgjs["bounce"]["bouncedRecipients"][0])
-#        return (msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"])  #WORKS
-        return (emailcomplaint)  #WORKS
+        #        return (msg["notificationType"])
+        #        return (msgjs)
+        #        return (msgjs["mail"])
+        #        return (msgjs["bounce"]["bouncedRecipients"][0])
+        #        return (msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"])  #WORKS
+        return (emailcomplaint)  # WORKS
+
 
 @bp.route('/test2')
 @util.admin_login_required
@@ -508,6 +518,7 @@ def test2():
 def background(app, msg):
     app.logger.debug(msg)
 
+
 def background2(app, msg):
     with app.app_context():
         app.logger.debug(msg)
@@ -520,6 +531,8 @@ def test3():
     app = current_app._get_current_object()
     Thread(target=background, args=(app, msg)).start()
     return 'Hello, World!'
+
+
 # works for single command (logger)
 
 
@@ -530,6 +543,7 @@ def test4():
     app = current_app._get_current_object()
     Thread(target=background2, args=(app, msg)).start()
     return 'Hello, World!'
+
 
 @bp.route('/test5')
 @util.admin_login_required

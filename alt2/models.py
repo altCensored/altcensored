@@ -386,3 +386,17 @@ class Email_list(Base):
     updated = Column(DateTime, nullable=True)
 
 
+class Channels(Base):
+    __tablename__ = 'channels'
+    url = Column(String, nullable=False)
+    synched = Column(Boolean, nullable=True)
+    working = Column(Boolean, nullable=True)
+    syncdate = Column(DateTime, nullable=True)
+
+
+class Channels_part(Base):
+    __tablename__ = 'channels_part'
+    ytc_id = Column(String, nullable=False)
+    synched = Column(Boolean, nullable=True)
+    working = Column(Boolean, nullable=True)
+    syncdate = Column(DateTime, nullable=True)

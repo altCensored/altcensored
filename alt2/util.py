@@ -1,5 +1,5 @@
 from flask import (
-    session, request, redirect, render_template, url_for, current_app
+    session, request, redirect, render_template, url_for, current_app, flash
 )
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
@@ -13,7 +13,8 @@ from . import config
 from email_validator import validate_email, EmailNotValidError
 from mailjet_rest import Client
 
-import functools, os, string, random
+import functools, os, string, random, subprocess
+
 import boto3
 
 
@@ -310,7 +311,7 @@ def title_exists(ftitle):
         return True
 
 
-def channel_partial_exists(channel_id):
+def channel_partial_add(channel_id):
     if db_session.query(Channels_part.ytc_id).filter((Channels_part.ytc_id) == (channel_id)).scalar() is not None:
         return True
     else:
@@ -319,7 +320,7 @@ def channel_partial_exists(channel_id):
         db_session.commit()
 
 
-def channel_full_exists(channel_url):
+def channel_full_add(channel_url):
     if db_session.query(Channels.url).filter((Channels.url) == (channel_url)).scalar() is not None:
         return True
     else:
@@ -328,10 +329,41 @@ def channel_full_exists(channel_url):
         db_session.commit()
 
 
-def channel_full_add(channel_url):
-    channel_full = Channels(url=channel_url)
-    db_session.add(channel_full)
-    db_session.commit()
+def channel_partial_remove(channel_id):
+    if db_session.query(Channels_part.ytc_id).filter(Channels_part.ytc_id == channel_id).scalar() is not None:
+        channel_part = Channels_part.query.filter(Channels_part.ytc_id == channel_id).first()
+        db_session.delete(channel_part)
+        db_session.commit()
+        return False
+    else:
+        return True
+
+
+def channel_full_remove(channel_url):
+    if db_session.query(Channels.url).filter(Channels.url == channel_url).scalar() is not None:
+        channel_full = Channels.query.filter(Channels.url == channel_url).first()
+        db_session.delete(channel_full)
+        db_session.commit()
+        return False
+    else:
+        return True
+
+
+def ssh_command(commands):
+    admin_ssh_host = config.ADMIN_SSH_HOST
+    for command in commands:
+        ssh = subprocess.Popen(["ssh", "%s" % admin_ssh_host, command],
+                               shell=False,
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
+        result = ssh.stdout.readlines()
+        if not result:
+            error = ssh.stderr.readlines()
+            flash(error, 'error')
+        else:
+            flash(result, 'success' )
+
+
 
 def send_sgrid_email(email, subject, content):
     message = Mail(

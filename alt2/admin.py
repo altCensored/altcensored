@@ -4,7 +4,6 @@ import requests
 import json
 import time
 import subprocess
-import sys
 
 from datetime import timezone
 from flask_babelplus import lazy_gettext
@@ -21,7 +20,8 @@ from . import config
 from .util import (
     confirm_token, send_all_mass_email, generate_confirmation_token,
     email_exists, email_list_exists, validate_user_email,
-    channel_partial_exists, channel_full_exists
+    channel_partial_add, channel_full_add, ssh_command,
+    channel_partial_remove, channel_full_remove
 )
 from werkzeug.utils import secure_filename
 
@@ -154,6 +154,101 @@ def video_data():
     return jsonify(rowTable.output_result())
 
 
+@bp.route('/status_channel', methods=['GET', 'POST'])
+@util.admin_login_required
+def status_channel():
+    title = "Status Channel"
+    if request.method == 'POST':
+        channel_id = (request.form['channel_id'])
+        channel_url = " https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
+        action = 'status_short'
+
+        params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
+        params2 = ' youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 -cf /root/rocketfuel_cookies '
+        command = params1 + params2 + action + channel_url
+        commands = [command]
+        ssh_command(commands)
+
+        return render_template('admin/admin_messages.html')
+
+    return render_template('admin/admin_channels.html', title=title)
+
+
+@bp.route('/add_channel', methods=['GET', 'POST'])
+@util.admin_login_required
+def add_channel():
+    title = "Add Channel"
+    if request.method == 'POST':
+        channel_id = (request.form['channel_id'])
+        channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
+        action = 'afs'
+        delta = ((request.form['delta']))
+        archive_type = (request.form['archive_type'])
+
+        params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
+        params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 -cf /root/rocketfuel_cookies '
+        params3 = ' -delta '
+        params4 = ' > /root/nohup_ssh.out 2>&1 &'
+
+        command = params1 + params2 + action + " " + channel_url + params3 + delta + params4
+        commands = [command]
+        ssh_command(commands)
+
+        if archive_type == 'partial':
+            if channel_partial_add(channel_id):
+                flash(channel_id + ' ALREADY EXIST for partial archiving', 'success')
+            else:
+                flash(channel_id + ' ADDED for partial archiving', 'error')
+
+        if archive_type == 'full':
+            channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
+            if channel_full_add(channel_url):
+                flash(channel_url + ' ALREADY EXIST for full archiving', 'error')
+            else:
+                flash(channel_url + ' ADDED for full archiving', 'success')
+
+    return render_template('admin/admin_channels.html', title=title)
+
+
+@bp.route('/remove_channel', methods=['GET', 'POST'])
+@util.admin_login_required
+def remove_channel():
+    title = "Remove Channel"
+    if request.method == 'POST':
+        channel_id = (request.form['channel_id'])
+        channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
+        action = 'remove'
+
+        params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
+        params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 -cf /root/rocketfuel_cookies '
+        params3 = ' > /root/nohup_ssh.out 2>&1 &'
+
+        command = params1 + params2 + action + " " + channel_url + params3
+        commands = [command]
+        ssh_command(commands)
+
+        if channel_partial_remove(channel_id):
+            flash(channel_id + ' DOES NOT EXIST for partial archiving', 'error')
+        else:
+            flash(channel_id + ' REMOVED from partial archiving', 'success')
+
+        if channel_full_remove(channel_url):
+            flash(channel_url + ' DOES NOT EXIST for full archiving', 'error')
+        else:
+            flash(channel_url + ' REMOVED from full archiving', 'success')
+
+    return render_template('admin/admin_channels.html', title=title)
+
+
+@bp.route('/scraper_status')
+@util.admin_login_required
+def scraper_status():
+    commands = ["systemctl status allsync", "systemctl status find_archive", "ps -aef | grep -E 'channel|find|afs'", "df /dev/vda1"]
+    ssh_command(commands)
+
+    return render_template('admin/admin_messages.html')
+
+
 @bp.route('/mass_email', methods=['GET', 'POST'])
 @util.admin_login_required
 def mass_email():
@@ -240,32 +335,6 @@ def mass_email():
         return redirect(url_for('admin.index'))
 
     return render_template('admin/admin_mass_email.html', title=title)
-
-
-@bp.route('/add_channel', methods=['GET', 'POST'])
-@util.admin_login_required
-def add_channel():
-    title = "Add Channel"
-    if request.method == 'POST':
-        channel_id = (request.form['channel_id'])
-        archive_type = (request.form['archive_type'])
-
-        if archive_type == 'partial':
-            if channel_partial_exists(channel_id):
-                flash(channel_id + ' ALREADY EXIST')
-            else:
-                flash(channel_id + ' has been added for partial archiving')
-
-        if archive_type == 'full':
-            channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
-            if channel_full_exists(channel_url):
-                flash(channel_url + ' ALREADY EXIST')
-            else:
-                flash(channel_url + ' has been added for full archiving')
-
-        return redirect(url_for('admin.index'))
-
-    return render_template('admin/admin_channels.html', title=title)
 
 
 @bp.route('/update_bounce', methods=['GET', 'POST'])
@@ -571,29 +640,10 @@ def test5():
     return render_template('admin/admin_index.html')
 
 
-@bp.route('/scraper_status')
+@bp.route('/test6')
 @util.admin_login_required
-def scraper_status():
-    # Ports are handled in ~/.ssh/config since we use OpenSSH
-    COMMAND1 = "ps -aef | grep -E 'channel|find|afs'"
-    COMMAND2 = "systemctl status allsync"
-    COMMANDa = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-    COMMANDb = ' youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 -cf /root/rocketfuel_cookies afs https://www.youtube.com/playlist?list=UUYOYoDmGQBDu7lPe2Qbh6pw -delta'
-#    COMMAND1 = COMMANDa + COMMANDb
-
-    admin_ssh_host = config.ADMIN_SSH_HOST
-    commands = ["systemctl status allsync", "systemctl status find_archive", "ps -aef | grep -E 'channel|find|afs'"]
-
-    for command in commands:
-        ssh = subprocess.Popen(["ssh", "%s" % admin_ssh_host, command],
-                               shell=False,
-                               stdout=subprocess.PIPE,
-                               stderr=subprocess.PIPE)
-        result = ssh.stdout.readlines()
-        if result == []:
-            error = ssh.stderr.readlines()
-            flash(error, 'error')
-        else:
-            flash(result, 'success' )
+def test6():
+    commands = ["systemctl status allsync", "systemctl status find_archive", "ps -aef | grep -E 'channel|find|afs'", "df /dev/vda1"]
+    ssh_command(commands)
 
     return render_template('admin/admin_messages.html')

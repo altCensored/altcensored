@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block head %}
+
+{% endblock %}
+{% block content %}
+
+{% with active_nav='admin' %}
+    {% include "widgets/navtabs.html" %}
+{% endwith %}
+
+<br>
+
+<div class="pure-g">
+  <div class="pure-u-1 pure-u-md-2-24"></div>
+  <div class="pure-u-1 pure-u-md-20-24">
+    <div class="pure-g">
+      <div class="pure-u-1 pure-u-md-1-1">
+        <div class="h-box">
+            {% with messages = get_flashed_messages(with_categories=true)  %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                    <p class="{{ category }}">
+                        {% for line in message %}
+                            {{line}}<br>
+                            {% endfor %}
+                        </p>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<p></p>
+{% endblock %}

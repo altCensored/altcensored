@@ -3,6 +3,8 @@ import datetime
 import requests
 import json
 import time
+import subprocess
+import sys
 
 from datetime import timezone
 from flask_babelplus import lazy_gettext
@@ -567,3 +569,31 @@ def test5():
         flash(user.email)
 
     return render_template('admin/admin_index.html')
+
+
+@bp.route('/scraper_status')
+@util.admin_login_required
+def scraper_status():
+    # Ports are handled in ~/.ssh/config since we use OpenSSH
+    COMMAND1 = "ps -aef | grep -E 'channel|find|afs'"
+    COMMAND2 = "systemctl status allsync"
+    COMMANDa = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
+    COMMANDb = ' youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 -cf /root/rocketfuel_cookies afs https://www.youtube.com/playlist?list=UUYOYoDmGQBDu7lPe2Qbh6pw -delta'
+#    COMMAND1 = COMMANDa + COMMANDb
+
+    admin_ssh_host = config.ADMIN_SSH_HOST
+    commands = ["systemctl status allsync", "systemctl status find_archive", "ps -aef | grep -E 'channel|find|afs'"]
+
+    for command in commands:
+        ssh = subprocess.Popen(["ssh", "%s" % admin_ssh_host, command],
+                               shell=False,
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
+        result = ssh.stdout.readlines()
+        if result == []:
+            error = ssh.stderr.readlines()
+            flash(error, 'error')
+        else:
+            flash(result, 'success' )
+
+    return render_template('admin/admin_messages.html')

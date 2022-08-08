@@ -243,7 +243,10 @@ def remove_channel():
 @bp.route('/scraper_status')
 @util.admin_login_required
 def scraper_status():
-    commands = ["systemctl status allsync", "systemctl status find_archive", "ps -aef | grep -E 'channel|find|afs'", "df /dev/vda1"]
+    commands = ["systemctl status allsync",
+                "systemctl status find_archive",
+                "systemctl status channel_archive",
+                "ps -aef | grep -E 'channel|find|afs'", "df /dev/vda1"]
     ssh_command(commands)
 
     return render_template('admin/admin_messages.html')

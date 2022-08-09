@@ -159,15 +159,16 @@ def video_data():
 def status_channel():
     title = "Status Channel"
     if request.method == 'POST':
+        sys_name = 'scraper'
         channel_id = (request.form['channel_id'])
-        channel_url = " https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
+        channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
         action = 'status_short'
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 -cf /root/rocketfuel_cookies '
-        command = params1 + params2 + action + channel_url
+        params2 = ' youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 -cf /root/rocketfuel_cookies.txt '
+        command = params1 + params2 + action + " " + channel_url
         commands = [command]
-        ssh_command(commands)
+        ssh_command(sys_name, commands)
 
         return render_template('admin/admin_messages.html')
 
@@ -179,6 +180,7 @@ def status_channel():
 def add_channel():
     title = "Add Channel"
     if request.method == 'POST':
+        sys_name = 'scraper'
         channel_id = (request.form['channel_id'])
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
         action = 'afs'
@@ -186,13 +188,13 @@ def add_channel():
         archive_type = (request.form['archive_type'])
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 -cf /root/rocketfuel_cookies '
+        params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 -cf /root/rocketfuel_cookies.txt '
         params3 = ' -delta '
         params4 = ' > /root/nohup_ssh.out 2>&1 &'
 
         command = params1 + params2 + action + " " + channel_url + params3 + delta + params4
         commands = [command]
-        ssh_command(commands)
+        ssh_command(sys_name, commands)
 
         if archive_type == 'partial':
             if channel_partial_add(channel_id):
@@ -215,17 +217,18 @@ def add_channel():
 def remove_channel():
     title = "Remove Channel"
     if request.method == 'POST':
+        sys_name = 'scraper'
         channel_id = (request.form['channel_id'])
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
         action = 'remove'
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 -cf /root/rocketfuel_cookies '
+        params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 -cf /root/rocketfuel_cookies.txt '
         params3 = ' > /root/nohup_ssh.out 2>&1 &'
 
         command = params1 + params2 + action + " " + channel_url + params3
         commands = [command]
-        ssh_command(commands)
+        ssh_command(sys_name, commands)
 
         if channel_partial_remove(channel_id):
             flash(channel_id + ' DOES NOT EXIST for partial archiving', 'error')
@@ -240,14 +243,44 @@ def remove_channel():
     return render_template('admin/admin_channels.html', title=title)
 
 
+@bp.route('/system_commands', methods=['GET', 'POST'])
+@util.admin_login_required
+def system_commands():
+    title = "System Commands"
+    if request.method == 'POST':
+        sys_name = (request.form['sys_name'])
+        cmd_name = (request.form['cmd_name'])
+        subsys_name = (request.form['subsys_name'])
+        action_name = (request.form['action_name'])
+
+        params1 = 'nohup '
+        params2 = ' > /root/nohup_ssh.out 2>&1 &'
+
+        if cmd_name == 'systemctl':
+            command = cmd_name + " " + action_name + " " + subsys_name
+        elif cmd_name == 'backup':
+            command = params1 + cmd_name + params2
+        else:
+            command = cmd_name
+
+        commands = [command]
+        ssh_command(sys_name, commands)
+
+        return render_template('admin/admin_messages.html')
+
+    return render_template('admin/admin_system_commands.html', title=title)
+
+
 @bp.route('/scraper_status')
 @util.admin_login_required
 def scraper_status():
+    sys_name = 'scraper'
     commands = ["systemctl status allsync",
                 "systemctl status find_archive",
                 "systemctl status channel_archive",
-                "ps -aef | grep -E 'channel|find|afs'", "df /dev/vda1"]
-    ssh_command(commands)
+                "ps -aef | grep -E 'channel|find|afs'",
+                "df /dev/vda1"]
+    ssh_command(sys_name, commands)
 
     return render_template('admin/admin_messages.html')
 

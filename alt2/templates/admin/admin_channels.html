@@ -18,9 +18,10 @@
         <div class="h-box">
         <h2>{{title}}</h2>
         <form method=post enctype=multipart/form-data>
-          <br><br>
           <label for="channel_id">Channel ID:</label>
           <input type="text" size="24" minlength="24" maxlength="24" required name="channel_id">
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <input type=submit value=Return>
           <br><br>
           <label for="delta">Delta:</label>
           <select name=delta>
@@ -30,15 +31,13 @@
             <option value=10>10</option>"
             <option value=15>15</option>
             <option value=30>30</option>
-          </select>
-          &nbsp;
+          </select>&nbsp;
           <label for="archive_type">Archive Type:</label>
           <select name=archive_type>
             <option value=partial>partial</option>"
             <option value=full>full</option>"
           </select>
           <br><br>
-          <input type=submit value=Return>
         </form>
         </div>
       </div>

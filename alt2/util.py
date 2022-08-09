@@ -349,10 +349,10 @@ def channel_full_remove(channel_url):
         return True
 
 
-def ssh_command(commands):
-    admin_ssh_host = config.ADMIN_SSH_HOST
+def ssh_command(sys_name, commands):
+    ssh_host = 'root@' + sys_name
     for command in commands:
-        ssh = subprocess.Popen(["ssh", "%s" % admin_ssh_host, command],
+        ssh = subprocess.Popen(["ssh", "%s" % ssh_host, command],
                                shell=False,
                                stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE)
@@ -361,8 +361,7 @@ def ssh_command(commands):
             error = ssh.stderr.readlines()
             flash(error, 'error')
         else:
-            flash(result, 'success' )
-
+            flash(result, 'success')
 
 
 def send_sgrid_email(email, subject, content):

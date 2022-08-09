@@ -19,12 +19,12 @@
             {% with messages = get_flashed_messages(with_categories=true)  %}
                 {% if messages %}
                     {% for category, message in messages %}
+                    <hr>
                     <p class="{{ category }}">
                         {% for line in message %}
                             {{line}}<br>
                             {% endfor %}
                         </p>
-                        <hr>
                     {% endfor %}
                 {% endif %}
             {% endwith %}

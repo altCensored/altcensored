@@ -292,6 +292,10 @@ def scraper_status():
                 "df /dev/vda1"]
     ssh_command(sys_name, commands)
 
+    sys_name = 'dbase'
+    commands = ["systemctl status pg_backup"]
+    ssh_command(sys_name, commands)
+
     return render_template('admin/admin_messages.html')
 
 

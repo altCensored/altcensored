@@ -3,7 +3,6 @@ import datetime
 import requests
 import json
 import time
-import subprocess
 
 from datetime import timezone
 from flask_babelplus import lazy_gettext
@@ -252,14 +251,29 @@ def system_commands():
         cmd_name = (request.form['cmd_name'])
         subsys_name = (request.form['subsys_name'])
         action_name = (request.form['action_name'])
+        param_name = (request.form['param_name'])
+        find_run = (request.form['find_run'])
 
-        params1 = 'nohup '
-        params2 = ' > /root/nohup_ssh.out 2>&1 &'
+        backup_cmd = './ssh_here_backup.sh'
+        find_cmd = './find_archive.py'
+        bground_p1 = 'nohup '
+        bground_p2 = ' > /root/nohup_ssh.out 2>&1 &'
+        find_p1 = " -s "
+        find_p2 = " -d 7000 -v 50"
+        tubeup_p = ' --metadata=collection:altcensored --cookies=rocketfuel_cookies.txt ' \
+                   '--proxy=socks5://127.0.0.1:2080 https://www.youtube.com/watch?v='
+
 
         if cmd_name == 'systemctl':
             command = cmd_name + " " + action_name + " " + subsys_name
         elif cmd_name == 'backup':
-            command = params1 + cmd_name + params2
+            command = bground_p1 + backup_cmd + bground_p2
+        elif cmd_name == 'find':
+            command = find_cmd + find_p1 + param_name + find_p2
+            if find_run == 'true':
+                command = bground_p1 + command + ' -r' + bground_p2
+        elif cmd_name == 'tubeup':
+            command = bground_p1 + cmd_name + tubeup_p + param_name + bground_p2
         else:
             command = cmd_name
 

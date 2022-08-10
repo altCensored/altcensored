@@ -27,11 +27,13 @@
           </select>&nbsp;
           <label for="cmd_name">Command:</label>
           <select name=cmd_name>
-            <option value='uptime'>uptime</option>"
+            <option value=uptime>uptime</option>"
             <option value='init 6'>reboot</option>"
-            <option value='apt update -y && apt upgrade -y && apt autoremove -y'>update</option>"
-            <option value='./ssh_here_backup.sh'>backup</option>"
             <option value='ls -lrt'>ls</option>"
+            <option value='apt update -y && apt upgrade -y && apt autoremove -y'>update</option>"
+            <option value=backup'>backup</option>"
+            <option value=find>find</option>"
+            <option value=tubeup>tubeup</option>"
             <option value=systemctl>systemctl</option>"
           </select>&nbsp;
           <input type=submit value=Return>
@@ -58,6 +60,13 @@
             <option value=imageproxy>imageproxy</option>"
           </select>
           <br><br>
+          <label for="param_name">Parameter:</label>
+          <input type="text" name="param_name">&nbsp;
+          <label for="find_run">Find Run:</label>
+          <select name=find_run>
+            <option value=false>false</option>"
+            <option value=true>true</option>"
+          </select>&nbsp;
         </form>
         </div>
       </div>

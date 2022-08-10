@@ -254,7 +254,6 @@ def system_commands():
         param_name = (request.form['param_name'])
         find_run = (request.form['find_run'])
 
-        backup_cmd = './ssh_here_backup.sh'
         find_cmd = './find_archive.py'
         bground_p1 = 'nohup '
         bground_p2 = ' > /root/nohup_ssh.out 2>&1 &'
@@ -263,11 +262,8 @@ def system_commands():
         tubeup_p = ' --metadata=collection:altcensored --cookies=rocketfuel_cookies.txt ' \
                    '--proxy=socks5://127.0.0.1:2080 https://www.youtube.com/watch?v='
 
-
         if cmd_name == 'systemctl':
             command = cmd_name + " " + action_name + " " + subsys_name
-        elif cmd_name == 'backup':
-            command = bground_p1 + backup_cmd + bground_p2
         elif cmd_name == 'find':
             command = find_cmd + find_p1 + param_name + find_p2
             if find_run == 'true':

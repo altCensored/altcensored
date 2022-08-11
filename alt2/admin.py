@@ -293,7 +293,7 @@ def scraper_status():
     ssh_command(sys_name, commands)
 
     sys_name = 'dbase'
-    commands = ["systemctl status pg_backup"]
+    commands = ["systemctl status pgbackup"]
     ssh_command(sys_name, commands)
 
     return render_template('admin/admin_messages.html')

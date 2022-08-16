@@ -289,7 +289,8 @@ def scraper_status():
                 "systemctl status find_archive",
                 "systemctl status channel_archive",
                 "ps -aef | grep -E 'channel|find|afs'",
-                "df /dev/vda1"]
+                "df /dev/vda1"],
+                "ls -lrt"]
     ssh_command(sys_name, commands)
 
     sys_name = 'dbase'

@@ -27,10 +27,10 @@
   <meta name="msapplication-TileColor" content="#575757">
   <meta name="theme-color" content="#575757">
 
-  <link rel="preload" as="style" href="{{ url_for('static', filename='css/pure-min.css') }}">
-  <link rel="preload" as="style" href="{{ url_for('static', filename='css/grids-responsive-min.css') }}">
-  <link rel="preload" as="style" href="{{ url_for('static', filename='css/default.css') }}?v=4">
-  <link rel="preload" as="style" href="{{ url_for('static', filename='css/lighttheme.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pure-min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/grids-responsive-min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}?v=4">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/lighttheme.css') }}">
   <link rel="preload" as="style" href="{{ url_for('static', filename='css/buttons-core.css') }}">
   <link rel="preload" as="style" href="{{ url_for('static', filename='css/buttons.css') }}">
 
@@ -38,7 +38,7 @@
   <link id="dark-reader" rel="stylesheet" href="{{ url_for('static', filename='css/dark.css') }}">
   {% endif %}
 
-  <link rel="preload" as="style" href="{{ url_for('static', filename='css/ionicons.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/ionicons.min.css') }}">
   <link rel="preload" as="style" href="{{ url_for('static', filename='css/flag-icon.min.css') }}">
 
   {% block head %}

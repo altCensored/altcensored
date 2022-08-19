@@ -145,7 +145,7 @@ def watch():
         IARCHIVEURL = current_app.config['IARCHIVEURL']
         video_url = IARCHIVEURL + video_id + "/" + filename
         video_url_short = IARCHIVEURL + video_id + "/"
-        if "access-restricted-item" in item.metadata: raise Exception
+#        if "access-restricted-item" in item.metadata: raise Exception
         if "altcen_hosted" in item.metadata: raise Exception
     except:
         MYSERVER_URL = current_app.config['MYSERVER_URL']

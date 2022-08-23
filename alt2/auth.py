@@ -173,11 +173,15 @@ def login():
                 conf_email_resent = lazy_gettext('Account not verified. Confirmation email resent')
                 flash(conf_email_resent, 'success')
 
+            resp = make_response(render_template(...))
+            resp.set_cookie('somecookiename', 'I am cookie')
+
             return redirect(url_for('video.index'))
 
         else:
             email_pw_bad = lazy_gettext('Email and password combination is invalid')
             flash(email_pw_bad, 'error')
+
 
     return render_template('/auth/auth_index.html')
 

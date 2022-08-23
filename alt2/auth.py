@@ -173,9 +173,6 @@ def login():
                 conf_email_resent = lazy_gettext('Account not verified. Confirmation email resent')
                 flash(conf_email_resent, 'success')
 
-            resp = make_response(render_template(...))
-            resp.set_cookie('somecookiename', 'I am cookie')
-
             return redirect(url_for('video.index'))
 
         else:
@@ -184,7 +181,6 @@ def login():
 
 
     return render_template('/auth/auth_index.html')
-
 
 @bp.route('/confirm/<token>', methods=['GET', 'POST'])
 def confirm_email(token):

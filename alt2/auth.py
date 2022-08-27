@@ -213,7 +213,7 @@ def confirm_email(token):
 
 @bp.route('/reset-password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
-    email = confirm_token(token)
+    email = confirm_token(token, 3600)
     if email == False:
         reset_bad = lazy_gettext('The reset password link is invalid or has expired')
         flash(reset_bad, 'error')

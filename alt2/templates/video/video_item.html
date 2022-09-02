@@ -24,15 +24,11 @@
 <meta property="og:image:secure_url" content="{{ video_url_short }}__ia_thumb.jpg">
 <meta name="og:video" content="{{ config['MYSERVER_URL'] }}/embed/{{ video_id }}">
 
-
-
 <meta name="altcen_title" content=
 "{% block title %}{{ video['title'] | striptags | truncate(length=56,killwords=False,end='',leeway=0) }}{% endblock %}">
 
 <meta name="altcen_meta_description" content="{% block description %}Limited Censored YouTube Video: {{ video['description'] }} (Published on {{ video['published'].strftime('%b %e, %G') }}){% endblock %}>
-<link rel="image_src" href="{% block imagesrc %}{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['title'] | ia_fname ~ '-' ~ video['extractor_data'] ~ '.jpg' }}{% endblock %}">
-
-<meta name="lc:image" content="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['title'] | ia_fname ~ '-' ~ video['extractor_data'] ~ '.jpg' }}">
+<link rel="image_src" href="{% block imagesrc %}{{ config.IPROXY ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}{% endblock %}">
 
 {% endblock %}
 {% block content %}
@@ -160,7 +156,7 @@
               <a style="width:100%;" href="{{ url_for('video.watch', v=video['extractor_data']) }}">
               {% endif %}
               <div class="thumbnail">
-                <img class="thumbnail" src="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['title'] | ia_fname ~ '-' ~ video['extractor_data'] ~ '.jpg' }}" onerror="this.onerror=null;this.src='{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}';" >
+                <img class="thumbnail" src="{{ config.IPROXY ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}" >
                 {% if video['duration']  is not none %}
                 <p class="length">{{ video['duration'] | hourminsec }}</p>
                 {% else %}

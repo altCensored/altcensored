@@ -40,8 +40,7 @@ style="outline:none;
     width: 100%;
     overflow-wrap: break-word;
     word-wrap: break-word;"
-    data-setup='{"controls": true, "autoplay": true, "preload": "auto"}'
-    poster="{{ video_url }}.jpg">
+    data-setup='{"controls": true, "autoplay": true, "preload": "auto"}'>
 
   <source
     src="{{ video_url }}.mp4"
@@ -82,7 +81,6 @@ style="outline:none;
         nextVideoURL = "/watch?v={{next_video}}"
       {% endif %}
     {% endif %}
-    console.log("Next Video URL", nextVideoURL);
     var Button = videojs.getComponent('Button');
     var NextButton = videojs.extend(Button, {
       buildCSSClass () {

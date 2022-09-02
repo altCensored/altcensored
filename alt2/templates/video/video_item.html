@@ -20,8 +20,10 @@
 <meta property="og:title" content="{{ video['title'] }}">
 <meta property="og:description" content="{{ video['description'] }} (Published on {{ video['published'].strftime('%b %e, %G') }})">
 <meta property="og:type" content="article">
-<meta property="og:image" content="{{ video_url }}.jpg">
-<meta property="og:image:secure_url" content="{{ video_url }}.jpg">
+<meta property="og:image" content="{{ video_url_short }}__ia_thumb.jpg">
+<meta property="og:image:secure_url" content="{{ video_url_short }}__ia_thumb.jpg">
+<meta name="og:video" content="{{ config['MYSERVER_URL'] }}/embed/{{ video_id }}">
+
 
 
 <meta name="altcen_title" content=

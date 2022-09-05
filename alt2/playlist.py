@@ -194,22 +194,20 @@ def add_video_playlist():
         playlist_ident = request.args.get('playlist', None)
         playlist = Playlist.query.filter(Playlist.hashid == playlist_ident).scalar()
 
-    video = Mv_Video.query.get(video_id)
-
     if playlist_ident == 'add_to_watchlater':
         user = User.query.get(session['user']['id'])
-        try:
-            user.watchlater += [video.extractor_data]
-        except:
-            user.watchlater = [video.extractor_data]
+
+        if not video_id in user.watchlater:
+            user.watchlater = list(dict.fromkeys(user.watchlater))
+            user.watchlater.append(video_id)
+
         flag_modified(user, "watchlater")
         db_session.commit()
         return redirect(url_for('video.watch', v=video_id ))
 
-    try:
-        playlist.videos += [video.extractor_data]
-    except:
-        playlist.videos = [video.extractor_data]
+    if not video_id in playlist.videos:
+        playlist.videos = list(dict.fromkeys(playlist.videos))
+        playlist.videos.append(video_id)
 
     if not playlist.featured_video:
         playlist.featured_video = {
@@ -237,16 +235,14 @@ def add_video_playlist_post():
         data = json.loads(request.data)
         v = data['v']
         p = data['p']
-
-        video = Mv_Video.query.get(v)
         playlist = Playlist.query.filter(Playlist.hashid == p).scalar()
 
-        try:
-            playlist.videos += [video.extractor_data]
-        except:
-            playlist.videos = [video.extractor_data]
+        if not v in playlist.videos:
+            playlist.videos = list(dict.fromkeys(playlist.videos))
+            playlist.videos.append(v)
 
         if not playlist.featured_video:
+            video = Mv_Video.query.get(v)
             playlist.featured_video = {
                 "pl_id": playlist.id,
                 "pl_title": playlist.title,
@@ -268,15 +264,14 @@ def add_video_playlist_post():
 @login_required
 def remove_video_playlist():
     playlist_hashid = request.args.get('playlist', None)
-    video_id = request.args.get('v', None)
-    video = Mv_Video.query.get(video_id)
+    video_ext = request.args.get('v', None)
     playlist = Playlist.query.filter(Playlist.hashid == playlist_hashid).scalar()
 
-    if video.extractor_data in playlist.videos:
+    if video_ext in playlist.videos:
         playlist.videos = list(dict.fromkeys(playlist.videos))
-        playlist.videos.remove(video.extractor_data)
+        playlist.videos.remove(video_ext)
 
-        if video_id == playlist.featured_video['extractor_data']:
+        if video_ext == playlist.featured_video['extractor_data']:
             playlist.featured_video = None
 
             if playlist.videos:

@@ -191,12 +191,13 @@ def watchlater(page):
 @login_required
 def add_video_watchlater():
     video_id = request.args.get('v', None)
-    video = Mv_Video.query.get(video_id)
+#    video = Mv_Video.query.get(video_id)
     user = db_session.query(User).filter(User.email == session['user']['email']).one()
-    try:
-        user.watchlater += [video.extractor_data]
-    except:
-        user.watchlater = [video.extractor_data]
+
+    if not video_id in user.watchlater:
+        user.watchlater = list(dict.fromkeys(user.watchlater))
+        user.watchlater.append(video_id)
+
     flag_modified(user, "watchlater")
     db_session.commit()
     return redirect(request.args.get('original_url', '/'))
@@ -208,12 +209,12 @@ def add_video_watchlater_post():
     if request.method == 'POST':
         data = json.loads(request.data)
         v = data['v']
-        video = Mv_Video.query.get(v)
         user = db_session.query(User).filter(User.email == session['user']['email']).one()
-        try:
-            user.watchlater += [video.extractor_data]
-        except:
-            user.watchlater = [video.extractor_data]
+
+        if not v in user.watchlater:
+            user.watchlater = list(dict.fromkeys(user.watchlater))
+            user.watchlater.append(v)
+
         flag_modified(user, "watchlater")
         db_session.commit()
         return json.dumps({'v': v })

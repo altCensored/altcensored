@@ -286,6 +286,7 @@ def remove_video_playlist():
 
         now = datetime.datetime.now(timezone.utc)
         playlist.updated = now
+        flag_modified(playlist, "videos")
         db_session.commit()
 
     return redirect(request.args.get('original_url', '/'))

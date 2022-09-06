@@ -39,7 +39,8 @@
                                     <div class="thumbnail">
                                         <left>
                                             <img style="width:97%"
-                                                 src="{{ channel['ytc_thumbnailurl'] | reverse | replace('88','671', 1) | reverse  }}" >
+                                                 src="{{ channel['ytc_thumbnailurl'] | reverse | replace('88','671', 1) | reverse  }}"
+                                            onerror="this.onerror=null;this.src='https://{{ config['MYSERVER_NAME'] }}/channel_unnamed.jpg';">
                                             </style>
                                             </left>
                                             </div>

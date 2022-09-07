@@ -120,7 +120,9 @@
           <div class="pure-u-1 pure-u-md-3-5">
             <div class="h-box">
               <a href="{{ url_for('channel.item', ytc_id=video['ytc_id']) }}">
-                <img src="{{ channel['ytc_thumbnailurl'] }}" height="35" width="35"></a>&nbsp; &nbsp;
+                <img src="{{ channel['ytc_thumbnailurl'] }}" height="35" width="35" "
+                onerror="this.onerror=null;this.src='https://{{ config['MYSERVER_NAME'] }}/channel_unnamed.jpg';">
+              </a>&nbsp; &nbsp;
                 <h3 style="display:inline"><a href="{{ url_for('channel.item', ytc_id=video['ytc_id']) }}">{{ video['ytc_title'] }}
               </a></h3>&nbsp;
               {% if channel['ytc_deleted'] %}

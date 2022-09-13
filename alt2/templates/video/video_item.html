@@ -5,7 +5,8 @@
 <meta name="keywords" content="{{ video['tags'] }}">
 
 <meta name="twitter:card" content="player">
-<meta name="twitter:image" content="{{ config.IPROXY ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}">
+<meta name="twitter:image" content="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['extractor_data'] ~ '.webp' }}">
+
 <meta name="twitter:url" content="{{ config['MYSERVER_URL'] }}/watch?v={{ video_id }}">
 <meta name="twitter:player" content="{{ config['MYSERVER_URL'] }}/embed/{{ video_id }}">
 <meta name="twitter:player:width" content="1280">

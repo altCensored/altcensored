@@ -112,7 +112,6 @@ def login():
             flash(clear_text, 'success')
             return redirect(url_for('auth.login'))
 
-
         if not email_exists(email) and session.get('register_email') is None:
             session['register_email'] = email
             generate_captcha()
@@ -153,7 +152,8 @@ def login():
         if user_and_password_is_valid(email, password):
             user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
 
-            session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public, email_subscribed=user.email_subscribed)
+            session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description,\
+                                   public=user.public, email_subscribed=user.email_subscribed, email_verified=user.email_verified)
 
             newSettings = dict(user.settings)
             session['locale'] = newSettings['locale']
@@ -170,8 +170,8 @@ def login():
 
             if not user.email_verified:
                 send_confirm_email(email)
-                conf_email_resent = lazy_gettext('Account not verified. Confirmation email resent')
-                flash(conf_email_resent, 'success')
+                conf_email_resent = lazy_gettext('Email not verified, confirmation email resent')
+                flash(conf_email_resent, 'error')
 
             return redirect(url_for('video.index'))
 

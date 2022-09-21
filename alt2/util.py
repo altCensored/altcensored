@@ -12,6 +12,7 @@ from .models import Translation, Playlist, Mv_Channel, Mv_Video, User, Email_lis
 from . import config
 from email_validator import validate_email, EmailNotValidError
 from mailjet_rest import Client
+from flask_babelplus import lazy_gettext
 
 import functools, os, string, random, subprocess
 
@@ -23,7 +24,6 @@ def get_locale():
         return session['locale']
     else:
         session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys(), default='en')
-    #        session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys())
     return session['locale']
 
 
@@ -252,7 +252,6 @@ def login_required(view):
         if session.get('user') is None:
             return redirect(url_for('video.index'))
         return view(**kwargs)
-
     return wrapped_view
 
 
@@ -262,9 +261,18 @@ def admin_login_required(view):
         if session['user']['username'] != 'admin':
             return redirect(url_for('video.index'))
         return view(**kwargs)
-
     return wrapped_view
 
+
+def email_verified_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if not session['user']['email_verified']:
+            msg = lazy_gettext('Email verification is required for VPN')
+            flash(msg, 'error')
+            return redirect(url_for('settings.index'))
+        return view(**kwargs)
+    return wrapped_view
 
 def email_exists(email):
     if session.get('email') is not None:

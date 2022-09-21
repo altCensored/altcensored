@@ -174,7 +174,7 @@ def create_app(test_config=None):
     def shutdown_session(exception=None):
         db_session.remove()    
 
-    from . import video, channel, about, category, language, settings, auth, admin, playlist, theme, user, newsletter
+    from . import video, channel, about, category, language, settings, auth, admin, playlist, theme, user, newsletter, vpn
 
     app.register_blueprint(video.bp)
     app.register_blueprint(channel.bp)
@@ -188,6 +188,7 @@ def create_app(test_config=None):
     app.register_blueprint(theme.bp)
     app.register_blueprint(user.bp)
     app.register_blueprint(newsletter.bp)
+    app.register_blueprint(vpn.bp)
 
     app.add_url_rule('/', endpoint='video.index', defaults={'page': 1})
 

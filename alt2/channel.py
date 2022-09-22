@@ -15,7 +15,7 @@ PER_PAGE_FEED = 100
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
 def index(page):
-    set_session()
+#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'latest'
     channels = Mv_Channel.query.limit(PER_PAGE).offset(offset)
@@ -76,7 +76,7 @@ def data_deleted():
 @bp.route('/new', defaults={'page': 1})
 @bp.route('/new/page/<int:page>')
 def new(page):
-    set_session()
+#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
     channels = Mv_Channel.query.order_by(Mv_Channel.ytc_publishedat.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset)
@@ -89,7 +89,7 @@ def new(page):
 @bp.route('/popular', defaults={'page': 1})
 @bp.route('/popular/page/<int:page>')
 def popular(page):
-    set_session()
+#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'popular'
     channels = Mv_Channel.query.order_by(Mv_Channel.ytc_viewcount.desc()).limit(PER_PAGE).offset(offset)
@@ -102,7 +102,7 @@ def popular(page):
 @bp.route('/deleted', defaults={'page': 1})
 @bp.route('/deleted/page/<int:page>')
 def deleted(page):
-    set_session()
+#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'deleted'
     channelcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
@@ -118,7 +118,7 @@ def deleted(page):
 @bp.route('/deleted/feed', defaults={'page': 1})
 @bp.route('/deleted/feed/page/<int:page>')
 def deleted_feed(page):
-    set_session()
+#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'deleted'
     channelcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
@@ -137,7 +137,7 @@ def deleted_feed(page):
 @bp.route('/limited', defaults={'page': 1})
 @bp.route('/limited/page/<int:page>')
 def limited(page):
-    set_session()
+#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'limited'
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
@@ -151,7 +151,7 @@ def limited(page):
 @bp.route('/archived', defaults={'page': 1})
 @bp.route('/archived/page/<int:page>')
 def archived(page):
-    set_session()
+#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'archived'
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
@@ -165,7 +165,7 @@ def archived(page):
 @bp.route('/feed', defaults={'page': 1})
 @bp.route('/feed/page/<int:page>')
 def feed(page):
-    set_session()
+#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'latest'
     channels = Mv_Channel.query.limit(PER_PAGE_FEED).offset(offset)
@@ -182,7 +182,7 @@ def feed(page):
 @bp.route('/<ytc_id>', defaults={'page': 1})
 @bp.route('/<ytc_id>/page/<int:page>')
 def item(ytc_id,page):
-    set_session()
+#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter_by(ytc_id=ytc_id).scalar()
@@ -202,7 +202,7 @@ def item(ytc_id,page):
 @bp.route('/<ytc_id>/popular', defaults={'page': 1})
 @bp.route('/<ytc_id>/popular/page/<int:page>')
 def item_popular(ytc_id,page):
-    set_session()
+#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'popular'
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter_by(ytc_id=ytc_id).scalar()
@@ -222,7 +222,7 @@ def item_popular(ytc_id,page):
 @bp.route('/<ytc_id>/feed', defaults={'page': 1})
 @bp.route('/<ytc_id>/feed/page/<int:page>')
 def item_feed(ytc_id,page):
-    set_session()
+#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter_by(ytc_id=ytc_id).scalar()

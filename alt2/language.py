@@ -14,7 +14,7 @@ PER_PAGE = 24
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
 def index(page):
-    set_session()
+#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     languagecount = db_session.query(func.count(Language.lang_id)).scalar()
     languages = Language.query.limit(PER_PAGE).offset(offset)
@@ -28,7 +28,7 @@ def index(page):
 @bp.route('/<lang_code>', defaults={'page': 1})
 @bp.route('/<lang_code>/page/<int:page>')
 def item(lang_code,page):
-    set_session()
+#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'latest'
 

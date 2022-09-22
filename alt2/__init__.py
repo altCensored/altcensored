@@ -140,16 +140,14 @@ def create_app(test_config=None):
             looplist=util.get_looplist(),
             current_url=quote_plus(request.url),
             navtabs=util.get_navtabs(),
-            navtabs_index=util.get_navtabs_index(),            videocount=util.get_videocount(),
-#            usercount=util.get_usercount(),
-#            playlistcount=util.get_playlistcount(),
+            navtabs_index=util.get_navtabs_index(),
+            videocount=util.get_videocount(),
             channelcount=util.get_channelcount(),
             delchannelcount=util.get_delchannelcount())
 
     @app.before_request
     def before_req():
         util.set_session()
-
 
     def has_no_empty_params(rule):
         defaults = rule.defaults if rule.defaults is not None else ()

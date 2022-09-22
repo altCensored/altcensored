@@ -16,11 +16,10 @@ bp = Blueprint('video', __name__)
 PER_PAGE = 24
 CHANN_MAX_RESULT = 28
 
-
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
 def index(page):
-    set_session()
+#    set_session()
     offset = ((int(page) - 1) * PER_PAGE)
     order = 'latest'
     videos = Mv_Video.query.order_by(Mv_Video.id.desc()).limit(PER_PAGE).offset(offset)
@@ -38,7 +37,7 @@ def index(page):
 @bp.route('/new', defaults={'page': 1})
 @bp.route('/new/page/<int:page>')
 def new(page):
-    set_session()
+#    set_session()
     offset = ((int(page) - 1) * PER_PAGE)
     order = 'newest'
     videos = Mv_Video.query.order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset)
@@ -56,7 +55,7 @@ def new(page):
 @bp.route('/popular', defaults={'page': 1})
 @bp.route('/popular/page/<int:page>')
 def popular(page):
-    set_session()
+#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'popular'
     videos = Mv_Video.query.order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset)
@@ -88,7 +87,7 @@ def feed(page):
 
 @bp.route("/watch")
 def watch():
-    set_session()
+#    set_session()
     video_id = request.args.get('v', None)
     playlist = request.args.get('playlist', None)
     userlist = request.args.get('userlist', None)
@@ -259,7 +258,7 @@ def embed(video_id):
 @bp.route("/search", defaults={'page': 1})
 @bp.route('/search/page/<int:page>')
 def search(page):
-    set_session()
+#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     rawsearch1 = request.args.get('q', None)
     rawsearch = rawsearch1.strip()

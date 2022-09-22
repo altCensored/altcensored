@@ -13,7 +13,7 @@ PER_PAGE = 24
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
 def index(page):
-    set_session()
+#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     categorycount = db_session.query(func.count(Mv_Category.cat_id)).scalar()
     categories = Mv_Category.query.limit(PER_PAGE).offset(offset)
@@ -30,7 +30,7 @@ def index(page):
 @bp.route('/<cat_id>', defaults={'page': 1})
 @bp.route('/<cat_id>/page/<int:page>')
 def item(cat_id,page):
-    set_session()
+#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'latest'
     category = Mv_Category.query.get(cat_id)
@@ -53,7 +53,7 @@ def item(cat_id,page):
 @bp.route('/<cat_id>/new', defaults={'page': 1})
 @bp.route('/<cat_id>/new/page/<int:page>')
 def item_new(cat_id,page):
-    set_session()
+#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
     category = Mv_Category.query.get(cat_id)
@@ -76,7 +76,7 @@ def item_new(cat_id,page):
 @bp.route('/<cat_id>/popular', defaults={'page': 1})
 @bp.route('/<cat_id>/popular/page/<int:page>')
 def item_popular(cat_id,page):
-    set_session()
+#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'popular'
     category = Mv_Category.query.get(cat_id)
@@ -99,7 +99,7 @@ def item_popular(cat_id,page):
 @bp.route('/<lang_code>', defaults={'page': 1})
 @bp.route('/<lang_code>/page/<int:page>')
 def lang_item(lang_code,page):
-    set_session()
+#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'latest'
     language = Language.query.get(lang_code)

@@ -19,12 +19,12 @@ bp = Blueprint('settings', __name__, url_prefix='/settings')
 
 @bp.route('/')
 def index():
-    set_session()
+#    set_session()
     return render_template('settings/settings_index.html')
 
 @bp.route('/update_site', methods=['GET', 'POST'])
 def update_site():
-    set_session()
+#    set_session()
     if request.method == 'POST':
         fnt1 = request.form['navtab1_value']
         fnt2 = request.form['navtab2_value']

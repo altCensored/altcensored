@@ -284,11 +284,12 @@ class User(Base):
     description = Column(String, nullable=True)
     public = Column(Boolean, nullable=False, default=False)
     view_counter = Column(Integer, nullable=True)
+    wg_publickey = Column(String, nullable=True)
+    wg_privatekey = Column(String, nullable=True)
+    contributor = Column(Boolean, nullable=False, default=False)
     settings = Column(MutableDict.as_mutable(JSON))
     featured_playlist = Column(MutableDict.as_mutable(JSON))
-#    playlists = relationship("Playlist", cascade="all, delete-orphan")
     playlists = relationship("Playlist", cascade="all, delete-orphan", back_populates="user")
-
 
 
 class Mv_Altcen_user(Base):

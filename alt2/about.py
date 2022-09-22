@@ -9,7 +9,7 @@ bp = Blueprint('about', __name__, url_prefix='/about' )
 
 @bp.route('/')
 def index():
-    set_session()
+#    set_session()
     archchancount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_archive).scalar()
     channels = Mv_Channel.query.all()
 

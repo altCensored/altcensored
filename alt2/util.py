@@ -274,6 +274,7 @@ def email_verified_required(view):
         return view(**kwargs)
     return wrapped_view
 
+
 def email_exists(email):
     if session.get('email') is not None:
         if email == session['user']['email']:
@@ -435,3 +436,21 @@ def send_all_mass_email(email, subject, html, service):
                 ]
                 }
         result = mailjet.send.create(data=data)
+
+
+def wg_keys_exist():
+    if session.get('user') is not None:
+        user = User.query.filter(User.id == session['user']['id']).scalar()
+        if user.wg_publickey:
+            return True
+
+
+def generate_wireguard_keys():
+    """
+    Generate a WireGuard private & public key
+    Requires that the 'wg' command is available on PATH
+    Returns (private_key, public_key), both strings
+    """
+    privkey = subprocess.check_output("wg genkey", shell=True).decode("utf-8").strip()
+    pubkey = subprocess.check_output(f"echo '{privkey}' | wg pubkey", shell=True).decode("utf-8").strip()
+    return (privkey, pubkey)

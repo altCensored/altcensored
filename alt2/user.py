@@ -17,7 +17,7 @@ PER_PAGE = 24
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
 def index(page):
-    set_session()
+#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
     users = User.query.filter(User.public).order_by(User.id.desc()).limit(PER_PAGE).offset(offset)
@@ -32,7 +32,7 @@ def index(page):
 @bp.route('/popular', defaults={'page': 1})
 @bp.route('/popular/page/<int:page>')
 def popular(page):
-    set_session()
+#    set_session()
     offset = ((int(page) - 1) * PER_PAGE)
     order = 'popular'
     users = User.query.filter(User.public).order_by(User.view_counter.desc()).limit(PER_PAGE).offset(offset)
@@ -46,7 +46,7 @@ def popular(page):
 
 @bp.route('/<username>')
 def item(username):
-    set_session()
+#    set_session()
     user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
 
     if not user.public and (session['user']['id'] != user.id):

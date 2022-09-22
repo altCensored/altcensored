@@ -23,7 +23,7 @@ PER_PAGE = 24
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
 def index(page):
-#    set_session()
+    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
     playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
@@ -41,7 +41,7 @@ def index(page):
 @bp.route('/popular', defaults={'page': 1})
 @bp.route('/popular/page/<int:page>')
 def popular(page):
-#    set_session()
+    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'popular'
     playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
@@ -59,7 +59,7 @@ def popular(page):
 @bp.route('/<playlist>', defaults={'page': 1})
 @bp.route('/<playlist>/page/<int:page>')
 def item(playlist,page):
-#    set_session()
+    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
     button = request.args.get('button', None)

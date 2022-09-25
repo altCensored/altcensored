@@ -458,7 +458,7 @@ def wg_key_exist():
         if user.wg_publickey:
             return True
 
-def get_wg_publickey():
+def get_wg_keys():
     if not session['user']['wg_publickey']:
         privkey = subprocess.check_output("wg genkey", shell=True).decode("utf-8").strip()
         pubkey = subprocess.check_output(f"echo '{privkey}' | wg pubkey", shell=True).decode("utf-8").strip()
@@ -467,8 +467,10 @@ def get_wg_publickey():
         user = User.query.get(session['user']['id'])
         user.wg_publickey = pubkey
         user.wg_privatekey = generate_password_hash(privkey)
-        user.wg_sharedkey = generate_password_hash(sharedkey)
+        user.wg_sharedkey = sharedkey
         db_session.commit()
-        return pubkey
+        return (pubkey, sharedkey)
     else:
-        return session['user']['wg_publickey']
+        user = User.query.get(session['user']['id'])
+        sharedkey = user.wg_sharedkey
+        return session['user']['wg_publickey'], sharedkey

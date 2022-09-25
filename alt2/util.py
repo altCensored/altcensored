@@ -13,6 +13,7 @@ from . import config
 from email_validator import validate_email, EmailNotValidError
 from mailjet_rest import Client
 from flask_babelplus import lazy_gettext
+from werkzeug.security import generate_password_hash
 
 import functools, os, string, random, subprocess
 
@@ -165,7 +166,8 @@ def set_session() -> object:
     if 'playlistcount' in session:
         pass
     else:
-        session['playlistcount'] = db_session.query(func.count(Playlist.id).filter(Playlist.public).filter(Playlist.featured_video.isnot(None))).scalar()
+        session['playlistcount'] = db_session.query(
+            func.count(Playlist.id).filter(Playlist.public).filter(Playlist.featured_video.isnot(None))).scalar()
 
     if 'channelcount' in session:
         pass
@@ -275,6 +277,17 @@ def email_verified_required(view):
     return wrapped_view
 
 
+def contributor_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if not session['user']['contributor']:
+#            msg = lazy_gettext('Contributor status is required for premium VPN')
+#            flash(msg, 'error')
+            return redirect(url_for('settings.index'))
+        return view(**kwargs)
+    return wrapped_view
+
+
 def email_exists(email):
     if session.get('email') is not None:
         if email == session['user']['email']:
@@ -284,7 +297,8 @@ def email_exists(email):
 
 
 def email_list_exists(email):
-    if db_session.query(Email_list.email).filter(func.lower(Email_list.email) == func.lower(email)).scalar() is not None:
+    if db_session.query(Email_list.email).filter(
+            func.lower(Email_list.email) == func.lower(email)).scalar() is not None:
         return True
 
 
@@ -433,24 +447,28 @@ def send_all_mass_email(email, subject, html, service):
                     "Subject": subject,
                     "HTMLPart": html
                 }
-                ]
-                }
+            ]
+        }
         result = mailjet.send.create(data=data)
 
 
-def wg_keys_exist():
+def wg_key_exist():
     if session.get('user') is not None:
         user = User.query.filter(User.id == session['user']['id']).scalar()
         if user.wg_publickey:
             return True
 
-
-def generate_wireguard_keys():
-    """
-    Generate a WireGuard private & public key
-    Requires that the 'wg' command is available on PATH
-    Returns (private_key, public_key), both strings
-    """
-    privkey = subprocess.check_output("wg genkey", shell=True).decode("utf-8").strip()
-    pubkey = subprocess.check_output(f"echo '{privkey}' | wg pubkey", shell=True).decode("utf-8").strip()
-    return (privkey, pubkey)
+def get_wg_publickey():
+    if not session['user']['wg_publickey']:
+        privkey = subprocess.check_output("wg genkey", shell=True).decode("utf-8").strip()
+        pubkey = subprocess.check_output(f"echo '{privkey}' | wg pubkey", shell=True).decode("utf-8").strip()
+        sharedkey = subprocess.check_output("wg genpsk", shell=True).decode("utf-8").strip()
+        session['user']['wg_publickey'] = pubkey
+        user = User.query.get(session['user']['id'])
+        user.wg_publickey = pubkey
+        user.wg_privatekey = generate_password_hash(privkey)
+        user.wg_sharedkey = generate_password_hash(sharedkey)
+        db_session.commit()
+        return pubkey
+    else:
+        return session['user']['wg_publickey']

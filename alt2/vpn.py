@@ -1,18 +1,17 @@
-from flask import (Blueprint, session, render_template, flash)
+from flask import (Blueprint, render_template, flash)
 
-from .util import email_verified_required, wg_keys_exist, generate_wireguard_keys
-from . import util
+from .util import email_verified_required, get_wg_publickey, contributor_required
+#from . import config
 
 bp = Blueprint('vpn', __name__, url_prefix='/vpn' )
 
 @bp.route('/')
 @email_verified_required
+@contributor_required
 def index():
-#    if wg_keys_exist():
-#        flash('key exist')
-#    else:
-#        flash('keys do not exist')
+    my_wg_publickey = get_wg_publickey()
+    tdata = my_wg_publickey
 
-    return render_template('vpn/vpn_index.html')
+    return render_template('vpn/vpn_index.html', tdata=tdata)
 
 

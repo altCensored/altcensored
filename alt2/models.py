@@ -286,6 +286,7 @@ class User(Base):
     view_counter = Column(Integer, nullable=True)
     wg_publickey = Column(String, nullable=True)
     wg_privatekey = Column(String, nullable=True)
+    wg_sharedkey = Column(String, nullable=True)
     contributor = Column(Boolean, nullable=False, default=False)
     settings = Column(MutableDict.as_mutable(JSON))
     featured_playlist = Column(MutableDict.as_mutable(JSON))
@@ -401,3 +402,16 @@ class Channels_part(Base):
     synched = Column(Boolean, nullable=True)
     working = Column(Boolean, nullable=True)
     syncdate = Column(DateTime, nullable=True)
+
+
+class vpn_node(Base):
+    __tablename__ = 'vpn_node'
+    id = Column(Integer, primary_key=True, nullable=False)
+    name = Column(String, nullable=False)
+    fqdn = Column(String, nullable=False)
+    ipaddress = Column(String, nullable=False)
+    dnsipaddress = Column(String, nullable=False)
+    wg_publickey = Column(String, nullable=False)
+    wg_privatekey = Column(String, nullable=False)
+
+

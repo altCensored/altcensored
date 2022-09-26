@@ -143,8 +143,7 @@ def login():
             send_confirm_email(email)
             session['register_email'] = None
             session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public,\
-                                   email_subscribed=user.email_subscribed, email_verified=user.email_verified, contributor=user.contributor,\
-                                   wg_publickey=user.wg_publickey)
+                                   email_subscribed=user.email_subscribed, email_verified=user.email_verified, contributor=user.contributor)
             conf_email_sent = lazy_gettext('Confirmation email sent')
             flash(conf_email_sent, 'success')
             return redirect(url_for('settings.index'))
@@ -153,8 +152,7 @@ def login():
             user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
 
             session['user'] = dict(id=user.id, email=user.email, username=user.username, description=user.description, public=user.public,\
-                                   email_subscribed=user.email_subscribed, email_verified=user.email_verified, contributor=user.contributor,\
-                                   wg_publickey=user.wg_publickey)
+                                   email_subscribed=user.email_subscribed, email_verified=user.email_verified, contributor=user.contributor)
 
             newSettings = dict(user.settings)
             session['locale'] = newSettings['locale']

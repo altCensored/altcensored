@@ -452,25 +452,23 @@ def send_all_mass_email(email, subject, html, service):
         result = mailjet.send.create(data=data)
 
 
-def wg_key_exist():
-    if session.get('user') is not None:
+def get_wg_publickey(idx):
+    if session.get('user'):
         user = User.query.filter(User.id == session['user']['id']).scalar()
-        if user.wg_publickey:
-            return True
-
-def get_wg_keys():
-    if not session['user']['wg_publickey']:
-        privkey = subprocess.check_output("wg genkey", shell=True).decode("utf-8").strip()
-        pubkey = subprocess.check_output(f"echo '{privkey}' | wg pubkey", shell=True).decode("utf-8").strip()
-        sharedkey = subprocess.check_output("wg genpsk", shell=True).decode("utf-8").strip()
-        session['user']['wg_publickey'] = pubkey
-        user = User.query.get(session['user']['id'])
-        user.wg_publickey = pubkey
-        user.wg_privatekey = generate_password_hash(privkey)
-        user.wg_sharedkey = sharedkey
-        db_session.commit()
-        return (pubkey, sharedkey)
-    else:
-        user = User.query.get(session['user']['id'])
-        sharedkey = user.wg_sharedkey
-        return session['user']['wg_publickey'], sharedkey
+        if not user.wg_publickey:
+            user.wg_publickey = []
+            user.wg_privatekey = []
+            user.wg_sharedkey = []
+            i = 1
+            while i < 4:
+                privkey = subprocess.check_output("wg genkey", shell=True).decode("utf-8").strip()
+                pubkey = subprocess.check_output(f"echo '{privkey}' | wg pubkey", shell=True).decode("utf-8").strip()
+                sharedkey = subprocess.check_output("wg genpsk", shell=True).decode("utf-8").strip()
+                user.wg_privatekey.append(privkey)
+                user.wg_publickey.append(pubkey)
+                user.wg_sharedkey.append(sharedkey)
+                i += 1
+            db_session.commit()
+            return user.wg_publickey[idx]
+        else:
+            return user.wg_publickey[idx]

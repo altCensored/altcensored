@@ -6,10 +6,10 @@ from .util import email_verified_required, get_wg_publickey, contributor_require
 bp = Blueprint('vpn', __name__, url_prefix='/vpn' )
 
 @bp.route('/')
-@email_verified_required
-@contributor_required
+#@email_verified_required
+#@contributor_required
 def index():
 #    flash(session)
-    my_wg_publickey = get_wg_publickey(2)
+    my_wg_publickey = get_wg_publickey(0)
     tdata = my_wg_publickey
     return render_template('vpn/vpn_index.html', tdata=tdata)

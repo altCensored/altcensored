@@ -131,7 +131,8 @@ def login():
                 return redirect(url_for('auth.login'))
 
             if util.contains_profanity(username):
-                flash(no_profanity, 'error')
+                prof_none = lazy_gettext('Profanity forbidden')
+                flash(prof_none, 'error')
                 return redirect(url_for('auth.login'))
 
             if email_exists(email):

@@ -1,4 +1,4 @@
-from flask import (Blueprint, session, render_template, flash, request)
+from flask import (Blueprint, session, render_template, flash, request, redirect, url_for)
 from .util import (login_required, email_verified_required, contributor_required, wg_api_call,\
                    generate_add_key_data_raw, add_key_to_conn )
 from .models import Vpn_node, Vpn_conn
@@ -7,14 +7,15 @@ from . import config
 bp = Blueprint('vpn', __name__, url_prefix='/vpn' )
 
 @bp.route('/')
-@login_required
+#@login_required
 # remove '{% if session.user.xxx %}' in html for prod.
 def index():
     node = request.args.get('node', None)
     submit = request.args.get('submit', None)
     tdata = None
     if session.get('user') is None:
-        return render_template('vpn/vpn_index.html')
+        flash('Account required for FreeVPN','error')
+        return redirect(url_for('auth.login'))
 
     if submit and not node:
         flash('Choose a node and try again','error')

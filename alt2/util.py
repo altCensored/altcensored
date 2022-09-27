@@ -8,16 +8,18 @@ from better_profanity import profanity
 from sqlalchemy import func, text, desc
 from captcha.image import ImageCaptcha
 from .database import db_session
-from .models import Translation, Playlist, Mv_Channel, Mv_Video, User, Email_list, Channels, Channels_part
+from .models import Translation, Playlist, Mv_Channel, Mv_Video, User, Email_list, Channels, Channels_part, Vpn_conn
 from . import config
 from email_validator import validate_email, EmailNotValidError
 from mailjet_rest import Client
 from flask_babelplus import lazy_gettext
+from datetime import timezone
+import datetime
+
 from werkzeug.security import generate_password_hash
 
-import functools, os, string, random, subprocess
-
-import boto3
+import functools, os, string, random, subprocess, requests
+import boto3, json
 
 
 def get_locale():
@@ -453,22 +455,61 @@ def send_all_mass_email(email, subject, html, service):
 
 
 def get_wg_publickey(idx):
-    if session.get('user'):
-        user = User.query.filter(User.id == session['user']['id']).scalar()
-        if not user.wg_publickey:
-            user.wg_publickey = []
-            user.wg_privatekey = []
-            user.wg_sharedkey = []
-            i = 1
-            while i < 4:
-                privkey = subprocess.check_output("wg genkey", shell=True).decode("utf-8").strip()
-                pubkey = subprocess.check_output(f"echo '{privkey}' | wg pubkey", shell=True).decode("utf-8").strip()
-                sharedkey = subprocess.check_output("wg genpsk", shell=True).decode("utf-8").strip()
-                user.wg_privatekey.append(privkey)
-                user.wg_publickey.append(pubkey)
-                user.wg_sharedkey.append(sharedkey)
-                i += 1
-            db_session.commit()
-            return user.wg_publickey[idx]
-        else:
-            return user.wg_publickey[idx]
+    user = User.query.filter(User.id == session['user']['id']).scalar()
+    if not user.wg_publickey:
+        user.wg_publickey = []
+        user.wg_privatekey = []
+        user.wg_sharedkey = []
+        i = 1
+        while i < 4:
+            privkey = subprocess.check_output("wg genkey", shell=True).decode("utf-8").strip()
+            pubkey = subprocess.check_output(f"echo '{privkey}' | wg pubkey", shell=True).decode("utf-8").strip()
+            sharedkey = subprocess.check_output("wg genpsk", shell=True).decode("utf-8").strip()
+            user.wg_privatekey.append(privkey)
+            user.wg_publickey.append(pubkey)
+            user.wg_sharedkey.append(sharedkey)
+            i += 1
+        db_session.commit()
+        return user.wg_publickey[idx]
+    else:
+        return user.wg_publickey[idx]
+
+
+def wg_api_call(node_fqdn, api_request, method='GET', data_raw=None):
+    url = 'https://' + node_fqdn + ':' + config.VPN_API_PORT + api_request
+    headers = {'Authorization':config.VPN_API_AUTH}
+    r = requests.request(method, url, headers=headers, json=data_raw)
+
+    data = r.json()
+    return data
+
+
+def generate_add_key_data_raw(p_bwLimit=config.VPN_FREE_BWLIMIT, *args, **kwargs):
+#    p_bwLimit = kwargs.get('p_bwLimit', config.VPN_FREE_BWLIMIT)
+    p_subExpiry = kwargs.get('b', config.VPN_DEFAULT_SUBEXPIRY)
+    p_ipIndex = kwargs.get('c', config.VPN_DEFAULT_IPINDEX)
+
+    privkey = subprocess.check_output("wg genkey", shell=True).decode("utf-8").strip()
+    pubkey = subprocess.check_output(f"echo '{privkey}' | wg pubkey", shell=True).decode("utf-8").strip()
+    sharedkey = subprocess.check_output("wg genpsk", shell=True).decode("utf-8").strip()
+
+    data_raw = {
+        "publicKey": pubkey,
+        "presharedKey": sharedkey,
+        "bwLimit": p_bwLimit,
+        "subExpiry": p_subExpiry,
+        "ipIndex": p_ipIndex
+    }
+    return data_raw, privkey
+
+
+def add_key_to_conn(data_raw, newkey, node, privkey):
+    now = datetime.datetime.now(timezone.utc)
+    vpn_conn = Vpn_conn(\
+        publickey=data_raw['publicKey'], vpn_node_name=node, altcen_user_id=session['user']['id'], privatekey=privkey, \
+        sharedkey=data_raw['presharedKey'], key_id=newkey['keyID'], bw_limit=data_raw['bwLimit'], bw_used=0, \
+        sub_expiry=data_raw['subExpiry'], expired=False, allowedips=newkey['allowedIPs'], dns=newkey['dns'], \
+        ipaddress=newkey['ipAddress'], ipv4address=newkey['ipv4Address'], ipv6address=newkey['ipv6Address'], created=now \
+        )
+    db_session.add(vpn_conn)
+    db_session.commit()

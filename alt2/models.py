@@ -404,14 +404,32 @@ class Channels_part(Base):
     syncdate = Column(DateTime, nullable=True)
 
 
-class vpn_node(Base):
+class Vpn_node(Base):
     __tablename__ = 'vpn_node'
-    id = Column(Integer, primary_key=True, nullable=False)
-    name = Column(String, nullable=False)
+    name = Column(String, primary_key=True, nullable=False)
     fqdn = Column(String, nullable=False)
-    ipaddress = Column(String, nullable=False)
-    dnsipaddress = Column(String, nullable=False)
-    wg_publickey = Column(String, nullable=False)
-    wg_privatekey = Column(String, nullable=False)
+    publickey = Column(String)
+    privatekey = Column(String)
+    ipaddress = Column(String)
+    dns_ipaddress = Column(String)
+    free = Column(Boolean, nullable=False, default=False)
 
 
+class Vpn_conn(Base):
+    __tablename__ = 'vpn_conn'
+    publickey = Column(String, primary_key=True, unique=True, nullable=False)
+    vpn_node_name = Column(String, ForeignKey("vpn_node.name"), primary_key=True, unique=True, nullable=False)
+    altcen_user_id = Column(Integer, ForeignKey("altcen_user.id"), nullable=False)
+    privatekey = Column(String, nullable=False)
+    sharedkey = Column(String, nullable=False)
+    key_id = Column(Integer)
+    bw_limit = Column(Integer)
+    bw_used = Column(Integer, nullable=False, default=0)
+    sub_expiry = Column(String)
+    expired = Column(Boolean, nullable=False, default=False)
+    allowedips = Column(String)
+    dns = Column(String)
+    ipaddress = Column(String)
+    ipv4address = Column(String)
+    ipv6address = Column(String)
+    created = Column(DateTime, nullable=True)

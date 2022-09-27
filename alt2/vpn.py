@@ -7,13 +7,13 @@ from . import config
 bp = Blueprint('vpn', __name__, url_prefix='/vpn' )
 
 @bp.route('/')
-#@login_required
+@login_required
 # remove '{% if session.user.xxx %}' in html for prod.
 def index():
     node = request.args.get('node', None)
     submit = request.args.get('submit', None)
     tdata = None
-    if not session['user']:
+    if session.get('user') is None:
         return render_template('vpn/vpn_index.html')
 
     if submit and not node:

@@ -14,7 +14,7 @@ def index():
     submit = request.args.get('submit', None)
     tdata = None
     if session.get('user') is None:
-        flash('Account required for FreeVPN','error')
+        flash('Account required for free VPN','error')
         return redirect(url_for('auth.login'))
 
     if submit and not node:

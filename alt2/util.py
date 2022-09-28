@@ -513,3 +513,7 @@ def add_key_to_conn(data_raw, newkey, node, privkey):
         )
     db_session.add(vpn_conn)
     db_session.commit()
+
+
+def write_file():
+    pass

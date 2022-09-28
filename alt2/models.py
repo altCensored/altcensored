@@ -1,4 +1,6 @@
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, Interval, ARRAY, ForeignKey, BigInteger, JSON, Table
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, Interval, ARRAY, \
+    ForeignKey, BigInteger, JSON, Table,UniqueConstraint
+
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -414,11 +416,15 @@ class Vpn_node(Base):
 
 class Vpn_conn(Base):
     __tablename__ = 'vpn_conn'
-    publickey = Column(String, primary_key=True, unique=True, nullable=False)
-    vpn_node_name = Column(String, ForeignKey("vpn_node.name"), primary_key=True, unique=True, nullable=False)
+    __table_args__ = (
+        UniqueConstraint('publickey', 'vpn_node_name'),
+    )
+    id = Column(Integer, primary_key=True, nullable=False)
+    publickey = Column(String, unique=True, nullable=False)
+    vpn_node_name = Column(String, ForeignKey("vpn_node.name"), nullable=False)
     altcen_user_id = Column(Integer, ForeignKey("altcen_user.id"), nullable=False)
-    privatekey = Column(String, nullable=False)
-    sharedkey = Column(String, nullable=False)
+    privatekey = Column(String, unique=True, nullable=False)
+    sharedkey = Column(String, unique=True, nullable=False)
     key_id = Column(Integer)
     bw_limit = Column(Integer)
     bw_used = Column(Integer, nullable=False, default=0)

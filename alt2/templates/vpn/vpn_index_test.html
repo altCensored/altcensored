@@ -58,27 +58,26 @@
                 {% if conns %}
                 <h3>Your VPN Connections</h3>
 
-                <form class="pure-form">
-                <fieldset>
-                  <div class="pure-controls">
-                    {% for conn in conns %}
+                   {% for conn in conns %}
 
-    <details><summary>
-    <b><u>{{ conn.vpn_node_name }}</b></u>
-    </summary>
+                    <details><summary>
+                    <b><u>{{ conn.vpn_node_name }}</b></u>
+                    </summary>
 
                     <label for={{ conn.vpn_node_name }}>{{ conn.vpn_node_name }}&nbsp;&nbsp;&nbsp;{{ conn.bw_limit }}&nbsp;&nbsp;&nbsp;{{ conn.publickey }}</label><br>
-        <p></p>
-        <button class="pure-button" type="submit" name="download" value="{{ conn.vpn_node_name }}">{{ gettext('Download') }}</button>&nbsp;&nbsp;&nbsp;
-        <button class="pure-button" type="submit" name="submit" value="email_conn">{{ gettext('Email') }}</button>&nbsp;&nbsp;&nbsp;
-        <button class="pure-button" type="submit" name="submit" value="qrcode_conn">{{ gettext('QR Code') }}</button>
-<br><br>
-    </details>
+
+                    <br>
+
+                    <form action="{{ url_for('vpn.conn_action') }}" >
+                    <button class="pure-button" type="submit" name="download" value="{{ conn.id }}">{{ gettext('Download') }}</button>&nbsp;&nbsp;&nbsp;
+                    <button class="pure-button" type="submit" name="qrcode" value="{{ conn.id }}">{{ gettext('QR Code') }}</button>
+                    <button class="pure-button" type="submit" name="email" value="{{ conn.id }}">{{ gettext('Email') }}</button>&nbsp;&nbsp;&nbsp;
+                    </form>
+                    <br>
+                    <br>
+                    </details>
                     {% endfor %}
                     <br>
-                  </div>
-                </fieldset>
-                </form>
 
                 {% else %}
                 {% endif %}

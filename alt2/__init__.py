@@ -1,10 +1,7 @@
-import os, time, re
-from flask import Flask, send_from_directory, request, url_for, redirect, g, flash, session
-
-from flask_seasurf import SeaSurf
-from flask_talisman import Talisman
+import os, re
+from flask import Flask, request, url_for, redirect, g
 from jinja2 import evalcontextfilter, Markup, escape
-from flask_babelplus import Babel, gettext, lazy_gettext
+from flask_babelplus import Babel
 from urllib.parse import quote_plus
 
 import timeago, datetime
@@ -88,7 +85,6 @@ def create_app(test_config=None):
     @app.template_filter('spaceplus')
     def spaceplus(value):
         return value.replace(' ', '+')
-#        return "{:+}".format(value)
 
     @app.template_filter('datetimeformat')
     def datetimeformat(value, format='%Y'):
@@ -97,13 +93,11 @@ def create_app(test_config=None):
     @app.template_filter('hourminsec')
     def secs_to_HMS2(secs):
         if secs < 3600:
-#            return time.strftime('%-M:%S', time.gmtime(secs))
             m, s = divmod(secs, 60)
             h, m = divmod(m, 60)
             return ('{:0>2}:{:0>2}'.format(m, s)).lstrip("0")
 
         else:
-#            return time.strftime('%-H:%M:%S', time.gmtime(secs))
             m, s = divmod(secs, 60)
             h, m = divmod(m, 60)
             return ('{}:{:0>2}:{:0>2}'.format(h, m, s)).lstrip("0")
@@ -190,9 +184,6 @@ def create_app(test_config=None):
 
     app.add_url_rule('/', endpoint='video.index', defaults={'page': 1})
 
-
-#    csrf = SeaSurf(app)
-
     csp = {
         'img-src': [
             'data:',
@@ -212,14 +203,6 @@ def create_app(test_config=None):
     feature_policy = {
         'geolocation': '\'none\''
     }
-
-#    Talisman(app,
-#             content_security_policy=csp,
-#             content_security_policy_nonce_in=['script-src'],
-#             feature_policy=feature_policy,
-#             frame_options='ALLOW_FROM',
-#             frame_options_allow_from='*'
-#             )
         
     def url_for_other_page(page):
         args = request.view_args.copy()

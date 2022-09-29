@@ -1,4 +1,5 @@
-from flask import (Blueprint, session, render_template, flash, request, redirect, url_for)
+import os
+from flask import (Blueprint, session, render_template, flash, request, redirect, url_for, current_app, send_from_directory)
 from .util import (login_required, email_verified_required, contributor_required, wg_api_call,\
                    generate_add_key_data_raw, add_key_to_conn )
 from .models import Vpn_node, Vpn_conn
@@ -138,3 +139,21 @@ def index_test():
         nodes = Vpn_node.query.all()
 
     return render_template('vpn/vpn_index_test.html', nodes=nodes, conns=conns, tdata=tdata)
+
+@bp.route('/conn_action')
+def conn_action():
+    download = request.args.get('download', None)
+    email = request.args.get('email', None)
+    qrcode = request.args.get('qrcode', None)
+
+    if download:
+        uploads = os.path.join(current_app.root_path, current_app.config['VPN_FOLDER'])
+        filename = 'vpn_index.html'
+        as_attach = True
+        return send_from_directory(directory=uploads, filename=filename, as_attachment=True)
+    elif qrcode:
+        uploads = os.path.join(current_app.root_path, 'static')
+        filename = 'bch_qr.png'
+        return send_from_directory(directory=uploads, filename=filename)
+
+    return redirect(url_for('vpn.index_test'))

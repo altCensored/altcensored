@@ -86,7 +86,7 @@
                 <h3>VPN Nodes</h3>
                 <form>
                     {% for node in nodes %}
-                    <input type="radio" id={{ node.name }} name= 'node' value={{ node.name }} ><label for={{ node.name }}>{{ node.name }}&nbsp;&nbsp;</label>
+                    <input type="radio" id={{ node.name }} name= 'node' value={{ node.name }} ><label for={{ node.name }}>&nbsp;{{ node.name }}&nbsp;&nbsp;</label>
                     {% endfor %}
                     <br>
                     <br>

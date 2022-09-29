@@ -84,17 +84,13 @@
                 <br>
                 {% if nodes %}
                 <h3>VPN Nodes</h3>
-                <form class="pure-form">
-                <fieldset>
-                  <div class="pure-controls">
+                <form>
                     {% for node in nodes %}
-                    <input type="radio" id={{ node.name }} name= 'node' value={{ node.name }} ><label for={{ node.name }}>{{ node.name }}</label>
+                    <input type="radio" id={{ node.name }} name= 'node' value={{ node.name }} ><label for={{ node.name }}>{{ node.name }}&nbsp;&nbsp;</label>
                     {% endfor %}
                     <br>
                     <br>
-                        <button class="pure-button" type="submit" name="submit" value="new_conn">{{ gettext('Create New Connection') }}</button>
-                  </div>
-                </fieldset>
+                    <button class="pure-button" type="submit" name="submit" value="new_conn">{{ gettext('Create New Connection') }}</button>
                 </form>
                 {% else %}
                 {% endif %}

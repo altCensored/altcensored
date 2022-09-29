@@ -88,8 +88,7 @@
                 <fieldset>
                   <div class="pure-controls">
                     {% for node in nodes %}
-                    <input type="radio" id={{ node.name }} name= 'node' value={{ node.name }} >
-                    <label for={{ node.name }}>{{ node.name }}&nbsp;&nbsp;&nbsp;</label>
+                    <input type="radio" id={{ node.name }} name= 'node' value={{ node.name }} ><label for={{ node.name }}>{{ node.name }}</label>
                     {% endfor %}
                     <br>
                     <br>

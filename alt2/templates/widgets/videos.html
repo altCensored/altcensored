@@ -14,7 +14,7 @@
           {% endif %}
             <div class="thumbnail">
               <img class="thumbnail" src="{{ config.IPROXY ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}"
-                   onerror="this.onerror=null;this.src="https://{{ config['MYSERVER_NAME'] }}/image_error.gif";" >
+                   onerror="this.onerror=null;this.src="href="{{ url_for('static', filename='image_error.gif') }}";" >
 
               {% if video['duration']  is not none %}
                 <p class="length">{{ video['duration'] | hourminsec }}</p>

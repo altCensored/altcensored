@@ -54,18 +54,25 @@
             session['user']['username'] == 'jiveandwail' or
             session['user']['username'] == 'SeenTheLight' %}
 
-                <br>
+
                 {% if conns %}
-                <h3>Connections</h3>
+                <h3>{{ gettext('Connections') }}</h3>
 
                    {% for conn in conns %}
 
-                    <details><summary>
+                    <details>
+                        <summary>
+                            {% if conn.enabled %}
+                            <img src="{{ url_for('static', filename='correct_16.png') }}" />
+                            {% else %}
+                            <img src="{{ url_for('static', filename='failed_16.png') }}" />
+                            {% endif %}
                     <b><u>{{ conn.vpn_node_name }}</b></u>
+                    {{ conn.bw_limit | bwremaining (conn.bw_used) }}
                     </summary>
 
-                    <label for={{ conn.vpn_node_name }}>{{ conn.vpn_node_name }}&nbsp;&nbsp;&nbsp;{{ conn.bw_limit }}&nbsp;&nbsp;&nbsp;{{ conn.publickey }}</label><br>
-
+                    <label for={{ conn.vpn_node_name }}>
+                        {{ conn.vpn_node_name }}&nbsp;&nbsp;&nbsp;{{ conn.bw_limit }}&nbsp;&nbsp;&nbsp;{{ conn.publickey }}</label><br>
                     <br>
 
                     <form action="{{ url_for('vpn.conn_action') }}" >
@@ -81,9 +88,9 @@
 
                 {% else %}
                 {% endif %}
-                <br>
+
                 {% if nodes %}
-                <h3>Nodes</h3>
+                <h3>{{ gettext('Nodes') }}</h3>
         </div>
             <form>
                 {% for node in nodes %}
@@ -102,14 +109,13 @@
 
             {% else %}
             {% endif %}
-            <br>
+
             {% if tdata %}
             {{ tdata }}
             {% endif %}
 
             {% else %}
 
-            <br>
             <div class="thumbnail">
                 <img class="thumbnail" src="https://altCensored.com/freevpn_5m.png" >
             </div>
@@ -119,5 +125,5 @@
             <br>
 
             {% endif %}
-            <p></p>
+
 {% endblock %}

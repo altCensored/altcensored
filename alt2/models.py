@@ -341,7 +341,7 @@ class Mv_Playlist(Base):
     public = Column(Boolean, nullable=False, default=True)
     view_counter = Column(Integer, nullable=True)
     user_id = Column(Integer, ForeignKey('altcen_user.id'), nullable=False)
-    featured_video =  Column(MutableDict.as_mutable(JSON))
+    featured_video = Column(MutableDict.as_mutable(JSON))
     user = relationship("User", backref="mv_playlist")
 
 
@@ -430,6 +430,7 @@ class Vpn_conn(Base):
     bw_used = Column(Integer, nullable=False, default=0)
     sub_expiry = Column(String)
     expired = Column(Boolean, nullable=False, default=False)
+    enabled = Column(Boolean, nullable=False, default=True)
     allowedips = Column(String)
     dns = Column(String)
     ipaddress = Column(String)

@@ -125,6 +125,19 @@ def create_app(test_config=None):
             result = Markup(result)
         return result
 
+    @app.template_filter('bwremaining')
+    def bwremaining(bwlimit, bwused):
+        if bwlimit == 0:
+           return 'Bandwidth Unlimited'
+        else:
+            bwremaining = bwlimit - bwused
+            if bwremaining == 5000:
+                return '5 GB Remaining'
+            else:
+                gb = 1.0 / 1024
+            convert_gb = round(gb * bwremaining,2)
+            return str(convert_gb) + ' GB Remaining'
+
     @app.context_processor
     def inject_context():
         return dict(

@@ -56,38 +56,41 @@
 
                 <br>
                 {% if conns %}
-                <h3>Your VPN Connections</h3>
+                <h3>Connections</h3>
 
-                <form class="pure-form">
-                <fieldset>
-                  <div class="pure-controls">
-                    {% for conn in conns %}
-                    <input type="radio" id={{ conn.vpn_node_name }} name= 'conn' value={{ conn.id }} >
+                   {% for conn in conns %}
+
+                    <details><summary>
+                    <b><u>{{ conn.vpn_node_name }}</b></u>
+                    </summary>
+
                     <label for={{ conn.vpn_node_name }}>{{ conn.vpn_node_name }}&nbsp;&nbsp;&nbsp;{{ conn.bw_limit }}&nbsp;&nbsp;&nbsp;{{ conn.publickey }}</label><br>
+
+                    <br>
+
+                    <form action="{{ url_for('vpn.conn_action') }}" >
+                    <button class="pure-button" type="submit" name="download" value="{{ conn.id }}">{{ gettext('Download') }}</button>&nbsp;&nbsp;&nbsp;
+                    <button class="pure-button" type="submit" name="qrcode" value="{{ conn.id }}">{{ gettext('QR Code') }}</button>
+                    <button class="pure-button" type="submit" name="email" value="{{ conn.id }}">{{ gettext('Email') }}</button>&nbsp;&nbsp;&nbsp;
+                    </form>
+                    <br>
+                    <br>
+                    </details>
                     {% endfor %}
                     <br>
-                        <button class="pure-button" type="submit" name="submit" value="save_conn">{{ gettext('Create File') }}</button>
-                  </div>
-                </fieldset>
-                </form>
 
                 {% else %}
                 {% endif %}
                 <br>
                 {% if nodes %}
-                <h3>VPN Nodes</h3>
-                <form class="pure-form">
-                <fieldset>
-                  <div class="pure-controls">
+                <h3>VPNNodes</h3>
+                <form>
                     {% for node in nodes %}
-                    <input type="radio" id={{ node.name }} name= 'node' value={{ node.name }} >
-                    <label for={{ node.name }}>{{ node.name }}&nbsp;&nbsp;&nbsp;</label>
+                    <input type="radio" id={{ node.name }} name= 'node' value={{ node.name }} ><label for={{ node.name }}>&nbsp;{{ node.name }}&nbsp;</label>
                     {% endfor %}
                     <br>
                     <br>
-                        <button class="pure-button" type="submit" name="submit" value="new_conn">{{ gettext('Create New Connection') }}</button>
-                  </div>
-                </fieldset>
+                    <button class="pure-button" type="submit" name="submit" value="new_conn">{{ gettext('Create New Connection') }}</button>
                 </form>
                 {% else %}
                 {% endif %}
@@ -109,7 +112,5 @@
 
             {% endif %}
         </div>
-      </div>
-    </div>
 <p></p>
 {% endblock %}

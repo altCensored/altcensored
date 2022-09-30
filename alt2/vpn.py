@@ -60,7 +60,7 @@ def index():
         method = 'POST'
         api_request = '/manager/key'
         newkey = wg_api_call(node_fqdn, api_request, method, data_raw)
-        add_key_to_conn(data_raw, newkey, node, privkey)
+        add_key_to_conn(data_raw, newkey, node, privkey, node_fqdn)
 
     conns = Vpn_conn.query.filter_by(altcen_user_id=(session['user']['id'])).all()
 

@@ -436,4 +436,6 @@ class Vpn_conn(Base):
     ipaddress = Column(String)
     ipv4address = Column(String)
     ipv6address = Column(String)
+    vpn_node_publickey = Column(String, nullable=False)
+    vpn_node_fqdn = Column(String, nullable=False)
     created = Column(DateTime, nullable=True)

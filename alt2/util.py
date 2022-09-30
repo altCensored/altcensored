@@ -485,7 +485,6 @@ def wg_api_call(node_fqdn, api_request, method='GET', data_raw=None):
 
 
 def generate_add_key_data_raw(p_bwLimit=config.VPN_FREE_BWLIMIT, *args, **kwargs):
-#    p_bwLimit = kwargs.get('p_bwLimit', config.VPN_FREE_BWLIMIT)
     p_subExpiry = kwargs.get('b', config.VPN_DEFAULT_SUBEXPIRY)
     p_ipIndex = kwargs.get('c', config.VPN_DEFAULT_IPINDEX)
 
@@ -503,13 +502,14 @@ def generate_add_key_data_raw(p_bwLimit=config.VPN_FREE_BWLIMIT, *args, **kwargs
     return data_raw, privkey
 
 
-def add_key_to_conn(data_raw, newkey, node, privkey):
+def add_key_to_conn(data_raw, newkey, node, privkey, node_fqdn):
     now = datetime.datetime.now(timezone.utc)
     vpn_conn = Vpn_conn(\
         publickey=data_raw['publicKey'], vpn_node_name=node, altcen_user_id=session['user']['id'], privatekey=privkey, \
         sharedkey=data_raw['presharedKey'], key_id=newkey['keyID'], bw_limit=data_raw['bwLimit'], bw_used=0, \
-        sub_expiry=data_raw['subExpiry'], expired=False, allowedips=newkey['allowedIPs'], dns=newkey['dns'], \
-        ipaddress=newkey['ipAddress'], ipv4address=newkey['ipv4Address'], ipv6address=newkey['ipv6Address'], created=now \
+        sub_expiry=data_raw['subExpiry'], expired=False, enabled=True, allowedips=newkey['allowedIPs'], dns=newkey['dns'], \
+        ipaddress=newkey['ipAddress'], ipv4address=newkey['ipv4Address'], ipv6address=newkey['ipv6Address'], created=now, \
+        vpn_node_publickey=newkey['publicKey'], vpn_node_fqdn=node_fqdn \
         )
     db_session.add(vpn_conn)
     db_session.commit()

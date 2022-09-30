@@ -8,6 +8,7 @@ MYSERVER_NAME_SHORT="altCensored"
 MYSERVER_NAME="altCensored.com"
 MYSERVER_URL="https://altCensored.com"
 MYSERVER_TEST_URL="https://altCensored.com"
+VIDEO_THUMB_ERROR_IMAGE="https://altCensored.com/image_error.gif"
 IARCHIVEURL="https://archive.org/download/youtube-"
 IPROXY=os.getenv('IPROXY')
 IPROXYBIG=os.getenv('IPROXYBIG')

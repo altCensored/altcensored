@@ -83,21 +83,29 @@
                 {% endif %}
                 <br>
                 {% if nodes %}
-                <h3>VPNNodes</h3>
-                <form>
-                    {% for node in nodes %}
-                    <input type="radio" id={{ node.name }} name= 'node' value={{ node.name }} ><label for={{ node.name }}>&nbsp;{{ node.name }}&nbsp;</label>
-                    {% endfor %}
-                    <br>
-                    <br>
-                    <button class="pure-button" type="submit" name="submit" value="new_conn">{{ gettext('Create New Connection') }}</button>
-                </form>
-                {% else %}
-                {% endif %}
+                <h3>Nodes</h3>
+        </div>
+            <form>
+                {% for node in nodes %}
+                <div class="pure-u-1 pure-u-md-1-6">
+                    <div class="h-box">
+                        <input type="radio" id={{ node.name }} name= 'node' value={{ node.name }} ><label for={{ node.name }}>&nbsp;{{ node.name }}&nbsp;</label>
+                    </div>
+                </div>
+                {% endfor %}
                 <br>
-                {% if tdata %}
-                {{ tdata }}
-                {% endif %}
+                <br>
+                <div class="h-box">
+                <button class="pure-button" type="submit" name="submit" value="new_conn">{{ gettext('Create New Connection') }}</button>
+                </div>
+            </form>
+
+            {% else %}
+            {% endif %}
+            <br>
+            {% if tdata %}
+            {{ tdata }}
+            {% endif %}
 
             {% else %}
 
@@ -111,6 +119,5 @@
             <br>
 
             {% endif %}
-        </div>
-<p></p>
+            <p></p>
 {% endblock %}

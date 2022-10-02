@@ -1,5 +1,5 @@
-import os
-from flask import (Blueprint, session, render_template, flash, request, redirect, url_for, current_app, send_from_directory)
+import os, io, csv
+from flask import (Blueprint, session, render_template, flash, request, redirect, url_for, current_app, send_from_directory, send_file)
 from .util import (login_required, email_verified_required, contributor_required, wg_api_call,\
                    generate_add_key_data_raw, add_key_to_conn )
 from .models import Vpn_node, Vpn_conn
@@ -74,20 +74,23 @@ def index():
     return render_template('vpn/vpn_index.html', nodes=nodes, conns=conns, tdata=tdata)
 
 
-@bp.route('/conn_action')
+@bp.route('/conn_action', methods=['POST'])
 def conn_action():
-    download = request.args.get('download', None)
-    email = request.args.get('email', None)
-    qrcode = request.args.get('qrcode', None)
+    download = request.form['download']
+    name = request.form['name']
 
     if download:
-        uploads = os.path.join(current_app.root_path, current_app.config['VPN_FOLDER'])
-        filename = 'vpn_index.html'
-        as_attach = True
-        return send_from_directory(directory=uploads, filename=filename, as_attachment=True)
-    elif qrcode:
-        uploads = os.path.join(current_app.root_path, 'static')
-        filename = 'bch_qr.png'
-        return send_from_directory(directory=uploads, filename=filename)
+        filename = name+'.conf'
+        mem_text_file = io.StringIO(download)
+        # Creating the byteIO object from the StringIO Object
+        mem = io.BytesIO()
+        mem.write(mem_text_file.getvalue().encode())
+        mem.seek(0)
+
+        return send_file(
+            mem,
+            as_attachment=True,
+            attachment_filename=filename,
+            mimetype='text/csv')
 
     return redirect(url_for('vpn.index'))

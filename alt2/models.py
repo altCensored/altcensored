@@ -438,4 +438,6 @@ class Vpn_conn(Base):
     ipv6address = Column(String)
     vpn_node_publickey = Column(String, nullable=False)
     vpn_node_fqdn = Column(String, nullable=False)
+    config_file = Column(String)
+    config_qrcode = Column(String)
     created = Column(DateTime, nullable=True)

@@ -11,12 +11,14 @@ CREATE TABLE IF NOT EXISTS public.vpn_conn (
     sub_expiry TEXT,
     expired BOOL NOT NULL DEFAULT FALSE,
     enabled BOOL NOT NULL DEFAULT TRUE,
-    created timestamptz,
     allowedIPs TEXT,
     dns TEXT,
     ipAddress TEXT,
     ipv4Address TEXT,
     ipv6Address TEXT,
     vpn_node_publickey TEXT NOT NULL,
-    vpn_node_fqdn TEXT NOT NULL
+    vpn_node_fqdn TEXT NOT NULL,
+    config_file TEXT,
+    config_qrcode TEXT,
+    created timestamptz
 );

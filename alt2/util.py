@@ -14,12 +14,11 @@ from email_validator import validate_email, EmailNotValidError
 from mailjet_rest import Client
 from flask_babelplus import lazy_gettext
 from datetime import timezone
-import datetime
-
-from werkzeug.security import generate_password_hash
+import datetime, qrcode, base64
+from io import BytesIO
 
 import functools, os, string, random, subprocess, requests
-import boto3, json
+import boto3
 
 
 def get_locale():
@@ -454,27 +453,6 @@ def send_all_mass_email(email, subject, html, service):
         result = mailjet.send.create(data=data)
 
 
-def get_wg_publickey(idx):
-    user = User.query.filter(User.id == session['user']['id']).scalar()
-    if not user.wg_publickey:
-        user.wg_publickey = []
-        user.wg_privatekey = []
-        user.wg_sharedkey = []
-        i = 1
-        while i < 4:
-            privkey = subprocess.check_output("wg genkey", shell=True).decode("utf-8").strip()
-            pubkey = subprocess.check_output(f"echo '{privkey}' | wg pubkey", shell=True).decode("utf-8").strip()
-            sharedkey = subprocess.check_output("wg genpsk", shell=True).decode("utf-8").strip()
-            user.wg_privatekey.append(privkey)
-            user.wg_publickey.append(pubkey)
-            user.wg_sharedkey.append(sharedkey)
-            i += 1
-        db_session.commit()
-        return user.wg_publickey[idx]
-    else:
-        return user.wg_publickey[idx]
-
-
 def wg_api_call(node_fqdn, api_request, method='GET', data_raw=None):
     url = 'https://' + node_fqdn + ':' + config.VPN_API_PORT + api_request
     headers = {'Authorization':config.VPN_API_AUTH}
@@ -503,17 +481,39 @@ def generate_add_key_data_raw(p_bwLimit=config.VPN_FREE_BWLIMIT, *args, **kwargs
 
 
 def add_key_to_conn(data_raw, newkey, node, privkey, node_fqdn):
+    config_file = "\
+[Interface]\n\
+PrivateKey = aa\n\
+Address = aa\n\
+"
+
+    l1='[Interface]'
+    l2='PrivateKey = '+privkey
+    l3='Address = '+newkey['ipv4Address']
+    l4='DNS = '+newkey['dns']
+    l5=None
+    l6='[Peer]'
+    l7='PublicKey = '+newkey['publicKey']
+    l8='PresharedKey = '+data_raw['presharedKey']
+    l9='AllowedIPs = '+newkey['allowedIPs']
+    l10='Endpoint = '+node_fqdn+':'+config.VPN_PORT
+
+    config_file=l1+chr(10)+l2+chr(10)+l3+chr(10)+l4+chr(10)+chr(10)+l6+chr(10)+l7+chr(10)+l8+chr(10)+l9+chr(10)+l10+chr(10)
+
+    image = qrcode.make(config_file)
+    bytesbuf = BytesIO()
+    image.save(bytesbuf, format='PNG')
+    bytes_out = bytesbuf.getvalue()
+    encoded = base64.b64encode(bytes_out)
+    encoded_ascii = encoded.decode('ascii')
+
     now = datetime.datetime.now(timezone.utc)
     vpn_conn = Vpn_conn(\
         publickey=data_raw['publicKey'], vpn_node_name=node, altcen_user_id=session['user']['id'], privatekey=privkey, \
         sharedkey=data_raw['presharedKey'], key_id=newkey['keyID'], bw_limit=data_raw['bwLimit'], bw_used=0, \
         sub_expiry=data_raw['subExpiry'], expired=False, enabled=True, allowedips=newkey['allowedIPs'], dns=newkey['dns'], \
         ipaddress=newkey['ipAddress'], ipv4address=newkey['ipv4Address'], ipv6address=newkey['ipv6Address'], created=now, \
-        vpn_node_publickey=newkey['publicKey'], vpn_node_fqdn=node_fqdn \
+        vpn_node_publickey=newkey['publicKey'], vpn_node_fqdn=node_fqdn, config_file=config_file, config_qrcode=encoded_ascii \
         )
     db_session.add(vpn_conn)
     db_session.commit()
-
-
-def write_file():
-    pass

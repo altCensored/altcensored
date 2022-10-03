@@ -99,7 +99,6 @@ def conn_action():
 @bp.route('/update2')
 @admin_login_required
 def update2():
-
     nodes = Vpn_node.query.filter(Vpn_node.free).all()
     for node in nodes:
         node_fqdn = node.fqdn

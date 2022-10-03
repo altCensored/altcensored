@@ -527,7 +527,7 @@ def update_connections():
                     filter_by(vpn_node_name=node.name). \
                     filter_by(key_id=key['KeyID']). \
                     one()
-                conn.enabled = strtobool(key['Enabled'])
+                conn.enabled = str_to_bool(key['Enabled'])
             except:
                 pass
         #

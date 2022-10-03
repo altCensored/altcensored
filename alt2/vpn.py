@@ -3,7 +3,6 @@ from distutils.util import strtobool
 from flask import (Blueprint, session, render_template, flash, request, redirect, url_for, current_app, send_from_directory, send_file)
 from .util import (login_required, email_verified_required, contributor_required, wg_api_call, \
                    generate_add_key_data_raw, add_key_to_conn, admin_login_required, update_connections )
-from .database import db_session
 from .models import Vpn_node, Vpn_conn
 from . import config
 

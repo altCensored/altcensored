@@ -109,17 +109,16 @@ def update_test():
 @admin_login_required
 def update():
     nodes = Vpn_node.query.filter(Vpn_node.free).all()
+    flash('upd_in_nodes')
+    node_fqdn = node.fqdn
+    #
+    # update keys for 'Enabled'
+    #
+    method = 'GET'
+    api_request = '/manager/key'
+    keys_upd = wg_api_call(node_fqdn, api_request)
+    keys = keys_upd['Keys']
     flash('upd_after_nodes')
-    for node in nodes:
-        node_fqdn = node.fqdn
-        #
-        # update keys for 'Enabled'
-        #
-        method = 'GET'
-        api_request = '/manager/key'
-        keys_upd = wg_api_call(node_fqdn, api_request)
-        keys = keys_upd['Keys']
-
 
 
     return redirect(url_for('vpn.index'))

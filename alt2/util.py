@@ -1,3 +1,6 @@
+import functools, os, string, random, subprocess, requests, datetime, qrcode, base64
+import boto3
+
 from flask import (
     session, request, redirect, render_template, url_for, current_app, flash
 )
@@ -5,20 +8,16 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from itsdangerous import URLSafeTimedSerializer
 from better_profanity import profanity
-from sqlalchemy import func, text, desc
+from sqlalchemy import func
 from captcha.image import ImageCaptcha
-from .database import db_session
-from .models import Translation, Playlist, Mv_Channel, Mv_Video, User, Email_list, Channels, Channels_part, Vpn_node, Vpn_conn
-from . import config
 from email_validator import validate_email, EmailNotValidError
 from mailjet_rest import Client
 from flask_babelplus import lazy_gettext
 from datetime import timezone
-import datetime, qrcode, base64
 from io import BytesIO
-
-import functools, os, string, random, subprocess, requests
-import boto3
+from .database import db_session
+from .models import Translation, Playlist, Mv_Channel, Mv_Video, User, Email_list, Channels, Channels_part, Vpn_node, Vpn_conn
+from . import config
 
 
 def get_locale():
@@ -511,6 +510,13 @@ def add_key_to_conn(data_raw, newkey, node, privkey, node_fqdn):
     db_session.commit()
 
 
+def string_boolean(zzz):
+    if zzz.lower() in ['true', '1', 't', 'y', 'yes']:
+        return True
+    else:
+        return False
+
+
 def update_connections():
     nodes = Vpn_node.query.filter(Vpn_node.free).all()
     for node in nodes:
@@ -527,7 +533,7 @@ def update_connections():
                     filter_by(vpn_node_name=node.name). \
                     filter_by(key_id=key['KeyID']). \
                     one()
-                conn.enabled = str_to_bool(key['Enabled'])
+                conn.enabled = string_boolean(key['Enabled'])
             except:
                 pass
         #

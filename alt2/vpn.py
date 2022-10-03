@@ -128,9 +128,25 @@ def update_test2():
                     one()
                 conn.enabled = string_boolean(key['Enabled'])
                 flash('inside keys')
-                db_session.commit()
+#                db_session.commit()
             except:
                 pass
-
+        #
+        # update subs for 'BandwidthUsed'
+        #
+        api_request = '/manager/subscription/all'
+        subs_upd = wg_api_call(node_fqdn, api_request)
+        subs = subs_upd['subscriptions']
+        for sub in subs:
+            try:
+                conn = Vpn_conn.query. \
+                    filter_by(vpn_node_name=node.name). \
+                    filter_by(key_id=sub['KeyID']). \
+                    one()
+                conn.bw_used = sub['BandwidthUsed']
+ #               db_session.commit()
+            except:
+                pass
+        db_session.commit()
 
     return redirect(url_for('vpn.index'))

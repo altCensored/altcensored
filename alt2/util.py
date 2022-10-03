@@ -8,7 +8,7 @@ from better_profanity import profanity
 from sqlalchemy import func, text, desc
 from captcha.image import ImageCaptcha
 from .database import db_session
-from .models import Translation, Playlist, Mv_Channel, Mv_Video, User, Email_list, Channels, Channels_part, Vpn_conn
+from .models import Translation, Playlist, Mv_Channel, Mv_Video, User, Email_list, Channels, Channels_part, Vpn_node, Vpn_conn
 from . import config
 from email_validator import validate_email, EmailNotValidError
 from mailjet_rest import Client
@@ -457,7 +457,6 @@ def wg_api_call(node_fqdn, api_request, method='GET', data_raw=None):
     url = 'https://' + node_fqdn + ':' + config.VPN_API_PORT + api_request
     headers = {'Authorization':config.VPN_API_AUTH}
     r = requests.request(method, url, headers=headers, json=data_raw)
-
     data = r.json()
     return data
 
@@ -481,12 +480,6 @@ def generate_add_key_data_raw(p_bwLimit=config.VPN_FREE_BWLIMIT, *args, **kwargs
 
 
 def add_key_to_conn(data_raw, newkey, node, privkey, node_fqdn):
-    config_file = "\
-[Interface]\n\
-PrivateKey = aa\n\
-Address = aa\n\
-"
-
     l1='[Interface]'
     l2='PrivateKey = '+privkey
     l3='Address = '+newkey['ipv4Address']
@@ -499,7 +492,6 @@ Address = aa\n\
     l10='Endpoint = '+node_fqdn+':'+config.VPN_PORT
 
     config_file=l1+chr(10)+l2+chr(10)+l3+chr(10)+l4+chr(10)+chr(10)+l6+chr(10)+l7+chr(10)+l8+chr(10)+l9+chr(10)+l10+chr(10)
-
     image = qrcode.make(config_file)
     bytesbuf = BytesIO()
     image.save(bytesbuf, format='PNG')
@@ -517,3 +509,40 @@ Address = aa\n\
         )
     db_session.add(vpn_conn)
     db_session.commit()
+
+
+def update_connections():
+    nodes = Vpn_node.query.filter(Vpn_node.free).all()
+    for node in nodes:
+        node_fqdn = node.fqdn
+        #
+        # update keys for 'Enabled'
+        #
+        api_request = '/manager/key'
+        keys_upd = wg_api_call(node_fqdn, api_request)
+        keys = keys_upd['Keys']
+        for key in keys:
+            try:
+                conn = Vpn_conn.query. \
+                    filter_by(vpn_node_name=node.name). \
+                    filter_by(key_id=key['KeyID']). \
+                    one()
+                conn.enabled = strtobool(key['Enabled'])
+            except:
+                pass
+        #
+        # update subs for 'BandwidthUsed'
+        #
+        api_request = '/manager/subscription/all'
+        subs_upd = wg_api_call(node_fqdn, api_request)
+        subs = subs_upd['subscriptions']
+        for sub in subs:
+            try:
+                conn = Vpn_conn.query. \
+                    filter_by(vpn_node_name=node.name). \
+                    filter_by(key_id=sub['KeyID']). \
+                    one()
+                conn.bw_used = sub['BandwidthUsed']
+            except:
+                pass
+        db_session.commit()

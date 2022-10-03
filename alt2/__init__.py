@@ -1,7 +1,7 @@
 import os, re
 from flask import Flask, request, url_for, redirect, g
 from jinja2 import evalcontextfilter, Markup, escape
-from flask_babelplus import Babel
+from flask_babelplus import Babel, lazy_gettext
 from urllib.parse import quote_plus
 
 import timeago, datetime
@@ -128,13 +128,10 @@ def create_app(test_config=None):
     @app.template_filter('bwremaining')
     def bwremaining(bwlimit, bwused):
         if bwlimit == 0:
-           return 'Bandwidth Unlimited'
+           return lazy_gettext('Bandwidth Unlimited')
         else:
             bwremaining = bwlimit - bwused
-            if bwremaining == 5000:
-                return '5 GB Remaining'
-            else:
-                gb = 1.0 / 1024
+            gb = 1.0 / 1024
             convert_gb = round(gb * bwremaining,2)
             return str(convert_gb) + ' GB Remaining'
 

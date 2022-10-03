@@ -417,15 +417,14 @@ class Vpn_node(Base):
 class Vpn_conn(Base):
     __tablename__ = 'vpn_conn'
     __table_args__ = (
-        UniqueConstraint('publickey', 'vpn_node_name'),
+        UniqueConstraint('vpn_node_name', 'publickey'),
     )
-    id = Column(Integer, primary_key=True, nullable=False)
+    vpn_node_name = Column(String, ForeignKey("vpn_node.name"), primary_key=True, nullable=False)
+    key_id = Column(Integer, primary_key=True)
     publickey = Column(String, unique=True, nullable=False)
-    vpn_node_name = Column(String, ForeignKey("vpn_node.name"), nullable=False)
     altcen_user_id = Column(Integer, ForeignKey("altcen_user.id"), nullable=False)
-    privatekey = Column(String, unique=True, nullable=False)
-    sharedkey = Column(String, unique=True, nullable=False)
-    key_id = Column(Integer)
+    privatekey = Column(String, nullable=False)
+    sharedkey = Column(String, nullable=False)
     bw_limit = Column(Integer)
     bw_used = Column(Integer, nullable=False, default=0)
     sub_expiry = Column(String)

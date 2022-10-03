@@ -3,7 +3,7 @@ from distutils.util import strtobool
 from flask import (Blueprint, session, render_template, flash, request, redirect, url_for, current_app, send_from_directory, \
                    send_file)
 from .util import (login_required, email_verified_required, contributor_required, wg_api_call, \
-                   generate_add_key_data_raw, add_key_to_conn, admin_login_required )
+                   generate_add_key_data_raw, add_key_to_conn, admin_login_required, string_boolean )
 from .models import Vpn_node, Vpn_conn
 from .database import db_session
 from . import config
@@ -22,9 +22,6 @@ def index():
     if session.get('user') is None:
         flash('Account required for free VPN','error')
         return redirect(url_for('auth.login'))
-
-    if submit == 'save_conn' and not conn:
-        flash('Choose a connection and try again','error')
 
     if submit == 'new_conn' and not node:
         flash('Choose a node and try again','error')
@@ -102,7 +99,9 @@ def conn_action():
 @bp.route('/update_test')
 @admin_login_required
 def update_test():
-    flash('sss')
+    flash('upd_test')
+
+
     return redirect(url_for('vpn.index'))
 
 
@@ -110,8 +109,8 @@ def update_test():
 @admin_login_required
 def update():
     nodes = Vpn_node.query.filter(Vpn_node.free).all()
+    flash('upd_after_nodes')
     for node in nodes:
-        flash('in nodes')
         node_fqdn = node.fqdn
         #
         # update keys for 'Enabled'
@@ -121,7 +120,6 @@ def update():
         keys_upd = wg_api_call(node_fqdn, api_request)
         keys = keys_upd['Keys']
         for key in keys:
-            flash('in keys')
             try:
                 conn = Vpn_conn.query. \
                     filter_by(vpn_node_name=node.name). \
@@ -131,23 +129,6 @@ def update():
                 db_session.commit()
             except:
                 pass
-        #
-        # update subs for 'BandwidthUsed'
-        #
-        api_request = '/manager/subscription/all'
-        subs_upd = wg_api_call(node_fqdn, api_request)
-        subs = subs_upd['subscriptions']
-        for sub in subs:
-            flash('in subs')
-            try:
-                conn = Vpn_conn.query. \
-                    filter_by(vpn_node_name=node.name). \
-                    filter_by(key_id=sub['KeyID']). \
-                    one()
-                conn.bw_used = sub['BandwidthUsed']
-                db_session.commit()
-            except:
-                pass
-        db_session.commit()
+
 
     return redirect(url_for('vpn.index'))

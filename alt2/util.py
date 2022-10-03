@@ -510,8 +510,8 @@ def add_key_to_conn(data_raw, newkey, node, privkey, node_fqdn):
     db_session.commit()
 
 
-def string_boolean(zzz):
-    if zzz.lower() in ['true', '1', 't', 'y', 'yes']:
+def string_boolean(text):
+    if text.lower() in ['true', '1', 't', 'y', 'yes']:
         return True
     else:
         return False

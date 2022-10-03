@@ -517,38 +517,3 @@ def string_boolean(zzz):
         return False
 
 
-def update_connections():
-    nodes = Vpn_node.query.filter(Vpn_node.free).all()
-    for node in nodes:
-        node_fqdn = node.fqdn
-        #
-        # update keys for 'Enabled'
-        #
-        api_request = '/manager/key'
-        keys_upd = wg_api_call(node_fqdn, api_request)
-        keys = keys_upd['Keys']
-        for key in keys:
-            try:
-                conn = Vpn_conn.query. \
-                    filter_by(vpn_node_name=node.name). \
-                    filter_by(key_id=key['KeyID']). \
-                    one()
-                conn.enabled = string_boolean(key['Enabled'])
-            except:
-                pass
-        #
-        # update subs for 'BandwidthUsed'
-        #
-        api_request = '/manager/subscription/all'
-        subs_upd = wg_api_call(node_fqdn, api_request)
-        subs = subs_upd['subscriptions']
-        for sub in subs:
-            try:
-                conn = Vpn_conn.query. \
-                    filter_by(vpn_node_name=node.name). \
-                    filter_by(key_id=sub['KeyID']). \
-                    one()
-                conn.bw_used = sub['BandwidthUsed']
-            except:
-                pass
-        db_session.commit()

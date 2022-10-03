@@ -1,9 +1,12 @@
 import os, io, csv
 from distutils.util import strtobool
-from flask import (Blueprint, session, render_template, flash, request, redirect, url_for, current_app, send_from_directory, send_file)
+from flask import (Blueprint, session, render_template, flash, request, redirect, url_for, current_app, send_from_directory, \
+                   send_file)
 from .util import (login_required, email_verified_required, contributor_required, wg_api_call, \
-                   generate_add_key_data_raw, add_key_to_conn, admin_login_required, update_connections )
+                   generate_add_key_data_raw, add_key_to_conn, admin_login_required )
 from .models import Vpn_node, Vpn_conn
+from .database import db_session
+
 from . import config
 
 bp = Blueprint('vpn', __name__, url_prefix='/vpn' )
@@ -100,6 +103,39 @@ def conn_action():
 @bp.route('/update')
 @admin_login_required
 def update():
-    update_connections()
+    nodes = Vpn_node.query.filter(Vpn_node.free).all()
+    for node in nodes:
+        node_fqdn = node.fqdn
+        #
+        # update keys for 'Enabled'
+        #
+        api_request = '/manager/key'
+        keys_upd = wg_api_call(node_fqdn, api_request)
+        keys = keys_upd['Keys']
+        for key in keys:
+            try:
+                conn = Vpn_conn.query. \
+                    filter_by(vpn_node_name=node.name). \
+                    filter_by(key_id=key['KeyID']). \
+                    one()
+                conn.enabled = string_boolean(key['Enabled'])
+            except:
+                pass
+        #
+        # update subs for 'BandwidthUsed'
+        #
+        api_request = '/manager/subscription/all'
+        subs_upd = wg_api_call(node_fqdn, api_request)
+        subs = subs_upd['subscriptions']
+        for sub in subs:
+            try:
+                conn = Vpn_conn.query. \
+                    filter_by(vpn_node_name=node.name). \
+                    filter_by(key_id=sub['KeyID']). \
+                    one()
+                conn.bw_used = sub['BandwidthUsed']
+            except:
+                pass
+        db_session.commit()
 
     return render_template('vpn/vpn_index.html')

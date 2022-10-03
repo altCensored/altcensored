@@ -3,7 +3,7 @@ from distutils.util import strtobool
 from flask import (Blueprint, session, render_template, flash, request, redirect, url_for, current_app, send_from_directory, \
                    send_file)
 from .util import (login_required, email_verified_required, contributor_required, wg_api_call, \
-                   generate_add_key_data_raw, add_key_to_conn, admin_login_required, update_conns )
+                   generate_add_key_data_raw, add_key_to_conn, admin_login_required, string_boolean, update_conns )
 from .models import Vpn_node, Vpn_conn
 from .database import db_session
 from . import config
@@ -96,10 +96,40 @@ def conn_action():
     return redirect(url_for('vpn.index'))
 
 
-@bp.route('/update')
+@bp.route('/update2')
 @admin_login_required
-def update():
+def update2():
 
-    update_conns()
+    nodes = Vpn_node.query.filter(Vpn_node.free).all()
+    for node in nodes:
+        node_fqdn = node.fqdn
+        #
+        # update keys for 'Enabled'
+        #
+        api_request = '/manager/key'
+        keys_upd = wg_api_call(node_fqdn, api_request)
+        keys = keys_upd['Keys']
+        for key in keys:
+            conn = Vpn_conn.query. \
+                    filter_by(vpn_node_name=node.name). \
+                    filter_by(key_id=key['KeyID']). \
+                    scalar()
+            if conn is not None:
+                conn.enabled = string_boolean(key['Enabled'])
+        #
+        # update subs for 'BandwidthUsed'
+        #
+        api_request = '/manager/subscription/all'
+        subs_upd = wg_api_call(node_fqdn, api_request)
+        subs = subs_upd['subscriptions']
+        for sub in subs:
+            conn = Vpn_conn.query. \
+                    filter_by(vpn_node_name=node.name). \
+                    filter_by(key_id=sub['KeyID']). \
+                    scalar()
+            if conn is not None:
+                conn.bw_used = sub['BandwidthUsed']
+
+    db_session.commit()
 
     return redirect(url_for('vpn.index'))

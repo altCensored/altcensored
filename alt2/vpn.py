@@ -108,9 +108,10 @@ def update_test():
 @bp.route('/update_test2')
 @admin_login_required
 def update_test2():
-    flash('upd_test2')
     nodes = Vpn_node.query.filter(Vpn_node.free).all()
-    flash('upd_in_nodes2')
+    for node in nodes:
+        node_fqdn = node.fqdn
+        flash('upd_test2')
 
 
 

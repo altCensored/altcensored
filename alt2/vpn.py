@@ -111,6 +111,7 @@ def update_test():
 def update():
     nodes = Vpn_node.query.filter(Vpn_node.free).all()
     for node in nodes:
+        flash('in nodes')
         node_fqdn = node.fqdn
         #
         # update keys for 'Enabled'
@@ -120,6 +121,7 @@ def update():
         keys_upd = wg_api_call(node_fqdn, api_request)
         keys = keys_upd['Keys']
         for key in keys:
+            flash('in keys')
             try:
                 conn = Vpn_conn.query. \
                     filter_by(vpn_node_name=node.name). \
@@ -135,6 +137,7 @@ def update():
         subs_upd = wg_api_call(node_fqdn, api_request)
         subs = subs_upd['subscriptions']
         for sub in subs:
+            flash('in subs')
             try:
                 conn = Vpn_conn.query. \
                     filter_by(vpn_node_name=node.name). \

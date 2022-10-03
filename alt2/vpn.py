@@ -105,9 +105,9 @@ def update_test():
     return redirect(url_for('vpn.index'))
 
 
-@bp.route('/update_test2')
+@bp.route('/update')
 @admin_login_required
-def update_test2():
+def update():
     nodes = Vpn_node.query.filter(Vpn_node.free).all()
     for node in nodes:
         node_fqdn = node.fqdn
@@ -119,7 +119,6 @@ def update_test2():
         keys_upd = wg_api_call(node_fqdn, api_request)
         keys = keys_upd['Keys']
         for key in keys:
-            flash('inside keys')
             try:
                 conn = Vpn_conn.query. \
                     filter_by(vpn_node_name=node.name). \

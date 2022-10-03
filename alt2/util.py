@@ -517,3 +517,35 @@ def string_boolean(text):
         return False
 
 
+def update_conns():
+    nodes = Vpn_node.query.filter(Vpn_node.free).all()
+    for node in nodes:
+        node_fqdn = node.fqdn
+        #
+        # update keys for 'Enabled'
+        #
+        api_request = '/manager/key'
+        keys_upd = wg_api_call(node_fqdn, api_request)
+        keys = keys_upd['Keys']
+        for key in keys:
+            conn = Vpn_conn.query. \
+                    filter_by(vpn_node_name=node.name). \
+                    filter_by(key_id=key['KeyID']). \
+                    scalar()
+            if conn is not None:
+                conn.enabled = string_boolean(key['Enabled'])
+        #
+        # update subs for 'BandwidthUsed'
+        #
+        api_request = '/manager/subscription/all'
+        subs_upd = wg_api_call(node_fqdn, api_request)
+        subs = subs_upd['subscriptions']
+        for sub in subs:
+            conn = Vpn_conn.query. \
+                    filter_by(vpn_node_name=node.name). \
+                    filter_by(key_id=sub['KeyID']). \
+                    scalar()
+            if conn is not None:
+                conn.bw_used = sub['BandwidthUsed']
+
+    db_session.commit()

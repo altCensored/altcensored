@@ -112,6 +112,14 @@ def update_test2():
     for node in nodes:
         node_fqdn = node.fqdn
         flash('upd_test2')
+        #
+        # update keys for 'Enabled'
+        #
+        method = 'GET'
+        api_request = '/manager/key'
+        keys_upd = wg_api_call(node_fqdn, api_request)
+        keys = keys_upd['Keys']
+        flash(keys)
 
 
 

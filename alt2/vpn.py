@@ -1,5 +1,6 @@
 import os, io, csv
-from distutils.util import strtobool
+from threading import Thread
+
 from flask import (Blueprint, session, render_template, flash, request, redirect, url_for, current_app, send_from_directory, \
                    send_file)
 from .util import (login_required, email_verified_required, contributor_required, wg_api_call, \
@@ -96,39 +97,9 @@ def conn_action():
     return redirect(url_for('vpn.index'))
 
 
-@bp.route('/update2')
+@bp.route('/update')
 @admin_login_required
-def update2():
-    nodes = Vpn_node.query.filter(Vpn_node.free).all()
-    for node in nodes:
-        node_fqdn = node.fqdn
-        #
-        # update keys for 'Enabled'
-        #
-        api_request = '/manager/key'
-        keys_upd = wg_api_call(node_fqdn, api_request)
-        keys = keys_upd['Keys']
-        for key in keys:
-            conn = Vpn_conn.query. \
-                    filter_by(vpn_node_name=node.name). \
-                    filter_by(key_id=key['KeyID']). \
-                    scalar()
-            if conn is not None:
-                conn.enabled = string_boolean(key['Enabled'])
-        #
-        # update subs for 'BandwidthUsed'
-        #
-        api_request = '/manager/subscription/all'
-        subs_upd = wg_api_call(node_fqdn, api_request)
-        subs = subs_upd['subscriptions']
-        for sub in subs:
-            conn = Vpn_conn.query. \
-                    filter_by(vpn_node_name=node.name). \
-                    filter_by(key_id=sub['KeyID']). \
-                    scalar()
-            if conn is not None:
-                conn.bw_used = sub['BandwidthUsed']
-
-    db_session.commit()
+def update():
+    Thread(target=update_conns()).start()
 
     return redirect(url_for('vpn.index'))

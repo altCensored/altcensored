@@ -128,6 +128,7 @@ def update():
                     filter_by(key_id=key['KeyID']). \
                     one()
                 conn.enabled = string_boolean(key['Enabled'])
+                db_session.commit()
             except:
                 pass
         #
@@ -144,6 +145,7 @@ def update():
                     filter_by(key_id=sub['KeyID']). \
                     one()
                 conn.bw_used = sub['BandwidthUsed']
+                db_session.commit()
             except:
                 pass
         db_session.commit()

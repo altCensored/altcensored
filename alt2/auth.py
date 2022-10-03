@@ -1,6 +1,7 @@
 import datetime
 import json
 from datetime import timezone
+from threading import Thread
 from flask import (
     Blueprint, redirect, request, session, render_template, flash, url_for
 )
@@ -15,7 +16,7 @@ from .models import User
 from .util import (
     get_locale, get_theme, get_navtabs, get_navtabs_index,
     send_forgot_password_email, generate_confirmation_token, confirm_token, email_exists, validate_user_email,
-    login_required, generate_random, create_captcha, set_session, send_confirm_email
+    login_required, generate_random, create_captcha, set_session, send_confirm_email, update_conns
 )
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -147,6 +148,8 @@ def login():
                                    email_subscribed=user.email_subscribed, email_verified=user.email_verified, contributor=user.contributor)
             conf_email_sent = lazy_gettext('Confirmation email sent')
             flash(conf_email_sent, 'success')
+            Thread(target=update_conns()).start()
+
             return redirect(url_for('settings.index'))
 
         if user_and_password_is_valid(email, password):
@@ -172,6 +175,8 @@ def login():
                 send_confirm_email(email)
                 conf_email_resent = lazy_gettext('Email not verified, confirmation email resent')
                 flash(conf_email_resent, 'error')
+
+            Thread(target=update_conns()).start()
 
             return redirect(url_for('video.index'))
 

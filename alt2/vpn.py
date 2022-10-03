@@ -6,7 +6,6 @@ from .util import (login_required, email_verified_required, contributor_required
                    generate_add_key_data_raw, add_key_to_conn, admin_login_required )
 from .models import Vpn_node, Vpn_conn
 from .database import db_session
-
 from . import config
 
 bp = Blueprint('vpn', __name__, url_prefix='/vpn' )
@@ -100,6 +99,13 @@ def conn_action():
     return redirect(url_for('vpn.index'))
 
 
+@bp.route('/update_test')
+@admin_login_required
+def update_test():
+    flash('sss')
+    return redirect(url_for('vpn.index'))
+
+
 @bp.route('/update')
 @admin_login_required
 def update():
@@ -109,6 +115,7 @@ def update():
         #
         # update keys for 'Enabled'
         #
+        method = 'GET'
         api_request = '/manager/key'
         keys_upd = wg_api_call(node_fqdn, api_request)
         keys = keys_upd['Keys']
@@ -138,4 +145,4 @@ def update():
                 pass
         db_session.commit()
 
-    return render_template('vpn/vpn_index.html')
+    return redirect(url_for('vpn.index'))

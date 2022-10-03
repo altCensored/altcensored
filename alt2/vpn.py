@@ -119,16 +119,7 @@ def update():
         api_request = '/manager/key'
         keys_upd = wg_api_call(node_fqdn, api_request)
         keys = keys_upd['Keys']
-        for key in keys:
-            try:
-                conn = Vpn_conn.query. \
-                    filter_by(vpn_node_name=node.name). \
-                    filter_by(key_id=key['KeyID']). \
-                    one()
-                conn.enabled = string_boolean(key['Enabled'])
-                db_session.commit()
-            except:
-                pass
+
 
 
     return redirect(url_for('vpn.index'))

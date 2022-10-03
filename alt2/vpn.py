@@ -111,7 +111,6 @@ def update_test2():
     nodes = Vpn_node.query.filter(Vpn_node.free).all()
     for node in nodes:
         node_fqdn = node.fqdn
-        flash('upd_test2')
         #
         # update keys for 'Enabled'
         #
@@ -119,16 +118,14 @@ def update_test2():
         api_request = '/manager/key'
         keys_upd = wg_api_call(node_fqdn, api_request)
         keys = keys_upd['Keys']
-        flash(keys)
         for key in keys:
+            flash('inside keys')
             try:
                 conn = Vpn_conn.query. \
                     filter_by(vpn_node_name=node.name). \
                     filter_by(key_id=key['KeyID']). \
                     one()
                 conn.enabled = string_boolean(key['Enabled'])
-                flash('inside keys')
-#                db_session.commit()
             except:
                 pass
         #
@@ -144,7 +141,6 @@ def update_test2():
                     filter_by(key_id=sub['KeyID']). \
                     one()
                 conn.bw_used = sub['BandwidthUsed']
- #               db_session.commit()
             except:
                 pass
         db_session.commit()

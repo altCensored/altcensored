@@ -1,5 +1,6 @@
 import os, io, csv
 from threading import Thread
+from flask_babelplus import lazy_gettext
 from flask import (Blueprint, session, render_template, flash, request, redirect, url_for, current_app, send_from_directory, \
                    send_file)
 from .util import (login_required, email_verified_required, contributor_required, wg_api_call, \
@@ -113,3 +114,22 @@ def reset():
     Thread(target=reset_conns()).start()
 
     return redirect(url_for('vpn.index'))
+
+
+@bp.route('/reset_confirm', methods=['GET', 'POST'])
+@admin_login_required
+def reset_confirm():
+    l_msg = lazy_gettext('Monthly Connections Reset')
+    message = l_msg + ' ?'
+    if request.method == 'POST':
+        submitvalue = request.form['submitvalue']
+        if submitvalue == 'yes':
+            Thread(target=reset_conns()).start()
+            msg_yes = lazy_gettext('Connections Reset')
+            flash(msg_yes, 'success')
+        else:
+            msg_no = lazy_gettext('Connections Not Reset')
+            flash(msg_no, 'error')
+        return redirect(url_for('admin.index'))
+
+    return render_template('widgets/widgets_confirm.html', message=message)

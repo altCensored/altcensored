@@ -557,23 +557,34 @@ def update_conns():
     db_session.commit()
 
 
-def reset_conns_free():
+def reset_conns():
     conns = Vpn_conn.query. \
         filter(Vpn_conn.bw_used != 0). \
         all()
-    if conns is not None:
-        for conn in conns:
-            flash(conn.key_id)
-            node_fqdn = conn.vpn_node_fqdn
-            node_fqdn = 'usa2.altcensored.com'
-            api_request = '/manager/subscription/edit'
-            method = 'POST'
-
-            data_raw = {
-                "keyID": conn.key_id,
-                "bwReset": True
-            }
-            sub_reset_bw = wg_api_call(node_fqdn, api_request, method, data_raw)
-            flash (sub_reset_bw)
-    else:
-        flash('no recs')
+    for conn in conns:
+        #
+        # reset bwidth used
+        #
+        node_fqdn = conn.vpn_node_fqdn
+        api_request = '/manager/subscription/edit'
+        method = 'POST'
+        data_raw = {
+            "keyID": str(conn.key_id),
+            "subExpiry": "2032-Oct-21 12:49:05 PM",
+            "bwReset": True
+        }
+        reset_bw = wg_api_call(node_fqdn, api_request, method, data_raw)
+        if response_success(reset_bw):
+            conn.bw_used = 0
+        #
+        # enable
+        #
+        api_request = '/manager/key/enable'
+        method = 'POST'
+        data_raw = {
+            "keyID": str(conn.key_id),
+        }
+        enable_key = wg_api_call(node_fqdn, api_request, method, data_raw)
+        if response_success(enable_key):
+            conn.enabled = True
+    db_session.commit()

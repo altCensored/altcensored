@@ -3,9 +3,13 @@ from threading import Thread
 from flask import (Blueprint, session, render_template, flash, request, redirect, url_for, current_app, send_from_directory, \
                    send_file)
 from .util import (login_required, email_verified_required, contributor_required, wg_api_call, \
-                   generate_add_key_data_raw, add_key_to_conn, admin_login_required, string_boolean, update_conns )
+                   generate_add_key_data_raw, add_key_to_conn, admin_login_required, string_boolean, update_conns, \
+                   reset_conns_free, response_success \
+                   )
 from .models import Vpn_node, Vpn_conn
 from . import config
+from .database import db_session
+
 
 bp = Blueprint('vpn', __name__, url_prefix='/vpn' )
 
@@ -99,5 +103,42 @@ def conn_action():
 @admin_login_required
 def update():
     Thread(target=update_conns()).start()
+
+    return redirect(url_for('vpn.index'))
+
+
+@bp.route('/reset')
+@admin_login_required
+def reset():
+    conns = Vpn_conn.query. \
+        filter(Vpn_conn.bw_used != 0). \
+        all()
+    for conn in conns:
+        #
+        # reset bwidth used
+        #
+        node_fqdn = conn.vpn_node_fqdn
+        api_request = '/manager/subscription/edit'
+        method = 'POST'
+        data_raw = {
+            "keyID": str(conn.key_id),
+            "subExpiry": "2032-Oct-21 12:49:05 PM",
+            "bwReset": True
+        }
+        reset_bw = wg_api_call(node_fqdn, api_request, method, data_raw)
+        if response_success(reset_bw):
+            conn.bw_used = 0
+        #
+        # enable key
+        #
+        api_request = '/manager/key/enable'
+        method = 'POST'
+        data_raw = {
+            "keyID": str(conn.key_id),
+        }
+        enable_key = wg_api_call(node_fqdn, api_request, method, data_raw)
+        if response_success(enable_key):
+            conn.enabled = True
+    db_session.commit()
 
     return redirect(url_for('vpn.index'))

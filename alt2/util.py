@@ -321,6 +321,12 @@ def generate_random(size=4, chars=string.ascii_uppercase):
     return ''.join(random.choice(chars) for _ in range(size))
 
 
+def response_success(sub_reset):
+    response = sub_reset['response']
+    if 'success' in response:
+        return True
+
+
 def create_captcha(myrandom, mycaptcha):
     image = ImageCaptcha()
     data = image.generate(str(myrandom))
@@ -549,3 +555,25 @@ def update_conns():
                 conn.bw_used = sub['BandwidthUsed']
 
     db_session.commit()
+
+
+def reset_conns_free():
+    conns = Vpn_conn.query. \
+        filter(Vpn_conn.bw_used != 0). \
+        all()
+    if conns is not None:
+        for conn in conns:
+            flash(conn.key_id)
+            node_fqdn = conn.vpn_node_fqdn
+            node_fqdn = 'usa2.altcensored.com'
+            api_request = '/manager/subscription/edit'
+            method = 'POST'
+
+            data_raw = {
+                "keyID": conn.key_id,
+                "bwReset": True
+            }
+            sub_reset_bw = wg_api_call(node_fqdn, api_request, method, data_raw)
+            flash (sub_reset_bw)
+    else:
+        flash('no recs')

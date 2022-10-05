@@ -488,15 +488,16 @@ def add_key_to_conn(data_raw, newkey, node, privkey, node_fqdn):
     l1='[Interface]'
     l2='PrivateKey = '+privkey
     l3='Address = '+newkey['ipv4Address']
-    l4='DNS = '+newkey['dns']
-    l5=None
-    l6='[Peer]'
-    l7='PublicKey = '+newkey['publicKey']
-    l8='PresharedKey = '+data_raw['presharedKey']
-    l9='AllowedIPs = '+newkey['allowedIPs']
-    l10='Endpoint = '+node_fqdn+':'+config.VPN_PORT
+    l4='Address = '+newkey['ipv6Address']
+    l5='DNS = '+newkey['dns']
+    l6=None
+    l7='[Peer]'
+    l8='PublicKey = '+newkey['publicKey']
+    l9='PresharedKey = '+data_raw['presharedKey']
+    l10='AllowedIPs = '+newkey['allowedIPs']
+    l11='Endpoint = '+node_fqdn+':'+config.VPN_PORT
 
-    config_file=l1+chr(10)+l2+chr(10)+l3+chr(10)+l4+chr(10)+chr(10)+l6+chr(10)+l7+chr(10)+l8+chr(10)+l9+chr(10)+l10+chr(10)
+    config_file=l1+chr(10)+l2+chr(10)+l3+chr(10)+l4+chr(10)+l5+chr(10)+chr(10)+l7+chr(10)+l8+chr(10)+l9+chr(10)+l10+chr(10)+l11+chr(10)
     image = qrcode.make(config_file)
     bytesbuf = BytesIO()
     image.save(bytesbuf, format='PNG')

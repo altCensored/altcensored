@@ -1,4 +1,4 @@
-import os, io, csv
+import io
 from threading import Thread
 from flask_babelplus import lazy_gettext
 from flask import (Blueprint, session, render_template, flash, request, redirect, url_for, current_app, send_from_directory, \
@@ -9,8 +9,6 @@ from .util import (login_required, email_verified_required, contributor_required
                    )
 from .models import Vpn_node, Vpn_conn
 from . import config
-from .database import db_session
-
 
 bp = Blueprint('vpn', __name__, url_prefix='/vpn' )
 
@@ -19,7 +17,6 @@ bp = Blueprint('vpn', __name__, url_prefix='/vpn' )
 # remove '{% if session.user.xxx %}' in html for prod.
 def index():
     node = request.args.get('node', None)
-    conn = request.args.get('conn', None)
     submit = request.args.get('submit', None)
     tdata = None
 
@@ -71,7 +68,7 @@ def index():
     if not session['user']['contributor'] and conns:
         nodes = None
     elif not session['user']['contributor']:
-        nodes = Vpn_node.query.filter(Vpn_node.free.is_(True)).all()
+        nodes = Vpn_node.query.filter(Vpn_node.free).all()
     else:
         nodes = Vpn_node.query.all()
 

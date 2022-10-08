@@ -14,7 +14,6 @@ bp = Blueprint('vpn', __name__, url_prefix='/vpn' )
 
 @bp.route('/')
 #@login_required
-# remove '{% if session.user.xxx %}' in html for prod.
 def index():
     node = request.args.get('node', None)
     submit = request.args.get('submit', None)
@@ -23,6 +22,11 @@ def index():
     if session.get('user') is None:
         flash('Account required for free VPN','error')
         return redirect(url_for('auth.login'))
+
+    if not session['user']['email_verified']:
+        msg = lazy_gettext('Email verification required for free VPN')
+        flash(msg, 'error')
+        return redirect(url_for('settings.index'))
 
     if submit == 'new_conn' and not node:
         flash('Choose a node and try again','error')
@@ -40,7 +44,7 @@ def index():
             flash('Maximum 2 Connections per Node', 'error')
             conns = Vpn_conn.query.filter_by(altcen_user_id=(session['user']['id'])).all()
             nodes = Vpn_node.query.all()
-            return render_template('vpn/vpn_index.html', nodes=nodes, conns=conns, tdata=tdata)
+            return render_template('vpn/vpn_index.html', nodes=nodes, conns=conns)
 
         #
         # create new profile on selected node w/fqdn and free flag
@@ -72,7 +76,7 @@ def index():
     else:
         nodes = Vpn_node.query.all()
 
-    return render_template('vpn/vpn_index.html', nodes=nodes, conns=conns, tdata=tdata)
+    return render_template('vpn/vpn_index.html', nodes=nodes, conns=conns)
 
 
 @bp.route('/conn_action', methods=['POST'])

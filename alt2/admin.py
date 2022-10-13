@@ -211,6 +211,27 @@ def add_channel():
     return render_template('admin/admin_channels.html', title=title)
 
 
+@bp.route('/disable_channel', methods=['GET', 'POST'])
+@util.admin_login_required
+def disable_channel():
+    title = "Disable Channel"
+    if request.method == 'POST':
+        sys_name = 'scraper'
+        channel_id = (request.form['channel_id'])
+        channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
+        action = 'disable'
+
+        params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
+        params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 -cf /root/rocketfuel_cookies.txt '
+        params3 = ' > /root/nohup_ssh.out 2>&1 &'
+
+        command = params1 + params2 + action + " " + channel_url + params3
+        commands = [command]
+        ssh_command(sys_name, commands)
+
+    return render_template('admin/admin_channels.html', title=title)
+
+
 @bp.route('/remove_channel', methods=['GET', 'POST'])
 @util.admin_login_required
 def remove_channel():

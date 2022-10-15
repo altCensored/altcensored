@@ -832,20 +832,24 @@ msgid ""
 "We receive no advertising or corporate revenue and are 100%% community "
 "funded:"
 msgstr ""
+"No recibimos publicidad ni ingresos corporativos y estamos 100%% financiados por la comunidad"
+"financiado:"
 
 #: templates/donate/donate_index.html:34
 msgid "\"together we show what they hide\""
-msgstr ""
+msgstr "\"juntos mostramos lo que esconden\""
 
 #: templates/donate/donate_index.html:60
 msgid ""
 "Thank-you Brave Browser/BAT users, your generous support makes a "
 "difference"
 msgstr ""
+"Gracias usuarios de Brave Browser/BAT, su generoso apoyo hace la "
+"diferencia"
 
 #: templates/donate/donate_index.html:63
 msgid "Request additional cryptocurrency addresses via email to"
-msgstr ""
+msgstr "Solicitar direcciones de criptomonedas adicionales por correo electrónico a"
 
 #: templates/language/language_item.html:117
 #: templates/language/language_item.html:131

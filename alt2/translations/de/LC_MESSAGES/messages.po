@@ -830,7 +830,7 @@ msgstr "Statistik"
 msgid ""
 "We receive no advertising or corporate revenue and are 100%% community "
 "funded:"
-msgstr "Wir erhalten keine Werbe- oder Unternehmenseinnahmen und werden zu 100% von der Gemeinschaft finanziert:"
+msgstr "Wir erhalten keine Werbe- oder Unternehmenseinnahmen und werden zu 100%% von der Gemeinschaft finanziert:"
 
 #: templates/donate/donate_index.html:34
 msgid "\"together we show what they hide\""

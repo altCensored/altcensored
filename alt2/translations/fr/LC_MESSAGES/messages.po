@@ -837,7 +837,7 @@ msgid ""
 "We receive no advertising or corporate revenue and are 100%% community "
 "funded:"
 msgstr ""
-"Nous ne recevons aucune publicité ni aucun revenu d'entreprise et sommes financés à 100% par la communauté "
+"Nous ne recevons aucune publicité ni aucun revenu d'entreprise et sommes financés à 100%% par la communauté "
 "financée :"
 
 #: templates/donate/donate_index.html:34

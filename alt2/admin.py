@@ -448,7 +448,7 @@ def update_bounce():
 @bp.route('/confirm/<token>', methods=['GET', 'POST'])
 def unsubscribe_email(token):
     email = confirm_token(token, None)
-    l_msg = lazy_gettext('Unsubscribe ')
+    l_msg = lazy_gettext('Unsubscribe')+' '
     item_quoted = (f'"{email}"')
     message = l_msg + ' ' + item_quoted + '?'
 
@@ -463,7 +463,7 @@ def unsubscribe_email(token):
             user = db_session.query(Email_list).filter(func.lower(Email_list.email) == func.lower(email)).one()
 
         if not user.email_subscribed:
-            conf = item_quoted + lazy_gettext(' has already been unsubscribed')
+            conf = item_quoted + ' ' + lazy_gettext('has already been unsubscribed')
             flash(conf, 'error')
             return redirect(url_for('video.index'))
 
@@ -478,11 +478,11 @@ def unsubscribe_email(token):
                 tablename = 'Email_list'
             action = 'altc_unsub'
             db_unsubscribe_email(tablename, user.email, action)
-            conf = item_quoted + lazy_gettext(' was unsubscribed')
+            conf = item_quoted + ' ' + lazy_gettext('was unsubscribed')
             flash(conf, 'success')
             return redirect(url_for('video.index'))
         else:
-            conf = item_quoted + lazy_gettext(' was NOT unsubscribed')
+            conf = item_quoted + ' ' + lazy_gettext('was NOT unsubscribed')
             flash(conf, 'error')
             return redirect(request.args.get('original_url', '/'))
     return render_template('widgets/widgets_confirm.html', message=message)

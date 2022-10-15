@@ -259,7 +259,7 @@ def logout():
 def delete():
     user_id = session['user']['id']
     user_email = session['user']['email']
-    l_msg = lazy_gettext('Delete User ')
+    l_msg = lazy_gettext('Delete User')+' '
     item_quoted = (f'"{user_email}"')
     message = l_msg + ' ' + item_quoted + '?'
     if request.method == 'POST':

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block head %}
 
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary_large_image" xmlns="http://www.w3.org/1999/html">
 <meta name="twitter:site" content="@altcensored">
 <meta name="twitter:creator" content="@altcensored">
 
@@ -56,11 +56,13 @@
           </p>
             </details>
             {% endfor %}
-          <br>
-          {{ gettext('Thank-you Brave Browser/BAT users, your generous support makes a difference')  }}
-          <br>
+          <p>
+          {{ gettext('Thank-you Brave Browser/BAT users, your generous support makes a difference') }}.
+          </p>
+          <p>
           {{ gettext('Request additional cryptocurrency addresses via email to') }}
           <b>altCensored AT protonmail.com</b>.
+          </p>
               </div>
             </div>
           </div>

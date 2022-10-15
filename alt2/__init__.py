@@ -3,6 +3,7 @@ from flask import Flask, request, url_for, redirect, g
 from jinja2 import evalcontextfilter, Markup, escape
 from flask_babelplus import Babel, lazy_gettext
 from urllib.parse import quote_plus
+from flask_qrcode import QRcode
 
 import timeago, datetime
 from datetime import timezone
@@ -37,6 +38,7 @@ def create_app(test_config=None):
         pass
 
     babel = Babel(app)
+    QRcode(app)
 
     # Flask-BabelPlus
     babel.init_app(app=app)
@@ -176,7 +178,7 @@ def create_app(test_config=None):
     def shutdown_session(exception=None):
         db_session.remove()    
 
-    from . import video, channel, about, category, language, settings, auth, admin, playlist, theme, user, newsletter, vpn
+    from . import video, channel, about, category, language, settings, auth, admin, playlist, theme, user, newsletter, vpn, donate
 
     app.register_blueprint(video.bp)
     app.register_blueprint(channel.bp)
@@ -191,6 +193,7 @@ def create_app(test_config=None):
     app.register_blueprint(user.bp)
     app.register_blueprint(newsletter.bp)
     app.register_blueprint(vpn.bp)
+    app.register_blueprint(donate.bp)
 
     app.add_url_rule('/', endpoint='video.index', defaults={'page': 1})
 

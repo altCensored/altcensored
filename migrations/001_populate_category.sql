@@ -1,9 +1,7 @@
 INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (18, 'Short Movies', 'ion-ios-cog');
 INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (21, 'Videoblogging', 'ion-ios-cog');
 INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (2, 'Autos & Vehicles', 'ion-ios-car');
-INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (10, 'Music', 'ion-ios-musical-notes	
-
-');
+INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (10, 'Music', 'ion-ios-musical-notes');
 INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (15, 'Pets & Animals', 'ion-ios-paw');
 INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (17, 'Sports', 'ion-ios-tennisball');
 INSERT INTO "category"("cat_id", "cat_name", "cat_image") VALUES (19, 'Travel & Events', 'ion-ios-airplane');

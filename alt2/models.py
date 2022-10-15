@@ -440,3 +440,11 @@ class Vpn_conn(Base):
     config_file = Column(String)
     config_qrcode = Column(String)
     created = Column(DateTime, nullable=True)
+
+
+class Crypto(Base):
+    __tablename__ = 'crypto'
+    id = Column(Integer, primary_key=True, nullable=False)
+    name = Column(String, nullable=False)
+    tag = Column(String, nullable=False)
+    address = Column(String, nullable=False)

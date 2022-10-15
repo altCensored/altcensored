@@ -1,0 +1,14 @@
+INSERT INTO "public"."crypto"("id", "name", "tag", "address") VALUES (1,'Bitcoin (BTC)','bitcoin','3PRivnBUoVLXHeBQTSP4FNPw5R8b9Gztd7');
+INSERT INTO "public"."crypto"("id", "name", "tag", "address") VALUES (2,'Bitcoin Cash (BCH)','bitcoincash','1HMcyukTbppH5Km5ZkFC8MrMiV9FHvaS47');
+INSERT INTO "public"."crypto"("id", "name", "tag", "address") VALUES (3,'Ethereum (ETH)','ethereum','0x8a4173A910C13F5dF67CBeD2d9066805ed582cc8');
+INSERT INTO "public"."crypto"("id", "name", "tag", "address") VALUES (4,'Litecoin (LTC)','litecoin','M9uui38dkxDGFiXHf6gaJxLVUtkubVzUTg');
+INSERT INTO "public"."crypto"("id", "name", "tag", "address") VALUES (5,'Monero (XMR)','monero','46NAazU6xSdEC3ciR19PFLJ2F9HNiGvLG193XJiegxceEsSUK9FTunNC1fnWw2z3kB7hN3MJhM59NSb5LFxEpxaaNpUpUfL');
+INSERT INTO "public"."crypto"("id", "name", "tag", "address") VALUES (6,'Binance (BNB)','bnb','bnb1qq22r3vcjhmhdm0vqgjnxy9qwwgf5udthcxmxp');
+INSERT INTO "public"."crypto"("id", "name", "tag", "address") VALUES (7,'Ripple (XRP)','ripple','rPQYuRBaE2ZKL6e9TutDxJSu7c7feFndnm');
+INSERT INTO "public"."crypto"("id", "name", "tag", "address") VALUES (8,'DASH','dash','XhNmnLzD2e6cVJoKmFUe97jPY3o9ov9NyE');
+INSERT INTO "public"."crypto"("id", "name", "tag", "address") VALUES (9,'Dogecoin (DOGE)','dogecoin','DFBcgsAbfGDGRt8g9xGUaNG7z49SmHW35q');
+INSERT INTO "public"."crypto"("id", "name", "tag", "address") VALUES (10,'Tether (USDT)','ethereum','0x8a4173A910C13F5dF67CBeD2d9066805ed582cc8');
+INSERT INTO "public"."crypto"("id", "name", "tag", "address") VALUES (11,'USD Coin (USDC)','ethereum','0x8a4173A910C13F5dF67CBeD2d9066805ed582cc8');
+INSERT INTO "public"."crypto"("id", "name", "tag", "address") VALUES (12,'Binance USD (BUSD)','bnb','bnb1qq22r3vcjhmhdm0vqgjnxy9qwwgf5udthcxmxp');
+INSERT INTO "public"."crypto"("id", "name", "tag", "address") VALUES (13,'Basic Attention Token (BAT)','ethereum','0x8a4173A910C13F5dF67CBeD2d9066805ed582cc8');
+INSERT INTO "public"."crypto"("id", "name", "tag", "address") VALUES (14,'Polygon (MATIC)','ethereum','0x8a4173A910C13F5dF67CBeD2d9066805ed582cc8');

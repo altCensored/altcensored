@@ -832,7 +832,7 @@ msgid ""
 "We receive no advertising or corporate revenue and are 100%% community "
 "funded:"
 msgstr ""
-"No recibimos publicidad ni ingresos corporativos y estamos 100%% financiados por la comunidad"
+"No recibimos publicidad ni ingresos corporativos y estamos 100%% financiados por la comunidad "
 "financiado:"
 
 #: templates/donate/donate_index.html:34
@@ -1023,7 +1023,7 @@ msgstr "¿Por qué usar la VPN altCensored?"
 #: templates/vpn/vpn_index.html:123
 msgid ""
 "A virtual private network (VPN) service provides a proxy server to help "
-"users bypass Internet censorship such as                     geoblocking "
+"users bypass Internet censorship such as geoblocking "
 "and users who want to protect their communications against data profiling"
 " or MitM attacks on hostile networks"
 msgstr ""

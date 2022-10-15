@@ -780,7 +780,7 @@ msgid ""
 "We receive no advertising or corporate revenue and are 100%% community "
 "funded:"
 msgstr ""
-"We ontvangen geen advertenties of bedrijfsinkomsten en zijn 100%% gemeenschap"
+"We ontvangen geen advertenties of bedrijfsinkomsten en zijn 100%% gemeenschap "
 "gefinancierd:"
 
 #: templates/donate/donate_index.html:34

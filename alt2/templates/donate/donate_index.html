@@ -41,25 +41,26 @@
           <p>
           <h3>Cryptocurrency</h3>
           </p>
-
           {% for crypto in cryptos %}
             <details>
             <summary>
               <b>{{ crypto.name }}</b>&nbsp;
-              <a href = "{{ crypto.tag }}:{{crypto.address}}" target="_blank">
               {{crypto.address}}
-              </a>
             </summary>
           <p>
           <div class="pure-u-md-1-3">
+            <a href = "{{ crypto.tag }}:{{crypto.address}}" target="_blank">
             <img class="thumbnail" src="{{ qrcode( crypto.tag+':'+crypto.address, error_correction='M', version=2, box_size=10, border=2 ) }}">
+            </a>
           </div>
           </p>
             </details>
             {% endfor %}
           <br>
-            {{ gettext('Request additional cryptocurrency addresses via email to') }}
-            <b>altCensored AT protonmail.com</b>.
+          {{ gettext('Thank-you Brave Browser/BAT users, your generous support makes a difference')  }}
+          <br>
+          {{ gettext('Request additional cryptocurrency addresses via email to') }}
+          <b>altCensored AT protonmail.com</b>.
               </div>
             </div>
           </div>

@@ -306,7 +306,8 @@ def system_commands():
 @util.admin_login_required
 def scraper_status():
     sys_name = 'scraper'
-    commands = ["systemctl status allsync",
+    commands = ["systemctl status archive_sync",
+                "systemctl status unarchive_sync",
                 "systemctl status find_archive",
                 "systemctl status channel_archive",
                 "ps -aef | grep -E 'channel|find|afs'",
@@ -315,7 +316,8 @@ def scraper_status():
     ssh_command(sys_name, commands)
 
     sys_name = 'dbase'
-    commands = ["systemctl status pgbackup"]
+    commands = ["systemctl status pgsync",
+                "systemctl status pgbackup"]
     ssh_command(sys_name, commands)
 
     return render_template('admin/admin_messages.html')

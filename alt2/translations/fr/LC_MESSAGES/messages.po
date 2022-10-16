@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-10-15 17:13-0300\n"
+"POT-Creation-Date: 2022-10-15 20:36-0300\n"
 "PO-Revision-Date: 2020-06-24 13:44+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -191,7 +191,7 @@ msgstr "S'identifier"
 msgid "Log Out"
 msgstr "Se déconnecter"
 
-#: templates/base.html:137
+#: templates/base.html:137 templates/donate/donate_index.html:30
 msgid "Donate"
 msgstr "Donner"
 
@@ -837,20 +837,28 @@ msgid ""
 "We receive no advertising or corporate revenue and are 100%% community "
 "funded:"
 msgstr ""
-"Nous ne recevons aucune publicité ni aucun revenu d'entreprise et sommes financés à 100%% par la communauté "
-"financée :"
+"Nous ne recevons aucune publicité ni aucun revenu d'entreprise et sommes "
+"financés à 100%% par la communauté financée :"
 
 #: templates/donate/donate_index.html:34
 msgid "\"together we show what they hide\""
 msgstr "\"ensemble nous montrons ce qu'ils cachent\""
+
+#: templates/donate/donate_index.html:37
+msgid "Credit Cards"
+msgstr "Cartes de Crédit"
+
+#: templates/donate/donate_index.html:42
+msgid "Cryptocurrency"
+msgstr "Crypto-monnaie"
 
 #: templates/donate/donate_index.html:60
 msgid ""
 "Thank-you Brave Browser/BAT users, your generous support makes a "
 "difference"
 msgstr ""
-"Merci aux utilisateurs de Brave Browser/BAT, votre soutien généreux fait une "
-"différence"
+"Merci aux utilisateurs de Brave Browser/BAT, votre soutien généreux fait "
+"une différence"
 
 #: templates/donate/donate_index.html:63
 msgid "Request additional cryptocurrency addresses via email to"
@@ -1032,10 +1040,11 @@ msgid ""
 "and users who want to protect their communications against data profiling"
 " or MitM attacks on hostile networks"
 msgstr ""
-"Un service de réseau privé virtuel (VPN) fournit un serveur proxy pour aider "
-"les utilisateurs à contourner la censure d'Internet telle que le géoblocage "
-"et les utilisateurs qui veulent protéger leurs communications contre le profilage des données"
-"ou les attaques MitM sur des réseaux hostiles"
+"Un service de réseau privé virtuel (VPN) fournit un serveur proxy pour "
+"aider les utilisateurs à contourner la censure d'Internet telle que le "
+"géoblocage et les utilisateurs qui veulent protéger leurs communications "
+"contre le profilage des donnéesou les attaques MitM sur des réseaux "
+"hostiles"
 
 #: templates/vpn/vpn_index.html:127
 msgid "Our goal is to raise funds for fighting censorship"

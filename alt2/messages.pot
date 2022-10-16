@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-10-15 17:13-0300\n"
+"POT-Creation-Date: 2022-10-15 20:36-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,166 +16,6 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.8.0\n"
-
-#: __init__.py:133
-msgid "Bandwidth Unlimited"
-msgstr ""
-
-#: admin.py:451
-msgid "Unsubscribe"
-msgstr ""
-
-#: admin.py:456
-msgid "The unsubscribe link is invalid"
-msgstr ""
-
-#: admin.py:466
-msgid "has already been unsubscribed"
-msgstr ""
-
-#: admin.py:481
-msgid "was unsubscribed"
-msgstr ""
-
-#: admin.py:485
-msgid "was NOT unsubscribed"
-msgstr ""
-
-#: auth.py:101
-msgid "User does not exist"
-msgstr ""
-
-#: auth.py:105
-msgid "Reset password email sent"
-msgstr ""
-
-#: auth.py:111
-msgid "Try again"
-msgstr ""
-
-#: auth.py:122 settings.py:125
-msgid "Username exists"
-msgstr ""
-
-#: auth.py:130
-msgid "Captcha not correct"
-msgstr ""
-
-#: auth.py:135 playlist.py:18 settings.py:129
-msgid "Profanity forbidden"
-msgstr ""
-
-#: auth.py:140
-msgid "Email taken"
-msgstr ""
-
-#: auth.py:149
-msgid "Confirmation email sent"
-msgstr ""
-
-#: auth.py:176
-msgid "Email not verified, confirmation email resent"
-msgstr ""
-
-#: auth.py:184
-msgid "Email and password combination is invalid"
-msgstr ""
-
-#: auth.py:194
-msgid "The confirmation link is invalid or has expired"
-msgstr ""
-
-#: auth.py:202
-msgid "Account already confirmed. Please login"
-msgstr ""
-
-#: auth.py:214
-msgid "Thank-you for confirming your account"
-msgstr ""
-
-#: auth.py:223
-msgid "The reset password link is invalid or has expired"
-msgstr ""
-
-#: auth.py:232
-msgid "Password has been updated"
-msgstr ""
-
-#: auth.py:262
-msgid "Delete User"
-msgstr ""
-
-#: playlist.py:19
-msgid "Title exists"
-msgstr ""
-
-#: playlist.py:299
-msgid "Remove Playlist"
-msgstr ""
-
-#: settings.py:115
-msgid "Email exists"
-msgstr ""
-
-#: settings.py:152
-msgid "New Email not verified. Confirmation email sent"
-msgstr ""
-
-#: user.py:120 user.py:143
-msgid "History Empty"
-msgstr ""
-
-#: user.py:146
-msgid "Clear History"
-msgstr ""
-
-#: user.py:155
-msgid "History Cleared"
-msgstr ""
-
-#: user.py:158
-msgid "History Not Cleared"
-msgstr ""
-
-#: user.py:185
-msgid "No WatchLater Available"
-msgstr ""
-
-#: user.py:243
-msgid "WatchLater Empty"
-msgstr ""
-
-#: user.py:246
-msgid "Clear WatchLater"
-msgstr ""
-
-#: user.py:255
-msgid "WatchLater Cleared"
-msgstr ""
-
-#: user.py:260
-msgid "WatchLater Not Cleared"
-msgstr ""
-
-#: util.py:273
-msgid "Email verification is required for VPN"
-msgstr ""
-
-#: vpn.py:27
-msgid "Email verification required for free VPN"
-msgstr ""
-
-#: vpn.py:123
-msgid "Monthly Connections Reset"
-msgstr ""
-
-#: vpn.py:129
-msgid "Connections Reset"
-msgstr ""
-
-#: vpn.py:132
-msgid "Connections Not Reset"
-msgstr ""
 
 #: templates/base.html:59 templates/base_nomessages.html:63
 #: templates/widgets/playlist.html:104
@@ -190,7 +30,7 @@ msgstr ""
 msgid "Log Out"
 msgstr ""
 
-#: templates/base.html:137
+#: templates/base.html:137 templates/donate/donate_index.html:30
 msgid "Donate"
 msgstr ""
 
@@ -775,6 +615,14 @@ msgstr ""
 
 #: templates/donate/donate_index.html:34
 msgid "\"together we show what they hide\""
+msgstr ""
+
+#: templates/donate/donate_index.html:37
+msgid "Credit Cards"
+msgstr ""
+
+#: templates/donate/donate_index.html:42
+msgid "Cryptocurrency"
 msgstr ""
 
 #: templates/donate/donate_index.html:60

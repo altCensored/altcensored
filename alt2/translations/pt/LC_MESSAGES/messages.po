@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-10-15 17:13-0300\n"
+"POT-Creation-Date: 2022-10-15 20:36-0300\n"
 "PO-Revision-Date: 2020-06-16 19:20+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: pt\n"
@@ -191,7 +191,7 @@ msgstr ""
 msgid "Log Out"
 msgstr ""
 
-#: templates/base.html:137
+#: templates/base.html:137 templates/donate/donate_index.html:30
 msgid "Donate"
 msgstr "Doar"
 
@@ -780,20 +780,28 @@ msgid ""
 "We receive no advertising or corporate revenue and are 100%% community "
 "funded:"
 msgstr ""
-"Não recebemos publicidade ou receita corporativa e somos 100%% comunidade "
-"financiado:"
+"Não recebemos publicidade ou receita corporativa e somos 100%% comunidade"
+" financiado:"
 
 #: templates/donate/donate_index.html:34
 msgid "\"together we show what they hide\""
 msgstr "\"juntos mostramos o que eles escondem\""
+
+#: templates/donate/donate_index.html:37
+msgid "Credit Cards"
+msgstr "Cartões de crédito"
+
+#: templates/donate/donate_index.html:42
+msgid "Cryptocurrency"
+msgstr "Criptomoeda"
 
 #: templates/donate/donate_index.html:60
 msgid ""
 "Thank-you Brave Browser/BAT users, your generous support makes a "
 "difference"
 msgstr ""
-"Agradecemos aos corajosos usuários do Browser/BAT, seu generoso apoio faz um"
-"diferença".
+"Agradecemos aos corajosos usuários do Browser/BAT, seu generoso apoio faz"
+" umdiferença\""
 
 #: templates/donate/donate_index.html:63
 msgid "Request additional cryptocurrency addresses via email to"
@@ -975,10 +983,10 @@ msgid ""
 "and users who want to protect their communications against data profiling"
 " or MitM attacks on hostile networks"
 msgstr ""
-"Um serviço de rede privada virtual (VPN) fornece um servidor proxy para ajudar".
-"os usuários contornam a censura da Internet, como o geoblocking".
-"e usuários que querem proteger suas comunicações contra a criação de perfis de dados"
-"ou ataques MitM a redes hostis".
+"Um serviço de rede privada virtual (VPN) fornece um servidor proxy para "
+"ajudar\"os usuários contornam a censura da Internet, como o "
+"geoblocking\"e usuários que querem proteger suas comunicações contra a "
+"criação de perfis de dadosou ataques MitM a redes hostis\""
 
 #: templates/vpn/vpn_index.html:127
 msgid "Our goal is to raise funds for fighting censorship"

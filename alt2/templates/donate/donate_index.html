@@ -27,19 +27,19 @@
       <div class="pure-u-1 pure-u-md-1-1">
         <div class="h-box">
 
-          <h3>Donate</h3>
+          <h3>{{ gettext('Donate') }}</h3>
           <p>
           {{ gettext('We receive no advertising or corporate revenue and are 100%% community funded:') }}
 
           {{ gettext('"together we show what they hide"') }}
 
           </p>
-          <h3>Credit Cards</h3>
+          <h3>{{ gettext('Credit Cards') }}</h3>
           <a href = "http://donorbox.org/altcensored" target="_blank">donorbox.org/altcensored</a>
           <br>
           <a href = "http://buymeacoffee.com/altcensored" target="_blank">buymeacoffee.com/altcensored</a>
           <p>
-          <h3>Cryptocurrency</h3>
+          <h3>{{ gettext('Cryptocurrency') }}</h3>
           </p>
           {% for crypto in cryptos %}
             <details>

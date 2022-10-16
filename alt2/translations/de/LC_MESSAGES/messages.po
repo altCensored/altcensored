@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-10-15 17:13-0300\n"
+"POT-Creation-Date: 2022-10-15 20:36-0300\n"
 "PO-Revision-Date: 2020-06-16 19:19+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: de\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: __init__.py:133
 msgid "Bandwidth Unlimited"
-msgstr ""
+msgstr "Unbegrenzte Bandbreite"
 
 #: admin.py:451
 msgid "Unsubscribe"
@@ -191,7 +191,7 @@ msgstr "Einloggen"
 msgid "Log Out"
 msgstr "Ausloggen"
 
-#: templates/base.html:137
+#: templates/base.html:137 templates/donate/donate_index.html:30
 msgid "Donate"
 msgstr "Spende"
 
@@ -830,17 +830,29 @@ msgstr "Statistik"
 msgid ""
 "We receive no advertising or corporate revenue and are 100%% community "
 "funded:"
-msgstr "Wir erhalten keine Werbe- oder Unternehmenseinnahmen und werden zu 100%% von der Gemeinschaft finanziert:"
+msgstr ""
+"Wir erhalten keine Werbe- oder Unternehmenseinnahmen und werden zu 100%% "
+"von der Gemeinschaft finanziert:"
 
 #: templates/donate/donate_index.html:34
 msgid "\"together we show what they hide\""
 msgstr "\"Gemeinsam zeigen wir, was sie verbergen\""
 
+#: templates/donate/donate_index.html:37
+msgid "Credit Cards"
+msgstr "Kreditkarten"
+
+#: templates/donate/donate_index.html:42
+msgid "Cryptocurrency"
+msgstr "Kryptowährung"
+
 #: templates/donate/donate_index.html:60
 msgid ""
 "Thank-you Brave Browser/BAT users, your generous support makes a "
 "difference"
-msgstr "Vielen Dank an die Nutzer von Brave Browser/BAT, Ihre großzügige Unterstützung macht einen Unterschied"
+msgstr ""
+"Vielen Dank an die Nutzer von Brave Browser/BAT, Ihre großzügige "
+"Unterstützung macht einen Unterschied"
 
 #: templates/donate/donate_index.html:63
 msgid "Request additional cryptocurrency addresses via email to"
@@ -1022,10 +1034,10 @@ msgid ""
 "and users who want to protect their communications against data profiling"
 " or MitM attacks on hostile networks"
 msgstr ""
-"Ein virtuelles privates Netzwerk (VPN) bietet einen Proxy-Server, der "
-"die Internet-Zensur zu umgehen, wie z.B. Geoblocking "
-"und Nutzern, die ihre Kommunikation vor Daten-Profiling"
-" oder MitM-Angriffe auf feindliche Netzwerke"
+"Ein virtuelles privates Netzwerk (VPN) bietet einen Proxy-Server, der die"
+" Internet-Zensur zu umgehen, wie z.B. Geoblocking und Nutzern, die ihre "
+"Kommunikation vor Daten-Profiling oder MitM-Angriffe auf feindliche "
+"Netzwerke"
 
 #: templates/vpn/vpn_index.html:127
 msgid "Our goal is to raise funds for fighting censorship"
@@ -1041,7 +1053,7 @@ msgstr "und den Online-Datenschutz verbessern"
 
 #: templates/vpn/vpn_index.html:130
 msgid "(together we hide what they want)"
-msgstr ("Gemeinsam verstecken wir, was sie wollen")
+msgstr "\"Gemeinsam verstecken wir, was sie wollen\""
 
 #: templates/vpn/vpn_index.html:137
 msgid "Wireguard Client Setup"

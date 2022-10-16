@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-10-15 17:13-0300\n"
+"POT-Creation-Date: 2022-10-15 20:36-0300\n"
 "PO-Revision-Date: 2020-06-24 15:39+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es\n"
@@ -191,7 +191,7 @@ msgstr "Entrar"
 msgid "Log Out"
 msgstr "Salir"
 
-#: templates/base.html:137
+#: templates/base.html:137 templates/donate/donate_index.html:30
 msgid "Donate"
 msgstr "Donar"
 
@@ -832,12 +832,20 @@ msgid ""
 "We receive no advertising or corporate revenue and are 100%% community "
 "funded:"
 msgstr ""
-"No recibimos publicidad ni ingresos corporativos y estamos 100%% financiados por la comunidad "
-"financiado:"
+"No recibimos publicidad ni ingresos corporativos y estamos 100%% "
+"financiados por la comunidad financiado:"
 
 #: templates/donate/donate_index.html:34
 msgid "\"together we show what they hide\""
 msgstr "\"juntos mostramos lo que esconden\""
+
+#: templates/donate/donate_index.html:37
+msgid "Credit Cards"
+msgstr "Tarjetas de Crédito"
+
+#: templates/donate/donate_index.html:42
+msgid "Cryptocurrency"
+msgstr "Criptomoneda"
 
 #: templates/donate/donate_index.html:60
 msgid ""
@@ -849,7 +857,9 @@ msgstr ""
 
 #: templates/donate/donate_index.html:63
 msgid "Request additional cryptocurrency addresses via email to"
-msgstr "Solicitar direcciones de criptomonedas adicionales por correo electrónico a"
+msgstr ""
+"Solicitar direcciones de criptomonedas adicionales por correo electrónico"
+" a"
 
 #: templates/language/language_item.html:117
 #: templates/language/language_item.html:131
@@ -1023,7 +1033,7 @@ msgstr "¿Por qué usar la VPN altCensored?"
 #: templates/vpn/vpn_index.html:123
 msgid ""
 "A virtual private network (VPN) service provides a proxy server to help "
-"users bypass Internet censorship such as geoblocking "
+"users bypass Internet censorship such as                     geoblocking "
 "and users who want to protect their communications against data profiling"
 " or MitM attacks on hostile networks"
 msgstr ""
@@ -1050,7 +1060,7 @@ msgstr "(juntos ocultamos lo que quieren)"
 
 #: templates/vpn/vpn_index.html:137
 msgid "Wireguard Client Setup"
-msgstr  "Configuración del cliente Wireguard"
+msgstr "Configuración del cliente Wireguard"
 
 #: templates/vpn/vpn_index.html:139
 msgid "Official"
@@ -1081,4 +1091,142 @@ msgstr "Sí"
 msgid "No"
 msgstr ""
 
+#~ msgid "Bandwidth Unlimited"
+#~ msgstr "Ancho de banda ilimitado"
+
+#~ msgid "Unsubscribe"
+#~ msgstr "Cancelar la suscripción"
+
+#~ msgid "The unsubscribe link is invalid"
+#~ msgstr "El enlace para cancelar la suscripción no es válido"
+
+#~ msgid "has already been unsubscribed"
+#~ msgstr "Ya se ha cancelado la suscripción"
+
+#~ msgid "was unsubscribed"
+#~ msgstr "se ha dado de baja"
+
+#~ msgid "was NOT unsubscribed"
+#~ msgstr "no se ha dado de baja"
+
+#~ msgid "User does not exist"
+#~ msgstr "El usuario no existe"
+
+#~ msgid "Reset password email sent"
+#~ msgstr "Restablecer la contraseña enviada por correo electrónico"
+
+#~ msgid "Try again"
+#~ msgstr "Intentar de nuevo"
+
+#~ msgid "Username exists"
+#~ msgstr "Usuario existe"
+
+#~ msgid "Captcha not correct"
+#~ msgstr "Captcha no es correcto"
+
+#~ msgid "Profanity forbidden"
+#~ msgstr "Se prohíbe la blasfemia"
+
+#~ msgid "Email taken"
+#~ msgstr "Correo electrónico tomado"
+
+#~ msgid "Confirmation email sent"
+#~ msgstr "Email de confirmación enviado"
+
+#~ msgid "Email not verified, confirmation email resent"
+#~ msgstr "Correo electrónico no verificado, correo de confirmación reenviado"
+
+#~ msgid "Email and password combination is invalid"
+#~ msgstr "Combinación de Email y contraseña es inválida"
+
+#~ msgid "The confirmation link is invalid or has expired"
+#~ msgstr "Enlace de confirmación no es válido o ha caducado"
+
+#~ msgid "Account already confirmed. Please login"
+#~ msgstr "Cuenta ya confirmada. Por favor, entra"
+
+#~ msgid "Thank-you for confirming your account"
+#~ msgstr "Gracias por confirmar su cuenta"
+
+#~ msgid "The reset password link is invalid or has expired"
+#~ msgstr "El enlace para restablecer la contraseña es inválido o ha caducado"
+
+#~ msgid "Password has been updated"
+#~ msgstr "La contraseña ha sido actualizada"
+
+#~ msgid "Delete User"
+#~ msgstr "Eliminar usuario"
+
+#~ msgid "Title exists"
+#~ msgstr "El título existe"
+
+#~ msgid "Remove Playlist"
+#~ msgstr "Eliminar Playlist"
+
+#~ msgid "Email exists"
+#~ msgstr "Email existe"
+
+#~ msgid "New Email not verified. Confirmation email sent"
+#~ msgstr "Nuevo Email no verificado. Se ha enviado un correo de confirmación"
+
+#~ msgid "History Empty"
+#~ msgstr "Historia Vacío"
+
+#~ msgid "Clear History"
+#~ msgstr "Borrar Historia"
+
+#~ msgid "History Cleared"
+#~ msgstr "Historia Borrada"
+
+#~ msgid "History Not Cleared"
+#~ msgstr "Historia No Borrada"
+
+#~ msgid "No WatchLater Available"
+#~ msgstr "No Hay VerDespues"
+
+#~ msgid "WatchLater Empty"
+#~ msgstr "VerDespues Vacío"
+
+#~ msgid "Clear WatchLater"
+#~ msgstr "Borrar VerDespues"
+
+#~ msgid "WatchLater Cleared"
+#~ msgstr "VerDespues Borrada"
+
+#~ msgid "WatchLater Not Cleared"
+#~ msgstr "VerDespues No Borrada"
+
+#~ msgid "Email verification is required for VPN"
+#~ msgstr ""
+
+#~ msgid "Email verification required for free VPN"
+#~ msgstr "La verificación del Email es necesaria para la VPN"
+
+#~ msgid "Monthly Connections Reset"
+#~ msgstr ""
+
+#~ msgid "Connections Reset"
+#~ msgstr ""
+
+#~ msgid "Connections Not Reset"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A virtual private network (VPN) service"
+#~ " provides a proxy server to help "
+#~ "users bypass Internet censorship such as"
+#~ " geoblocking and users who want to"
+#~ " protect their communications against data"
+#~ " profiling or MitM attacks on hostile"
+#~ " networks"
+#~ msgstr ""
+#~ "Un servicio de red privada virtual "
+#~ "(VPN) proporciona un servidor proxy para"
+#~ " ayudar a a los usuarios a "
+#~ "eludir la censura de Internet, como "
+#~ "el geobloqueoy a los usuarios que "
+#~ "quieren proteger sus comunicaciones contra "
+#~ "la elaboración de perfiles de datos "
+#~ "\"o de ataques MitM en redes "
+#~ "hostiles"
 

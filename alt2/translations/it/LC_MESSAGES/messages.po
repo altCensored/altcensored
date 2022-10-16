@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-10-15 17:13-0300\n"
+"POT-Creation-Date: 2022-10-15 20:36-0300\n"
 "PO-Revision-Date: 2020-07-28 19:09+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: it\n"
@@ -191,7 +191,7 @@ msgstr ""
 msgid "Log Out"
 msgstr ""
 
-#: templates/base.html:137
+#: templates/base.html:137 templates/donate/donate_index.html:30
 msgid "Donate"
 msgstr "Donare"
 
@@ -341,10 +341,11 @@ msgid ""
 "websites database until the user decides to remove it. This data will not"
 " be intentionally shared with anyone or anything"
 msgstr ""
-"I dati che l'utente fornisce al sito web ai fini del suo funzionamento "
-" (ad esempio, il nome o la password di un account o una playlist) saranno memorizzati nel "
-" "database del sito web fino a quando l'utente non deciderà di rimuoverli. Questi dati non saranno"
-" "saranno intenzionalmente condivisi con nessuno o qualcosa"
+"I dati che l'utente fornisce al sito web ai fini del suo funzionamento  "
+"(ad esempio, il nome o la password di un account o una playlist) saranno "
+"memorizzati nel  \"database del sito web fino a quando l'utente non "
+"deciderà di rimuoverli. Questi dati non saranno \"saranno "
+"intenzionalmente condivisi con nessuno o qualcosa"
 
 #: templates/about/about_index.html:96
 msgid "Information stored about a registered user is limited to"
@@ -355,8 +356,8 @@ msgid ""
 "a user ID (for persistent storage of preferences and playlists) and "
 "hashed password"
 msgstr ""
-"un ID utente (per la memorizzazione persistente di preferenze e playlist) e "
-"password con hash"
+"un ID utente (per la memorizzazione persistente di preferenze e playlist)"
+" e password con hash"
 
 #: templates/about/about_index.html:99
 msgid "a json object containing user preferences"
@@ -368,7 +369,9 @@ msgstr "un oggetto json contenente le preferenze dell'utente"
 
 #: templates/about/about_index.html:102
 msgid "Users can clear their watch history using the "
-msgstr "Gli utenti possono cancellare la cronologia degli orologi utilizzando il menu "
+msgstr ""
+"Gli utenti possono cancellare la cronologia degli orologi utilizzando il "
+"menu "
 
 #: templates/about/about_index.html:102
 msgid "clear watch history"
@@ -383,8 +386,10 @@ msgid ""
 "When you request any resource from this website (e.g., a page, font, or "
 "image) information about the request may be logged"
 msgstr ""
-"Quando si richiede una qualsiasi risorsa da questo sito web (ad esempio, una pagina, un carattere o un'immagine), le informazioni sulla richiesta possono essere registrate".
-"immagine) le informazioni sulla richiesta possono essere registrate"
+"Quando si richiede una qualsiasi risorsa da questo sito web (ad esempio, "
+"una pagina, un carattere o un'immagine), le informazioni sulla richiesta "
+"possono essere registrate\"immagine) le informazioni sulla richiesta "
+"possono essere registrate"
 
 #: templates/about/about_index.html:106
 msgid "Information about a request is limited to"
@@ -404,7 +409,7 @@ msgstr "il metodo della richiesta"
 
 #: templates/about/about_index.html:111
 msgid "the requested URL"
-msgstr  "l'URL richiesto"
+msgstr "l'URL richiesto"
 
 #: templates/about/about_index.html:112
 msgid "how long it took to complete the request"
@@ -422,9 +427,10 @@ msgid ""
 "This website does not store the visitors user-agent or full IP address "
 "and does not use fingerprinting, advertisements, or tracking of any form"
 msgstr ""
-"Non vengono registrate informazioni identificative, come il cookie del visitatore, l'utente-"
-"agente, o l'indirizzo IP completo (solo i primi /24 bit vengono memorizzati per "
-"riscontro geografico). Ecco alcune righe come esempio"
+"Non vengono registrate informazioni identificative, come il cookie del "
+"visitatore, l'utente-agente, o l'indirizzo IP completo (solo i primi /24 "
+"bit vengono memorizzati per riscontro geografico). Ecco alcune righe come"
+" esempio"
 
 #: templates/about/about_index.html:124
 msgid "Data stored in your browser"
@@ -435,16 +441,17 @@ msgid ""
 "This website uses browser cookies to authenticate registered users. This "
 "data consists of"
 msgstr ""
-"Questo sito web utilizza i cookie del browser per autenticare gli utenti registrati. Questi "
-"dati consistono in"
+"Questo sito web utilizza i cookie del browser per autenticare gli utenti "
+"registrati. Questi dati consistono in"
 
 #: templates/about/about_index.html:127
 msgid ""
 "An account token to keep you logged into the website between visits, "
 "which is sent when any page is loaded while you are logged in"
 msgstr ""
-"Un token dell'account per mantenere l'accesso al sito web tra una visita e l'altra".
-"che viene inviato quando viene caricata una pagina mentre l'utente è connesso"
+"Un token dell'account per mantenere l'accesso al sito web tra una visita "
+"e l'altra\"che viene inviato quando viene caricata una pagina mentre "
+"l'utente è connesso"
 
 #: templates/about/about_index.html:129
 msgid ""
@@ -453,10 +460,11 @@ msgid ""
 "cookie in the visitors browser containing their preferences. This cookie "
 "is sent on every request and does not contain any identifying information"
 msgstr ""
-"Questo sito web offre anche la possibilità di memorizzare le preferenze del sito (ad esempio, "
-"tema o locale) senza un account. L'utilizzo di questa funzione comporta la memorizzazione di un "
-"cookie nel browser dei visitatori contenente le loro preferenze. Questo cookie "
-"viene inviato a ogni richiesta e non contiene informazioni identificative"
+"Questo sito web offre anche la possibilità di memorizzare le preferenze "
+"del sito (ad esempio, tema o locale) senza un account. L'utilizzo di "
+"questa funzione comporta la memorizzazione di un cookie nel browser dei "
+"visitatori contenente le loro preferenze. Questo cookie viene inviato a "
+"ogni richiesta e non contiene informazioni identificative"
 
 #: templates/about/about_index.html:131
 msgid ""
@@ -464,9 +472,9 @@ msgid ""
 "website, or by using your browsers cookie-related controls to delete the "
 "data"
 msgstr ""
-"L'utente può rimuovere questi dati dal proprio browser effettuando il logout da questo "
-"sito web, o utilizzando i controlli relativi ai cookie del browser per eliminare i "
-"dati"
+"L'utente può rimuovere questi dati dal proprio browser effettuando il "
+"logout da questo sito web, o utilizzando i controlli relativi ai cookie "
+"del browser per eliminare i dati"
 
 #: templates/about/about_index.html:133
 msgid "Removal of data"
@@ -477,16 +485,17 @@ msgid ""
 "To remove data stored in your browser, you can log out of the website, or"
 " you can use your browsers cookie-related controls to delete the data"
 msgstr ""
-"Per rimuovere i dati memorizzati nel browser, è possibile disconnettersi dal sito web, oppure"
-" è possibile utilizzare i controlli relativi ai cookie del browser per eliminare i dati"
+"Per rimuovere i dati memorizzati nel browser, è possibile disconnettersi "
+"dal sito web, oppure è possibile utilizzare i controlli relativi ai "
+"cookie del browser per eliminare i dati"
 
 #: templates/about/about_index.html:135
 msgid ""
 "To remove data that has been stored in the websites database, you can use"
 " the "
 msgstr ""
-"Per rimuovere i dati che sono stati memorizzati nel database del sito web, è possibile utilizzare"
-" il tasto "
+"Per rimuovere i dati che sono stati memorizzati nel database del sito "
+"web, è possibile utilizzare il tasto "
 
 #: templates/about/about_index.html:136
 msgid "delete my account</u></a></b> page"
@@ -506,9 +515,10 @@ msgid ""
 "channels and videos. Use the minimum number of exact words. YouTube "
 "channel and video identifiers can also be used"
 msgstr ""
-"La barra di ricerca nella parte superiore di ogni pagina è il modo migliore per individuare "
-" canali e video. Utilizzare il numero minimo di parole esatte. YouTube "
-"è possibile utilizzare anche gli identificatori dei canali e dei video".
+"La barra di ricerca nella parte superiore di ogni pagina è il modo "
+"migliore per individuare  canali e video. Utilizzare il numero minimo di "
+"parole esatte. YouTube è possibile utilizzare anche gli identificatori "
+"dei canali e dei video\""
 
 #: templates/about/about_index.html:151
 msgid "How can I upload my videos/channels?"
@@ -558,16 +568,18 @@ msgid ""
 "Download videos with \"right mouse button click\" inside the video window"
 " or use the \"Download Torrent\" link"
 msgstr ""
-"Scaricare i video con un "clic con il tasto destro del mouse" all'interno della finestra del video".
-"o utilizzare il link \"Scarica Torrent\" link"
+"Scaricare i video con un \"clic con il tasto destro del mouse\" "
+"all'interno della finestra del video\"o utilizzare il link \"Scarica "
+"Torrent\" link"
 
 #: templates/about/about_index.html:166
 msgid ""
 "Channel and Video RSS Feeds contain torrent links to easily download "
 "multiple videos with an RSS feed capable torrent client such as"
 msgstr ""
-"I feed RSS dei canali e dei video contengono link torrent per scaricare facilmente "
-"più video con un client torrent compatibile con i feed RSS come"
+"I feed RSS dei canali e dei video contengono link torrent per scaricare "
+"facilmente più video con un client torrent compatibile con i feed RSS "
+"come"
 
 #: templates/about/about_index.html:173
 msgid "How can I embed videos?"
@@ -578,8 +590,8 @@ msgid ""
 "Videos can be embedded (with or without iframes) using the same syntax as"
 " YouTube"
 msgstr ""
-"I video possono essere incorporati (con o senza iframe) utilizzando la stessa sintassi di"
-" YouTube"
+"I video possono essere incorporati (con o senza iframe) utilizzando la "
+"stessa sintassi di YouTube"
 
 #: templates/admin/admin_channel_table.html:23
 #: templates/admin/admin_video_table.html:25
@@ -816,20 +828,28 @@ msgid ""
 "We receive no advertising or corporate revenue and are 100%% community "
 "funded:"
 msgstr ""
-"Non riceviamo pubblicità o entrate aziendali e siamo finanziati al 100%% dalla comunità "
-"finanziato:"
+"Non riceviamo pubblicità o entrate aziendali e siamo finanziati al 100%% "
+"dalla comunità finanziato:"
 
 #: templates/donate/donate_index.html:34
 msgid "\"together we show what they hide\""
 msgstr "´insieme mostriamo ciò che nascondono´"
+
+#: templates/donate/donate_index.html:37
+msgid "Credit Cards"
+msgstr "Carte di credito"
+
+#: templates/donate/donate_index.html:42
+msgid "Cryptocurrency"
+msgstr "Criptovalute"
 
 #: templates/donate/donate_index.html:60
 msgid ""
 "Thank-you Brave Browser/BAT users, your generous support makes a "
 "difference"
 msgstr ""
-"Grazie agli utenti di Brave Browser/BAT, il vostro generoso supporto fa la "
-"differenza"
+"Grazie agli utenti di Brave Browser/BAT, il vostro generoso supporto fa "
+"la differenza"
 
 #: templates/donate/donate_index.html:63
 msgid "Request additional cryptocurrency addresses via email to"
@@ -1011,10 +1031,10 @@ msgid ""
 "and users who want to protect their communications against data profiling"
 " or MitM attacks on hostile networks"
 msgstr ""
-"Un servizio di rete privata virtuale (VPN) fornisce un server proxy per aiutare "
-"gli utenti a bypassare la censura di Internet come il geoblocking"
-"e gli utenti che vogliono proteggere le loro comunicazioni dalla profilazione dei dati"
-" "o da attacchi MitM su reti ostili"
+"Un servizio di rete privata virtuale (VPN) fornisce un server proxy per "
+"aiutare gli utenti a bypassare la censura di Internet come il "
+"geoblockinge gli utenti che vogliono proteggere le loro comunicazioni "
+"dalla profilazione dei dati \"o da attacchi MitM su reti ostili"
 
 #: templates/vpn/vpn_index.html:127
 msgid "Our goal is to raise funds for fighting censorship"

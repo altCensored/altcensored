@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-10-15 17:13-0300\n"
+"POT-Creation-Date: 2022-10-15 20:36-0300\n"
 "PO-Revision-Date: 2020-07-28 20:05+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: se\n"
@@ -191,7 +191,7 @@ msgstr ""
 msgid "Log Out"
 msgstr ""
 
-#: templates/base.html:137
+#: templates/base.html:137 templates/donate/donate_index.html:30
 msgid "Donate"
 msgstr "Donera"
 
@@ -780,20 +780,26 @@ msgid ""
 "We receive no advertising or corporate revenue and are 100%% community "
 "funded:"
 msgstr ""
-"Vi får inga reklam- eller företagsintäkter och är till 100%% ett gemenskapsföretag "
-"finansieras:"
+"Vi får inga reklam- eller företagsintäkter och är till 100%% ett "
+"gemenskapsföretag finansieras:"
 
 #: templates/donate/donate_index.html:34
 msgid "\"together we show what they hide\""
 msgstr "\"tillsammans visar vi vad de döljer\""
 
+#: templates/donate/donate_index.html:37
+msgid "Credit Cards"
+msgstr "Kreditkort"
+
+#: templates/donate/donate_index.html:42
+msgid "Cryptocurrency"
+msgstr "Kryptovaluta"
+
 #: templates/donate/donate_index.html:60
 msgid ""
 "Thank-you Brave Browser/BAT users, your generous support makes a "
 "difference"
-msgstr ""
-"Tack Brave Browser/BAT-användare, ert generösa stöd gör en "
-"skillnad"
+msgstr "Tack Brave Browser/BAT-användare, ert generösa stöd gör en skillnad"
 
 #: templates/donate/donate_index.html:63
 msgid "Request additional cryptocurrency addresses via email to"
@@ -975,10 +981,10 @@ msgid ""
 "and users who want to protect their communications against data profiling"
 " or MitM attacks on hostile networks"
 msgstr ""
-"En VPN-tjänst (Virtual Private Network) tillhandahåller en proxyserver för att hjälpa "
-"användare att kringgå internetcensur, t.ex. geoblockering "
-"och användare som vill skydda sin kommunikation mot dataprofilering."
-" eller MitM-attacker på fientliga nätverk."
+"En VPN-tjänst (Virtual Private Network) tillhandahåller en proxyserver "
+"för att hjälpa användare att kringgå internetcensur, t.ex. geoblockering "
+"och användare som vill skydda sin kommunikation mot dataprofilering. "
+"eller MitM-attacker på fientliga nätverk."
 
 #: templates/vpn/vpn_index.html:127
 msgid "Our goal is to raise funds for fighting censorship"

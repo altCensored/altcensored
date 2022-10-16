@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-10-15 17:13-0300\n"
+"POT-Creation-Date: 2022-10-15 20:36-0300\n"
 "PO-Revision-Date: 2020-07-27 23:24+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: nl\n"
@@ -191,7 +191,7 @@ msgstr ""
 msgid "Log Out"
 msgstr ""
 
-#: templates/base.html:137
+#: templates/base.html:137 templates/donate/donate_index.html:30
 msgid "Donate"
 msgstr "Doneren"
 
@@ -780,20 +780,26 @@ msgid ""
 "We receive no advertising or corporate revenue and are 100%% community "
 "funded:"
 msgstr ""
-"We ontvangen geen advertenties of bedrijfsinkomsten en zijn 100%% gemeenschap "
-"gefinancierd:"
+"We ontvangen geen advertenties of bedrijfsinkomsten en zijn 100%% "
+"gemeenschap gefinancierd:"
 
 #: templates/donate/donate_index.html:34
 msgid "\"together we show what they hide\""
 msgstr "\"samen laten we zien wat ze verbergen\""
 
+#: templates/donate/donate_index.html:37
+msgid "Credit Cards"
+msgstr "Kredietkaarten"
+
+#: templates/donate/donate_index.html:42
+msgid "Cryptocurrency"
+msgstr ""
+
 #: templates/donate/donate_index.html:60
 msgid ""
 "Thank-you Brave Browser/BAT users, your generous support makes a "
 "difference"
-msgstr ""
-"Dank u Brave Browser/BAT-gebruikers, uw genereuze steun maakt een "
-"verschil"
+msgstr "Dank u Brave Browser/BAT-gebruikers, uw genereuze steun maakt een verschil"
 
 #: templates/donate/donate_index.html:63
 msgid "Request additional cryptocurrency addresses via email to"

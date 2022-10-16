@@ -801,7 +801,7 @@ msgid ""
 "difference"
 msgstr ""
 "Agradecemos aos corajosos usuários do Browser/BAT, seu generoso apoio faz"
-" umdiferença\""
+" uma diferença\"
 
 #: templates/donate/donate_index.html:63
 msgid "Request additional cryptocurrency addresses via email to"

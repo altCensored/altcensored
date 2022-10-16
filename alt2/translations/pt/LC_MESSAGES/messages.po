@@ -800,7 +800,7 @@ msgid ""
 "Thank-you Brave Browser/BAT users, your generous support makes a "
 "difference"
 msgstr ""
-"Agradecemos aos corajosos usuários do Browser/BAT, seu generoso apoio faz"
+"Agradecemos aos usuários do Brave Browser/BAT, seu generoso apoio faz"
 " uma diferença"
 
 #: templates/donate/donate_index.html:63

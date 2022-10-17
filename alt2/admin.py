@@ -265,7 +265,7 @@ def remove_channel():
 
 @bp.route('/resync_channel', methods=['GET', 'POST'])
 @util.admin_login_required
-def remove_channel():
+def resync_channel():
     title = "Resync Channel"
     if request.method == 'POST':
         sys_name = 'scraper'

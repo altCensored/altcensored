@@ -48,7 +48,8 @@ class Entity(Base):
     exists_ia = Column(Boolean, nullable=True)
     yt_deleted = Column(Boolean, nullable=True)
     sync_iadate = Column(DateTime, nullable=True)
-    addeddate = Column(DateTime, nullable=False)    
+    addeddate = Column(DateTime, nullable=False)
+    filesize_approx = Column(Integer, nullable=True)
 
     def __init__(self, type=None, prev=None):
         self.id = id
@@ -79,6 +80,8 @@ class Entity(Base):
         self.yt_deleted = yt_deleted
         self.sync_iadate = sync_iadate
         self.addeddate = addeddate
+        self.filesize_approx = filesize_approx
+
 
     def __repr__(self):
         return '<Entity %r>' % (self.id)

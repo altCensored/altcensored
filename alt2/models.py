@@ -91,13 +91,6 @@ Sources_to_Videos = Table(
 )
 
 
-class Video(Entity):
-    __tablename__ = 'video'
-    id = Column(Integer, ForeignKey(Entity.__tablename__+'.id', onupdate="CASCADE", ondelete="CASCADE"), primary_key=True)
-    sources = relationship('Source', secondary=Sources_to_Videos, back_populates='videos')
-    __mapper_args__ = {'polymorphic_identity': __tablename__}
-
-
 class Source(Base):
     __tablename__ = 'source'
     id = Column(Integer, primary_key=True, nullable=False)

@@ -16,9 +16,8 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.ext.hybrid import hybrid_property
-
-
 from alt2.database import Base
+
 
 class Entity(Base):
     __tablename__ = 'entity'
@@ -84,6 +83,21 @@ class Entity(Base):
     def __repr__(self):
         return '<Entity %r>' % (self.id)
 
+
+Sources_to_Videos = Table(
+    'content', Base.metadata,
+    Column('source_id', Integer, ForeignKey('source.id')),
+    Column('video_id', Integer, ForeignKey('entity.id')),
+)
+
+
+class Video(Entity):
+    __tablename__ = 'video'
+    id = Column(Integer, ForeignKey(Entity.__tablename__+'.id', onupdate="CASCADE", ondelete="CASCADE"), primary_key=True)
+    sources = relationship('Source', secondary=Sources_to_Videos, back_populates='videos')
+    __mapper_args__ = {'polymorphic_identity': __tablename__}
+
+
 class Source(Base):
     __tablename__ = 'source'
     id = Column(Integer, primary_key=True, nullable=False)
@@ -107,6 +121,7 @@ class Source(Base):
     ytc_deleteddate = Column(DateTime, nullable=True)
     ytc_addeddate = Column(DateTime, nullable=True)
     ytc_partarchive = Column(Boolean, nullable=False, default=False)
+    next_resync = Column(DateTime, nullable=True)
 
     def __init__(self, next=None, delta=None):
         self.id = id
@@ -135,97 +150,7 @@ class Source(Base):
         return '<Source %r>' % (self.id)
 
 
-Sources_to_Videos = Table(
-    'content', Base.metadata,
-    Column('source_id', Integer, ForeignKey('source.id')),
-    Column('video_id', Integer, ForeignKey('entity.id')),
-)
 
-
-class Mv_Video(Base):
-    __tablename__ = 'mv_video'
-    id = Column(Integer, nullable=False, unique=True)
-    extractor_data = Column(String, primary_key=True, nullable=False)
-    rating = Column(Integer, nullable=True)
-    published = Column(DateTime, nullable=True)
-    title = Column(String, nullable=True)
-    thumbnail = Column(String, nullable=True)
-    yt_views = Column(Integer, nullable=True)
-    duration = Column(String, nullable=True)
-    ytc_title = Column(String, nullable=True)
-    ytc_id = Column(String, nullable=True)
-    description = Column(String, nullable=True)
-    category = Column(String, nullable=True)
-    tags = Column(String, nullable=True)
-    document = Column(String, nullable=True)
-
-
-    def __init__(self, extractor_data=None, allow=None):
-        self.id = id
-        self.extractor_data = extractor_data
-        self.rating = rating
-        self.published = published
-        self.title = title
-        self.thumbnail = thumbnail
-        self.yt_views = yt_views
-        self.duration = duration
-        self.ytc_title = ytc_title
-        self.ytc_id = ytc_id
-        self.description = description
-        self.category = category
-        self.tags = tags
-        self.document = document
-  
-    def __repr__(self):
-        return '<Mv_Video %r>' % (self.id)
-
-
-class Mv_Channel(Base):
-    __tablename__ = 'mv_channel'
-    id = Column(Integer, unique=True, nullable=False)
-    ytc_id = Column(String, primary_key=True, nullable=False)
-    ytc_title = Column(String, nullable=True)
-    ytc_publishedat = Column(DateTime, nullable=True)
-    ytc_thumbnailurl = Column(String, nullable=True)
-    ytc_viewcount = Column(Integer, nullable=True)
-    ytc_subscribercount = Column(Integer, nullable=True)
-    total = Column(Integer, nullable=True)
-    limited = Column(Integer, nullable=True)
-    ytc_description = Column(String, nullable=True)
-    ytc_deleted = Column(String, nullable=True)
-    ytc_archive = Column(String, nullable=True)
-    allow = Column(String, nullable=True)
-    delta = Column(DateTime, nullable=True)
-    ytc_deleteddate = Column(DateTime, nullable=True)
-    ytc_addeddate = Column(DateTime, nullable=True)
-    ytc_partarchive = Column(Boolean, nullable=False, default=False)
-
-
-    def __init__(self, ytc_id=None, ytc_title=None):
-        self.id = id
-        self.ytc_id = ytc_id        
-        self.ytc_title = ytc_title
-        self.ytc_publishedat = ytc_publishedat
-        self.ytc_thumbnailurl = ytc_thumbnailurl
-        self.ytc_viewcount = ytc_viewcount
-        self.ytc_subscribercount = ytc_subscribercount
-        self.total = total       
-        self.limited = limited
-        self.ytc_description = ytc_description
-        self.ytc_deleted = ytc_deleted
-        self.ytc_archive = ytc_archive
-        self.allow = allow
-        self.ytc_deleteddate = ytc_deleteddate        
-        self.ytc_addeddate = ytc_addeddate
-        self.ytc_partarchive = ytc_partarchive
-        self.delta = delta
-
-    def __repr__(self):
-        return '<Mv_Channel %r>' % (self.ytc_id)
-
-    @hybrid_property
-    def archive(self):
-        return self.ytc_archive | self.ytc_partarchive
 
 
 class Category(Base):
@@ -241,23 +166,6 @@ class Category(Base):
 
     def __repr__(self):
         return '<Category %r>' % (self.cat_id)
-
-
-class Mv_Category(Base):
-    __tablename__ = 'mv_category'
-    cat_id = Column(Integer, primary_key=True, unique=True, nullable=False)
-    cat_name = Column(String, unique=True, nullable=False)
-    cat_image  = Column(String, nullable=False)
-    cat_count = Column(Integer, nullable=False)
-
-    def __init__(self, next=None, delta=None):
-        self.cat_id = cat_id
-        self.cat_name = cat_name
-        self.cat_image = cat_image
-        self.cat_count = cat_count
-
-    def __repr__(self):
-        return '<Mv_Category %r>' % (self.cat_id)
 
 
 class Language(Base):
@@ -276,6 +184,24 @@ class Language(Base):
         self.lang_tagstring = lang_tagstring
         self.lang_code = lang_code        
         self.lang_image_css = lang_image_css
+
+
+class Translation(Base):
+    __tablename__ = 'translation'
+    varname = Column(String, primary_key=True, nullable=False)
+    en = Column(String, nullable=False)
+    de = Column(String, nullable=True)
+    es = Column(String, nullable=True)
+    fr = Column(String, nullable=True)
+    pt = Column(String, nullable=True)
+    nl = Column(String, nullable=True)
+    it = Column(String, nullable=True)
+    se = Column(String, nullable=True)
+
+
+class Counter(Base):
+    __tablename__ = 'counter'
+    hash = Column(BigInteger, primary_key=True, nullable=False)
 
 
 class User(Base):
@@ -304,23 +230,6 @@ class User(Base):
     playlists = relationship("Playlist", cascade="all, delete-orphan", back_populates="user")
 
 
-class Mv_Altcen_user(Base):
-    __tablename__ = 'mv_altcen_user'
-    id = Column(Integer, primary_key=True, nullable=False)
-    username = Column(String, nullable=True)
-    description = Column(String, nullable=True)
-    public = Column(Boolean, nullable=False, default=False)
-    view_counter = Column(Integer, nullable=True)
-    featured_playlist = Column(MutableDict.as_mutable(JSON))
-
-    def __init__(self, next=None, delta=None):
-        self.id = id
-        self.username = username
-        self.description = description
-
-    def __repr__(self):
-        return '<Mv_Altcen_user %r>' % (self.id)
-
 class Playlist(Base):
     __tablename__ = 'playlist'
     id = Column(Integer, primary_key=True, nullable=False)
@@ -335,53 +244,8 @@ class Playlist(Base):
     view_counter = Column(Integer, nullable=True)
     user_id = Column(Integer, ForeignKey('altcen_user.id'), nullable=False)
     featured_video =  Column(MutableDict.as_mutable(JSON))
-#    user = relationship("User", backref="playlist")
     user = relationship("User", back_populates="playlists")
 
-
-
-class Mv_Playlist(Base):
-    __tablename__ = 'mv_playlist'
-    id = Column(Integer, primary_key=True, nullable=False)
-    hashid = Column(String, nullable=False)
-    title = Column(String, nullable=True)
-    description = Column(String, nullable=True)
-    videos = Column(ARRAY(Integer))
-    video_count = Column(Integer, nullable=True)
-    created = Column(DateTime, nullable=True)
-    updated = Column(DateTime, nullable=True)
-    public = Column(Boolean, nullable=False, default=True)
-    view_counter = Column(Integer, nullable=True)
-    user_id = Column(Integer, ForeignKey('altcen_user.id'), nullable=False)
-    featured_video = Column(MutableDict.as_mutable(JSON))
-    user = relationship("User", backref="mv_playlist")
-
-
-    def __init__(self, next=None, delta=None):
-        self.id = id
-        self.hashid = hashid
-        self.title = title
-        self.description = description
-
-    def __repr__(self):
-        return '<Mv_Playlist %r>' % (self.id)
-
-class Translation(Base):
-    __tablename__ = 'translation'
-    varname = Column(String, primary_key=True, nullable=False)
-    en = Column(String, nullable=False)
-    de = Column(String, nullable=True)
-    es = Column(String, nullable=True)
-    fr = Column(String, nullable=True)
-    pt = Column(String, nullable=True)
-    nl = Column(String, nullable=True)
-    it = Column(String, nullable=True)
-    se = Column(String, nullable=True)
-
-
-class Counter(Base):
-    __tablename__ = 'counter'
-    hash = Column(BigInteger, primary_key=True, nullable=False)
 
 
 class Email_list(Base):
@@ -460,3 +324,149 @@ class Crypto(Base):
     name = Column(String, nullable=False)
     tag = Column(String, nullable=False)
     address = Column(String, nullable=False)
+
+
+class Mv_Video(Base):
+    __tablename__ = 'mv_video'
+    id = Column(Integer, nullable=False, unique=True)
+    extractor_data = Column(String, primary_key=True, nullable=False)
+    rating = Column(Integer, nullable=True)
+    published = Column(DateTime, nullable=True)
+    title = Column(String, nullable=True)
+    thumbnail = Column(String, nullable=True)
+    yt_views = Column(Integer, nullable=True)
+    duration = Column(String, nullable=True)
+    ytc_title = Column(String, nullable=True)
+    ytc_id = Column(String, nullable=True)
+    description = Column(String, nullable=True)
+    category = Column(String, nullable=True)
+    tags = Column(String, nullable=True)
+    document = Column(String, nullable=True)
+
+    def __init__(self, extractor_data=None, allow=None):
+        self.id = id
+        self.extractor_data = extractor_data
+        self.rating = rating
+        self.published = published
+        self.title = title
+        self.thumbnail = thumbnail
+        self.yt_views = yt_views
+        self.duration = duration
+        self.ytc_title = ytc_title
+        self.ytc_id = ytc_id
+        self.description = description
+        self.category = category
+        self.tags = tags
+        self.document = document
+
+    def __repr__(self):
+        return '<Mv_Video %r>' % (self.id)
+
+
+class Mv_Channel(Base):
+    __tablename__ = 'mv_channel'
+    id = Column(Integer, unique=True, nullable=False)
+    ytc_id = Column(String, primary_key=True, nullable=False)
+    ytc_title = Column(String, nullable=True)
+    ytc_publishedat = Column(DateTime, nullable=True)
+    ytc_thumbnailurl = Column(String, nullable=True)
+    ytc_viewcount = Column(Integer, nullable=True)
+    ytc_subscribercount = Column(Integer, nullable=True)
+    total = Column(Integer, nullable=True)
+    limited = Column(Integer, nullable=True)
+    ytc_description = Column(String, nullable=True)
+    ytc_deleted = Column(String, nullable=True)
+    ytc_archive = Column(String, nullable=True)
+    allow = Column(String, nullable=True)
+    delta = Column(DateTime, nullable=True)
+    ytc_deleteddate = Column(DateTime, nullable=True)
+    ytc_addeddate = Column(DateTime, nullable=True)
+    ytc_partarchive = Column(Boolean, nullable=False, default=False)
+
+    def __init__(self, ytc_id=None, ytc_title=None):
+        self.id = id
+        self.ytc_id = ytc_id
+        self.ytc_title = ytc_title
+        self.ytc_publishedat = ytc_publishedat
+        self.ytc_thumbnailurl = ytc_thumbnailurl
+        self.ytc_viewcount = ytc_viewcount
+        self.ytc_subscribercount = ytc_subscribercount
+        self.total = total
+        self.limited = limited
+        self.ytc_description = ytc_description
+        self.ytc_deleted = ytc_deleted
+        self.ytc_archive = ytc_archive
+        self.allow = allow
+        self.ytc_deleteddate = ytc_deleteddate
+        self.ytc_addeddate = ytc_addeddate
+        self.ytc_partarchive = ytc_partarchive
+        self.delta = delta
+
+    def __repr__(self):
+        return '<Mv_Channel %r>' % (self.ytc_id)
+
+    @hybrid_property
+    def archive(self):
+        return self.ytc_archive | self.ytc_partarchive
+
+
+class Mv_Category(Base):
+    __tablename__ = 'mv_category'
+    cat_id = Column(Integer, primary_key=True, unique=True, nullable=False)
+    cat_name = Column(String, unique=True, nullable=False)
+    cat_image  = Column(String, nullable=False)
+    cat_count = Column(Integer, nullable=False)
+
+    def __init__(self, next=None, delta=None):
+        self.cat_id = cat_id
+        self.cat_name = cat_name
+        self.cat_image = cat_image
+        self.cat_count = cat_count
+
+    def __repr__(self):
+        return '<Mv_Category %r>' % (self.cat_id)
+
+
+class Mv_Playlist(Base):
+    __tablename__ = 'mv_playlist'
+    id = Column(Integer, primary_key=True, nullable=False)
+    hashid = Column(String, nullable=False)
+    title = Column(String, nullable=True)
+    description = Column(String, nullable=True)
+    videos = Column(ARRAY(Integer))
+    video_count = Column(Integer, nullable=True)
+    created = Column(DateTime, nullable=True)
+    updated = Column(DateTime, nullable=True)
+    public = Column(Boolean, nullable=False, default=True)
+    view_counter = Column(Integer, nullable=True)
+    user_id = Column(Integer, ForeignKey('altcen_user.id'), nullable=False)
+    featured_video = Column(MutableDict.as_mutable(JSON))
+    user = relationship("User", backref="mv_playlist")
+
+    def __init__(self, next=None, delta=None):
+        self.id = id
+        self.hashid = hashid
+        self.title = title
+        self.description = description
+
+    def __repr__(self):
+        return '<Mv_Playlist %r>' % (self.id)
+
+
+class Mv_Altcen_user(Base):
+    __tablename__ = 'mv_altcen_user'
+    id = Column(Integer, primary_key=True, nullable=False)
+    username = Column(String, nullable=True)
+    description = Column(String, nullable=True)
+    public = Column(Boolean, nullable=False, default=False)
+    view_counter = Column(Integer, nullable=True)
+    featured_playlist = Column(MutableDict.as_mutable(JSON))
+
+    def __init__(self, next=None, delta=None):
+        self.id = id
+        self.username = username
+        self.description = description
+
+    def __repr__(self):
+        return '<Mv_Altcen_user %r>' % (self.id)
+

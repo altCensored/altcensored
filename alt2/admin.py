@@ -164,7 +164,7 @@ def status_channel():
         action = 'status_short'
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 -cf /root/rocketfuel_cookies.txt '
+        params2 = ' youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 --cookies /root/rocketfuel_cookies.txt '
         command = params1 + params2 + action + " " + channel_url
         commands = [command]
         ssh_command(sys_name, commands)
@@ -187,7 +187,7 @@ def add_channel():
         archive_type = (request.form['archive_type'])
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 -cf /root/rocketfuel_cookies.txt '
+        params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 --cookies /root/rocketfuel_cookies.txt '
         params3 = ' -delta '
         params4 = ' > /root/nohup_ssh.out 2>&1 &'
 
@@ -222,7 +222,7 @@ def disable_channel():
         action = 'disable'
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 -cf /root/rocketfuel_cookies.txt '
+        params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 --cookies /root/rocketfuel_cookies.txt '
         params3 = ' > /root/nohup_ssh.out 2>&1 &'
 
         command = params1 + params2 + action + " " + channel_url + params3
@@ -243,7 +243,7 @@ def remove_channel():
         action = 'remove'
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 -cf /root/rocketfuel_cookies.txt '
+        params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 --cookies /root/rocketfuel_cookies.txt '
         params3 = ' > /root/nohup_ssh.out 2>&1 &'
 
         command = params1 + params2 + action + " " + channel_url + params3
@@ -274,7 +274,7 @@ def resync_channel():
         action = 'resync_all'
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 -cf /root/rocketfuel_cookies.txt '
+        params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 --cookies /root/rocketfuel_cookies.txt '
         params3 = ' > /root/nohup_ssh.out 2>&1 &'
 
         command = params1 + params2 + action + " " + channel_url + params3

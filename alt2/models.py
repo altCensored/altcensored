@@ -1,5 +1,17 @@
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, Interval, ARRAY, \
-    ForeignKey, BigInteger, JSON, Table,UniqueConstraint
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    Integer,
+    Interval,
+    ForeignKey,
+    String,
+    Table,
+    UniqueConstraint,
+    ARRAY,
+    BigInteger,
+    JSON,
+)
 
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.mutable import MutableDict

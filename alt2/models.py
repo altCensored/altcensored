@@ -50,6 +50,7 @@ class Entity(Base):
     sync_iadate = Column(DateTime, nullable=True)
     addeddate = Column(DateTime, nullable=False)
     filesize_approx = Column(Integer, nullable=True)
+    live_status = Column(String, nullable=True)
 
     def __init__(self, type=None, prev=None):
         self.id = id

@@ -1,0 +1,16 @@
+CREATE MATERIALIZED VIEW public.mv_altcen_user
+TABLESPACE pg_default
+AS SELECT altcen_user.id,
+    altcen_user.username,
+    altcen_user.description,
+    altcen_user.view_counter,
+    altcen_user.featured_playlist,
+    altcen_user.public,
+    setweight(to_tsvector(COALESCE(altcen_user.username, ''::character varying::text)), 'A'::"char") || setweight(to_tsvector(COALESCE(altcen_user.description, ''::character varying::text)), 'A'::"char") AS document
+   FROM altcen_user
+  ORDER BY altcen_user.id DESC
+WITH DATA;
+
+-- View indexes:
+CREATE INDEX altcen_user_document_gin_idx ON public.mv_altcen_user USING gin (document);
+CREATE INDEX playlist_document_gin_idx ON public.mv_altcen_user USING gin (document);

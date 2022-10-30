@@ -1,0 +1,18 @@
+CREATE MATERIALIZED VIEW public.mv_playlist
+TABLESPACE pg_default
+AS SELECT playlist.id,
+    playlist.hashid,
+    playlist.title,
+    playlist.user_id,
+    playlist.description,
+    playlist.videos,
+    playlist.video_count,
+    playlist.view_counter,
+    playlist.created,
+    playlist.updated,
+    playlist.public,
+    playlist.featured_video,
+    setweight(to_tsvector(COALESCE(playlist.hashid, ''::character varying)::text), 'A'::"char") || (setweight(to_tsvector(COALESCE(playlist.title, ''::character varying::text)), 'A'::"char") || setweight(to_tsvector(COALESCE(playlist.description, ''::character varying::text)), 'A'::"char")) AS document
+   FROM playlist
+  ORDER BY playlist.id DESC
+WITH DATA;

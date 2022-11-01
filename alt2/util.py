@@ -16,7 +16,7 @@ from flask_babelplus import lazy_gettext
 from datetime import timezone
 from io import BytesIO
 from .database import db_session
-from .models import Translation, Playlist, Mv_Channel, Mv_Video, User, Email_list, Channels, Channels_part, Vpn_node, Vpn_conn
+from .models import Translation, Playlist, Mv_Channel, Mv_Video, User, Email_list, Channels, Channels_part, Vpn_node, Vpn_conn, Entity
 from . import config
 
 
@@ -391,6 +391,16 @@ def ssh_command(sys_name, commands):
             flash(error, 'error')
         else:
             flash(result, 'success')
+
+
+def video_toggle_allow(video_id, bool_action):
+    try:
+        video = Entity.query.filter(Entity.extractor_data == video_id).first()
+        video.allow = bool_action
+        db_session.commit()
+        return True
+    except:
+        return False
 
 
 def send_sgrid_email(email, subject, content):

@@ -284,6 +284,23 @@ def resync_channel():
     return render_template('admin/admin_channels.html', title=title)
 
 
+@bp.route('/update_video', methods=['GET', 'POST'])
+@util.admin_login_required
+def update_video():
+    title = "Update Video"
+    if request.method == 'POST':
+        video_id = (request.form['video_id'])
+        allow_action = (request.form['allow_action'])
+        bool_action = util.string_boolean(allow_action)
+
+        if util.video_toggle_allow(video_id, bool_action):
+            flash(video_id + ' allow toggled', 'success')
+        else:
+            flash(video_id + ' allow NOT toggled', 'error')
+
+    return render_template('admin/admin_videos.html', title=title)
+
+
 @bp.route('/system_commands', methods=['GET', 'POST'])
 @util.admin_login_required
 def system_commands():

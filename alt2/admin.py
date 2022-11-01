@@ -327,10 +327,12 @@ def system_commands():
 @util.admin_login_required
 def scraper_status():
     sys_name = 'scraper'
-    commands = ["systemctl status archive_sync",
-                "systemctl status unarchive_sync",
-                "systemctl status find_archive",
+    commands = ["systemctl status archive_full",
+                "systemctl status archive_part",
+                "systemctl status archive_none",
                 "systemctl status channel_archive",
+                "systemctl status channel_archive_part",
+                "systemctl status find_archive",
                 "ps -aef | grep -E 'channel|find|afs'",
                 "df /dev/vda1",
                 "ls -lrt"]

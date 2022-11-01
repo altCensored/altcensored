@@ -211,6 +211,25 @@ def add_channel():
     return render_template('admin/admin_channels.html', title=title)
 
 
+@bp.route('/update_channel', methods=['GET', 'POST'])
+@util.admin_login_required
+def update_channel():
+    title = "Update Channel"
+    if request.method == 'POST':
+
+        channel_id = (request.form['channel_id'])
+        viewcount = (request.form['viewcount'])
+        subscribercount = (request.form['subscribercount'])
+        deleteddate = (request.form['deleteddate'])
+
+        if util.channel_update(channel_id, viewcount, subscribercount, deleteddate):
+            flash(channel_id + ' Updated', 'success')
+        else:
+            flash(channel_id + ' NOT Updated', 'error')
+
+    return render_template('admin/admin_channels.html', title=title)
+
+
 @bp.route('/disable_channel', methods=['GET', 'POST'])
 @util.admin_login_required
 def disable_channel():

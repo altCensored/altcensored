@@ -25,19 +25,32 @@
           <br><br>
           <label for="delta">Delta:</label>
           <select name=delta>
-            <option value=2>2</option>"
+            <option value="">Select a value:</option>
             <option value=1>1</option>"
+            <option value=2>2</option>"
             <option value=5>5</option>"
             <option value=10>10</option>"
             <option value=15>15</option>
             <option value=30>30</option>
-          </select>&nbsp;
+            <option value=45>45</option>
+          </select>
+          {% if title == 'Update' %}
+          <hr>
           <label for="archive_type">Archive Type:</label>
           <select name=archive_type>
+            <option value="">Select a value:</option>
+            <option value=none>none</option>"
             <option value=partial>partial</option>"
             <option value=full>full</option>"
           </select>
-          <hr>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <label for="deleted">Deleted:</label>
+          <select name=deleted>
+            <option value="">Select a value:</option>
+            <option value=False>False</option>"
+            <option value=True>True</option>"
+          </select>
+          <br><br>
           <label for="viewcount">View Count:</label>
           <input type="text" name="viewcount">
           &nbsp;&nbsp;&nbsp;&nbsp;
@@ -46,6 +59,8 @@
           <br><br>
           <label for="deleteddate">Deleted Date (YYYY-MM-DD):</label>
           <input type="text" name="deleteddate">
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          {% endif %}
           <br><br>
         </form>
         </div>

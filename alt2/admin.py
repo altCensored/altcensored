@@ -4,7 +4,7 @@ import requests
 import json
 import time
 
-from datetime import timezone
+from datetime import timezone, timedelta
 from flask_babelplus import lazy_gettext
 from flask import (
     Blueprint, flash, redirect, render_template, request, url_for, current_app, jsonify)
@@ -153,38 +153,16 @@ def video_data():
     return jsonify(rowTable.output_result())
 
 
-@bp.route('/status_channel', methods=['GET', 'POST'])
-@util.admin_login_required
-def status_channel():
-    title = "Status Channel"
-    if request.method == 'POST':
-        sys_name = 'scraper'
-        channel_id = (request.form['channel_id'])
-        channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
-        action = 'status_short'
-
-        params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 '
-        command = params1 + params2 + action + " " + channel_url
-        commands = [command]
-        ssh_command(sys_name, commands)
-
-        return render_template('admin/admin_messages.html')
-
-    return render_template('admin/admin_channels.html', title=title)
-
-
 @bp.route('/add_channel', methods=['GET', 'POST'])
 @util.admin_login_required
 def add_channel():
-    title = "Add Channel"
+    title = "Add"
     if request.method == 'POST':
         sys_name = 'scraper'
         channel_id = (request.form['channel_id'])
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
         action = 'afs'
-        delta = ((request.form['delta']))
-        archive_type = (request.form['archive_type'])
+        delta = (request.form['delta'])
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
         params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 --cookies /root/rocketfuel_cookies.txt '
@@ -195,13 +173,18 @@ def add_channel():
         commands = [command]
         ssh_command(sys_name, commands)
 
+        flash(archive_type)
+
+        if archive_type == 'none':
+            flash(channel_id + ' NOT ADDED for partial or full archiving', 'success')
+
         if archive_type == 'partial':
             if channel_partial_add(channel_id):
                 flash(channel_id + ' ALREADY EXIST for partial archiving', 'success')
             else:
                 flash(channel_id + ' ADDED for partial archiving', 'error')
 
-        if archive_type == 'full':
+        elif archive_type == 'full':
             channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
             if channel_full_add(channel_url):
                 flash(channel_url + ' ALREADY EXIST for full archiving', 'error')
@@ -214,15 +197,25 @@ def add_channel():
 @bp.route('/update_channel', methods=['GET', 'POST'])
 @util.admin_login_required
 def update_channel():
-    title = "Update Channel"
+    title = "Update"
     if request.method == 'POST':
 
         channel_id = (request.form['channel_id'])
+        delta = (request.form['delta'])
+        archive_type = (request.form['archive_type'])
+        deleted = (request.form['deleted'])
         viewcount = (request.form['viewcount'])
         subscribercount = (request.form['subscribercount'])
         deleteddate = (request.form['deleteddate'])
 
-        if util.channel_update(channel_id, viewcount, subscribercount, deleteddate):
+        if delta:
+            intdays = int(delta)
+            delta = timedelta(days=intdays)
+
+        if deleted:
+            deleted = util.str_to_bool(deleted)
+
+        if util.channel_update(channel_id, delta, archive_type, deleted, viewcount, subscribercount, deleteddate):
             flash(channel_id + ' Updated', 'success')
         else:
             flash(channel_id + ' NOT Updated', 'error')
@@ -233,7 +226,7 @@ def update_channel():
 @bp.route('/disable_channel', methods=['GET', 'POST'])
 @util.admin_login_required
 def disable_channel():
-    title = "Disable Channel"
+    title = "Disable"
     if request.method == 'POST':
         sys_name = 'scraper'
         channel_id = (request.form['channel_id'])
@@ -254,7 +247,7 @@ def disable_channel():
 @bp.route('/remove_channel', methods=['GET', 'POST'])
 @util.admin_login_required
 def remove_channel():
-    title = "Remove Channel"
+    title = "Remove"
     if request.method == 'POST':
         sys_name = 'scraper'
         channel_id = (request.form['channel_id'])
@@ -285,7 +278,7 @@ def remove_channel():
 @bp.route('/resync_channel', methods=['GET', 'POST'])
 @util.admin_login_required
 def resync_channel():
-    title = "Resync Channel"
+    title = "Resync"
     if request.method == 'POST':
         sys_name = 'scraper'
         channel_id = (request.form['channel_id'])
@@ -299,6 +292,27 @@ def resync_channel():
         command = params1 + params2 + action + " " + channel_url + params3
         commands = [command]
         ssh_command(sys_name, commands)
+
+    return render_template('admin/admin_channels.html', title=title)
+
+
+@bp.route('/status_channel', methods=['GET', 'POST'])
+@util.admin_login_required
+def status_channel():
+    title = "Status"
+    if request.method == 'POST':
+        sys_name = 'scraper'
+        channel_id = (request.form['channel_id'])
+        channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
+        action = 'status_short'
+
+        params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
+        params2 = ' youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 '
+        command = params1 + params2 + action + " " + channel_url
+        commands = [command]
+        ssh_command(sys_name, commands)
+
+        return render_template('admin/admin_messages.html')
 
     return render_template('admin/admin_channels.html', title=title)
 
@@ -367,7 +381,11 @@ def scraper_status():
                 "systemctl status archive_part",
                 "systemctl status archive_none",
                 "systemctl status channel_archive",
+                "systemctl status channel_archive_second",
+                "systemctl status channel_archive_third",
                 "systemctl status channel_archive_part",
+                "systemctl status channel_archive_part_second",
+                "systemctl status channel_archive_part_third",
                 "systemctl status find_archive",
                 "ps -aef | grep -E 'channel|find|afs'",
                 "df /dev/vda1",

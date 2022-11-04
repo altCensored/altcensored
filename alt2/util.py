@@ -404,9 +404,26 @@ def video_toggle_allow(video_id, bool_action):
         return False
 
 
-def channel_update(channel_id, viewcount=None, subscribercount=None, deleteddate=None):
+def channel_update(channel_id, delta=None, archive_type=None, deleted=None, viewcount=None, subscribercount=None, deleteddate=None):
     try:
         channel = Source.query.filter(Source.ytc_id == channel_id).first()
+
+        if delta:
+            channel.delta = delta
+
+        if archive_type:
+            if archive_type == 'none':
+                channel.ytc_archive = False
+                channel.ytc_partarchive = False
+            elif archive_type == 'partial':
+                channel.ytc_archive = False
+                channel.ytc_partarchive = True
+            elif archive_type == 'full':
+                channel.ytc_archive = True
+                channel.ytc_partarchive = False
+
+        if deleted is True or deleted is False:
+            channel.ytc_deleted = deleted
         if viewcount:
             channel.ytc_viewcount = viewcount
         if subscribercount:

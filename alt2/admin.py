@@ -162,6 +162,7 @@ def add_channel():
         channel_id = (request.form['channel_id'])
         action = 'afs'
         delta = (request.form['delta'])
+        channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
         params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 --cookies /root/rocketfuel_cookies.txt '
@@ -184,7 +185,6 @@ def add_channel():
                 flash(channel_id + ' ADDED for partial archiving', 'error')
 
         elif archive_type == 'full':
-            channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
             if channel_full_add(channel_url):
                 flash(channel_url + ' ALREADY EXIST for full archiving', 'error')
             else:

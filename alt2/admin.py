@@ -160,7 +160,6 @@ def add_channel():
     if request.method == 'POST':
         sys_name = 'scraper'
         channel_id = (request.form['channel_id'])
-        channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
         action = 'afs'
         delta = (request.form['delta'])
 
@@ -204,6 +203,7 @@ def update_channel():
         delta = (request.form['delta'])
         archive_type = (request.form['archive_type'])
         deleted = (request.form['deleted'])
+        channel_tables = (request.form['channel_tables'])
         viewcount = (request.form['viewcount'])
         subscribercount = (request.form['subscribercount'])
         deleteddate = (request.form['deleteddate'])
@@ -214,6 +214,34 @@ def update_channel():
 
         if deleted:
             deleted = util.str_to_bool(deleted)
+
+        if channel_tables:
+            if channel_tables == 'add_partial':
+                if channel_partial_add(channel_id):
+                    flash(channel_id + ' ALREADY EXIST for partial archiving', 'success')
+                else:
+                    flash(channel_id + ' ADDED for partial archiving', 'error')
+
+            elif channel_tables == 'add_full':
+                channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
+                if channel_full_add(channel_url):
+                    flash(channel_url + ' ALREADY EXIST for full archiving', 'error')
+                else:
+                    flash(channel_url + ' ADDED for full archiving', 'success')
+
+            elif channel_tables == 'remove_partial':
+                if channel_partial_remove(channel_id):
+                    flash(channel_id + ' DOES NOT EXIST for partial archiving', 'error')
+                else:
+                    flash(channel_id + ' REMOVED from partial archiving', 'success')
+
+            elif channel_tables == 'remove_full':
+                channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
+                if channel_full_remove(channel_url):
+                    flash(channel_url + ' DOES NOT EXIST for full archiving', 'error')
+                else:
+                    flash(channel_url + ' REMOVED from full archiving', 'success')
+
 
         if util.channel_update(channel_id, delta, archive_type, deleted, viewcount, subscribercount, deleteddate):
             flash(channel_id + ' Updated', 'success')

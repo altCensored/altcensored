@@ -171,24 +171,11 @@ def add_channel():
 
         command = params1 + params2 + action + " " + channel_url + params3 + delta + params4
         commands = [command]
-        ssh_command(sys_name, commands)
-
-        flash(archive_type)
-
-        if archive_type == 'none':
-            flash(channel_id + ' NOT ADDED for partial or full archiving', 'success')
-
-        if archive_type == 'partial':
-            if channel_partial_add(channel_id):
-                flash(channel_id + ' ALREADY EXIST for partial archiving', 'success')
-            else:
-                flash(channel_id + ' ADDED for partial archiving', 'error')
-
-        elif archive_type == 'full':
-            if channel_full_add(channel_url):
-                flash(channel_url + ' ALREADY EXIST for full archiving', 'error')
-            else:
-                flash(channel_url + ' ADDED for full archiving', 'success')
+        try:
+            ssh_command(sys_name, commands)
+            flash(channel_id + " added using afs")
+        except:
+            flash(channel_id + " NOT added usiing afs")
 
     return render_template('admin/admin_channels.html', title=title)
 

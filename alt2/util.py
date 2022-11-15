@@ -394,10 +394,13 @@ def ssh_command(sys_name, commands):
             flash(result, 'success')
 
 
-def video_toggle_allow(video_id, bool_action):
+def video_toggle_allow(video_id, bool_allow=None, bool_deleted=None):
     try:
         video = Entity.query.filter(Entity.extractor_data == video_id).first()
-        video.allow = bool_action
+        if bool_allow is not None:
+            video.allow = bool_allow
+        if bool_deleted is not None:
+            video.yt_deleted = bool_deleted
         db_session.commit()
         return True
     except:

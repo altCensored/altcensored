@@ -338,11 +338,19 @@ def update_video():
     title = "Update Video"
     if request.method == 'POST':
         video_id = (request.form['video_id'])
-        allow_action = (request.form['allow_action'])
-        bool_action = util.string_boolean(allow_action)
 
-        if util.video_toggle_allow(video_id, bool_action):
-            flash(video_id + ' allow toggled', 'success')
+        if request.form['allow_action']:
+            bool_allow = util.string_boolean(request.form['allow_action'])
+        else:
+            bool_allow = None
+
+        if request.form['deleted_action']:
+            bool_deleted = util.string_boolean(request.form['deleted_action'])
+        else:
+            bool_deleted = None
+
+        if util.video_toggle_allow(video_id, bool_allow, bool_deleted):
+            flash(video_id + ' allow/deleted toggled', 'success')
         else:
             flash(video_id + ' allow NOT toggled', 'error')
 

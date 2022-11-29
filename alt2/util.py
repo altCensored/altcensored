@@ -418,12 +418,19 @@ def channel_update(channel_id, delta=None, archive_type=None, deleted=None, view
             if archive_type == 'none':
                 channel.ytc_archive = False
                 channel.ytc_partarchive = False
+                channel.ytc_latestarchive = False
             elif archive_type == 'partial':
                 channel.ytc_archive = False
                 channel.ytc_partarchive = True
+                channel.ytc_latestarchive = False
             elif archive_type == 'full':
                 channel.ytc_archive = True
                 channel.ytc_partarchive = False
+                channel.ytc_latestarchive = False
+            elif archive_type == 'latest':
+                channel.ytc_archive = False
+                channel.ytc_partarchive = False
+                channel.ytc_latestarchive = True
 
         if deleted is True or deleted is False:
             channel.ytc_deleted = deleted

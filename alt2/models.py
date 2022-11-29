@@ -149,9 +149,6 @@ class Source(Base):
         return '<Source %r>' % (self.id)
 
 
-
-
-
 class Category(Base):
     __tablename__ = 'category'
     cat_id = Column(Integer, primary_key=True, unique=True, nullable=False)
@@ -408,7 +405,7 @@ class Mv_Channel(Base):
 
     @hybrid_property
     def archive(self):
-        return self.ytc_archive | self.ytc_partarchive
+        return self.ytc_archive | self.ytc_partarchive | self.ytc_latestarchive
 
 
 class Mv_Category(Base):

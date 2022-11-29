@@ -143,6 +143,7 @@ class Source(Base):
         self.ytc_deleteddate = ytc_deleteddate
         self.ytc_addeddate = ytc_addeddate
         self.ytc_partarchive = ytc_partarchive
+        self.ytc_latestarchive = ytc_latestarchive
 
     def __repr__(self):
         return '<Source %r>' % (self.id)
@@ -380,6 +381,7 @@ class Mv_Channel(Base):
     ytc_deleteddate = Column(DateTime, nullable=True)
     ytc_addeddate = Column(DateTime, nullable=True)
     ytc_partarchive = Column(Boolean, nullable=False, default=False)
+    ytc_latestarchive = Column(Boolean, nullable=False, default=False)
 
     def __init__(self, ytc_id=None, ytc_title=None):
         self.id = id
@@ -398,6 +400,7 @@ class Mv_Channel(Base):
         self.ytc_deleteddate = ytc_deleteddate
         self.ytc_addeddate = ytc_addeddate
         self.ytc_partarchive = ytc_partarchive
+        self.ytc_latestarchive = ytc_latestarchive
         self.delta = delta
 
     def __repr__(self):

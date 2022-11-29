@@ -60,6 +60,8 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
                         {{ gettext('Full') }}<br>
                     {% elif channel.ytc_partarchive %}
                         {{ gettext('Partial') }}<br>
+                    {% elif channel.ytc_latestarchive %}
+                        {{ gettext('Latest') }}<br>
                     {% else %}
                         {{ gettext('None') }}<br>
                     {% endif %}

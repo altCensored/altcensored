@@ -6,7 +6,7 @@
 <meta name="twitter:creator" content="@altcensored">
 
 <meta property="og:site_name" content="{{ config['MYSERVER_NAME'] }}">
-<meta property="og:description" content="'we show what they hide'">
+<meta property="og:description" content="'together we show what they hide'">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://{{ config['MYSERVER_NAME'] }}/logo_clip.png">
 <meta property="og:image:url" content="https://{{ config['MYSERVER_NAME'] }}/logo_clip.png">
@@ -132,6 +132,7 @@
                                                  {{ gettext('Archive') }}:
                                                  {% if channel.ytc_archive %}{{ gettext('Full') }}<br>
                                                      {% elif channel.ytc_partarchive %}{{ gettext('Part') }}<br>
+                                                     {% elif channel.ytc_latestarchive %}{{ gettext('Latest') }}<br>
                                                      {% else %}{{ gettext('None') }}<br>
                                                  {% endif %}
                                              {% endif %}

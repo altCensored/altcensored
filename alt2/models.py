@@ -118,6 +118,7 @@ class Source(Base):
     ytc_deleteddate = Column(DateTime, nullable=True)
     ytc_addeddate = Column(DateTime, nullable=True)
     ytc_partarchive = Column(Boolean, nullable=False, default=False)
+    ytc_latestarchive = Column(Boolean, nullable=False, default=False)
     next_resync = Column(DateTime, nullable=True)
 
     def __init__(self, next=None, delta=None):

@@ -62,7 +62,8 @@
                             <a href="{{ url_for('playlist.item', playlist=playlist.hashid ) }}">
                                 {% if playlist.featured_video%}
                                     <div class="thumbnail">
-                                        <img class="thumbnail" src="{{ config.IPROXY ~ config.IARCHIVEURL ~ playlist.featured_video.extractor_data ~ '/' ~ playlist.featured_video.title | ia_fname ~ '-' ~ playlist.featured_video.extractor_data ~ '.jpg' }}"onerror="this.onerror=null;this.src='{{ config.IPROXY ~ config.IARCHIVEURL ~ playlist.featured_video.extractor_data ~ '/__ia_thumb.jpg' }}';" >
+                                        <img class="thumbnail" src="{{ config.IPROXY ~ config.IARCHIVEURL ~ playlist.featured_video.extractor_data ~ '/' ~ playlist.featured_video.title | ia_fname ~ '-' ~ playlist.featured_video.extractor_data ~'/__ia_thumb.jpg' }}"
+                                             onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
                                     </div>
                                 {% endif %}
                                 <p>

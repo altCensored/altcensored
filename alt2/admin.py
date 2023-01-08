@@ -302,7 +302,7 @@ def resync_channel():
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
         params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 --cookies /root/rocketfuel_cookies.txt '
-        params3 = '-f > /root/nohup_ssh.out 2>&1 &'
+        params3 = ' -f > /root/nohup_ssh.out 2>&1 &'
 
         command = params1 + params2 + action + " " + channel_url + params3
         commands = [command]

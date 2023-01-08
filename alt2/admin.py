@@ -298,7 +298,7 @@ def resync_channel():
         sys_name = 'scraper'
         channel_id = (request.form['channel_id'])
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
-        action = 'resync_all'
+        action = 'resync_all -f'
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
         params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:3080 --cookies /root/rocketfuel_cookies.txt '

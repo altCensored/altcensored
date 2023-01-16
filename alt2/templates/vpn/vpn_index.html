@@ -4,6 +4,15 @@
       xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 <link rel="preload" as="style" href="{{ url_for('static', filename='css/buttons.css') }}">
 
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@altcensored">
+<meta name="twitter:creator" content="@altcensored">
+<meta property="og:site_name" content="{{ config['MYSERVER_NAME'] }}">
+<meta property="og:description" content="'together we hide what they want'">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://{{ config['MYSERVER_NAME'] }}/freevpn_5m.png">
+<meta property="og:image:secure_url" content="https://{{ config['MYSERVER_NAME'] }}/freevpn_5m.png">
+
 {% endblock %}
 {% block content %}
 

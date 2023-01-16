@@ -23,8 +23,7 @@ def index():
         flash('Account required for free VPN','error')
 #        return redirect(url_for('auth.login'))
 #        return redirect(url_for('vpn.error'))
-        return render_template('vpn/vpn_error.html')
-
+        return render_template('vpn/vpn_index.html', nodes=None, conns=None)
 
     if not session['user']['email_verified']:
         msg = lazy_gettext('Email verification required for free VPN')

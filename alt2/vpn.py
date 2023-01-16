@@ -21,16 +21,16 @@ def index():
 
     if session.get('user') is None:
         flash('Account required for free VPN','error')
-        return redirect(url_for('auth.login'))
-#        return redirect(url_for('vpn.error'))
+#        return redirect(url_for('auth.login'))
+        return redirect(url_for('vpn.error'))
 #        return render_template('vpn/vpn_error.html')
 
 
     if not session['user']['email_verified']:
         msg = lazy_gettext('Email verification required for free VPN')
         flash(msg, 'error')
-        return redirect(url_for('settings.index'))
-#        return redirect(url_for('vpn.error'))
+#        return redirect(url_for('settings.index'))
+        return redirect(url_for('vpn.error'))
 #        return render_template('vpn/vpn_error.html')
 
     if submit == 'new_conn' and not node:
@@ -141,6 +141,6 @@ def reset_confirm():
     return render_template('widgets/widgets_confirm.html', message=message)
 
 
-#@bp.route('/error')
-#def error():
-#    return render_template('vpn/vpn_error.html')
+@bp.route('/error')
+def error():
+    return render_template('vpn/vpn_error.html')

@@ -21,8 +21,8 @@ def index():
 
     if session.get('user') is None:
         flash('Account required for free VPN','error')
-#        return redirect(url_for('a.login'))
-        return render_template('vpn/vpn_error.html')
+        return redirect(url_for('vpn.error'))
+#        return render_template('vpn/vpn_error.html')
 
 
     if not session['user']['email_verified']:
@@ -137,3 +137,8 @@ def reset_confirm():
         return redirect(url_for('admin.index'))
 
     return render_template('widgets/widgets_confirm.html', message=message)
+
+
+@bp.route('/error')
+def error():
+    return render_template('vpn/vpn_error.html')

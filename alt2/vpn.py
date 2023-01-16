@@ -21,12 +21,12 @@ def index():
 
     if session.get('user') is None:
         flash('Account required for free VPN','error')
-        return redirect(url_for('auth.login'))
+#        return redirect(url_for('auth.login'))
 
     if not session['user']['email_verified']:
         msg = lazy_gettext('Email verification required for free VPN')
         flash(msg, 'error')
-        return redirect(url_for('settings.index'))
+#        return redirect(url_for('settings.index'))
 
     if submit == 'new_conn' and not node:
         flash('Choose a node and try again','error')

@@ -55,6 +55,7 @@ def register_user(email, password, username):
     settings = {
         "theme": session['theme'],
         "locale": session['locale'],
+        "autoplay": session['autoplay'],
         "playnext": session['playnext'],
         "looplist": session['looplist']
     }
@@ -161,6 +162,7 @@ def login():
             newSettings = dict(user.settings)
             session['locale'] = newSettings['locale']
             session['theme'] = newSettings['theme']
+            session['autoplay'] = newSettings['autoplay']
             session['playnext'] = newSettings['playnext']
 
             session['navtabs']['navtab1'] = user.navtabs[0]
@@ -243,6 +245,7 @@ def logout():
     user.settings = {
         "theme": session['theme'],
         "locale": session['locale'],
+        "autoplay": session['autoplay']
         "playnext": session['playnext']
     }
 

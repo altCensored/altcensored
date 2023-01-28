@@ -162,7 +162,7 @@ def login():
             newSettings = dict(user.settings)
             session['locale'] = newSettings['locale']
             session['theme'] = newSettings['theme']
-           session['autoplay'] = newSettings['autoplay']
+            session['autoplay'] = newSettings['autoplay']
             session['playnext'] = newSettings['playnext']
 
             session['navtabs']['navtab1'] = user.navtabs[0]

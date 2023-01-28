@@ -66,7 +66,7 @@ def update_site():
             user.settings = {
                 "theme": session['theme'],
                 "locale": session['locale'],
-                "autostart": session['autostart'],
+                "autoplay": session['autoplay'],
                 "playnext": session['playnext'],
                 "looplist": session['looplist']
             }

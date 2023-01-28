@@ -53,7 +53,7 @@ def get_autoplay():
     if 'autoplay' in session:
         return session['autoplay']
     else:
-        session['autoplay'] = True
+        session['autoplay'] = False
     return session['autoplay']
 
 

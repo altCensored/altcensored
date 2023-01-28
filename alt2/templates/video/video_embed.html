@@ -21,6 +21,8 @@
 <html>
 <body>
 
+{% if autoplay is true %}
+
 <video id="video-player" class="video-js" preload="auto" playsinline autoplay outline="none" controls
 style="outline:none;
     background-color:#000;
@@ -40,6 +42,30 @@ style="outline:none;
     width: 100%;
     overflow-wrap: break-word;
     word-wrap: break-word;">
+
+{% else %}
+
+<video id="video-player" class="video-js" preload="auto" playsinline outline="none" controls
+style="outline:none;
+    background-color:#000;
+    background-size:cover;
+    display: inline-block;
+    vertical-align: middle;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;">
+
+{% endif %}
 
   <source
     src="{{ video_url }}.webm"

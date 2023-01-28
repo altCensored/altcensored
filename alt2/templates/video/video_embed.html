@@ -21,7 +21,7 @@
 <html>
 <body>
 
-<video id="video-player" class="video-js" preload="auto" playsinline outline="none" controls
+<video id="video-player" class="video-js" preload="auto" playsinline autoplay muted outline="none" controls
 style="outline:none;
     background-color:#000;
     background-size:cover;
@@ -39,8 +39,7 @@ style="outline:none;
     height: 100%;
     width: 100%;
     overflow-wrap: break-word;
-    word-wrap: break-word;"
-    data-setup='{"controls": true, "autoplay": autoplay, "preload": "auto"}'>
+    word-wrap: break-word;">
 
   <source
     src="{{ video_url }}.webm"

@@ -31,6 +31,7 @@ def update_site():
         fnt3 = request.form['navtab3_value']
 
         session['theme'] = request.form['theme']
+        session['autostart'] = util.str_to_bool(request.form['autostart'])
         session['playnext'] = util.str_to_bool(request.form['playnext'])
         session['looplist'] = util.str_to_bool(request.form['looplist'])
 
@@ -65,6 +66,7 @@ def update_site():
             user.settings = {
                 "theme": session['theme'],
                 "locale": session['locale'],
+                "autostart": session['autostart'],
                 "playnext": session['playnext'],
                 "looplist": session['looplist']
             }

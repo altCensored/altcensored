@@ -49,6 +49,14 @@ def get_looplist():
     return session['looplist']
 
 
+def get_autoplay():
+    if 'autoplay' in session:
+        return session['autoplay']
+    else:
+        session['autoplay'] = True
+    return session['autoplay']
+
+
 def get_navtabs():
     if 'navtabs' in session:
         return session['navtabs']

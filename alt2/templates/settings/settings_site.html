@@ -76,7 +76,17 @@
                             </select>
                         </div>
                         <div class="pure-control-group">
-                            <label for="PlayNext"> {{ gettext('AutoPlay') }}: </label>
+                            <label for="AutoPlay"> {{ gettext('Auto Play') }}: </label>
+                            <select name=autoplay>
+                                <option value="{{session.autoplay}}" SELECTED>{{session.autoplay}}</option>"
+                                {% if session.autoplay %}
+                                    <option value=False>{{ gettext('False') }}</option>"
+                                {% else %}
+                                    <option value=True>{{ gettext('True') }}</option>"
+                                {% endif %}
+                            </select>
+                        </div>                        <div class="pure-control-group">
+                            <label for="PlayNext"> {{ gettext('Play Next') }}: </label>
                             <select name=playnext>
                                 <option value="{{session.playnext}}" SELECTED>{{session.playnext}}</option>"
                                 {% if session.playnext %}

@@ -165,7 +165,7 @@ def add_channel():
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:4080 --cookies /root/rocketfuel_cookies.txt '
+        params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:5080 --cookies /root/rocketfuel_cookies.txt '
         params3 = ' -delta '
         params4 = ' > /root/nohup_ssh.out 2>&1 &'
 
@@ -249,7 +249,7 @@ def disable_channel():
         action = 'disable'
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:4080 '
+        params2 = ' youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:5080 '
         params3 = ' > /root/nohup_ssh.out 2>&1 &'
 
         command = params1 + params2 + action + " " + channel_url + params3
@@ -270,7 +270,7 @@ def remove_channel():
         action = 'remove'
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:4080 '
+        params2 = ' youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:5080 '
         params3 = ' > /root/nohup_ssh.out 2>&1 &'
 
         command = params1 + params2 + action + " " + channel_url + params3
@@ -301,7 +301,7 @@ def resync_channel():
         action = 'resync_all'
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:4080 --cookies /root/rocketfuel_cookies.txt '
+        params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:5080 --cookies /root/rocketfuel_cookies.txt '
         params3 = ' -f > /root/nohup_ssh.out 2>&1 &'
 
         command = params1 + params2 + action + " " + channel_url + params3
@@ -322,7 +322,7 @@ def status_channel():
         action = 'status_short'
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:4080 '
+        params2 = ' youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:5080 '
         command = params1 + params2 + action + " " + channel_url
         commands = [command]
         ssh_command(sys_name, commands)

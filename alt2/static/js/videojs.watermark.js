@@ -8,11 +8,11 @@ console.log('watermark: Start');
         ypos: 0,
         xrepeat: 0,
         opacity: 100,
-        clickable: false,
-        url: "",
+        clickable: true,
+        url: "http://altcensored.com",
         className: 'vjs-watermark',
 	text: false,
-	debug: false
+	debug: true
     },
     extend = function() {
       var args, target, i, object, property;

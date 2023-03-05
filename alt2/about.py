@@ -16,4 +16,4 @@ def index():
 
 @bp.route('/example')
 def example():
-    return render_template('about/about_example.html')
+    return render_template('video/video_overtest.html')

@@ -408,7 +408,6 @@ def scraper_status():
                 "systemctl status yts_5080@upload_archivefull_firstrun",
                 "systemctl status 3proxy",
                 "journalctl -n -u find_archive",
-                "ps -aef | grep -E 'channel|find|afs'",
                 "df /dev/vda1",
                 "ls -lrt"]
     ssh_command(sys_name, commands)

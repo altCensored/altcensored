@@ -400,16 +400,14 @@ def system_commands():
 @util.admin_login_required
 def scraper_status():
     sys_name = 'scraper'
-    commands = ["systemctl status archive_full",
-                "systemctl status archive_part",
-                "systemctl status archive_none",
-                "systemctl status channel_archive",
-                "systemctl status channel_archive_second",
-                "systemctl status channel_archive_third",
-                "systemctl status channel_archive_part",
-                "systemctl status channel_archive_part_second",
-                "systemctl status channel_archive_part_third",
-                "systemctl status find_archive",
+    commands = ["systemctl status yts_5080@sync_archivenone",
+                "systemctl status yts_5080@upload_archivelatest",
+                "systemctl status yts_5080@upload_archivepart",
+                "systemctl status yts_5080@upload_archivefull",
+                "systemctl status yts_5080@upload_archivepart_firstrun",
+                "systemctl status yts_5080@upload_archivefull_firstrun",
+                "systemctl status 3proxy",
+                "journalctl -n -u find_archive",
                 "ps -aef | grep -E 'channel|find|afs'",
                 "df /dev/vda1",
                 "ls -lrt"]

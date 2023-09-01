@@ -401,6 +401,19 @@ def ssh_command(sys_name, commands):
         else:
             flash(result, 'success')
 
+def local_command(commands):
+    for command in commands:
+        ssh = subprocess.Popen(["%s" % command],
+                               shell=False,
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
+        result = ssh.stdout.readlines()
+        if not result:
+            error = ssh.stderr.readlines()
+            flash(error, 'error')
+        else:
+            flash(result, 'success')
+
 
 def video_toggle_allow(video_id, bool_allow=None, bool_deleted=None):
     try:

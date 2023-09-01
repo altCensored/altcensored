@@ -19,7 +19,7 @@ from . import config
 from .util import (
     confirm_token, send_all_mass_email, generate_confirmation_token,
     email_exists, email_list_exists, validate_user_email,
-    channel_partial_add, channel_full_add, ssh_command,
+    channel_partial_add, channel_full_add, ssh_command, local_command,
     channel_partial_remove, channel_full_remove
 )
 from werkzeug.utils import secure_filename
@@ -416,6 +416,9 @@ def scraper_status():
     commands = ["systemctl status pgsync",
                 "systemctl status pgbackup"]
     ssh_command(sys_name, commands)
+
+    commands = ["awk '{print $3}' /var/log/nginx/rt_cache.log  | sort | uniq -c | sort -r"]
+    local_command(commands)
 
     return render_template('admin/admin_messages.html')
 

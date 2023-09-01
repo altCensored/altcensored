@@ -404,7 +404,7 @@ def ssh_command(sys_name, commands):
 
 def local_command(commands):
     for command in commands:
-        localcmd = subprocess.Popen([%s command],
+        localcmd = subprocess.Popen([command],
                                 executable='/bin/bash',
                                 shell = True,
                                 stdout = subprocess.PIPE,

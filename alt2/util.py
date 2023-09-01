@@ -390,17 +390,17 @@ def channel_full_remove(channel_url):
 def ssh_command(sys_name, commands):
     ssh_host = 'root@' + sys_name
     for command in commands:
-        localcmd = subprocess.Popen([command],
-                                    executable='/bin/bash',
-                                    shell=True,
-                                    stdout=subprocess.PIPE,
-                                    stderr=subprocess.PIPE)
-        result = localcmd.stdout.readlines()
+        ssh = subprocess.Popen(["ssh", "%s" % ssh_host, command],
+                               shell=False,
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
+        result = ssh.stdout.readlines()
         if not result:
-            error = localcmd.stderr.readlines()
+            error = ssh.stderr.readlines()
             flash(error, 'error')
         else:
             flash(result, 'success')
+
 
 def local_command(commands):
     for command in commands:

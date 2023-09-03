@@ -419,7 +419,7 @@ def scraper_status():
 
     commands = ["awk '{print $3}' /var/log/nginx/access.log  | sort | uniq -c | sort -r",
                 "du -c -h -s /var/lib/nginx/i_cache",
-                "du -c -h -s /var/lib/nginx/i_cache"]
+                "du -c -h -s /tmp/cache"]
     local_command(commands)
 
     return render_template('admin/admin_messages.html')

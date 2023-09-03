@@ -417,7 +417,7 @@ def scraper_status():
                 "systemctl status pgbackup"]
     ssh_command(sys_name, commands)
 
-    commands = ["awk '{print $3}' /var/log/nginx/access.log  | sort | uniq -c | sort -r",
+    commands = ["awk '{print $3}' /var/log/nginx/rt_cache.log  | sort | uniq -c | sort -r",
                 "du -c -h -s /var/lib/nginx/i_cache",
                 "du -c -h -s /tmp/cache"]
     local_command(commands)

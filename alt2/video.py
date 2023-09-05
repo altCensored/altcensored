@@ -31,7 +31,10 @@ def index(page):
         user = User.query.filter(User.id == session['user']['id']).scalar()
         if user.watchlater:
             watchlater = user.watchlater
-    return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater)
+    try:
+        return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater)
+    except IndexError:
+        abort(404)
 
 
 @bp.route('/new', defaults={'page': 1})

@@ -150,6 +150,7 @@ def watch():
     except:
         MYSERVER_URL = current_app.config['MYSERVER_URL']
         video_url = MYSERVER_URL + "/videos/" + video_id
+        video_url_short = IARCHIVEURL + video_id + "/"
 
     playlist_titles = []
     not_in_watchlater = None

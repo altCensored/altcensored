@@ -161,17 +161,24 @@ def create_app(test_config=None):
         arguments = rule.arguments if rule.arguments is not None else ()
         return len(defaults) >= len(arguments)
 
+    def bad_request(e):
+        return render_template('400.html'), 404
+
     def page_not_found(e):
         return render_template('404.html'), 404
+
+    def internal_server_error(e):
+        # note that we set the 500 status explicitly
+        return render_template('500.html'), 500
 
     @app.template_filter('time_diff')
     def time_diff(s):
         now = datetime.datetime.now(timezone.utc) + datetime.timedelta(seconds=60 * 3.4)
         return timeago.format(s, now)
 
+    app.register_error_handler(400, bad_request)
     app.register_error_handler(404, page_not_found)
-    app.register_error_handler(400, page_not_found)
-    app.register_error_handler(500, page_not_found)
+    app.register_error_handler(500, internal_server_error)
 
     from .database import db_session
 

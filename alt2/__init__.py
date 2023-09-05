@@ -162,7 +162,7 @@ def create_app(test_config=None):
         return len(defaults) >= len(arguments)
 
     def page_not_found(e):
-        return redirect(url_for('video.index'))
+        return render_template('404.html'), 404
 
     @app.template_filter('time_diff')
     def time_diff(s):

@@ -91,10 +91,8 @@ def watch():
     playlist = request.args.get('playlist', None)
     userlist = request.args.get('userlist', None)
     video = Mv_Video.query.get(video_id)
-
     if video is None:
         abort(404)
-
     cat_name = video.category
     tagstring = video.tags
     session['first_vid_pub'] = video.published

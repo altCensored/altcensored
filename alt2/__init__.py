@@ -1,5 +1,5 @@
 import os, re
-from flask import Flask, request, url_for, redirect, g
+from flask import Flask, request, url_for, render_template, g
 from jinja2 import evalcontextfilter, Markup, escape
 from flask_babelplus import Babel, lazy_gettext
 from urllib.parse import quote_plus
@@ -162,14 +162,14 @@ def create_app(test_config=None):
         return len(defaults) >= len(arguments)
 
     def bad_request(e):
-        return render_template('400.html'), 404
+        return render_template('video/400.html'), 400
 
     def page_not_found(e):
-        return render_template('404.html'), 404
+        return render_template('video/404.html'), 404
 
     def internal_server_error(e):
         # note that we set the 500 status explicitly
-        return render_template('500.html'), 500
+        return render_template('video/500.html'), 500
 
     @app.template_filter('time_diff')
     def time_diff(s):

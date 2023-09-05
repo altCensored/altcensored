@@ -187,6 +187,10 @@ def item(ytc_id,page):
     order = 'newest'
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter_by(ytc_id=ytc_id).scalar()
     channel = Mv_Channel.query.get(ytc_id)
+
+    if channel is None:
+        abort(404)
+
     videos = Mv_Video.query.filter_by(ytc_id=ytc_id).order_by(Mv_Video.published.desc(),Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset)
     if not videos and page != 1:
         abort(404)

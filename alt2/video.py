@@ -31,11 +31,7 @@ def index(page):
         user = User.query.filter(User.id == session['user']['id']).scalar()
         if user.watchlater:
             watchlater = user.watchlater
-    try:
-        return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater)
-    except IndexError:
-        abort(404)
-
+    return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater)
 
 @bp.route('/new', defaults={'page': 1})
 @bp.route('/new/page/<int:page>')
@@ -185,7 +181,10 @@ def watch():
 
 @bp.route('/embed/<video_id>')
 def embed(video_id):
-    video = Mv_Video.query.get(video_id)
+    try:
+        video = Mv_Video.query.get(video_id)
+    except:
+        abort(404)
     playlist = request.args.get('playlist', None)
     userlist = request.args.get('userlist', None)
 

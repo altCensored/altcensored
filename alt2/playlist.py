@@ -62,6 +62,10 @@ def item(playlist,page):
 #    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
+
+    if playlist is None:
+        abort(404)
+
     button = request.args.get('button', None)
 
     watchlater = None

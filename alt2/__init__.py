@@ -1,9 +1,10 @@
 import os, re
 from flask import Flask, request, url_for, render_template, g
-from jinja2 import evalcontextfilter, Markup, escape
+from jinja2 import pass_eval_context, Markup
 from flask_babelplus import Babel, lazy_gettext
 from urllib.parse import quote_plus
 from flask_qrcode import QRcode
+from markupsafe import escape
 
 import timeago, datetime
 from datetime import timezone
@@ -119,7 +120,7 @@ def create_app(test_config=None):
     _paragraph_re = re.compile(r'(?:\r\n|\r|\n){2,}')
 
     @app.template_filter('nl2br')
-    @evalcontextfilter
+    @pass_eval_context
     def nl2br(eval_ctx, value):
         result = u'\n\n'.join(u'<p>%s</p>' % p.replace('\n', Markup('<br>\n'))
                               for p in _paragraph_re.split(escape(value)))

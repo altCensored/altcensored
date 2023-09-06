@@ -75,6 +75,7 @@ def db_add_email_list(email, email_source):
 
 
 @bp.route('/')
+@util.login_required
 @util.admin_login_required
 def index():
     return render_template('admin/admin_index.html')

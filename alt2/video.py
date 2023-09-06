@@ -113,6 +113,8 @@ def watch():
 
     if playlist:
         playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
+        if playlist.videos is None:
+            abort(404)
         ordering = case(
             {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(playlist.videos))))},
             value=Mv_Video.extractor_data

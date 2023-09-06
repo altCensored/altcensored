@@ -35,6 +35,7 @@ MarkupSafe==2.0.1
 monotonic==1.5
 packaging==20.4
 Pillow==9.5.0
+psycogreen==1.0.2
 psycopg2==2.9.7
 pycparser==2.20
 pyparsing==2.4.7

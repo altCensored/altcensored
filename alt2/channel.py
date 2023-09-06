@@ -185,11 +185,13 @@ def item(ytc_id,page):
 #    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
-    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter_by(ytc_id=ytc_id).scalar()
-    channel = Mv_Channel.query.get(ytc_id)
 
-    if channel is None:
+    if ytc_id is None:
         abort(404)
+    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter_by(ytc_id=ytc_id).scalar()
+    if videocount is None:
+        abort(404)
+    channel = Mv_Channel.query.get(ytc_id)
 
     videos = Mv_Video.query.filter_by(ytc_id=ytc_id).order_by(Mv_Video.published.desc(),Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset)
     if not videos and page != 1:

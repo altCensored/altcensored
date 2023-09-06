@@ -47,7 +47,7 @@ s3transfer==0.6.0
 schema==0.7.2
 sendgrid==6.4.7
 six==1.15.0
-SQLAlchemy==1.4.39
+SQLAlchemy==1.4.49
 sqlalchemy-datatables==2.0.1
 starkbank-ecdsa==1.1.0
 timeago==1.0.14

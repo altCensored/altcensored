@@ -185,9 +185,6 @@ def item(ytc_id,page):
 #    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
-
-    if ytc_id is None:
-        abort(404)
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter_by(ytc_id=ytc_id).scalar()
     if videocount is None:
         abort(404)

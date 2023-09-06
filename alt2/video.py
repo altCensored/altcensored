@@ -113,7 +113,7 @@ def watch():
 
     if playlist:
         playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
-        if playlist.videos is None:
+        if playlist is None:
             abort(404)
         ordering = case(
             {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(playlist.videos))))},
@@ -215,6 +215,8 @@ def embed(video_id):
 
     if playlist:
         playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
+        if playlist is None:
+            abort(404)
         if len(playlist.videos) > 1:
             idx = (playlist.videos).index(video.extractor_data)
             next_video = (playlist.videos).pop(idx - 1)

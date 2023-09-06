@@ -211,9 +211,14 @@ def add_video_watchlater_post():
         v = data['v']
         user = db_session.query(User).filter(User.email == session['user']['email']).one()
 
-        if not v in user.watchlater:
-            user.watchlater = list(dict.fromkeys(user.watchlater))
-            user.watchlater.append(v)
+        try:
+            user.watchlater += [v]
+        except:
+            user.watchlater = [v]
+
+#        if not v in user.watchlater:
+#            user.watchlater = list(dict.fromkeys(user.watchlater))
+#            user.watchlater.append(v)
 
         flag_modified(user, "watchlater")
         db_session.commit()

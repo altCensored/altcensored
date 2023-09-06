@@ -149,7 +149,7 @@ def login():
                                    email_subscribed=user.email_subscribed, email_verified=user.email_verified, contributor=user.contributor)
             conf_email_sent = lazy_gettext('Confirmation email sent')
             flash(conf_email_sent, 'success')
-            Thread(target=update_conns()).start()
+#            Thread(target=update_conns()).start()
 
             return redirect(url_for('settings.index'))
 
@@ -178,7 +178,7 @@ def login():
                 conf_email_resent = lazy_gettext('Email not verified, confirmation email resent')
                 flash(conf_email_resent, 'error')
 
-            Thread(target=update_conns()).start()
+ #           Thread(target=update_conns()).start()
 
             return redirect(url_for('video.index'))
 

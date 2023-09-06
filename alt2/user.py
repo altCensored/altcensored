@@ -48,6 +48,8 @@ def popular(page):
 def item(username):
 #    set_session()
     user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
+    if user is None:
+        abort(404)
 
     if not user.public and (session['user']['id'] != user.id):
         abort(404)

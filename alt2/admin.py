@@ -419,7 +419,8 @@ def scraper_status():
 
     commands = ["awk '{print $3}' /var/log/nginx/rt_cache.log  | sort | uniq -c | sort -r",
                 "du -c -h -s /var/lib/nginx/i_cache",
-                "du -c -h -s /tmp/cache"]
+                "du -c -h -s /var/lib/nginx/e_cache",
+                "du -c -h -s /var/lib/nginx/f_cache"]
     local_command(commands)
 
     return render_template('admin/admin_messages.html')

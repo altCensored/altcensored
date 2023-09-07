@@ -8,8 +8,6 @@ dbase = config.SQLALCHEMY_DATABASE_URI
 engine = create_engine(dbase)
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
-                                         pool_size=30,
-                                         max_overflow=60,
                                          bind=engine))
 Base = declarative_base()
 Base.query = db_session.query_property()

@@ -107,8 +107,11 @@ def watch():
     except:
         tags = None
 
-    category = Mv_Category.query.filter_by(cat_name=cat_name).first()
-    cat_id = category.cat_id
+    try:
+        category = Mv_Category.query.filter_by(cat_name=cat_name).first()
+        cat_id = category.cat_id
+    except:
+        cat_id = 25
     channel = Mv_Channel.query.get(video.ytc_id)
 
     if playlist:

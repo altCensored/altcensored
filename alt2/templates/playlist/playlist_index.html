@@ -68,7 +68,9 @@
                                 <p>
                                     <i class='ion-md-list'  style="font-size: 24px"></i>
                                     <b>{{ playlist.title }}</p></b></a>
-                            <p>{{ playlist.description | linkify | safe }}<p>
+                            {% if playlist['description']  is not none %}
+                              <p>{{ playlist.description | linkify | safe }}<p>
+                            {% endif %}
                             <i class='ion-logo-youtube'  style="font-size: 20px"></i>
                             <b>{{ playlist.video_count }}</b>
                             <b>|</b>

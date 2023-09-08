@@ -123,7 +123,9 @@
                                 <p>
                                     <i class='ion-md-list'  style="font-size: 24px"></i>
                                     <b>{{ searchplaylist.title }}</p></b></a>
-                            <p>{{ searchplaylist.description | linkify | safe }}<p>
+                            {% if searchplaylist.description%}
+                              <p>{{ searchplaylist.description | linkify | safe }}<p>
+                            {% endif %}
                             <i class='ion-logo-youtube'  style="font-size: 20px"></i>
                             <b>{{ searchplaylist.video_count }}</b>
                             <b>|</b>
@@ -170,7 +172,9 @@
                                 <i class='ion-ios-contact' style="font-size: 24px"></i>
                                 <b>{{ altcen_user.username }}</b></a>
                             <p></p>
-                            {{ altcen_user.description | linkify | safe }}
+                            {% if altcen_user.description %}
+                              {{ altcen_user.description | linkify | safe }}
+                            {% endif %}
                             <p></p>
                             <div class="pure-u-1 pure-md-1-1">
                                 <i class='ion-md-eye'  style="font-size: 20px"></i>

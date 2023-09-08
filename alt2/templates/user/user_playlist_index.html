@@ -66,8 +66,9 @@
                                     &nbsp;&nbsp;<i class='ion-ios-star'  style="font-size: 20px"></i></a></p>
                                 {% endif %}
                             </p>
-
-                            <p>{{ playlist.description | linkify | safe }}<p>
+                            {% if playlist['description']  is not none %}
+                              <p>{{ playlist.description | linkify | safe }}<p>
+                            {% endif %}
                             <i class='ion-logo-youtube'  style="font-size: 20px"></i>
                             <b>&nbsp;{{ playlist.video_count }}</b>
                             <b>&nbsp;|&nbsp;</b>

@@ -134,8 +134,7 @@
               {% endif %}
               <h4>{{ gettext('Published on') }} {{ video['published'].strftime('%b %e, %G') }}</h4>
                 {% if video['description']  is not none %}
-                {{ video['description'] | linkify | safe | nl2br }}
-                {% else %}
+                  {{ video['description'] | linkify | safe | nl2br }}
                 {% endif %}
               <hr>
             </div>

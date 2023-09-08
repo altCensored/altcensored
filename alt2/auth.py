@@ -160,9 +160,11 @@ def login():
                                    email_subscribed=user.email_subscribed, email_verified=user.email_verified, contributor=user.contributor)
 
             newSettings = dict(user.settings)
+            autoplayg = user.settings.get("autoplay")
+
             session['locale'] = newSettings['locale']
             session['theme'] = newSettings['theme']
-            session['autoplay'] = newSettings['autoplay']
+            session['autoplay'] = autoplayg
             session['playnext'] = newSettings['playnext']
 
             session['navtabs']['navtab1'] = user.navtabs[0]

@@ -4,8 +4,8 @@ from sqlalchemy import func
 from .database import db_session
 from .models import Mv_Video, Mv_Channel, User
 from .pagination import Pagination
-from .util import set_session
 from datatables import ColumnDT, DataTables
+from .cache import cache
 
 bp = Blueprint('channel', __name__, url_prefix='/channel' )
 
@@ -14,6 +14,7 @@ PER_PAGE_FEED = 100
 
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
+@cache.cached()
 def index(page):
 #    set_session()
     offset = ((int(page)-1) * PER_PAGE)
@@ -75,6 +76,7 @@ def data_deleted():
 
 @bp.route('/new', defaults={'page': 1})
 @bp.route('/new/page/<int:page>')
+@cache.cached()
 def new(page):
 #    set_session()
     offset = ((int(page)-1) * PER_PAGE)
@@ -88,6 +90,7 @@ def new(page):
 
 @bp.route('/popular', defaults={'page': 1})
 @bp.route('/popular/page/<int:page>')
+@cache.cached()
 def popular(page):
 #    set_session()
     offset = ((int(page)-1) * PER_PAGE)
@@ -101,6 +104,7 @@ def popular(page):
 
 @bp.route('/deleted', defaults={'page': 1})
 @bp.route('/deleted/page/<int:page>')
+@cache.cached()
 def deleted(page):
 #    set_session()
     offset = ((int(page)-1) * PER_PAGE)
@@ -136,6 +140,7 @@ def deleted_feed(page):
 
 @bp.route('/limited', defaults={'page': 1})
 @bp.route('/limited/page/<int:page>')
+@cache.cached()
 def limited(page):
 #    set_session()
     offset = ((int(page)-1) * PER_PAGE)
@@ -150,6 +155,7 @@ def limited(page):
 
 @bp.route('/archived', defaults={'page': 1})
 @bp.route('/archived/page/<int:page>')
+@cache.cached()
 def archived(page):
 #    set_session()
     offset = ((int(page)-1) * PER_PAGE)
@@ -181,6 +187,7 @@ def feed(page):
 
 @bp.route('/<ytc_id>', defaults={'page': 1})
 @bp.route('/<ytc_id>/page/<int:page>')
+@cache.cached()
 def item(ytc_id,page):
 #    set_session()
     offset = ((int(page)-1) * PER_PAGE)
@@ -205,6 +212,7 @@ def item(ytc_id,page):
 
 @bp.route('/<ytc_id>/popular', defaults={'page': 1})
 @bp.route('/<ytc_id>/popular/page/<int:page>')
+@cache.cached()
 def item_popular(ytc_id,page):
 #    set_session()
     offset = ((int(page)-1) * PER_PAGE)

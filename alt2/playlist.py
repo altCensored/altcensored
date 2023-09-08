@@ -12,7 +12,8 @@ from .database import db_session
 from .models import User, Playlist, Mv_Video, Counter
 from .pagination import Pagination
 from . import util
-from .util import login_required, str_to_bool, title_exists, set_session
+from .util import login_required, str_to_bool, title_exists
+from .cache import cache
 
 bp = Blueprint('playlist', __name__, url_prefix='/playlist')
 
@@ -23,8 +24,8 @@ PER_PAGE = 24
 
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
+@cache.cached()
 def index(page):
-#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
     playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
@@ -41,8 +42,8 @@ def index(page):
 
 @bp.route('/popular', defaults={'page': 1})
 @bp.route('/popular/page/<int:page>')
+@cache.cached()
 def popular(page):
-#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'popular'
     playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
@@ -59,8 +60,8 @@ def popular(page):
 
 @bp.route('/<playlist>', defaults={'page': 1})
 @bp.route('/<playlist>/page/<int:page>')
+@cache.cached()
 def item(playlist,page):
-#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
 

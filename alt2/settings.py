@@ -9,7 +9,6 @@ from flask_babelplus import lazy_gettext
 from .database import db_session
 from .models import Mv_Video, Mv_Channel, Translation, User, Playlist
 from . import util
-from .util import set_session
 from .util import (
     email_exists, validate_user_email, username_exists, set_session, send_welcome_email,
     send_confirm_email
@@ -19,7 +18,6 @@ bp = Blueprint('settings', __name__, url_prefix='/settings')
 
 @bp.route('/')
 def index():
-#    set_session()
     return render_template('settings/settings_index.html')
 
 @bp.route('/update_site', methods=['GET', 'POST'])

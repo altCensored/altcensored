@@ -8,8 +8,8 @@ from werkzeug.exceptions import abort
 from .database import db_session
 from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_user, User, Playlist
 from .pagination import Pagination
-from .util import set_session
 import json
+from .cache import cache
 
 bp = Blueprint('video', __name__)
 
@@ -18,6 +18,7 @@ CHANN_MAX_RESULT = 28
 
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
+@cache.cached()
 def index(page):
 #    set_session()
     offset = ((int(page) - 1) * PER_PAGE)
@@ -35,6 +36,7 @@ def index(page):
 
 @bp.route('/new', defaults={'page': 1})
 @bp.route('/new/page/<int:page>')
+@cache.cached()
 def new(page):
 #    set_session()
     offset = ((int(page) - 1) * PER_PAGE)
@@ -53,8 +55,8 @@ def new(page):
 
 @bp.route('/popular', defaults={'page': 1})
 @bp.route('/popular/page/<int:page>')
+@cache.cached()
 def popular(page):
-#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'popular'
     videos = Mv_Video.query.order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset)

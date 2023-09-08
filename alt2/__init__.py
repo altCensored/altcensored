@@ -13,7 +13,7 @@ import bleach
 import unicodedata
 import math
 from . import util
-
+from .cache import cache
 from psycogreen.gevent import patch_psycopg
 patch_psycopg()
 
@@ -43,9 +43,10 @@ def create_app(test_config=None):
 
     babel = Babel(app)
     QRcode(app)
+    cache.init_app(app)
 
-    # Flask-BabelPlus
-    babel.init_app(app=app)
+#    Flask-BabelPlus
+#    babel.init_app(app=app)
 
     @babel.localeselector
     def get_locale():

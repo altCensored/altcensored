@@ -1,14 +1,15 @@
 from flask import (
     Blueprint, session, render_template, flash, redirect, request, url_for)
-from sqlalchemy import func, text, case, select
+from sqlalchemy import func, case
 from sqlalchemy.orm.attributes import flag_modified
 from werkzeug.exceptions import abort
 from flask_babelplus import lazy_gettext
 from .database import db_session
 from .models import User, Mv_Video, Playlist, Counter
 from .pagination import Pagination
-from .util import login_required, set_session
+from .util import login_required
 import datetime, json
+from .cache import cache
 
 bp = Blueprint('user', __name__, url_prefix='/user' )
 
@@ -16,8 +17,8 @@ PER_PAGE = 24
 
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
+@cache.cached()
 def index(page):
-#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
     users = User.query.filter(User.public).order_by(User.id.desc()).limit(PER_PAGE).offset(offset)
@@ -31,8 +32,8 @@ def index(page):
 
 @bp.route('/popular', defaults={'page': 1})
 @bp.route('/popular/page/<int:page>')
+@cache.cached()
 def popular(page):
-#    set_session()
     offset = ((int(page) - 1) * PER_PAGE)
     order = 'popular'
     users = User.query.filter(User.public).order_by(User.view_counter.desc()).limit(PER_PAGE).offset(offset)
@@ -45,8 +46,8 @@ def popular(page):
     return render_template('user/user_index.html', pagination=pagination, users=users, usercount=usercount, order=order)
 
 @bp.route('/<username>')
+@cache.cached()
 def item(username):
-#    set_session()
     user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
     if user is None:
         abort(404)

@@ -8,7 +8,7 @@ from werkzeug.exceptions import abort
 from .database import db_session
 from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_user, User, Playlist
 from .pagination import Pagination
-import json
+import json, re
 from .cache import cache
 
 bp = Blueprint('video', __name__)
@@ -277,11 +277,12 @@ def embed(video_id):
 @bp.route("/search", defaults={'page': 1})
 @bp.route('/search/page/<int:page>')
 def search(page):
-#    set_session()
     offset = ((int(page)-1) * PER_PAGE)
     rawsearch1 = request.args.get('q', None)
     rawsearch = rawsearch1.strip()
-    search = rawsearch.replace(" " , "&")
+    search2 = re.sub(' +', ' ', rawsearch)
+    search1 = search2.replace(" & " , "&")
+    search = search1.replace(" " , "&")
     order = 'default'
     playlist_ident = request.args.get('playlist', None)
 

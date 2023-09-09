@@ -9,7 +9,6 @@ from .models import User, Mv_Video, Playlist, Counter
 from .pagination import Pagination
 from .util import login_required
 import datetime, json
-from .cache import cache
 
 bp = Blueprint('user', __name__, url_prefix='/user' )
 
@@ -17,7 +16,6 @@ PER_PAGE = 24
 
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
-@cache.cached()
 def index(page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
@@ -32,7 +30,6 @@ def index(page):
 
 @bp.route('/popular', defaults={'page': 1})
 @bp.route('/popular/page/<int:page>')
-@cache.cached()
 def popular(page):
     offset = ((int(page) - 1) * PER_PAGE)
     order = 'popular'
@@ -46,7 +43,6 @@ def popular(page):
     return render_template('user/user_index.html', pagination=pagination, users=users, usercount=usercount, order=order)
 
 @bp.route('/<username>')
-@cache.cached()
 def item(username):
     user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
     if user is None:

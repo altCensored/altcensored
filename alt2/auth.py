@@ -82,7 +82,6 @@ def send_reset_password_email(email):
 @bp.route('/login', methods=['GET', 'POST'])
 @bp.route('/', methods=['GET', 'POST'])
 def login():
-#    set_session()
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']

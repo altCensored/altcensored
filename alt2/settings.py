@@ -22,7 +22,6 @@ def index():
 
 @bp.route('/update_site', methods=['GET', 'POST'])
 def update_site():
-#    set_session()
     if request.method == 'POST':
         fnt1 = request.form['navtab1_value']
         fnt2 = request.form['navtab2_value']

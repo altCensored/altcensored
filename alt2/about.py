@@ -3,12 +3,10 @@ from sqlalchemy import func
 
 from .database import db_session
 from .models import Mv_Channel
-from .cache import cache
 
 bp = Blueprint('about', __name__, url_prefix='/about' )
 
 @bp.route('/')
-@cache.cached()
 def index():
     archchancount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_archive).scalar()
     channels = Mv_Channel.query.all()

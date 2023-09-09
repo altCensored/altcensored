@@ -23,7 +23,7 @@
               	<p>
                 {% if video['description']  is not none %}
                   {{ video['description'] | linkify | safe | nl2br }}
-                {% endif %}
+                {% endif %}]]>
               </description>
               <pubDate>{{ video['published'].strftime('%a, %d %b %Y %T') }} EST</pubDate>
               <category>{{ video['ytc_title'] }}</category>

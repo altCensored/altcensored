@@ -1,14 +1,13 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker, declarative_base
-#from sqlalchemy.ext.declarative import
 from . import config
 
 dbase = config.SQLALCHEMY_DATABASE_URI
 
 engine = create_engine(dbase,
                        pool_size=30,
-#                       echo=True,
-#                       echo_pool="debug",
+                       echo=True,
+                       echo_pool="debug",
                        max_overflow=60,
                        )
 

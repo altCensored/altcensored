@@ -9,7 +9,7 @@ from .database import db_session
 from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_user, User, Playlist
 from .pagination import Pagination
 import json, re
-from .cache import cache
+from .util import videos_latest, videos_newest, videos_popular
 
 bp = Blueprint('video', __name__)
 
@@ -18,12 +18,11 @@ CHANN_MAX_RESULT = 28
 
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
-@cache.cached()
 def index(page):
-#    set_session()
     offset = ((int(page) - 1) * PER_PAGE)
     order = 'latest'
-    videos = Mv_Video.query.order_by(Mv_Video.id.desc()).limit(PER_PAGE).offset(offset)
+#    videos = Mv_Video.query.order_by(Mv_Video.id.desc()).limit(PER_PAGE).offset(offset)
+    videos = videos_latest(PER_PAGE, offset)
     if not videos and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, session['videocount'])
@@ -36,12 +35,11 @@ def index(page):
 
 @bp.route('/new', defaults={'page': 1})
 @bp.route('/new/page/<int:page>')
-@cache.cached()
 def new(page):
-#    set_session()
     offset = ((int(page) - 1) * PER_PAGE)
     order = 'newest'
-    videos = Mv_Video.query.order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset)
+#    videos = Mv_Video.query.order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset)
+    videos = videos_newest(PER_PAGE, offset)
     if not videos and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, session['videocount'])
@@ -55,11 +53,11 @@ def new(page):
 
 @bp.route('/popular', defaults={'page': 1})
 @bp.route('/popular/page/<int:page>')
-@cache.cached()
 def popular(page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'popular'
-    videos = Mv_Video.query.order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset)
+#    videos = Mv_Video.query.order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset)
+    videos = videos_popular(PER_PAGE, offset)
     if not videos and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, session['videocount'])
@@ -88,7 +86,6 @@ def feed(page):
 
 @bp.route("/watch")
 def watch():
-#    set_session()
     video_id = request.args.get('v', None)
     playlist = request.args.get('playlist', None)
     userlist = request.args.get('userlist', None)

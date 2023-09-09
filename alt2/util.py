@@ -19,7 +19,7 @@ from .database import db_session
 from .models import Translation, Playlist, Mv_Channel, Mv_Video, User, \
     Email_list, Channels, Channels_part, Vpn_node, Vpn_conn, Entity, Source
 from . import config
-
+from .cache import cache
 
 def get_locale():
     if 'locale' in session:
@@ -665,3 +665,96 @@ def reset_conns():
         if response_success(enable_key):
             conn.enabled = True
     db_session.commit()
+
+@cache.cached(timeout=20, key_prefix="data"+"%s")
+def videos_latest(PER_PAGE, offset):
+    video_values = db_session.execute(db_session.query(Mv_Video).order_by(Mv_Video.id.desc()).limit(PER_PAGE).offset(offset))
+    videos = [r[0] for r in video_values]
+    return videos
+
+
+@cache.cached(timeout=20, key_prefix="data"+"%s")
+def videos_newest(PER_PAGE, offset):
+    video_values = db_session.execute(db_session.query(Mv_Video).order_by(Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset))
+    videos = [r[0] for r in video_values]
+    return videos
+
+
+@cache.cached(timeout=20, key_prefix="data"+"%s")
+def videos_popular(PER_PAGE, offset):
+    video_values = db_session.execute(db_session.query(Mv_Video).order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset))
+    videos = [r[0] for r in video_values]
+    return videos
+
+
+@cache.cached(timeout=20, key_prefix="data"+"%s")
+def channels_latest(PER_PAGE, offset):
+    channel_values = db_session.execute(db_session.query(Mv_Channel).limit(PER_PAGE).offset(offset))
+#    channels = Mv_Channel.query.limit(PER_PAGE).offset(offset)
+    channels = [r[0] for r in channel_values]
+    return channels
+
+
+@cache.cached(timeout=20, key_prefix="data"+"%s")
+def channels_newest(PER_PAGE, offset):
+    channel_values = db_session.execute(db_session.query(Mv_Channel).order_by(Mv_Channel.ytc_publishedat.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset))
+#    channels = Mv_Channel.query.order_by(Mv_Channel.ytc_publishedat.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset)
+    channels = [r[0] for r in channel_values]
+    return channels
+
+@cache.cached(timeout=20, key_prefix="data"+"%s")
+def channels_popular(PER_PAGE, offset):
+    channel_values = db_session.execute(db_session.query(Mv_Channel).order_by(Mv_Channel.ytc_viewcount.desc()).limit(PER_PAGE).offset(offset))
+#    channels = Mv_Channel.query.order_by(Mv_Channel.ytc_viewcount.desc()).limit(PER_PAGE).offset(offset)
+    channels = [r[0] for r in channel_values]
+    return channels
+
+@cache.cached(timeout=20, key_prefix="data"+"%s")
+def channels_deleted(PER_PAGE, offset):
+    channel_values = db_session.execute(db_session.query(Mv_Channel).filter(Mv_Channel.ytc_deleted).order_by(Mv_Channel.ytc_deleteddate.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset))
+#    channels = Mv_Channel.query.filter(Mv_Channel.ytc_deleted).order_by(Mv_Channel.ytc_deleteddate.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset)
+    channels = [r[0] for r in channel_values]
+    return channels
+
+@cache.cached(timeout=20, key_prefix="data"+"%s")
+def channels_limited(PER_PAGE, offset):
+    channel_values = db_session.execute(db_session.query(Mv_Channel).order_by(Mv_Channel.limited.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset))
+#    channels = Mv_Channel.query.order_by(Mv_Channel.limited.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset)
+    channels = [r[0] for r in channel_values]
+    return channels
+
+
+@cache.cached(timeout=20, key_prefix="data"+"%s")
+def ytc_newest(ytc_id, PER_PAGE, offset):
+    videos_values = db_session.execute(db_session.query(Mv_Video).filter_by(ytc_id=ytc_id).order_by(Mv_Video.published.desc(),Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset))
+#videos = Mv_Video.query.filter_by(ytc_id=ytc_id).order_by(Mv_Video.published.desc(),Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset)
+    videos = [r[0] for r in videos_values]
+    return videos
+
+
+@cache.cached(timeout=20, key_prefix="data"+"%s")
+def ytc_popular(ytc_id, PER_PAGE, offset):
+    videos_values = db_session.execute(db_session.query(Mv_Video).filter_by(ytc_id=ytc_id).order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset))
+#    videos = Mv_Video.query.filter_by(ytc_id=ytc_id).order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset)
+    videos = [r[0] for r in videos_values]
+    return videos
+
+
+@cache.cached(timeout=20, key_prefix="data"+"%s")
+def playlists_newest(PER_PAGE, offset):
+    playlists_values = db_session.execute(db_session.query(Playlist).filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
+                                          .order_by(Playlist.updated.desc()).limit(PER_PAGE).offset(offset))
+#    playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
+#            .order_by(Playlist.updated.desc()).limit(PER_PAGE).offset(offset)
+    playlists = [r[0] for r in playlists_values]
+    return playlists
+
+
+@cache.cached(timeout=20, key_prefix="data"+"%s")
+def playlists_popular(PER_PAGE, offset):
+    playlists_values = db_session.execute(db_session.query(Playlist).filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
+                                          .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset))
+#    playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
+#            .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
+    playlists = [r[0] for r in playlists_values]
+    return playlists

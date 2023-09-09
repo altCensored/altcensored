@@ -5,10 +5,12 @@ from . import config
 dbase = config.SQLALCHEMY_DATABASE_URI
 
 engine = create_engine(dbase,
-                       pool_size=30,
+                       pool_size=20,
+                       max_overflow=50,
 #                       echo=True,
 #                       echo_pool="debug",
-                       max_overflow=60,
+                       pool_use_lifo=True,
+                       pool_pre_ping=True
                        )
 
 db_session = scoped_session(sessionmaker(autocommit=False,

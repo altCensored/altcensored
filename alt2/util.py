@@ -675,7 +675,8 @@ def videos_latest(PER_PAGE, offset):
 
 @cache.cached(timeout=20, key_prefix="data"+"%s")
 def videos_newest(PER_PAGE, offset):
-    video_values = db_session.execute(db_session.query(Mv_Video).order_by(Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset))
+    video_values = db_session.execute(db_session.query(Mv_Video).order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset))
+#    videos = Mv_Video.query.order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset)
     videos = [r[0] for r in video_values]
     return videos
 

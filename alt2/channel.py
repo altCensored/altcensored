@@ -147,6 +147,18 @@ def limited(page):
     return render_template('channel/channel_index.html', pagination=pagination, channels=channels, videocount=videocount, order=order)
 
 
+@bp.route('/archived', defaults={'page': 1})
+@bp.route('/archived/page/<int:page>')
+def archived(page):
+    offset = ((int(page)-1) * PER_PAGE)
+    order = 'archived'
+    videocount = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
+    channels = Mv_Channel.query.filter(Mv_Channel.ytc_archive).limit(PER_PAGE).offset(offset)
+    if not channels and page != 1:
+        abort(404)
+    pagination = Pagination(page, PER_PAGE, session['channelcount'])
+    return render_template('channel/channel_index.html', pagination=pagination, channels=channels, videocount=videocount, order=order)
+
 
 @bp.route('/feed', defaults={'page': 1})
 @bp.route('/feed/page/<int:page>')

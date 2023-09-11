@@ -29,9 +29,15 @@ def get_locale():
     return session['locale']
 
 
-def get_theme():
-    return session.get('theme', 'light')
+#def get_theme():
+#    return session.get('theme', default='light')
 
+def get_theme():
+    if 'theme' in session:
+        return session['theme']
+    else:
+        session['theme'] = config.DEFAULT_THEME
+    return session['theme']
 
 def get_playnext():
     if 'playnext' in session:

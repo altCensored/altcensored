@@ -153,9 +153,11 @@ def create_app(test_config=None):
             current_url=quote_plus(request.url),
             navtabs=util.get_navtabs(),
             navtabs_index=util.get_navtabs_index(),
+            usercount=util.get_usercount(),
             videocount=util.get_videocount(),
             channelcount=util.get_channelcount(),
-            delchannelcount=util.get_delchannelcount())
+            delchannelcount=util.get_delchannelcount()
+        )
 
 #    @app.before_request
 #    def before_req():

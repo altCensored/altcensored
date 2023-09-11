@@ -26,7 +26,7 @@ def index(page):
     usercount = get_usercount()
     pagination = Pagination(page, PER_PAGE, usercount)
 
-    return render_template('user/user_index.html', pagination=pagination, users=users, usercount=usercount, order=order)
+    return render_template('user/user_index.html', pagination=pagination, users=users, order=order)
 
 @bp.route('/popular', defaults={'page': 1})
 @bp.route('/popular/page/<int:page>')
@@ -37,10 +37,10 @@ def popular(page):
 
     if not users and page != 1:
         abort(404)
-    usercount = session['usercount']
+    usercount = get_usercount()
     pagination = Pagination(page, PER_PAGE, usercount)
 
-    return render_template('user/user_index.html', pagination=pagination, users=users, usercount=usercount, order=order)
+    return render_template('user/user_index.html', pagination=pagination, users=users, order=order)
 
 @bp.route('/<username>')
 def item(username):

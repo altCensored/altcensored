@@ -25,6 +25,8 @@ def index(page):
     videos = videos_latest(PER_PAGE, offset)
     if not videos and page != 1:
         abort(404)
+
+
     session['videocount'] = get_videocount()
     pagination = Pagination(page, PER_PAGE, session['videocount'])
     watchlater = None
@@ -312,7 +314,7 @@ def search(page):
     my_to_tsquery_altcen_user = text("Mv_Altcen_user.document @@ to_tsquery(:search)")
     my_ts_rank_altcen_user = text("ts_rank(Mv_Altcen_user.document, to_tsquery(:search)) DESC")
     altcen_users = db_session.query(Mv_Altcen_user).\
-        filter(my_to_tsquery_altcen_user).\
+        filter((Mv_Altcen_user.public),(my_to_tsquery_altcen_user)).\
         order_by(my_ts_rank_altcen_user).\
         limit(PER_PAGE).offset(offset).\
         params(search=search).all()
@@ -320,7 +322,7 @@ def search(page):
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
     channcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(my_to_tsquery_channel).params(search=search).scalar()
     searchplaylistcount = db_session.query(func.count(Mv_Playlist.id)).filter(my_to_tsquery_playlist).params(search=search).scalar()
-    usercount = db_session.query(func.count(Mv_Altcen_user.id)).filter(my_to_tsquery_altcen_user).params(search=search).scalar()
+    usercount = db_session.query(func.count(Mv_Altcen_user.id)). filter((Mv_Altcen_user.public),(my_to_tsquery_altcen_user)).params(search=search).scalar()
 
     pagination = Pagination(page, PER_PAGE, videocount)
 

@@ -17,6 +17,7 @@ IPROXYTWBIG=os.getenv('IPROXYTWBIG')
 
 SUPPORTED_LANGUAGES = {'en': 'English', 'de': 'Deutsch', 'es': 'Español', 'fr': 'Français', 'pt': 'Portuguese', 'nl': 'Nederlandse', 'it': 'Italiano', 'se': 'Sverige'}
 SUPPORTED_THEMES = {'light', 'dark'}
+DEFAULT_THEME = 'light'
 BABEL_DEFAULT_LOCALE = 'en'
 BABEL_DEFAULT_TIMEZONE = 'UTC'
 
@@ -40,6 +41,7 @@ VPN_DEFAULT_IPINDEX = 0
 VPN_FOLDER = 'templates/vpn'
 
 CACHE_TYPE = 'RedisCache'
+#CACHE_TYPE = 'NullCache'
 CACHE_DEFAULT_TIMEOUT = 3600
 CACHE_REDIS_HOST=os.getenv('CACHE_REDIS_HOST')
 CACHE_REDIS_DB=1

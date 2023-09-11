@@ -112,6 +112,32 @@ def get_delchannelcount():
     return session['delchannelcount']
 
 
+def get_archivechannelcount():
+    if 'archivechannelcount' in session:
+        return session['archivechannelcount']
+    else:
+        session['archivechannelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).filter(
+            Mv_Channel.ytc_archive).scalar()
+    return session['archivechannelcount']
+
+
+def get_playlistcount():
+    if 'playlistcount' in session:
+        return session['playlistcount']
+    else:
+        session['playlistcount'] = db_session.query(
+            func.count(Playlist.id).filter(Playlist.public).filter(Playlist.featured_video.isnot(None))).scalar()
+    return session['playlistcount']
+
+
+def get_usercount():
+    if 'usercount' in session:
+        return session['usercount']
+    else:
+        session['usercount'] =db_session.query(func.count(User.id).filter(User.public)).scalar()
+    return session['usercount']
+
+
 def set_session() -> object:
     """
     :rtype: object
@@ -724,6 +750,13 @@ def channels_limited(PER_PAGE, offset):
     channels = [r[0] for r in channel_values]
     return channels
 
+
+@cache.cached(key_prefix="data"+"%s")
+def channels_archived(PER_PAGE, offset):
+    channel_values = db_session.execute(db_session.query(Mv_Channel).filter_by(ytc_archive).limit(PER_PAGE).offset(offset))
+#    channels = Mv_Channel.query.filter(Mv_Channel.ytc_archive).limit(PER_PAGE).offset(offset)
+    channels = [r[0] for r in channel_values]
+    return channels
 
 @cache.cached(key_prefix="data"+"%s")
 def ytc_newest(ytc_id, PER_PAGE, offset):

@@ -12,7 +12,7 @@ from .database import db_session
 from .models import User, Playlist, Mv_Video, Counter
 from .pagination import Pagination
 from . import util
-from .util import login_required, str_to_bool, title_exists, playlists_popular, playlists_newest
+from .util import login_required, str_to_bool, title_exists, playlists_popular, playlists_newest, get_playlistcount
 
 bp = Blueprint('playlist', __name__, url_prefix='/playlist')
 
@@ -31,8 +31,7 @@ def index(page):
 #    playlists = playlists_newest(PER_PAGE, offset)
     if not playlists and page != 1:
         abort(404)
-
-    playlistcount = session['playlistcount']
+    playlistcount = get_playlistcount()
     pagination = Pagination(page, PER_PAGE, playlistcount)
 
     return render_template('playlist/playlist_index.html',
@@ -46,11 +45,9 @@ def popular(page):
     playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
             .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
 #    playlists = playlists_popular(PER_PAGE, offset)
-
     if not playlists and page != 1:
         abort(404)
-
-    playlistcount = session['playlistcount']
+    playlistcount = get_playlistcount()
     pagination = Pagination(page, PER_PAGE, playlistcount)
 
     return render_template('playlist/playlist_index.html',

@@ -157,9 +157,9 @@ def create_app(test_config=None):
             channelcount=util.get_channelcount(),
             delchannelcount=util.get_delchannelcount())
 
-    @app.before_request
-    def before_req():
-        util.set_session()
+#    @app.before_request
+#    def before_req():
+#        util.set_session()
 
     def has_no_empty_params(rule):
         defaults = rule.defaults if rule.defaults is not None else ()

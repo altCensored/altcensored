@@ -91,7 +91,8 @@ def get_videocount():
     if 'videocount' in session:
         return session['videocount']
     else:
-        session['videocount'] = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
+#        session['videocount'] = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
+        session['videocount'] = videocount_cache()
     return session['videocount']
 
 
@@ -99,7 +100,8 @@ def get_channelcount():
     if 'channelcount' in session:
         return session['channelcount']
     else:
-        session['channelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
+#        session['channelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
+        session['channelcount'] = channelcount_cache()
     return session['channelcount']
 
 
@@ -107,8 +109,8 @@ def get_delchannelcount():
     if 'delchannelcount' in session:
         return session['delchannelcount']
     else:
-        session['delchannelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).filter(
-            Mv_Channel.ytc_deleted).scalar()
+#        session['delchannelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
+        session['delchannelcount'] = delchannelcount_cache()
     return session['delchannelcount']
 
 
@@ -116,8 +118,8 @@ def get_archivechannelcount():
     if 'archivechannelcount' in session:
         return session['archivechannelcount']
     else:
-        session['archivechannelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).filter(
-            Mv_Channel.ytc_archive).scalar()
+#        session['archivechannelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_archive).scalar()
+        session['archivechannelcount'] = archivechannelcount_cache()
     return session['archivechannelcount']
 
 
@@ -125,8 +127,8 @@ def get_playlistcount():
     if 'playlistcount' in session:
         return session['playlistcount']
     else:
-        session['playlistcount'] = db_session.query(
-            func.count(Playlist.id).filter(Playlist.public).filter(Playlist.featured_video.isnot(None))).scalar()
+#        session['playlistcount'] = db_session.query(func.count(Playlist.id).filter(Playlist.public).filter(Playlist.featured_video.isnot(None))).scalar()
+        session['playlistcount'] = playlistcount_cache()
     return session['playlistcount']
 
 
@@ -134,7 +136,8 @@ def get_usercount():
     if 'usercount' in session:
         return session['usercount']
     else:
-        session['usercount'] =db_session.query(func.count(User.id).filter(User.public)).scalar()
+#        session['usercount'] =db_session.query(func.count(User.id).filter(User.public)).scalar()
+        session['usercount'] = usercount_cache()
     return session['usercount']
 
 
@@ -792,3 +795,44 @@ def playlists_popular(PER_PAGE, offset):
 #            .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
     playlists = [r[0] for r in playlists_values]
     return playlists
+
+
+@cache.cached(key_prefix="data"+"%s"+"videocount")
+def videocount_cache():
+    videocount_cache = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
+    return videocount_cache
+
+
+@cache.cached(key_prefix="data"+"%s"+"channelcount")
+def channelcount_cache():
+    channelcount_cache = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
+    #        session['channelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
+    return channelcount_cache
+
+
+@cache.cached(key_prefix="data"+"%s"+"delchannelcount")
+def delchannelcount_cache():
+    delchannelcount_cache = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
+    #        session['delchannelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
+    return delchannelcount_cache
+
+
+@cache.cached(key_prefix="data"+"%s"+"archivechannelcount")
+def archivechannelcount_cache():
+    archivechannelcount_cache = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_archive).scalar()
+    #        session['archivechannelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_archive).scalar()
+    return archivechannelcount_cache
+
+
+@cache.cached(key_prefix="data"+"%s"+"playlistcount")
+def playlistcount_cache():
+    playlistcount_cache = db_session.query(func.count(Playlist.id).filter(Playlist.public).filter(Playlist.featured_video.isnot(None))).scalar()
+    #        session['playlistcount'] = db_session.query(func.count(Playlist.id).filter(Playlist.public).filter(Playlist.featured_video.isnot(None))).scalar()
+    return playlistcount_cache
+
+
+@cache.cached(key_prefix="data"+"%s"+"usercount")
+def usercount_cache():
+    usercount_cache = db_session.query(func.count(User.id).filter(User.public)).scalar()
+    #        session['usercount'] =db_session.query(func.count(User.id).filter(User.public)).scalar()
+    return usercount_cache

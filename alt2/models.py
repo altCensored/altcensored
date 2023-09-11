@@ -224,6 +224,8 @@ class User(Base):
     settings = Column(MutableDict.as_mutable(JSON))
     featured_playlist = Column(MutableDict.as_mutable(JSON))
     playlists = relationship("Playlist", cascade="all, delete-orphan", back_populates="user")
+    vpn_conns = relationship("Vpn_conn", cascade="all, delete-orphan", back_populates="user")
+
 
 
 class Playlist(Base):
@@ -241,7 +243,6 @@ class Playlist(Base):
     user_id = Column(Integer, ForeignKey('altcen_user.id'), nullable=False)
     featured_video =  Column(MutableDict.as_mutable(JSON))
     user = relationship("User", back_populates="playlists")
-
 
 
 class Email_list(Base):
@@ -312,6 +313,7 @@ class Vpn_conn(Base):
     config_file = Column(String)
     config_qrcode = Column(String)
     created = Column(DateTime, nullable=True)
+    user = relationship("User", back_populates="vpn_conns")
 
 
 class Crypto(Base):

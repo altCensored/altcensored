@@ -4,13 +4,12 @@ from datetime import timezone
 from flask import (
     Blueprint, flash, redirect, render_template, request, url_for, current_app, session
 )
-from sqlalchemy import func
 from flask_babelplus import lazy_gettext
 from .database import db_session
-from .models import Mv_Video, Mv_Channel, Translation, User, Playlist
+from .models import Translation, User, Playlist
 from . import util
 from .util import (
-    email_exists, validate_user_email, username_exists, set_session, send_welcome_email,
+    email_exists, validate_user_email, username_exists,
     send_confirm_email
 )
 
@@ -74,16 +73,20 @@ def update_site():
 
             return redirect(url_for('settings.index'))
 
+    session['locale'] = util.get_locale()
     locales = (current_app.config['SUPPORTED_LANGUAGES'].keys())
     locales = list(locales)
     locales.remove(session['locale'])
 
+    session['theme'] = util.get_theme()
     themes = (current_app.config['SUPPORTED_THEMES'])
     themes = list(themes)
     themes.remove(session['theme'])
 
+    session['navtabs'] = util.get_navtabs()
     navtab_values = db_session.query(Translation).with_entities(getattr(Translation, session['locale'])).all()
     navtab_values = [r[0] for r in navtab_values]
+
 
     navtab1_values = list(navtab_values)
     navtab2_values = list(navtab_values)

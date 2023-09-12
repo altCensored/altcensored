@@ -29,9 +29,6 @@ def get_locale():
     return session['locale']
 
 
-#def get_theme():
-#    return session.get('theme', default='light')
-
 def get_theme():
     if 'theme' in session:
         return session['theme']
@@ -43,7 +40,7 @@ def get_playnext():
     if 'playnext' in session:
         return session['playnext']
     else:
-        session['playnext'] = False
+        session['playnext'] = config.DEFAULT_PLAYNEXT
     return session['playnext']
 
 
@@ -51,7 +48,7 @@ def get_looplist():
     if 'looplist' in session:
         return session['looplist']
     else:
-        session['looplist'] = True
+        session['looplist'] = config.DEFAULT_LOOPLIST
     return session['looplist']
 
 
@@ -59,7 +56,7 @@ def get_autoplay():
     if 'autoplay' in session:
         return session['autoplay']
     else:
-        session['autoplay'] = False
+        session['autoplay'] = config.DEFAULT_AUTOPLAY
     return session['autoplay']
 
 
@@ -67,8 +64,8 @@ def get_navtabs():
     if 'navtabs' in session:
         return session['navtabs']
     else:
-        row = db_session.query(Translation).with_entities(Translation.varname,
-                                                          getattr(Translation, session['locale'])).all()
+        row = navtabs_cache(session['locale'])
+#        row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, session['locale'])).all()
         rowtuple = tuple(row)
         session['navtabs'] = dict(rowtuple)
     return session['navtabs']
@@ -78,19 +75,21 @@ def get_navtabs_index():
     if 'navtabs_index' in session:
         return session['navtabs_index']
     else:
-        row = db_session.query(Translation).with_entities(Translation.varname, Translation.en).all()
+        row = navtabs_index_cache()
+#        row = db_session.query(Translation).with_entities(Translation.varname, Translation.en).all()
         rowtuple = tuple(row)
         session['navtabs_index'] = dict(rowtuple)
     return session['navtabs_index']
 
-
-def get_navtabs_perm():
-    session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys())
-    row = db_session.query(Translation).with_entities(Translation.varname,
-                                                      getattr(Translation, session['locale'])).all()
-    rowtuple = tuple(row)
-    navtabs_perm = dict(rowtuple)
-    return navtabs_perm
+#
+# not being used
+#
+#def get_navtabs_perm():
+#    session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys())
+#    row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, session['locale'])).all()
+#    rowtuple = tuple(row)
+#    navtabs_perm = dict(rowtuple)
+#    return navtabs_perm
 
 
 def get_videocount():
@@ -842,3 +841,22 @@ def usercount_cache():
     usercount_cache = db_session.query(func.count(User.id).filter(User.public)).scalar()
     #        session['usercount'] =db_session.query(func.count(User.id).filter(User.public)).scalar()
     return usercount_cache
+
+
+@cache.memoize()
+def navtabs_cache(locale):
+    navtabs_cache = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, locale)).all()
+#        row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, session['locale'])).all()
+    return navtabs_cache
+
+
+@cache.cached(key_prefix="data"+"%s"+"navtabs_index")
+def navtabs_index_cache():
+    navtabs_index_cache = db_session.query(Translation).with_entities(Translation.varname, Translation.en).all()
+#    row = db_session.query(Translation).with_entities(Translation.varname, Translation.en).all()
+    return navtabs_index_cache
+
+
+def print_session():
+    for k, v in session.items():
+        print(k, v)

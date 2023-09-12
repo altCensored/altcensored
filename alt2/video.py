@@ -9,7 +9,7 @@ from .database import db_session
 from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_user, User, Playlist
 from .pagination import Pagination
 import json, re
-from .util import videos_latest, videos_newest, videos_popular, get_videocount
+from .util import videos_latest, videos_newest, videos_popular, get_videocount, print_session
 
 bp = Blueprint('video', __name__)
 
@@ -19,14 +19,13 @@ CHANN_MAX_RESULT = 28
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
 def index(page):
+#    print_session()
     offset = ((int(page) - 1) * PER_PAGE)
     order = 'latest'
 #    videos = Mv_Video.query.order_by(Mv_Video.id.desc()).limit(PER_PAGE).offset(offset)
     videos = videos_latest(PER_PAGE, offset)
     if not videos and page != 1:
         abort(404)
-
-
     session['videocount'] = get_videocount()
     pagination = Pagination(page, PER_PAGE, session['videocount'])
     watchlater = None

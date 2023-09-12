@@ -7,7 +7,7 @@ from flask_babelplus import lazy_gettext
 from .database import db_session
 from .models import User, Mv_Video, Playlist, Counter
 from .pagination import Pagination
-from .util import login_required, get_usercount
+from .util import login_required, get_usercount, users_newest, users_popular, userf
 import datetime, json
 
 bp = Blueprint('user', __name__, url_prefix='/user' )
@@ -19,12 +19,12 @@ PER_PAGE = 24
 def index(page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
-    users = User.query.filter(User.public).order_by(User.id.desc()).limit(PER_PAGE).offset(offset)
-
+#    users = User.query.filter(User.public).order_by(User.id.desc()).limit(PER_PAGE).offset(offset)
+    users = users_newest(PER_PAGE, offset)
     if not users and page != 1:
         abort(404)
-    usercount = get_usercount()
-    pagination = Pagination(page, PER_PAGE, usercount)
+    get_usercount()
+    pagination = Pagination(page, PER_PAGE, session['usercount'])
 
     return render_template('user/user_index.html', pagination=pagination, users=users, order=order)
 
@@ -33,8 +33,8 @@ def index(page):
 def popular(page):
     offset = ((int(page) - 1) * PER_PAGE)
     order = 'popular'
-    users = User.query.filter(User.public).order_by(User.view_counter.desc()).limit(PER_PAGE).offset(offset)
-
+#    users = User.query.filter(User.public).order_by(User.view_counter.desc()).limit(PER_PAGE).offset(offset)
+    users = users_popular(PER_PAGE, offset)
     if not users and page != 1:
         abort(404)
     usercount = get_usercount()
@@ -44,7 +44,9 @@ def popular(page):
 
 @bp.route('/<username>')
 def item(username):
-    user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
+    userv = username
+#    user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
+    user = userf(userv)
     if user is None:
         abort(404)
 

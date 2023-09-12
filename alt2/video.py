@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, render_template, request, make_response, session, current_app, flash)
+    Blueprint, render_template, request, make_response, session, current_app)
 from internetarchive import get_item
 from sqlalchemy import func, text, case
 from sqlalchemy.orm.attributes import flag_modified

@@ -802,6 +802,29 @@ def playlists_popular(PER_PAGE, offset):
     return playlists
 
 
+@cache.cached(key_prefix="data"+"%s")
+def users_newest(PER_PAGE, offset):
+    users_values = db_session.execute(db_session.query(User).filter(User.public).order_by(User.id.desc()).limit(PER_PAGE).offset(offset))
+#    users = User.query.filter(User.public).order_by(User.id.desc()).limit(PER_PAGE).offset(offset)
+    users = [r[0] for r in users_values]
+    return users
+
+
+@cache.cached(key_prefix="data"+"%s")
+def users_popular(PER_PAGE, offset):
+    users_values = db_session.execute(db_session.query(User).filter(User.public).order_by(User.view_counter.desc()).limit(PER_PAGE).offset(offset))
+#    users = User.query.filter(User.public).order_by(User.view_counter.desc()).limit(PER_PAGE).offset(offset)
+    users = [r[0] for r in users_values]
+    return users
+
+
+@cache.cached(key_prefix="data"+"%s")
+def userf(username):
+    user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
+    #    user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
+    return user
+
+
 @cache.cached(key_prefix="data"+"%s"+"videocount")
 def videocount_cache():
     videocount_cache = db_session.query(func.count(Mv_Video.extractor_data)).scalar()

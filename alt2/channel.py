@@ -239,7 +239,7 @@ def item_feed(ytc_id,page):
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter_by(ytc_id=ytc_id).scalar()
     channel = Mv_Channel.query.get(ytc_id)
 #    videos = Mv_Video.query.filter_by(ytc_id=ytc_id).order_by(Mv_Video.published.desc())
-    videos = ytc_video_newest(ytc_id, PER_PAGE, offset)
+    videos = channeli_videos_newest(ytc_id, PER_PAGE, offset)
     if not videos and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)

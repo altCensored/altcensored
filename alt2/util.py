@@ -700,6 +700,7 @@ def reset_conns():
             conn.enabled = True
     db_session.commit()
 
+
 @cache.cached(key_prefix="data"+"%s")
 def videos_latest(PER_PAGE, offset):
     video_values = db_session.execute(db_session.query(Mv_Video).order_by(Mv_Video.id.desc()).limit(PER_PAGE).offset(offset))
@@ -761,16 +762,33 @@ def channels_limited(PER_PAGE, offset):
 
 @cache.cached(key_prefix="data"+"%s")
 def channels_archived(PER_PAGE, offset):
-    channel_values = db_session.execute(db_session.query(Mv_Channel).filter_by(ytc_archive).limit(PER_PAGE).offset(offset))
-#    channels = Mv_Channel.query.filter(Mv_Channel.ytc_archive).limit(PER_PAGE).offset(offset)
+    channel_values = db_session.execute(db_session.query(Mv_Channel).filter(Mv_Channel.ytc_archive).limit(PER_PAGE).offset(offset))
     channels = [r[0] for r in channel_values]
     return channels
 
+@cache.memoize()
+def channeli(ytc_id):
+    channel = Mv_Channel.query.get(ytc_id)
+    return channel
+
+
+@cache.cached(key_prefix="data"+"%s"+"/channeli_videocount")
+def channeli_videocount(ytc_id):
+    channeli_videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter_by(ytc_id=ytc_id).scalar()
+    return channeli_videocount
+
+
 @cache.cached(key_prefix="data"+"%s")
-def ytc_newest(ytc_id, PER_PAGE, offset):
-    videos_values = db_session.execute(db_session.query(Mv_Video).filter_by(ytc_id=ytc_id).order_by(Mv_Video.published.desc(),Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset))
-#videos = Mv_Video.query.filter_by(ytc_id=ytc_id).order_by(Mv_Video.published.desc(),Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset)
-    videos = [r[0] for r in videos_values]
+def channeli_videos_newest(ytc_id, PER_PAGE, offset):
+    video_values = db_session.execute(db_session.query(Mv_Video).filter_by(ytc_id=ytc_id).order_by(Mv_Video.id.desc()).limit(PER_PAGE).offset(offset))
+    videos = [r[0] for r in video_values]
+    return videos
+
+
+@cache.cached(key_prefix="data"+"%s")
+def channeli_videos_popular(ytc_id, PER_PAGE, offset):
+    video_values = db_session.execute(db_session.query(Mv_Video).filter_by(ytc_id=ytc_id).order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset))
+    videos = [r[0] for r in video_values]
     return videos
 
 
@@ -819,7 +837,7 @@ def users_popular(PER_PAGE, offset):
 
 
 @cache.cached(key_prefix="data"+"%s")
-def userf(username):
+def useri(username):
     user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
     #    user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
     return user

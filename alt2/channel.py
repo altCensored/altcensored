@@ -5,9 +5,10 @@ from .database import db_session
 from .models import Mv_Video, Mv_Channel, User
 from .pagination import Pagination
 from datatables import ColumnDT, DataTables
-from .util import (channels_latest, channels_deleted, channels_popular, channels_newest, channels_limited,
-                   channels_archived,
-                   ytc_newest, ytc_popular, get_channelcount, get_delchannelcount, get_archivechannelcount)
+from .util import (channels_latest, channels_deleted, channels_popular, channels_newest, channels_limited, channels_archived,
+                   channeli, channeli_videocount, channeli_videos_newest, channeli_videos_popular,
+                   get_channelcount, get_delchannelcount, get_archivechannelcount
+                   )
 
 bp = Blueprint('channel', __name__, url_prefix='/channel' )
 
@@ -115,11 +116,11 @@ def deleted(page):
     channels = channels_deleted(PER_PAGE, offset)
     if not channels and page != 1:
         abort(404)
-    delchannelcount = get_delchannelcount()
+    get_delchannelcount()
     pagination = Pagination(page, PER_PAGE, session['delchannelcount'])
     return render_template('channel/channel_index.html', 
 #        pagination=pagination, channels=channels, channelcount=channelcount, videocount=videocount, order=order)
-        pagination = pagination, channels = channels, channelcount=delchannelcount, order=order)
+        pagination = pagination, channels = channels, channelcount=session['delchannelcount'], order=order)
 
 @bp.route('/deleted/feed', defaults={'page': 1})
 @bp.route('/deleted/feed/page/<int:page>')
@@ -132,10 +133,10 @@ def deleted_feed(page):
     channels = channels_deleted(PER_PAGE, offset)
     if not channels and page != 1:
         abort(404)
-    delchannelcount = get_delchannelcount()
+    get_delchannelcount()
     pagination = Pagination(page, PER_PAGE_FEED, session['delchannelcount'])
 
-    template = render_template('channel/channel_index.xml', pagination=pagination, channels=channels, channelcount=delchannelcount, order=order)
+    template = render_template('channel/channel_index.xml', pagination=pagination, channels=channels, channelcount=session['delchannelcount'], order=order)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
     return response
@@ -162,13 +163,13 @@ def archived(page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'archived'
 #    videocount = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
-    channels = Mv_Channel.query.filter(Mv_Channel.ytc_archive).limit(PER_PAGE).offset(offset)
-#    channels = channels_archived(PER_PAGE, offset)
+#    channels = Mv_Channel.query.filter(Mv_Channel.ytc_archive).limit(PER_PAGE).offset(offset)
+    channels = channels_archived(PER_PAGE, offset)
     if not channels and page != 1:
         abort(404)
-    archivechannelcount = get_archivechannelcount()
+    get_archivechannelcount()
     pagination = Pagination(page, PER_PAGE, session['archivechannelcount'])
-    return render_template('channel/channel_index.html', pagination=pagination, channels=channels, channelcount=archivechannelcount, order=order)
+    return render_template('channel/channel_index.html', pagination=pagination, channels=channels, channelcount=session['archivechannelcount'], order=order)
 
 
 @bp.route('/feed', defaults={'page': 1})
@@ -193,12 +194,11 @@ def feed(page):
 def item(ytc_id,page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
-    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter_by(ytc_id=ytc_id).scalar()
-    channel = Mv_Channel.query.get(ytc_id)
+    channel = channeli(ytc_id)
     if channel is None:
         abort(404)
-#    videos = Mv_Video.query.filter_by(ytc_id=ytc_id).order_by(Mv_Video.published.desc(),Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset)
-    videos = ytc_newest(ytc_id, PER_PAGE, offset)
+    videocount = channeli_videocount(ytc_id)
+    videos = channeli_videos_newest(ytc_id, PER_PAGE, offset)
     if not videos and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)
@@ -215,10 +215,11 @@ def item(ytc_id,page):
 def item_popular(ytc_id,page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'popular'
-    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter_by(ytc_id=ytc_id).scalar()
-    channel = Mv_Channel.query.get(ytc_id)
-#    videos = Mv_Video.query.filter_by(ytc_id=ytc_id).order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset)
-    videos = ytc_popular(ytc_id, PER_PAGE, offset)
+    channel = channeli(ytc_id)
+    if channel is None:
+        abort(404)
+    videocount = channeli_videocount(ytc_id)
+    videos = channeli_videos_popular(ytc_id, PER_PAGE, offset)
     if not videos and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)
@@ -238,7 +239,7 @@ def item_feed(ytc_id,page):
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter_by(ytc_id=ytc_id).scalar()
     channel = Mv_Channel.query.get(ytc_id)
 #    videos = Mv_Video.query.filter_by(ytc_id=ytc_id).order_by(Mv_Video.published.desc())
-    videos = ytc_newest(ytc_id, PER_PAGE, offset)
+    videos = ytc_video_newest(ytc_id, PER_PAGE, offset)
     if not videos and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)

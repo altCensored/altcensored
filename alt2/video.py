@@ -22,7 +22,6 @@ def index(page):
 #    print_session()
     offset = ((int(page) - 1) * PER_PAGE)
     order = 'latest'
-#    videos = Mv_Video.query.order_by(Mv_Video.id.desc()).limit(PER_PAGE).offset(offset)
     videos = videos_latest(PER_PAGE, offset)
     if not videos and page != 1:
         abort(404)
@@ -40,7 +39,6 @@ def index(page):
 def new(page):
     offset = ((int(page) - 1) * PER_PAGE)
     order = 'newest'
-#    videos = Mv_Video.query.order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset)
     videos = videos_newest(PER_PAGE, offset)
     if not videos and page != 1:
         abort(404)
@@ -78,7 +76,7 @@ def popular(page):
 def feed(page):
     offset = ((int(page) - 1) * PER_PAGE)
     order = 'latest'
-    videos = Mv_Video.query.order_by(Mv_Video.id.desc()).limit(PER_PAGE).offset(offset)
+    videos = videos_newest(PER_PAGE, offset)
     if not videos and page != 1:
         abort(404)
     get_videocount()

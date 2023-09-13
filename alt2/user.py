@@ -7,7 +7,7 @@ from flask_babelplus import lazy_gettext
 from .database import db_session
 from .models import User, Mv_Video, Playlist, Counter
 from .pagination import Pagination
-from .util import login_required, get_usercount, users_newest, users_popular, userf
+from .util import login_required, get_usercount, users_newest, users_popular, useri
 import datetime, json
 
 bp = Blueprint('user', __name__, url_prefix='/user' )
@@ -44,9 +44,8 @@ def popular(page):
 
 @bp.route('/<username>')
 def item(username):
-    userv = username
 #    user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
-    user = userf(userv)
+    user = useri(username)
     if user is None:
         abort(404)
 

@@ -304,7 +304,7 @@ def search(page):
     my_to_tsquery_playlist = text("Mv_Playlist.document @@ to_tsquery(:search)")
     my_ts_rank_playlist = text("ts_rank(Mv_Playlist.document, to_tsquery(:search)) DESC")
     searchplaylists = db_session.query(Mv_Playlist).\
-        filter(my_to_tsquery_playlist).\
+        filter((Mv_Playlist.public),(my_to_tsquery_playlist)).\
         order_by(my_ts_rank_playlist).\
         params(search=search).all()
 
@@ -370,14 +370,14 @@ def search_latest(page):
     my_to_tsquery_playlist = text("Mv_Playlist.document @@ to_tsquery(:search)")
     my_ts_rank_playlist = text("ts_rank(Mv_Playlist.document, to_tsquery(:search)) DESC")
     searchplaylists = db_session.query(Mv_Playlist).\
-        filter(my_to_tsquery_playlist).\
+        filter((Mv_Playlist.public),(my_to_tsquery_playlist)).\
         order_by(my_ts_rank_playlist).\
         params(search=search).all()
 
     my_to_tsquery_altcen_user = text("Mv_Altcen_user.document @@ to_tsquery(:search)")
     my_ts_rank_altcen_user = text("ts_rank(Mv_Altcen_user.document, to_tsquery(:search)) DESC")
     altcen_users = db_session.query(Mv_Altcen_user).\
-        filter(my_to_tsquery_altcen_user).\
+        filter((Mv_Altcen_user.public),(my_to_tsquery_altcen_user)).\
         order_by(my_ts_rank_altcen_user).\
         limit(PER_PAGE).offset(offset).\
         params(search=search).all()
@@ -436,14 +436,14 @@ def search_new(page):
     my_to_tsquery_playlist = text("Mv_Playlist.document @@ to_tsquery(:search)")
     my_ts_rank_playlist = text("ts_rank(Mv_Playlist.document, to_tsquery(:search)) DESC")
     searchplaylists = db_session.query(Mv_Playlist).\
-        filter(my_to_tsquery_playlist).\
+        filter((Mv_Playlist.public),(my_to_tsquery_playlist)).\
         order_by(my_ts_rank_playlist).\
         params(search=search).all()
 
     my_to_tsquery_altcen_user = text("Mv_Altcen_user.document @@ to_tsquery(:search)")
     my_ts_rank_altcen_user = text("ts_rank(Mv_Altcen_user.document, to_tsquery(:search)) DESC")
     altcen_users = db_session.query(Mv_Altcen_user).\
-        filter(my_to_tsquery_altcen_user).\
+        filter((Mv_Altcen_user.public),(my_to_tsquery_altcen_user)).\
         order_by(my_ts_rank_altcen_user).\
         limit(PER_PAGE).offset(offset).\
         params(search=search).all()
@@ -502,14 +502,14 @@ def search_popular(page):
     my_to_tsquery_playlist = text("Mv_Playlist.document @@ to_tsquery(:search)")
     my_ts_rank_playlist = text("ts_rank(Mv_Playlist.document, to_tsquery(:search)) DESC")
     searchplaylists = db_session.query(Mv_Playlist).\
-        filter(my_to_tsquery_playlist).\
+        filter((Mv_Playlist.public),(my_to_tsquery_playlist)).\
         order_by(my_ts_rank_playlist).\
         params(search=search).all()
 
     my_to_tsquery_altcen_user = text("Mv_Altcen_user.document @@ to_tsquery(:search)")
     my_ts_rank_altcen_user = text("ts_rank(Mv_Altcen_user.document, to_tsquery(:search)) DESC")
     altcen_users = db_session.query(Mv_Altcen_user).\
-        filter(my_to_tsquery_altcen_user).\
+        filter((Mv_Altcen_user.public),(my_to_tsquery_altcen_user)).\
         order_by(my_ts_rank_altcen_user).\
         limit(PER_PAGE).offset(offset).\
         params(search=search).all()

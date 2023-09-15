@@ -9,7 +9,7 @@ from .database import db_session
 from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_user, User, Playlist
 from .pagination import Pagination
 import json, re
-from .util import videos_latest, videos_newest, videos_popular, get_videocount, print_session
+from .util import videos_latest, videos_newest, videos_popular, get_videocount, get_playnext
 
 bp = Blueprint('video', __name__)
 
@@ -542,6 +542,7 @@ def search_popular(page):
 
 @bp.route('/play-next', methods=['GET', 'POST'])
 def play_next():
+    get_playnext()
     if request.method == 'POST':
         data = json.loads(request.data)
 #        session['playnext'] = data['checked']

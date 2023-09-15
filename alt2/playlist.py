@@ -205,11 +205,17 @@ def add_video_playlist():
         db_session.commit()
         return redirect(url_for('video.watch', v=video_id ))
 
-    if not video_id in playlist.videos:
+    if playlist.videos is not None:
+        if not video_id in playlist.videos:
+            playlist.videos = list(dict.fromkeys(playlist.videos))
+            playlist.videos.append(video_id)
+
+    if playlist.videos is None:
         playlist.videos = list(dict.fromkeys(playlist.videos))
         playlist.videos.append(video_id)
 
     if not playlist.featured_video:
+        video = Mv_Video.query.get(video_id)
         playlist.featured_video = {
             "pl_id": playlist.id,
             "pl_title": playlist.title,

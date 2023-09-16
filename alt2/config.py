@@ -18,9 +18,9 @@ IPROXYTWBIG=os.getenv('IPROXYTWBIG')
 SUPPORTED_LANGUAGES = {'en': 'English', 'de': 'Deutsch', 'es': 'Español', 'fr': 'Français', 'pt': 'Portuguese', 'nl': 'Nederlandse', 'it': 'Italiano', 'se': 'Sverige'}
 SUPPORTED_THEMES = {'light', 'dark'}
 DEFAULT_THEME = 'light'
-DEFAULT_PLAYNEXT = 'False'
+DEFAULT_PLAYNEXT = 'True'
 DEFAULT_LOOPLIST = 'True'
-DEFAULT_AUTOPLAY = 'False'
+DEFAULT_AUTOPLAY = 'True'
 
 BABEL_DEFAULT_LOCALE = 'en'
 BABEL_DEFAULT_TIMEZONE = 'UTC'

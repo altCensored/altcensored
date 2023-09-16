@@ -134,6 +134,17 @@ def watch():
         )
         videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(user.watched)).order_by(ordering)
 
+        user.watched = []
+        for video in videos:
+            try:
+                user.watched += [video.extractor_data]
+            except:
+                user.watched = [video.extractor_data]
+
+            user.watched = list(dict.fromkeys(user.watched))
+            flag_modified(user, "watched")
+
+
     elif userlist == "watchlater":
         user = User.query.filter(User.id == session['user']['id']).scalar()
         ordering = case(
@@ -141,6 +152,16 @@ def watch():
             value=Mv_Video.extractor_data
         )
         videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(user.watchlater)).order_by(ordering)
+
+        user.watchlater = []
+        for video in videos:
+            try:
+                user.watchlater += [video.extractor_data]
+            except:
+                user.watchlater = [video.extractor_data]
+
+            user.watchlater = list(dict.fromkeys(user.watchlater))
+            flag_modified(user, "watchlater")
 
     else:
         videos = db_session.query(Mv_Video).filter(Mv_Video.ytc_id == video.ytc_id,
@@ -238,7 +259,6 @@ def embed(video_id):
 
     elif userlist == "watchlater":
         user = User.query.filter(User.id == session['user']['id']).scalar()
-        print("Watch Later", user.watchlater)
         if len(user.watchlater) > 1:
             idx = (user.watchlater).index(video.extractor_data)
             next_video = (user.watchlater).pop(idx - 1)

@@ -838,7 +838,7 @@ def users_popular(PER_PAGE, offset):
 
 @cache.cached(key_prefix="data"+"%s")
 def useri(username):
-    user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
+    user = User.query.filter((User.public),func.lower(User.username) == func.lower(username)).scalar()
     #    user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
     return user
 

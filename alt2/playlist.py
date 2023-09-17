@@ -12,8 +12,10 @@ from .database import db_session
 from .models import User, Playlist, Mv_Video, Counter
 from .pagination import Pagination
 from . import util
-from .util import login_required, str_to_bool, title_exists, playlists_popular, playlists_newest, get_playlistcount
-
+from .util import (
+    login_required, str_to_bool, title_exists, get_playlistcount,
+    playlists_popular, playlists_newest, playlisti, playlisti_videocount
+    )
 bp = Blueprint('playlist', __name__, url_prefix='/playlist')
 
 no_profanity = lazy_gettext('Profanity forbidden')
@@ -27,7 +29,7 @@ def index(page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
     playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
-            .order_by(Playlist.updated.desc()).limit(PER_PAGE).offset(offset)
+        .order_by(Playlist.updated.desc()).limit(PER_PAGE).offset(offset)
 #    playlists = playlists_newest(PER_PAGE, offset)
     if not playlists and page != 1:
         abort(404)
@@ -43,7 +45,7 @@ def popular(page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'popular'
     playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
-            .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
+        .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
 #    playlists = playlists_popular(PER_PAGE, offset)
     if not playlists and page != 1:
         abort(404)
@@ -58,10 +60,10 @@ def popular(page):
 def item(playlist,page):
     offset = ((int(page)-1) * PER_PAGE)
     playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
+#    playlist = playlisti(playlist)
 
     if playlist is None:
         abort(404)
-
     button = request.args.get('button', None)
 
     watchlater = None
@@ -95,6 +97,9 @@ def item(playlist,page):
         )
         videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(playlist.videos)).order_by(ordering).limit(PER_PAGE).offset(offset)
         videocount = db_session.query(func.count(Mv_Video.id)).filter(Mv_Video.extractor_data.in_(playlist.videos)).scalar()
+#        videocount = playlisti_videocount(playlist)
+#        videos = playlisti_videos(playlist, ordering, PER_PAGE, offset)
+
         pagination = Pagination(page, PER_PAGE, videocount)
     else:
         videos = []

@@ -801,6 +801,7 @@ def ytc_popular(ytc_id, PER_PAGE, offset):
 
 
 @cache.cached(key_prefix="data"+"%s")
+#@cache.memoize()
 def playlists_newest(PER_PAGE, offset):
     playlists_values = db_session.execute(db_session.query(Playlist).filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
                                           .order_by(Playlist.updated.desc()).limit(PER_PAGE).offset(offset))
@@ -808,16 +809,63 @@ def playlists_newest(PER_PAGE, offset):
 #            .order_by(Playlist.updated.desc()).limit(PER_PAGE).offset(offset)
     playlists = [r[0] for r in playlists_values]
     return playlists
+#
+# does not work because object is lazy loaded, and i am not using the ORM and calling with the session object, because that causes the
+# cannot pickle error message
+#
+# sqlalchemy.orm.exc.DetachedInstanceError: Parent instance <Playlist at 0x7f201f705600> is not bound to a Session;
+# lazy load operation of attribute 'user' cannot proceed (Background on this error at: https://sqlalche.me/e/14/bhk3)
+#
+
+@cache.cached(key_prefix="data"+"%s")
+#@cache.memoize()
+def playlists_popular(PER_PAGE, offset):
+#    playlists_values = db_session.execute(db_session.query(Playlist).filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
+#                                          .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset))
+    playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
+        .order_by(Playlist.updated.desc()).limit(PER_PAGE).offset(offset)
+#    playlists = [r[0] for r in playlists_values]
+    return playlists
+#
+# calling with the ORM and using the session object causes the 'cannot pickle session object' error message:
+# _pickle.PicklingError: Can't pickle <class 'sqlalchemy.orm.session.Session'>: it's not the same object as sqlalchemy.orm.session.Session
+
+
+@cache.memoize()
+def playlisti(playlist):
+    playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
+    return playlist
+#
+# does not work because object is lazy loaded, and i am not using the ORM and calling with the session object, because that causes the
+# cannot pickle error message
+#
+# sqlalchemy.orm.exc.DetachedInstanceError: Parent instance <Playlist at 0x7f201f705600> is not bound to a Session;
+# lazy load operation of attribute 'user' cannot proceed (Background on this error at: https://sqlalche.me/e/14/bhk3)
+#
+
+#@cache.memoize()
+@cache.cached(key_prefix="data"+"%s"+"/channeli_videocount")
+def playlisti_videocount(playlist):
+#    videocount = db_session.query(func.count(Mv_Video.id)).filter(Mv_Video.extractor_data.in_(playlist.videos)).scalar()
+    playlisti_videocount = db_session.query(func.count(Mv_Video.id)).filter(Mv_Video.extractor_data.in_(playlist.videos)).scalar()
+    print(playlisti_videocount)
+    return playlisti_videocount
+#
+# sqlalchemy.orm.exc.DetachedInstanceError: Parent instance <Playlist at 0x7f201f705600> is not bound to a Session;
+# lazy load operation of attribute 'user' cannot proceed (Background on this error at: https://sqlalche.me/e/14/bhk3)
+#
+
 
 
 @cache.cached(key_prefix="data"+"%s")
-def playlists_popular(PER_PAGE, offset):
-    playlists_values = db_session.execute(db_session.query(Playlist).filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
-                                          .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset))
-#    playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
-#            .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
-    playlists = [r[0] for r in playlists_values]
-    return playlists
+#@cache.memoize()
+def playlisti_videos(playlist, ordering, PER_PAGE, offset):
+#    playlisti_videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(playlist.videos)).order_by(ordering).limit(PER_PAGE).offset(offset)
+    playlisti_values = db_session.execute(db_session.query(Mv_Video).filter(Mv_Video.extractor_data.in_(playlist.videos)).order_by(ordering).limit(PER_PAGE).offset(offset))
+#    video_values = db_session.execute(db_session.query(Mv_Video).filter_by(ytc_id=ytc_id).order_by(Mv_Video.id.desc()).limit(PER_PAGE).offset(offset))
+
+    videos = [r[0] for r in playlisti_values]
+    return videos
 
 
 @cache.cached(key_prefix="data"+"%s")

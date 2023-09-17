@@ -179,7 +179,7 @@ def watchlater(page):
         return render_template('user/user_watchlater_index.html', pagination=pagination, \
                                videos=videos, videocount=videocount, playlist=playlist, watchlater=user.watchlater)
     except:
-        no_watch = lazy_gettext('No WatchLater Available')
+        no_watch = lazy_gettext('WatchLater Empty')
         flash(no_watch, 'success')
         return redirect(request.args.get('original_url', '/'))
 

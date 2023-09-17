@@ -45,8 +45,9 @@ def popular(page):
 @bp.route('/<username>')
 def item(username):
     user = useri(username)
-    if not user.public and (session['user']['id'] != user.id):
-        abort(404)
+    if user is None:
+        flash(lazy_gettext('User unknown'), 'error')
+        return redirect(request.args.get('original_url', '/'))
 
     if session.get('user') is not None and username == session['user']['username']:
         playlists = Playlist.query.filter((Playlist.public),(Playlist.user_id == user.id)) \

@@ -44,11 +44,7 @@ def popular(page):
 
 @bp.route('/<username>')
 def item(username):
-#    user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
     user = useri(username)
-    if user is None:
-        abort(404)
-
     if not user.public and (session['user']['id'] != user.id):
         abort(404)
 

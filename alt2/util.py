@@ -780,7 +780,7 @@ def channeli_videocount(ytc_id):
 
 @cache.cached(key_prefix="data"+"%s")
 def channeli_videos_newest(ytc_id, PER_PAGE, offset):
-    video_values = db_session.execute(db_session.query(Mv_Video).filter_by(ytc_id=ytc_id).order_by(Mv_Video.id.desc()).limit(PER_PAGE).offset(offset))
+    video_values = db_session.execute(db_session.query(Mv_Video).filter_by(ytc_id=ytc_id).order_by(Mv_Video.published.desc()).limit(PER_PAGE).offset(offset))
     videos = [r[0] for r in video_values]
     return videos
 

@@ -192,7 +192,7 @@ def add_video_playlist():
     if request.method == 'POST':
         video_id = request.form['v']
         playlist_ident = request.form['playlist_title']
-        playlist = Playlist.query.filter(Playlist.title == playlist_ident).scalar()
+        playlist = Playlist.query.filter((Playlist.user_id == session['user']['id']), Playlist.title == playlist_ident).scalar()
 
     else:
         video_id = request.args.get('v', None)
@@ -202,8 +202,13 @@ def add_video_playlist():
     if playlist_ident == 'add_to_watchlater':
         user = User.query.get(session['user']['id'])
 
-        if not video_id in user.watchlater:
-            user.watchlater = list(dict.fromkeys(user.watchlater))
+        if user.watchlater is not None:
+            if not video_id in user.watchlater:
+                user.watchlater = list(dict.fromkeys(user.watchlater))
+                user.watchlater.append(video_id)
+
+        if user.watchlater is None:
+            user.watchlater = []
             user.watchlater.append(video_id)
 
         flag_modified(user, "watchlater")
@@ -216,7 +221,7 @@ def add_video_playlist():
             playlist.videos.append(video_id)
 
     if playlist.videos is None:
-        playlist.videos = list(dict.fromkeys(playlist.videos))
+        playlist.videos = []
         playlist.videos.append(video_id)
 
     if not playlist.featured_video:

@@ -44,7 +44,8 @@ def popular(page):
 
 @bp.route('/<username>')
 def item(username):
-    user = useri(username)
+    user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
+#    user = useri(username)
     if user is None:
         flash(lazy_gettext('User unknown'), 'error')
         return redirect(request.args.get('original_url', '/'))

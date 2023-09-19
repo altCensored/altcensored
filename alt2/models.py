@@ -223,7 +223,7 @@ class User(Base):
     contributor = Column(Boolean, nullable=False, default=False)
     settings = Column(MutableDict.as_mutable(JSON))
     featured_playlist = Column(MutableDict.as_mutable(JSON))
-    playlists = relationship("Playlist", cascade="all, delete-orphan", back_populates="user")
+    playlists = relationship("Playlist", cascade="all", back_populates="user")
     vpn_conns = relationship("Vpn_conn", cascade="all, delete-orphan", back_populates="user")
 
 
@@ -441,7 +441,7 @@ class Mv_Playlist(Base):
     view_counter = Column(Integer, nullable=True)
     user_id = Column(Integer, ForeignKey('altcen_user.id'), nullable=False)
     featured_video = Column(MutableDict.as_mutable(JSON))
-    user = relationship("User", backref="playlist")
+    user = relationship("User", backref="mv_playlist")
 
 
     def __init__(self, next=None, delta=None):

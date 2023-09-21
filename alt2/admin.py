@@ -416,8 +416,8 @@ def scraper_status():
     sys_name = 'dbase'
     commands = ["systemctl status pgsync",
                 "systemctl status pgbackup",
-                "sudo -u postgres psql -c 'select current_timestamp - pg_postmaster_start_time() as uptime'",
-                'grep "$(date +"%Y-%m-%d")" /var/log/postgresql/postgresql-15-main.log | grep -e FATAL -e ERROR | awk '{ print $6" "$7" " $8" " $9" " $10" "$11" "$12" "$13" "$14" "$15 }' | sort | uniq -c | sort -rn']
+                "sudo -u postgres psql -c 'select current_timestamp - pg_postmaster_start_time() as uptime'"]
+#                'grep "$(date +"%Y-%m-%d")" /var/log/postgresql/postgresql-15-main.log | grep -e FATAL -e ERROR | awk '{ print $6" "$7" " $8" " $9" " $10" "$11" "$12" "$13" "$14" "$15 }' | sort | uniq -c | sort -rn']
     ssh_command(sys_name, commands)
 
     commands = ["awk '{print $3}' /var/log/nginx/rt_cache.log  | sort | uniq -c | sort -r",

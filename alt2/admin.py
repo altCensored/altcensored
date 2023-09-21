@@ -423,7 +423,7 @@ def scraper_status():
     commands = ["awk '{print $3}' /var/log/nginx/rt_cache.log  | sort | uniq -c | sort -r",
                 "du -c -h -s /var/lib/nginx/i_cache",
                 "du -c -h -s /var/lib/nginx/f_cache",
-                'journalctl -u gunicorn -f']
+                "journalctl -u gunicorn -n 20"]
 #    'journalctl -u gunicorn -S today | grep -e ERROR | awk '{ print $10" "$11" "$12" "$13 }' | sort | uniq -c | sort -r',
     local_command(commands)
 

@@ -417,14 +417,16 @@ def scraper_status():
     commands = ["systemctl status pgsync",
                 "systemctl status pgbackup",
                 "sudo -u postgres psql -c 'select current_timestamp - pg_postmaster_start_time() as uptime'",
-                "more /var/log/postgresql/postgresql-15-main.log | grep non-replication -m 20",
-                "more /var/log/postgresql/postgresql-15-main.log | grep 'terminating connection' -m 20"]
+                'grep "$(date +"%Y-%m-%d")" /var/log/postgresql/postgresql-15-main.log \
+                    | grep -e FATAL -e ERROR | awk '{ print $6" "$7" " $8" " $9" " $10" "$11" "$12" "$13" "$14" "$15 }' \
+                    | sort | uniq -c | sort -rn']
     ssh_command(sys_name, commands)
 
     commands = ["awk '{print $3}' /var/log/nginx/rt_cache.log  | sort | uniq -c | sort -r",
                 "du -c -h -s /var/lib/nginx/i_cache",
-                "du -c -h -s /var/lib/nginx/e_cache",
-                "du -c -h -s /var/lib/nginx/f_cache"]
+                "du -c -h -s /var/lib/nginx/f_cache",
+                'journalctl -u gunicorn -S today | grep -e ERROR | awk '{ print $10" "$11" "$12" "$13 }' | sort | uniq -c | sort -r',
+                'journalctl -u gunicorn -f']
     local_command(commands)
 
     return render_template('admin/admin_messages.html')

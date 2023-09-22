@@ -410,7 +410,8 @@ def scraper_status():
                 "systemctl status 3proxy",
                 "journalctl -n -u find_archive",
                 "df /dev/vda1",
-                "ls -lrt"]
+                "ls -lrt"
+                ]
     ssh_command(sys_name, commands)
 
     sys_name = 'dbase'
@@ -419,14 +420,20 @@ def scraper_status():
                 "sudo -u postgres psql -c 'select current_timestamp - pg_postmaster_start_time() as uptime'",
                 "grep \"$(date +\"%Y-%m-%d\")\" /var/log/postgresql/postgresql-15-main.log \
                 | grep -e FATAL -e ERROR | awk '{ print $6\" \"$7\" \"$8\" \"$9\" \"$10\" \"$11\" \"$12\" \"$13\" \"$14\" \"$15 }' \
-                | sort | uniq -c | sort -rn"]
+                | sort | uniq -c | sort -rn"
+                ]
     ssh_command(sys_name, commands)
 
-    commands = ["awk '{print $3}' /var/log/nginx/rt_cache.log  | sort | uniq -c | sort -r",
+    commands = ["grep \"$(date +\"%Y/%m/%d\")\" /var/log/nginx/error.log \
+                | grep -e [crit] -e [error] \
+                | awk '{ print $3\" \"$6\" \"$24\" \"$25\" \"$31$32 }' \
+                | sort | uniq -c | sort -rn",
+                "awk '{print $3}' /var/log/nginx/rt_cache.log  | sort | uniq -c | sort -r",
                 "du -c -h -s /var/lib/nginx/i_cache",
                 "du -c -h -s /var/lib/nginx/f_cache",
-                "journalctl -u gunicorn -n 20",
-                "journalctl -u gunicorn -S today | grep -e ERROR | awk '{ print $10\" \"$11\" \"$12\" \"$13 }' | sort | uniq -c | sort -r"]
+                "journalctl -u gunicorn -S today | grep -e ERROR | awk '{ print $10\" \"$11\" \"$12\" \"$13 }' | sort | uniq -c | sort -r",
+                "journalctl -u gunicorn -n 20"
+                ]
     local_command(commands)
 
     return render_template('admin/admin_messages.html')

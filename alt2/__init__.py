@@ -169,13 +169,15 @@ def create_app(test_config=None):
         return len(defaults) >= len(arguments)
 
     def bad_request(e):
+        app.logger.error(e)
         return render_template('video/400.html'), 400
 
     def page_not_found(e):
+        app.logger.error(e)
         return render_template('video/404.html'), 404
 
     def internal_server_error(e):
-        # note that we set the 500 status explicitly
+        app.logger.error(e)
         return render_template('video/500.html'), 500
 
     @app.template_filter('time_diff')

@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, session, render_template, request, flash, redirect, url_for
+    Blueprint, session, render_template, request, flash, redirect, url_for, app
 )
 from werkzeug.exceptions import abort
 from sqlalchemy import func, case
@@ -13,8 +13,7 @@ from .models import User, Playlist, Mv_Video, Counter
 from .pagination import Pagination
 from . import util
 from .util import (
-    login_required, str_to_bool, title_exists, get_playlistcount,
-    playlists_popular, playlists_newest, playlisti, playlisti_videocount
+    login_required, str_to_bool, title_exists, get_playlistcount
     )
 bp = Blueprint('playlist', __name__, url_prefix='/playlist')
 
@@ -198,6 +197,11 @@ def add_video_playlist():
         video_id = request.args.get('v', None)
         playlist_ident = request.args.get('playlist', None)
         playlist = Playlist.query.filter(Playlist.hashid == playlist_ident).scalar()
+
+    if playlist is None:
+        app.logging.error('playlist is NONE. user is %s, playlist_ident is %s, video is %s', session['user']['id'], playlist_ident, video_id)
+        abort(500)
+
 
     if playlist_ident == 'add_to_watchlater':
         user = User.query.get(session['user']['id'])

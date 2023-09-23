@@ -26,6 +26,7 @@ def create_app(test_config=None):
         # a default secret that should be overridden by instance config
         SECRET_KEY=app.config['SECRET_KEY'],
         DATABASE=os.path.join(app.instance_path, 'altcen.db'),
+        PROPAGATE_EXCEPTIONS=app.config['PROPAGATE_EXCEPTIONS'],
     )
 
     if test_config is None:
@@ -177,7 +178,7 @@ def create_app(test_config=None):
         return render_template('video/400.html'), 400
 
     def page_not_found(e):
-        app.logger.error(e)
+#        app.logger.error(e)
         return render_template('video/404.html'), 404
 
     def internal_server_error(e):

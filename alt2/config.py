@@ -14,6 +14,7 @@ IPROXY=os.getenv('IPROXY')
 IPROXYBIG=os.getenv('IPROXYBIG')
 IPROXYTW=os.getenv('IPROXYTW')
 IPROXYTWBIG=os.getenv('IPROXYTWBIG')
+PROPAGATE_EXCEPTIONS=False
 
 SUPPORTED_LANGUAGES = {'en': 'English', 'de': 'Deutsch', 'es': 'Español', 'fr': 'Français', 'pt': 'Portuguese', 'nl': 'Nederlandse', 'it': 'Italiano', 'se': 'Sverige'}
 SUPPORTED_THEMES = {'light', 'dark'}

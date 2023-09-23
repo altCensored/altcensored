@@ -194,7 +194,7 @@ def add_video_playlist():
         try:
             playlist = Playlist.query.filter((Playlist.user_id == session['user']['id']), Playlist.title == playlist_ident).scalar()
         except:
-            app.logging.error('playlist is NONE. user is %s, playlist_ident is %s, video is %s', session['user']['id'], playlist_ident, video_id)
+            app.logging.error('playlist POST query failed. user: %s, playlist_ident: %s, video: %s', session['user']['id'], playlist_ident, video_id)
             abort(500)
 
     else:
@@ -203,7 +203,7 @@ def add_video_playlist():
         playlist = Playlist.query.filter(Playlist.hashid == playlist_ident).scalar()
 
     if playlist is None:
-        app.logging.error('playlist is NONE. user is %s, playlist_ident is %s, video is %s', session['user']['id'], playlist_ident, video_id)
+        app.logging.error('playlist is NONE. user: %s, playlist_ident: %s, video: %s', session['user']['id'], playlist_ident, video_id)
         abort(500)
 
 

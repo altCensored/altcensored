@@ -182,7 +182,7 @@ def create_app(test_config=None):
         return render_template('video/404.html'), 404
 
     def internal_server_error(e):
-        app.logger.error(e)
+#        app.logger.error(e)
         return render_template('video/500.html'), 500
 
     @app.template_filter('time_diff')

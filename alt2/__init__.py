@@ -1,4 +1,4 @@
-import os, re
+import os, re, logging
 from flask import Flask, request, url_for, render_template, g
 from jinja2 import pass_eval_context, Markup
 from flask_babelplus import Babel, lazy_gettext
@@ -41,12 +41,16 @@ def create_app(test_config=None):
     except OSError:
         pass
 
+    if __name__ != '__main__':
+        gunicorn_logger = logging.getLogger('gunicorn.error')
+        app.logger.handlers = gunicorn_logger.handlers
+        app.logger.setLevel(gunicorn_logger.level)
+
+
     babel = Babel(app)
     QRcode(app)
     cache.init_app(app)
 
-#    Flask-BabelPlus
-#    babel.init_app(app=app)
 
     @babel.localeselector
     def get_locale():

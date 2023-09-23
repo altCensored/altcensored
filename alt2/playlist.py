@@ -191,7 +191,11 @@ def add_video_playlist():
     if request.method == 'POST':
         video_id = request.form['v']
         playlist_ident = request.form['playlist_title']
-        playlist = Playlist.query.filter((Playlist.user_id == session['user']['id']), Playlist.title == playlist_ident).scalar()
+        try:
+            playlist = Playlist.query.filter((Playlist.user_id == session['user']['id']), Playlist.title == playlist_ident).scalar()
+        except:
+            app.logging.error('playlist is NONE. user is %s, playlist_ident is %s, video is %s', session['user']['id'], playlist_ident, video_id)
+            abort(500)
 
     else:
         video_id = request.args.get('v', None)

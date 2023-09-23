@@ -57,7 +57,6 @@ def new(page):
 def popular(page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'popular'
-#    videos = Mv_Video.query.order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset)
     videos = videos_popular(PER_PAGE, offset)
     if not videos and page != 1:
         abort(404)
@@ -298,38 +297,35 @@ def embed(video_id):
 @bp.route('/search/page/<int:page>')
 def search(page):
     offset = ((int(page)-1) * PER_PAGE)
-    rawsearch1 = request.args.get('q', None)
-    rawsearch = rawsearch1.strip()
-    search2 = re.sub(' +', ' ', rawsearch)
-    search1 = search2.replace(" & " , "&")
-    search = search1.replace(" " , "&")
+    rawsearch = request.args.get('q', None)
+    search = rawsearch.strip()
     order = 'default'
     playlist_ident = request.args.get('playlist', None)
 
-    my_to_tsquery_video = text("mv_video.document @@ to_tsquery(:search)")
-    my_ts_rank_video = text("ts_rank(mv_video.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_video = text("mv_video.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_video = text("ts_rank(mv_video.document, websearch_to_tsquery(:search)) DESC")
     videos = db_session.query(Mv_Video).\
         filter(my_to_tsquery_video).\
         order_by(my_ts_rank_video).\
         limit(PER_PAGE).offset(offset).\
         params(search=search).all()
 
-    my_to_tsquery_channel = text("Mv_Channel.document @@ to_tsquery(:search)")
-    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_channel = text("Mv_Channel.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, websearch_to_tsquery(:search)) DESC")
     channels = db_session.query(Mv_Channel).\
         filter(my_to_tsquery_channel).\
         order_by(my_ts_rank_channel).\
         params(search=search).all()
 
-    my_to_tsquery_playlist = text("Mv_Playlist.document @@ to_tsquery(:search)")
-    my_ts_rank_playlist = text("ts_rank(Mv_Playlist.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_playlist = text("Mv_Playlist.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_playlist = text("ts_rank(Mv_Playlist.document, websearch_to_tsquery(:search)) DESC")
     searchplaylists = db_session.query(Mv_Playlist).\
         filter((Mv_Playlist.public),(my_to_tsquery_playlist)).\
         order_by(my_ts_rank_playlist).\
         params(search=search).all()
 
-    my_to_tsquery_altcen_user = text("Mv_Altcen_user.document @@ to_tsquery(:search)")
-    my_ts_rank_altcen_user = text("ts_rank(Mv_Altcen_user.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_altcen_user = text("Mv_Altcen_user.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_altcen_user = text("ts_rank(Mv_Altcen_user.document, websearch_to_tsquery(:search)) DESC")
     altcen_users = db_session.query(Mv_Altcen_user).\
         filter((Mv_Altcen_user.public),(my_to_tsquery_altcen_user)).\
         order_by(my_ts_rank_altcen_user).\
@@ -366,36 +362,35 @@ def search(page):
 @bp.route('/search/latest/page/<int:page>')
 def search_latest(page):
     offset = ((int(page)-1) * PER_PAGE)
-    rawsearch1 = request.args.get('q', None)
-    rawsearch = rawsearch1.strip()
-    search = rawsearch.replace(" " , "&")
+    rawsearch = request.args.get('q', None)
+    search = rawsearch.strip()
     order = 'latest'
     playlist_ident = request.args.get('playlist', None)
 
-    my_to_tsquery_video = text("mv_video.document @@ to_tsquery(:search)")
-    my_ts_rank_video = text("ts_rank(mv_video.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_video = text("mv_video.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_video = text("ts_rank(mv_video.document, websearch_to_tsquery(:search)) DESC")
     videos = db_session.query(Mv_Video).\
         filter(my_to_tsquery_video).\
         order_by(Mv_Video.id.desc()).\
         limit(PER_PAGE).offset(offset).\
         params(search=search).all()
 
-    my_to_tsquery_channel = text("Mv_Channel.document @@ to_tsquery(:search)")
-    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_channel = text("Mv_Channel.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, websearch_to_tsquery(:search)) DESC")
     channels = db_session.query(Mv_Channel).\
         filter(my_to_tsquery_channel).\
         order_by(my_ts_rank_channel).\
         params(search=search).all()
 
-    my_to_tsquery_playlist = text("Mv_Playlist.document @@ to_tsquery(:search)")
-    my_ts_rank_playlist = text("ts_rank(Mv_Playlist.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_playlist = text("Mv_Playlist.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_playlist = text("ts_rank(Mv_Playlist.document, websearch_to_tsquery(:search)) DESC")
     searchplaylists = db_session.query(Mv_Playlist).\
         filter((Mv_Playlist.public),(my_to_tsquery_playlist)).\
         order_by(my_ts_rank_playlist).\
         params(search=search).all()
 
-    my_to_tsquery_altcen_user = text("Mv_Altcen_user.document @@ to_tsquery(:search)")
-    my_ts_rank_altcen_user = text("ts_rank(Mv_Altcen_user.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_altcen_user = text("Mv_Altcen_user.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_altcen_user = text("ts_rank(Mv_Altcen_user.document, websearch_to_tsquery(:search)) DESC")
     altcen_users = db_session.query(Mv_Altcen_user).\
         filter((Mv_Altcen_user.public),(my_to_tsquery_altcen_user)).\
         order_by(my_ts_rank_altcen_user).\
@@ -432,36 +427,35 @@ def search_latest(page):
 @bp.route('/search/new/page/<int:page>')
 def search_new(page):
     offset = ((int(page)-1) * PER_PAGE)
-    rawsearch1 = request.args.get('q', None)
-    rawsearch = rawsearch1.strip()
-    search = rawsearch.replace(" " , "&")
+    rawsearch = request.args.get('q', None)
+    search = rawsearch.strip()
     order = 'newest'
     playlist_ident = request.args.get('playlist', None)
 
-    my_to_tsquery_video = text("mv_video.document @@ to_tsquery(:search)")
-    my_ts_rank_video = text("ts_rank(mv_video.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_video = text("mv_video.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_video = text("ts_rank(mv_video.document, websearch_to_tsquery(:search)) DESC")
     videos = db_session.query(Mv_Video).\
         filter(my_to_tsquery_video).\
         order_by(Mv_Video.published.desc()).\
         limit(PER_PAGE).offset(offset).\
         params(search=search).all()
 
-    my_to_tsquery_channel = text("Mv_Channel.document @@ to_tsquery(:search)")
-    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_channel = text("Mv_Channel.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, websearch_to_tsquery(:search)) DESC")
     channels = db_session.query(Mv_Channel).\
         filter(my_to_tsquery_channel).\
         order_by(my_ts_rank_channel).\
         params(search=search).all()
 
-    my_to_tsquery_playlist = text("Mv_Playlist.document @@ to_tsquery(:search)")
-    my_ts_rank_playlist = text("ts_rank(Mv_Playlist.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_playlist = text("Mv_Playlist.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_playlist = text("ts_rank(Mv_Playlist.document, websearch_to_tsquery(:search)) DESC")
     searchplaylists = db_session.query(Mv_Playlist).\
         filter((Mv_Playlist.public),(my_to_tsquery_playlist)).\
         order_by(my_ts_rank_playlist).\
         params(search=search).all()
 
-    my_to_tsquery_altcen_user = text("Mv_Altcen_user.document @@ to_tsquery(:search)")
-    my_ts_rank_altcen_user = text("ts_rank(Mv_Altcen_user.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_altcen_user = text("Mv_Altcen_user.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_altcen_user = text("ts_rank(Mv_Altcen_user.document, websearch_to_tsquery(:search)) DESC")
     altcen_users = db_session.query(Mv_Altcen_user).\
         filter((Mv_Altcen_user.public),(my_to_tsquery_altcen_user)).\
         order_by(my_ts_rank_altcen_user).\
@@ -498,36 +492,35 @@ def search_new(page):
 @bp.route('/search/popular/page/<int:page>')
 def search_popular(page):
     offset = ((int(page)-1) * PER_PAGE)
-    rawsearch1 = request.args.get('q', None)
-    rawsearch = rawsearch1.strip()
-    search = rawsearch.replace(" " , "&")
+    rawsearch = request.args.get('q', None)
+    search = rawsearch.strip()
     playlist_ident = request.args.get('playlist', None)
 
     order = 'popular'
-    my_to_tsquery_video = text("mv_video.document @@ to_tsquery(:search)")
-    my_ts_rank_video = text("ts_rank(mv_video.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_video = text("mv_video.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_video = text("ts_rank(mv_video.document, websearch_to_tsquery(:search)) DESC")
     videos = db_session.query(Mv_Video).\
         filter(my_to_tsquery_video).\
         order_by(Mv_Video.yt_views.desc()).\
         limit(PER_PAGE).offset(offset).\
         params(search=search).all()
 
-    my_to_tsquery_channel = text("Mv_Channel.document @@ to_tsquery(:search)")
-    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_channel = text("Mv_Channel.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, websearch_to_tsquery(:search)) DESC")
     channels = db_session.query(Mv_Channel).\
         filter(my_to_tsquery_channel).\
         order_by(my_ts_rank_channel).\
         params(search=search).all()
 
-    my_to_tsquery_playlist = text("Mv_Playlist.document @@ to_tsquery(:search)")
-    my_ts_rank_playlist = text("ts_rank(Mv_Playlist.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_playlist = text("Mv_Playlist.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_playlist = text("ts_rank(Mv_Playlist.document, websearch_to_tsquery(:search)) DESC")
     searchplaylists = db_session.query(Mv_Playlist).\
         filter((Mv_Playlist.public),(my_to_tsquery_playlist)).\
         order_by(my_ts_rank_playlist).\
         params(search=search).all()
 
-    my_to_tsquery_altcen_user = text("Mv_Altcen_user.document @@ to_tsquery(:search)")
-    my_ts_rank_altcen_user = text("ts_rank(Mv_Altcen_user.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_altcen_user = text("Mv_Altcen_user.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_altcen_user = text("ts_rank(Mv_Altcen_user.document, websearch_to_tsquery(:search)) DESC")
     altcen_users = db_session.query(Mv_Altcen_user).\
         filter((Mv_Altcen_user.public),(my_to_tsquery_altcen_user)).\
         order_by(my_ts_rank_altcen_user).\

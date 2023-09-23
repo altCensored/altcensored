@@ -37,16 +37,16 @@ def item(lang_code,page):
     rawsearch_str = ''.join(rawsearch)
     search = rawsearch.replace(',','|')
 
-    my_to_tsquery_video = text("mv_video.document @@ to_tsquery(:search)")
-    my_ts_rank_video = text("ts_rank(mv_video.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_video = text("mv_video.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_video = text("ts_rank(mv_video.document, websearch_to_tsquery(:search)) DESC")
     videos = db_session.query(Mv_Video).\
         filter(my_to_tsquery_video).\
         order_by(Mv_Video.id.desc()).\
         limit(PER_PAGE).offset(offset).\
         params(search=search).all()
 
-    my_to_tsquery_channel = text("Mv_Channel.document @@ to_tsquery(:search)")
-    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_channel = text("Mv_Channel.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, websearch_to_tsquery(:search)) DESC")
     channels = db_session.query(Mv_Channel).\
         filter(my_to_tsquery_channel).\
         order_by(my_ts_rank_channel).\
@@ -75,16 +75,16 @@ def item_new(lang_code,page):
     rawsearch_str = ''.join(rawsearch)
     search = rawsearch.replace(',','|')
 
-    my_to_tsquery_video = text("mv_video.document @@ to_tsquery(:search)")
-    my_ts_rank_video = text("ts_rank(mv_video.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_video = text("mv_video.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_video = text("ts_rank(mv_video.document, websearch_to_tsquery(:search)) DESC")
     videos = db_session.query(Mv_Video).\
         filter(my_to_tsquery_video).\
         order_by(Mv_Video.published.desc()).\
         limit(PER_PAGE).offset(offset).\
         params(search=search).all()
 
-    my_to_tsquery_channel = text("Mv_Channel.document @@ to_tsquery(:search)")
-    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_channel = text("Mv_Channel.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, websearch_to_tsquery(:search)) DESC")
     channels = db_session.query(Mv_Channel).\
         filter(my_to_tsquery_channel).\
         order_by(my_ts_rank_channel).\
@@ -113,16 +113,16 @@ def item_old(lang_code,page):
     rawsearch_str = ''.join(rawsearch)
     search = rawsearch.replace(',','|')
 
-    my_to_tsquery_video = text("mv_video.document @@ to_tsquery(:search)")
-    my_ts_rank_video = text("ts_rank(mv_video.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_video = text("mv_video.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_video = text("ts_rank(mv_video.document, websearch_to_tsquery(:search)) DESC")
     videos = db_session.query(Mv_Video).\
         filter(my_to_tsquery_video).\
         order_by(Mv_Video.published.asc()).\
         limit(PER_PAGE).offset(offset).\
         params(search=search).all()
 
-    my_to_tsquery_channel = text("Mv_Channel.document @@ to_tsquery(:search)")
-    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_channel = text("Mv_Channel.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, websearch_to_tsquery(:search)) DESC")
     channels = db_session.query(Mv_Channel).\
         filter(my_to_tsquery_channel).\
         order_by(my_ts_rank_channel).\
@@ -151,16 +151,16 @@ def item_popular(lang_code,page):
     rawsearch_str = ''.join(rawsearch)
     search = rawsearch.replace(',','|')
 
-    my_to_tsquery_video = text("mv_video.document @@ to_tsquery(:search)")
-    my_ts_rank_video = text("ts_rank(mv_video.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_video = text("mv_video.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_video = text("ts_rank(mv_video.document, websearch_to_tsquery(:search)) DESC")
     videos = db_session.query(Mv_Video).\
         filter(my_to_tsquery_video).\
         order_by(Mv_Video.yt_views.desc()).\
         limit(PER_PAGE).offset(offset).\
         params(search=search).all()
 
-    my_to_tsquery_channel = text("Mv_Channel.document @@ to_tsquery(:search)")
-    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_channel = text("Mv_Channel.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, websearch_to_tsquery(:search)) DESC")
     channels = db_session.query(Mv_Channel).\
         filter(my_to_tsquery_channel).\
         order_by(my_ts_rank_channel).\

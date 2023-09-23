@@ -107,8 +107,8 @@ def lang_item(lang_code,page):
 
     search = lang_tagstring
 
-    my_to_tsquery_video = text("mv_video.document @@ to_tsquery(:search)")
-    my_ts_rank_video = text("ts_rank(mv_video.document, to_tsquery(:search)) DESC")
+    my_to_tsquery_video = text("mv_video.document @@ websearch_to_tsquery(:search)")
+    my_ts_rank_video = text("ts_rank(mv_video.document, websearch_to_tsquery(:search)) DESC")
     videos = db_session.query(Mv_Video).\
         filter(my_to_tsquery_video).\
         order_by(my_ts_rank_video).\

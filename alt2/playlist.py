@@ -203,7 +203,6 @@ def add_video_playlist():
         playlist = Playlist.query.filter(Playlist.hashid == playlist_ident).scalar()
 
     if playlist is None:
-        app.logging.error('playlist is NONE. user: %s, playlist_ident: %s, video: %s', session['user']['id'], playlist_ident, video_id)
         abort(500)
 
 

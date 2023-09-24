@@ -1,26 +1,48 @@
 import os, re, logging
-from flask import Flask, request, url_for, render_template, g
+from flask import Flask, request, url_for, render_template, g, has_request_context
+from logging.config import dictConfig
+
 from jinja2 import pass_eval_context, Markup
 from flask_babelplus import Babel, lazy_gettext
 from urllib.parse import quote_plus
 from flask_qrcode import QRcode
 from markupsafe import escape
-
 import timeago, datetime
 from datetime import timezone
-
 import bleach
 import unicodedata
 import math
 from . import util
 from .cache import cache
 from psycogreen.gevent import patch_psycopg
-
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
-sentry_sdk.init(dsn=os.getenv('SENTRY_DSN'), integrations=[FlaskIntegration()])
+
+
+dictConfig({
+    'version': 1,
+    'formatters': {'default': {
+        'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
+    }},
+    'handlers': {'wsgi': {
+        'class': 'logging.StreamHandler',
+        'stream': 'ext://flask.logging.wsgi_errors_stream',
+        'formatter': 'default'
+    }},
+    'root': {
+        'level': 'INFO',
+        'handlers': ['wsgi']
+    }
+})
+
+
+sentry_sdk.init(dsn=os.getenv('SENTRY_DSN'),
+#                debug=True,
+                send_default_pii=True,
+                integrations=[FlaskIntegration()])
 
 patch_psycopg()
+
 
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
@@ -51,7 +73,6 @@ def create_app(test_config=None):
         gunicorn_logger = logging.getLogger('gunicorn.error')
         app.logger.handlers = gunicorn_logger.handlers
         app.logger.setLevel(gunicorn_logger.level)
-
 
     babel = Babel(app)
     QRcode(app)
@@ -183,7 +204,10 @@ def create_app(test_config=None):
         return render_template('video/400.html'), 400
 
     def page_not_found(e):
-#        app.logger.error(e)
+        if has_request_context():
+            app.logger.error('404 Not Found: Requested URL: %s, IP Address: %s', request.url, request.remote_addr)
+        else:
+            app.logger.error(e)
         return render_template('video/404.html'), 404
 
     def internal_server_error(e):

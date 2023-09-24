@@ -302,6 +302,11 @@ def search(page):
     order = 'default'
     playlist_ident = request.args.get('playlist', None)
 
+    if search.lower().partition("youtube.com/watch?v=")[2] != "":
+        search = (search.lower().partition("youtube.com/watch?v=")[2])
+    elif search.lower().partition("youtube.com/channel/")[2] != "":
+        search = (search.lower().partition("youtube.com/channel/")[2])
+
     my_to_tsquery_video = text("mv_video.document @@ websearch_to_tsquery(:search)")
     my_ts_rank_video = text("ts_rank(mv_video.document, websearch_to_tsquery(:search)) DESC")
     videos = db_session.query(Mv_Video).\
@@ -364,6 +369,12 @@ def search_latest(page):
     offset = ((int(page)-1) * PER_PAGE)
     rawsearch = request.args.get('q', None)
     search = rawsearch.strip()
+
+    if search.lower().partition("youtube.com/watch?v=")[2] != "":
+        search = (search.lower().partition("youtube.com/watch?v=")[2])
+    elif search.lower().partition("youtube.com/channel/")[2] != "":
+        search = (search.lower().partition("youtube.com/channel/")[2])
+
     order = 'latest'
     playlist_ident = request.args.get('playlist', None)
 
@@ -432,6 +443,11 @@ def search_new(page):
     order = 'newest'
     playlist_ident = request.args.get('playlist', None)
 
+    if search.lower().partition("youtube.com/watch?v=")[2] != "":
+        search = (search.lower().partition("youtube.com/watch?v=")[2])
+    elif search.lower().partition("youtube.com/channel/")[2] != "":
+        search = (search.lower().partition("youtube.com/channel/")[2])
+
     my_to_tsquery_video = text("mv_video.document @@ websearch_to_tsquery(:search)")
     my_ts_rank_video = text("ts_rank(mv_video.document, websearch_to_tsquery(:search)) DESC")
     videos = db_session.query(Mv_Video).\
@@ -495,6 +511,11 @@ def search_popular(page):
     rawsearch = request.args.get('q', None)
     search = rawsearch.strip()
     playlist_ident = request.args.get('playlist', None)
+
+    if search.lower().partition("youtube.com/watch?v=")[2] != "":
+        search = (search.lower().partition("youtube.com/watch?v=")[2])
+    elif search.lower().partition("youtube.com/channel/")[2] != "":
+        search = (search.lower().partition("youtube.com/channel/")[2])
 
     order = 'popular'
     my_to_tsquery_video = text("mv_video.document @@ websearch_to_tsquery(:search)")

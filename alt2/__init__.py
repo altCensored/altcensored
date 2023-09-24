@@ -15,6 +15,11 @@ import math
 from . import util
 from .cache import cache
 from psycogreen.gevent import patch_psycopg
+
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
+sentry_sdk.init(dsn=os.getenv('SENTRY_DSN'), integrations=[FlaskIntegration()])
+
 patch_psycopg()
 
 def create_app(test_config=None):

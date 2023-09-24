@@ -186,7 +186,7 @@ def create_app(test_config=None):
 
     def page_not_found(e):
         if has_request_context():
-            app.logger.error('404 Not Found: Requested URL: %s, IP Address: %s', request.url, request.remote_addr)
+            app.logger.error('404 Not Found: Requested URL: %s', request.url)
         else:
             app.logger.error(e)
         return render_template('video/404.html'), 404

@@ -1,7 +1,6 @@
 from flask import (
-    Blueprint, session, render_template, request, flash, redirect, url_for, app
+    Blueprint, session, render_template, request, flash, redirect, url_for, app, abort
 )
-from werkzeug.exceptions import abort
 from sqlalchemy import func, case
 from sqlalchemy.orm.attributes import flag_modified
 from hashids import Hashids

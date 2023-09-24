@@ -1,8 +1,7 @@
 from flask import (
-    Blueprint, session, render_template, flash, redirect, request, url_for)
+    Blueprint, session, render_template, flash, redirect, request, url_for, abort)
 from sqlalchemy import func, case
 from sqlalchemy.orm.attributes import flag_modified
-from werkzeug.exceptions import abort
 from flask_babelplus import lazy_gettext
 from .database import db_session
 from .models import User, Mv_Video, Playlist, Counter

@@ -7,7 +7,7 @@ import time
 from datetime import timezone, timedelta
 from flask_babelplus import lazy_gettext
 from flask import (
-    Blueprint, flash, redirect, render_template, request, url_for, current_app, jsonify)
+    Blueprint, flash, redirect, render_template, request, url_for, current_app, jsonify, abort)
 from sqlalchemy import func
 from .database import db_session
 from .models import Mv_Channel, User, Entity, Source, Sources_to_Videos, Email_list
@@ -837,3 +837,9 @@ def test6():
     ssh_command(commands)
 
     return render_template('admin/admin_messages.html')
+
+
+@bp.route('/test500')
+@util.admin_login_required
+def test500():
+    abort(500)

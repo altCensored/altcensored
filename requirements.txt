@@ -3,8 +3,8 @@ backports.csv==1.0.7
 bcrypt==4.0.1
 better-profanity==0.7.0
 bleach==3.2.1
-boto3==1.24.19
-botocore==1.27.19
+boto3>=1.24.19
+botocore>=1.27.19
 captcha==0.3
 certifi==2020.11.8
 cffi==1.15.1
@@ -45,11 +45,11 @@ python-http-client==3.3.1
 pytz==2020.4
 qrcode==7.3.1
 redis==5.0.0
-requests==2.24.0
+requests>=2.31.0
 s3transfer==0.6.0
 schema==0.7.2
 sendgrid==6.4.7
-sentry-sdk[flask]==1.31
+sentry-sdk[flask]>=1.31
 six==1.15.0
 SQLAlchemy==1.4.49
 sqlalchemy-datatables==2.0.1
@@ -57,6 +57,6 @@ starkbank-ecdsa==1.1.0
 timeago==1.0.14
 total-ordering==0.1.0
 tqdm==4.51.0
-urllib3==1.25.11
+urllib3>=1.26.16
 webencodings==0.5.1
 Werkzeug==2.0

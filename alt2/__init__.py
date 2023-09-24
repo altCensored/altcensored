@@ -1,7 +1,5 @@
 import os, re, logging
 from flask import Flask, request, url_for, render_template, g, has_request_context
-from logging.config import dictConfig
-
 from jinja2 import pass_eval_context, Markup
 from flask_babelplus import Babel, lazy_gettext
 from urllib.parse import quote_plus
@@ -17,23 +15,6 @@ from .cache import cache
 from psycogreen.gevent import patch_psycopg
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
-
-
-dictConfig({
-    'version': 1,
-    'formatters': {'default': {
-        'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
-    }},
-    'handlers': {'wsgi': {
-        'class': 'logging.StreamHandler',
-        'stream': 'ext://flask.logging.wsgi_errors_stream',
-        'formatter': 'default'
-    }},
-    'root': {
-        'level': 'INFO',
-        'handlers': ['wsgi']
-    }
-})
 
 
 sentry_sdk.init(dsn=os.getenv('SENTRY_DSN'),
@@ -211,7 +192,7 @@ def create_app(test_config=None):
         return render_template('video/404.html'), 404
 
     def internal_server_error(e):
-#        app.logger.error(e)
+        app.logger.error(e)
         return render_template('video/500.html'), 500
 
     @app.template_filter('time_diff')

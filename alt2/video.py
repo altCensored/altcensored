@@ -297,6 +297,8 @@ def embed(video_id):
 def search(page):
     offset = ((int(page)-1) * PER_PAGE)
     rawsearch = request.args.get('q', None)
+    if rawsearch is None:
+        abort(404)
     search = rawsearch.strip()
     order = 'default'
     playlist_ident = request.args.get('playlist', None)

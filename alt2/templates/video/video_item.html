@@ -84,8 +84,8 @@
                         <fieldset>
                             <div class="pure-control-group">
                                 <label for="AddtoPlaylist"></label>
-                                <select id="playlist_title" name="playlist_title" >
-                                    <option value="" SELECTED>{{ gettext('Select Playlist') }}</option>
+                                <select id="playlist_title" name="playlist_title" required>
+                                    <option value="" selected>{{ gettext('Select Playlist') }}</option>
                                     {% for playlist_title in playlist_titles %}
                                         <option value="{{ playlist_title }}">{{ playlist_title }}</option>"
                                     {% endfor %}

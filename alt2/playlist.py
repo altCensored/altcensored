@@ -190,20 +190,12 @@ def add_video_playlist():
     if request.method == 'POST':
         video_id = request.form['v']
         playlist_ident = request.form['playlist_title']
-        try:
-            playlist = Playlist.query.filter((Playlist.user_id == session['user']['id']), Playlist.title == playlist_ident).scalar()
-        except:
-            app.logging.error('playlist POST query failed. user: %s, playlist_ident: %s, video: %s', session['user']['id'], playlist_ident, video_id)
-            abort(500)
+        playlist = Playlist.query.filter((Playlist.user_id == session['user']['id']), Playlist.title == playlist_ident).scalar()
 
     else:
         video_id = request.args.get('v', None)
         playlist_ident = request.args.get('playlist', None)
         playlist = Playlist.query.filter(Playlist.hashid == playlist_ident).scalar()
-
-    if playlist is None:
-        abort(500)
-
 
     if playlist_ident == 'add_to_watchlater':
         user = User.query.get(session['user']['id'])

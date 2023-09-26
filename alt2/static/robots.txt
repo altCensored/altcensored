@@ -1,6 +1,28 @@
-User-agent: Twitterbot
- Disallow:
- 
+User-agent: AhrefsBot
+Disallow:/
+
+User-agent: SemrushBot
+Disallow:/
+
+User-agent: MJ12bot
+Disallow:/
+
+User-agent: Petalbot
+Disallow:/
+
+User-agent: DotBot
+Disallow:/
+
+User-agent: SemrushBot-BA
+Disallow:/
+
 User-agent: *
 Disallow: /search
-Crawl-delay: 1
+Disallow: /category
+Disallow: /language
+Disallow: /settings
+Disallow: /vpn
+Disallow: /auth
+Disallow: /newsletter
+Disallow: /donate
+Crawl-delay: 3

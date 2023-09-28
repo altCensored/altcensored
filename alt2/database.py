@@ -9,8 +9,8 @@ engine = create_engine(dbase,
                        max_overflow=25,
 #                       echo=True,
 #                       echo_pool="debug",
-#                       pool_use_lifo=True,
-#                       pool_pre_ping=True
+                       pool_use_lifo=True,
+                       pool_pre_ping=True
                        )
 
 db_session = scoped_session(sessionmaker(autocommit=False,

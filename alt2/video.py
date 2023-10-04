@@ -348,18 +348,18 @@ def search(page):
 def search_latest(page):
     offset = ((int(page)-1) * PER_PAGE)
     rawsearch = request.args.get('q', None)
+    if rawsearch is None:
+        abort(404)
     search = rawsearch.strip()
+    order = 'latest'
+    playlist_ident = request.args.get('playlist', None)
 
     if search.lower().partition("youtube.com/watch?v=")[2] != "":
         search = (search.lower().partition("youtube.com/watch?v=")[2])
     elif search.lower().partition("youtube.com/channel/")[2] != "":
         search = (search.lower().partition("youtube.com/channel/")[2])
 
-    order = 'latest'
-    playlist_ident = request.args.get('playlist', None)
-
     my_to_tsquery_video = text("mv_video.document @@ websearch_to_tsquery(:search)")
-    my_ts_rank_video = text("ts_rank(mv_video.document, websearch_to_tsquery(:search)) DESC")
     videos = db_session.query(Mv_Video).\
         filter(my_to_tsquery_video).\
         order_by(Mv_Video.id.desc()).\
@@ -419,6 +419,8 @@ def search_latest(page):
 def search_new(page):
     offset = ((int(page)-1) * PER_PAGE)
     rawsearch = request.args.get('q', None)
+    if rawsearch is None:
+        abort(404)
     search = rawsearch.strip()
     order = 'newest'
     playlist_ident = request.args.get('playlist', None)
@@ -429,7 +431,6 @@ def search_new(page):
         search = (search.lower().partition("youtube.com/channel/")[2])
 
     my_to_tsquery_video = text("mv_video.document @@ websearch_to_tsquery(:search)")
-    my_ts_rank_video = text("ts_rank(mv_video.document, websearch_to_tsquery(:search)) DESC")
     videos = db_session.query(Mv_Video).\
         filter(my_to_tsquery_video).\
         order_by(Mv_Video.published.desc()).\
@@ -489,7 +490,10 @@ def search_new(page):
 def search_popular(page):
     offset = ((int(page)-1) * PER_PAGE)
     rawsearch = request.args.get('q', None)
+    if rawsearch is None:
+        abort(404)
     search = rawsearch.strip()
+    order = 'popular'
     playlist_ident = request.args.get('playlist', None)
 
     if search.lower().partition("youtube.com/watch?v=")[2] != "":
@@ -497,9 +501,7 @@ def search_popular(page):
     elif search.lower().partition("youtube.com/channel/")[2] != "":
         search = (search.lower().partition("youtube.com/channel/")[2])
 
-    order = 'popular'
     my_to_tsquery_video = text("mv_video.document @@ websearch_to_tsquery(:search)")
-    my_ts_rank_video = text("ts_rank(mv_video.document, websearch_to_tsquery(:search)) DESC")
     videos = db_session.query(Mv_Video).\
         filter(my_to_tsquery_video).\
         order_by(Mv_Video.yt_views.desc()).\

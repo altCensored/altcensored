@@ -241,6 +241,9 @@ def update_channel():
         else:
             flash(channel_id + ' NOT Updated', 'error')
 
+        return redirect(request.url)
+
+
     return render_template('admin/admin_channels.html', title=title, ddays=ddays, atype=atype)
 
 

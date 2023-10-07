@@ -23,9 +23,10 @@
           &nbsp;&nbsp;&nbsp;&nbsp;
           <input type=submit value=Return>
           <br><br>
+          {% if 'Add' or 'Update' in title %}
           <label for="delta">Delta:</label>
           <select name=delta>
-            <option value="">Select a value:</option>
+            <option value={{ddays}}>{{ddays}} OR Select:</option>
             <option value=1>1</option>"
             <option value=2>2</option>"
             <option value=5>5</option>"
@@ -34,12 +35,12 @@
             <option value=30>30</option>
             <option value=45>45</option>
           </select>
-          {% if title == 'Update' %}
+          {% endif %}
+          {% if 'Update' in title %}
           <hr>
           <label for="archive_type">Archive Type:</label>
           <select name=archive_type>
-            <option value="">Select a value:</option>
-            <option value=none>none</option>"
+            <option value={{atype}}>{{atype}} OR Select:</option>
             <option value=partial>partial</option>"
             <option value=latest>latest</option>"
             <option value=full>full</option>"

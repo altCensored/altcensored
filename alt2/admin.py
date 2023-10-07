@@ -157,7 +157,8 @@ def video_data():
 @bp.route('/add_channel', methods=['GET', 'POST'])
 @util.admin_login_required
 def add_channel():
-    title = "Add"
+    ddays = request.args.get('ddays', 'null')
+    title = request.args.get('title', 'Add')
     if request.method == 'POST':
         sys_name = 'scraper'
         channel_id = (request.form['channel_id'])
@@ -178,15 +179,17 @@ def add_channel():
         except:
             flash(channel_id + " NOT added usiing afs")
 
-    return render_template('admin/admin_channels.html', title=title)
+    return render_template('admin/admin_channels.html', title=title, ddays=ddays)
 
 
 @bp.route('/update_channel', methods=['GET', 'POST'])
 @util.admin_login_required
 def update_channel():
-    title = "Update"
-    if request.method == 'POST':
+    title = request.args.get('title', 'Update')
+    atype = request.args.get('atype', 'null')
+    ddays = request.args.get('ddays', 'null')
 
+    if request.method == 'POST':
         channel_id = (request.form['channel_id'])
         delta = (request.form['delta'])
         archive_type = (request.form['archive_type'])
@@ -195,6 +198,8 @@ def update_channel():
         viewcount = (request.form['viewcount'])
         subscribercount = (request.form['subscribercount'])
         deleteddate = (request.form['deleteddate'])
+
+        print(archive_type)
 
         if delta:
             intdays = int(delta)
@@ -236,7 +241,7 @@ def update_channel():
         else:
             flash(channel_id + ' NOT Updated', 'error')
 
-    return render_template('admin/admin_channels.html', title=title)
+    return render_template('admin/admin_channels.html', title=title, ddays=ddays, atype=atype)
 
 
 @bp.route('/disable_channel', methods=['GET', 'POST'])
@@ -431,7 +436,10 @@ def scraper_status():
                 "awk '{print $3}' /var/log/nginx/rt_cache.log  | sort | uniq -c | sort -r",
                 "du -c -h -s /var/lib/nginx/i_cache",
                 "du -c -h -s /var/lib/nginx/f_cache",
-                "journalctl -u gunicorn -S today | grep -e ERROR | awk '{ print $10\" \"$11\" \"$12\" \"$13 }' | sort | uniq -c | sort -r",
+                "journalctl -u gunicorn -S today \
+                | grep -e ERROR \
+                | awk '{ print $10\" \"$11\" \"$12\" \"$13 }' \
+                | sort | uniq -c | sort -r",
                 "journalctl -u gunicorn -n 20"
                 ]
     local_command(commands)

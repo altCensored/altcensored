@@ -157,8 +157,8 @@ def video_data():
 @bp.route('/add_channel', methods=['GET', 'POST'])
 @util.admin_login_required
 def add_channel():
-    ddays = request.args.get('ddays', 'null')
     title = request.args.get('title', 'Add')
+    ddays = request.args.get('ddays', '')
     if request.method == 'POST':
         sys_name = 'scraper'
         channel_id = (request.form['channel_id'])
@@ -187,7 +187,7 @@ def add_channel():
 def update_channel():
     title = request.args.get('title', 'Update')
     atype = request.args.get('atype', 'null')
-    ddays = request.args.get('ddays', 'null')
+    ddays = request.args.get('ddays', '')
 
     if request.method == 'POST':
         channel_id = (request.form['channel_id'])

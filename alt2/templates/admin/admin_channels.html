@@ -23,7 +23,7 @@
           &nbsp;&nbsp;&nbsp;&nbsp;
           <input type=submit value=Return>
           <br><br>
-          {% if 'Add' or 'Update' in title %}
+          {% if 'Add' in title or 'Update' in title %}
           <label for="delta">Delta:</label>
           <select name=delta>
             <option value={{ddays}}>{{ddays}} OR Select:</option>
@@ -41,6 +41,7 @@
           <label for="archive_type">Archive Type:</label>
           <select name=archive_type>
             <option value={{atype}}>{{atype}} OR Select:</option>
+            <option value=none>none</option>"
             <option value=partial>partial</option>"
             <option value=latest>latest</option>"
             <option value=full>full</option>"

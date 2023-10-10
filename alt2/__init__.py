@@ -20,6 +20,7 @@ from sentry_sdk.integrations.flask import FlaskIntegration
 sentry_sdk.init(dsn=os.getenv('SENTRY_DSN'),
 #                debug=True,
                 send_default_pii=True,
+                traces_sample_rate=0.3,
                 integrations=[FlaskIntegration()])
 
 patch_psycopg()

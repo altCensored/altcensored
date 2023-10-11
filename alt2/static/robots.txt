@@ -1,7 +1,13 @@
+User-agent: BLEXBot
+Disallow:/
+
 User-agent: AhrefsBot
 Disallow:/
 
 User-agent: SemrushBot
+Disallow:/
+
+User-agent: SemrushBot-BA
 Disallow:/
 
 User-agent: MJ12bot
@@ -13,11 +19,21 @@ Disallow:/
 User-agent: DotBot
 Disallow:/
 
-User-agent: SemrushBot-BA
+User-agent: DataForSeoBot
 Disallow:/
+
+User-agent: SeekportBot
+Disallow:/
+
+User-agent: Bytespider
+Disallow:/
+
 
 User-agent: *
 Disallow: /search
+Disallow: /embed
+Disallow: /embed
+
 Disallow: /category
 Disallow: /language
 Disallow: /settings

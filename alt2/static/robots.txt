@@ -28,6 +28,14 @@ Disallow:/
 User-agent: Bytespider
 Disallow:/
 
+User-agent: Qwantify
+Disallow:/
+
+User-agent: barkrowler
+Disallow:/
+
+User-agent: DataForSeoBot
+Disallow:/
 
 User-agent: *
 Disallow: /search

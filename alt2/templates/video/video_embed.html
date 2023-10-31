@@ -43,8 +43,7 @@ style="outline:none;
     height: 100%;
     width: 100%;
     overflow-wrap: break-word;
-    word-wrap: break-word;
-">
+    word-wrap: break-word;">
 
 {% else %}
 
@@ -67,8 +66,7 @@ style="outline:none;
     height: 100%;
     width: 100%;
     overflow-wrap: break-word;
-    word-wrap: break-word;
-">
+    word-wrap: break-word;">
 
 {% endif %}
 
@@ -104,7 +102,7 @@ style="outline:none;
     var player = videojs('video-player');
 
     // added to work with altCen, and changed 'url' below
-    // var replacedStr =  window.location.href.replace("embed/", "watch?v=");
+    var replacedStr =  window.location.href.replace("embed/", "watch?v=");
 
     var shareOptions = {
       socials: [
@@ -117,7 +115,7 @@ style="outline:none;
 
       url: replacedStr,
 //      title: "videojs-share",
-      description: "video.js share plugin",
+//      description: "video.js share plugin",
       image: "https://dummyimage.com/1200x630",
 
       // required for Facebook and Messenger

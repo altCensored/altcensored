@@ -38,10 +38,7 @@ User-agent: DataForSeoBot
 Disallow:/
 
 User-agent: *
-Disallow: /search
 Disallow: /embed
-Disallow: /embed
-
 Disallow: /category
 Disallow: /language
 Disallow: /settings

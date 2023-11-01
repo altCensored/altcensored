@@ -102,7 +102,8 @@ style="outline:none;
     var player = videojs('video-player');
 
     // added to work with altCen, and changed 'url' below
-    var replacedStr =  window.location.href.replace("embed/", "watch?v=");
+    var replacedStr1 =  window.location.href.replace("?", "&amp");
+    var replacedStr2 =  replacedStr1.replace("embed/", "watch?v=");
 
     var shareOptions = {
       socials: [
@@ -113,7 +114,9 @@ style="outline:none;
         "email",
       ],
 
-      url: replacedStr,
+//      url: window.location.href,
+//      url: quotedText,
+      url: replacedStr2,
 //      title: "videojs-share",
 //      description: "video.js share plugin",
       image: "https://dummyimage.com/1200x630",

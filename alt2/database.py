@@ -6,11 +6,11 @@ dbase = config.SQLALCHEMY_DATABASE_URI
 
 engine = create_engine(dbase,
                        pool_size=5,
-                       max_overflow=100,
+                       max_overflow=130,
 #                       echo=True,
 #                       echo_pool="debug",
 #                       pool_use_lifo=True,
-                       pool_pre_ping=True
+#                       pool_pre_ping=True
                        )
 
 db_session = scoped_session(sessionmaker(autocommit=False,

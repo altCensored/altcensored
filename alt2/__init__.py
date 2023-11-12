@@ -14,14 +14,14 @@ from . import util
 from .cache import cache
 from psycogreen.gevent import patch_psycopg
 import sentry_sdk
-#from sentry_sdk.integrations.flask import FlaskIntegration
+from sentry_sdk.integrations.flask import FlaskIntegration
 
 
-#sentry_sdk.init(dsn=os.getenv('SENTRY_DSN'),
-##                debug=True,
-#                send_default_pii=True,
-#                traces_sample_rate=1.0,
-#                integrations=[FlaskIntegration()])
+sentry_sdk.init(dsn=os.getenv('SENTRY_DSN'),
+#                debug=True,
+                send_default_pii=True,
+                traces_sample_rate=1.0,
+                integrations=[FlaskIntegration()])
 
 patch_psycopg()
 

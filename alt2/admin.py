@@ -408,7 +408,7 @@ def system_commands():
 @bp.route('/scraper_status')
 @util.admin_login_required
 def scraper_status():
-    sys_name = 'scraper'
+#    sys_name = 'scraper'
     commands = ["systemctl status yts_5080@sync_archivenone",
                 "systemctl status yts_5080@upload_archivelatest",
                 "systemctl status yts_5080@upload_archivepart",
@@ -422,7 +422,7 @@ def scraper_status():
                 ]
     ssh_command(sys_name, commands)
 
-    sys_name = 'dbase'
+ #   sys_name = 'dbase'
     commands = ["systemctl status pgsync",
                 "systemctl status pgbackup",
                 "sudo -u postgres psql -c 'select current_timestamp - pg_postmaster_start_time() as uptime'",

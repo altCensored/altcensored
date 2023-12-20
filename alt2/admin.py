@@ -167,14 +167,15 @@ def add_channel():
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:5080 --cookies /root/rocketfuel_cookies.txt '
+        params2 = ' nohup youtube-sync -p /home/m2np3/m2np3 --proxy socks5://127.0.0.1:5080 --cookies /home/m2np3/rocketfuel_cookies.txt '
         params3 = ' -delta '
         params4 = ' > /root/nohup_ssh.out 2>&1 &'
 
         command = params1 + params2 + action + " " + channel_url + params3 + delta + params4
         commands = [command]
         try:
-            ssh_command(sys_name, commands)
+#            ssh_command(sys_name, commands)
+            local_command(commands)
             flash(channel_id + " added using afs")
         except:
             flash(channel_id + " NOT added usiing afs")
@@ -258,13 +259,13 @@ def disable_channel():
         action = 'disable'
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:5080 '
+        params2 = ' youtube-sync -p /home/m2np3/m2np3 --proxy socks5://127.0.0.1:5080 '
         params3 = ' > /root/nohup_ssh.out 2>&1 &'
 
         command = params1 + params2 + action + " " + channel_url + params3
         commands = [command]
-        ssh_command(sys_name, commands)
-
+#        ssh_command(sys_name, commands)
+        local_command(commands)
     return render_template('admin/admin_channels.html', title=title)
 
 
@@ -279,12 +280,13 @@ def remove_channel():
         action = 'remove'
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:5080 '
+        params2 = ' youtube-sync -p /home/m2np3/m2np3 --proxy socks5://127.0.0.1:5080 '
         params3 = ' > /root/nohup_ssh.out 2>&1 &'
 
         command = params1 + params2 + action + " " + channel_url + params3
         commands = [command]
-        ssh_command(sys_name, commands)
+#        ssh_command(sys_name, commands)
+        local_command(commands)
 
         if channel_partial_remove(channel_id):
             flash(channel_id + ' DOES NOT EXIST for partial archiving', 'error')
@@ -310,12 +312,13 @@ def resync_channel():
         action = 'resync_all'
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' nohup youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:5080 --cookies /root/rocketfuel_cookies.txt '
+        params2 = ' nohup youtube-sync -p /home/m2np3/m2np3 --proxy socks5://127.0.0.1:5080 --cookies /home/m2np3/rocketfuel_cookies.txt '
         params3 = ' -f > /root/nohup_ssh.out 2>&1 &'
 
         command = params1 + params2 + action + " " + channel_url + params3
         commands = [command]
-        ssh_command(sys_name, commands)
+#        ssh_command(sys_name, commands)
+        local_command(commands)
 
     return render_template('admin/admin_channels.html', title=title)
 
@@ -331,10 +334,11 @@ def status_channel():
         action = 'status_short'
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' youtube-sync -p /root/m2np3 --proxy socks5://127.0.0.1:5080 '
+        params2 = ' youtube-sync -p /home/m2np3/m2np3 --proxy socks5://127.0.0.1:5080 '
         command = params1 + params2 + action + " " + channel_url
         commands = [command]
-        ssh_command(sys_name, commands)
+#        ssh_command(sys_name, commands)
+        local_command(commands)
 
         return render_template('admin/admin_messages.html')
 
@@ -383,8 +387,8 @@ def system_commands():
         bground_p2 = ' > /root/nohup_ssh.out 2>&1 &'
         find_p1 = " -s "
         find_p2 = " -d 7000 -v 50"
-        tubeup_p = ' --metadata=collection:altcensored --cookies=rocketfuel_cookies.txt ' \
-                   '--proxy=socks5://127.0.0.1:2080 https://www.youtube.com/watch?v='
+        tubeup_p = ' --metadata=collection:altcensored --cookies=/home/m2np3/m2np3/rocketfuel_cookies.txt ' \
+                   '--proxy=socks5://127.0.0.1:5080 https://www.youtube.com/watch?v='
 
         if cmd_name == 'systemctl':
             command = cmd_name + " " + action_name + " " + subsys_name

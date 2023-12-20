@@ -382,7 +382,7 @@ def system_commands():
         param_name = (request.form['param_name'])
         find_run = (request.form['find_run'])
 
-        find_cmd = './find_archive.py'
+        find_cmd = '/home/m2np3/channel_find/find_archive.py'
         bground_p1 = 'nohup '
         bground_p2 = ' > /root/nohup_ssh.out 2>&1 &'
         find_p1 = " -s "

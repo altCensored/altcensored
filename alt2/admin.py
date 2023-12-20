@@ -408,7 +408,7 @@ def system_commands():
 @bp.route('/scraper_status')
 @util.admin_login_required
 def scraper_status():
-#    sys_name = 'scraper'
+#    sys_name = 'web'
     commands = ["systemctl status yts_5080@sync_archivenone",
                 "systemctl status yts_5080@upload_archivelatest",
                 "systemctl status yts_5080@upload_archivepart",
@@ -420,9 +420,10 @@ def scraper_status():
                 "df /dev/vda1",
                 "ls -lrt"
                 ]
-    ssh_command(sys_name, commands)
+#   ssh_command(sys_name, commands)
+    local_command(commands)
 
- #   sys_name = 'dbase'
+#  sys_name = 'web'
     commands = ["systemctl status pgsync",
                 "systemctl status pgbackup",
                 "sudo -u postgres psql -c 'select current_timestamp - pg_postmaster_start_time() as uptime'",
@@ -430,7 +431,8 @@ def scraper_status():
                 | grep -e FATAL -e ERROR | awk '{ print $6\" \"$7\" \"$8\" \"$9\" \"$10\" \"$11\" \"$12\" \"$13\" \"$14\" \"$15 }' \
                 | sort | uniq -c | sort -rn"
                 ]
-    ssh_command(sys_name, commands)
+#    ssh_command(sys_name, commands)
+    local_command(commands)
 
     commands = ["grep \"$(date +\"%Y/%m/%d\")\" /var/log/nginx/error.log \
                 | grep -e [crit] -e [error] \

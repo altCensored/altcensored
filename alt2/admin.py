@@ -387,7 +387,7 @@ def system_commands():
         bground_p2 = ' > /root/nohup_ssh.out 2>&1 &'
         find_p1 = " -s "
         find_p2 = " -d 7000 -v 50"
-        tubeup_p = ' --metadata=collection:altcensored --cookies=/home/m2np3/m2np3/rocketfuel_cookies.txt ' \
+        tubeup_p = ' --metadata=collection:altcensored --cookies=/home/m2np3/rocketfuel_cookies.txt ' \
                    '--proxy=socks5://127.0.0.1:5080 https://www.youtube.com/watch?v='
 
         if cmd_name == 'systemctl':

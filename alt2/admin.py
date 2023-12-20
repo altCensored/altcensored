@@ -402,7 +402,8 @@ def system_commands():
             command = cmd_name
 
         commands = [command]
-        ssh_command(sys_name, commands)
+#        ssh_command(sys_name, commands)
+        local_command(commands)
 
         return render_template('admin/admin_messages.html')
 

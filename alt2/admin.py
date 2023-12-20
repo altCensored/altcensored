@@ -446,7 +446,8 @@ def scraper_status():
                 | awk '{ print $10\" \"$11\" \"$12\" \"$13 }' \
                 | sort | uniq -c | sort -r",
                 "journalctl -u gunicorn -n 20",
-                "systemctl --failed"
+                "systemctl --failed",
+                "systemctl status"
                 ]
     local_command(commands)
 

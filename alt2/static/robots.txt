@@ -37,6 +37,12 @@ Disallow:/
 User-agent: DataForSeoBot
 Disallow:/
 
+User-agent: FriendlyCrawler
+Disallow:/
+
+User-agent: omgili
+Disallow:/
+
 User-agent: *
 Disallow: /embed
 Disallow: /category

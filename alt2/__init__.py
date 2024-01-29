@@ -13,6 +13,8 @@ import math
 from . import util
 from .cache import cache
 from psycogreen.gevent import patch_psycopg
+from flask_talisman import Talisman
+
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
 
@@ -25,6 +27,36 @@ from sentry_sdk.integrations.flask import FlaskIntegration
 
 patch_psycopg()
 
+csp = {
+    'default-src': [
+        '\'self\'',
+        'altcensored.com',
+        '*.altcensored.com'
+    ],
+    'style-src': [
+        '\'self\'',
+        '\'unsafe-inline\''
+    ],
+    'script-src': [
+        '\'self\'',
+        '\'unsafe-inline\'',
+        '*.altcensored.com'
+    ],
+    'media-src': [
+        '\'self\'',
+        'archive.org',
+        '*.archive.org'
+    ],
+    'img-src': [
+        '*',
+        'data:'
+    ],
+    'font-src': [
+#        '*',
+        '\'self\'',
+        'data:'
+    ]
+}
 
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
@@ -59,6 +91,7 @@ def create_app(test_config=None):
     babel = Babel(app)
     QRcode(app)
     cache.init_app(app)
+    talisman = Talisman(app, content_security_policy=csp)
 
 
     @babel.localeselector
@@ -230,26 +263,6 @@ def create_app(test_config=None):
 
     app.add_url_rule('/', endpoint='video.index', defaults={'page': 1})
 
-    csp = {
-        'img-src': [
-            'data:',
-            '\'self\'',
-            '*',
-    ],
-        'frame-ancestors': [
-            '\'self\'',
-            '*.twitter.com',
-    ],
-        'script-src': [
-            '\'unsafe-inline\'',
-            '\'self\'',
-    ]
-    }
-
-    feature_policy = {
-        'geolocation': '\'none\''
-    }
-        
     def url_for_other_page(page):
         args = request.view_args.copy()
         args['page'] = page

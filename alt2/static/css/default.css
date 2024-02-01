@@ -84,6 +84,11 @@ img.thumbnail {
   top: 0;
 }
 
+img.responsive_revive {
+  max-width: 100%;
+  height: auto;
+}
+
 .length {
   z-index: 100;
   position: absolute;

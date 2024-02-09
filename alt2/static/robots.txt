@@ -46,6 +46,12 @@ Disallow:/
 User-agent: Amazonbot
 Disallow:/
 
+User-agent: AwarioSmartBot
+Disallow:/
+
+User-agent: AwarioRssBot
+Disallow:/
+
 User-agent: *
 Disallow: /embed
 Disallow: /category

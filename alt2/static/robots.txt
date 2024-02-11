@@ -52,6 +52,12 @@ Disallow:/
 User-agent: AwarioRssBot
 Disallow:/
 
+User-agent: MBCrawler
+Disallow:/
+
+User-agent: FriendlyCrawler
+Disallow:/
+
 User-agent: *
 Disallow: /embed
 Disallow: /category
@@ -61,4 +67,4 @@ Disallow: /vpn
 Disallow: /auth
 Disallow: /newsletter
 Disallow: /donate
-Crawl-delay: 3
+Crawl-delay: 10

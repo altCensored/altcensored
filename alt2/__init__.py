@@ -13,7 +13,7 @@ import math
 from . import util
 from .cache import cache
 from psycogreen.gevent import patch_psycopg
-#from flask_talisman import Talisman
+from flask_talisman import Talisman
 
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration

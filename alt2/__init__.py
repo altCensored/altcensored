@@ -52,7 +52,6 @@ csp = {
         'data:'
     ],
     'font-src': [
-#        '*',
         '\'self\'',
         'data:'
     ],

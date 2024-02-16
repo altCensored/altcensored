@@ -57,6 +57,9 @@ csp = {
     ],
     'frame-src': [
         '*'
+    ],
+    'frame-ancestors': [
+        '*'
     ]
 }
 

@@ -67,4 +67,4 @@ Disallow: /vpn
 Disallow: /auth
 Disallow: /newsletter
 Disallow: /donate
-Crawl-delay: 10
+Crawl-delay: 5

@@ -91,7 +91,7 @@ def create_app(test_config=None):
     babel = Babel(app)
     QRcode(app)
     cache.init_app(app)
-    talisman = Talisman(app, content_security_policy=csp)
+#    talisman = Talisman(app, content_security_policy=csp)
 
 
     @babel.localeselector

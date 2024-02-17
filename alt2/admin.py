@@ -426,9 +426,9 @@ def scraper_status():
                 "systemctl status pgbackup",
                 "systemctl status pgsync",
                 "journalctl -u gunicorn -n 20",
-                "systemctl --failed",
                 "systemctl status",
                 "df /dev/sda1",
+                "systemctl --failed",
                 "du -c -h -s /var/cache/nginx/i_cache",
                 "du -c -h -s /var/cache/nginx/f_cache"
                 ]

@@ -415,15 +415,15 @@ def system_commands():
 @util.admin_login_required
 def scraper_status():
 #    sys_name = 'web'
-    commands = ["systemctl status yts_5080@sync_archivenone",
-                "systemctl status yts_5080@upload_archivelatest",
-                "systemctl status yts_5080@upload_archivepart",
-                "systemctl status yts_5080@upload_archivefull",
-                "systemctl status yts_5080@upload_archivepart_firstrun",
-                "systemctl status yts_5080@upload_archivefull_firstrun",
+    commands = ["systemctl status 5080@sync_archivenone",
+                "systemctl status 5080@upload_archivelatest",
+                "systemctl status 5080@upload_archivepart",
+                "systemctl status 5080@upload_archivefull",
+                "systemctl status 5080@upload_archivepart_firstrun",
+                "systemctl status 5080@upload_archivefull_firstrun",
                 "systemctl status 3proxy",
                 "journalctl -n -u find_archive",
-                "df /dev/vda1",
+                "df /dev/sda1",
                 "ls -lrt"
                 ]
 #   ssh_command(sys_name, commands)
@@ -445,8 +445,8 @@ def scraper_status():
                 | awk '{ print $3\" \"$6\" \"$24\" \"$25\" \"$31$32 }' \
                 | sort | uniq -c | sort -rn",
                 "awk '{print $3}' /var/log/nginx/rt_cache.log  | sort | uniq -c | sort -r",
-                "du -c -h -s /var/lib/nginx/i_cache",
-                "du -c -h -s /var/lib/nginx/f_cache",
+                "du -c -h -s /var/cache/nginx/i_cache",
+                "du -c -h -s /var/cache/nginx/f_cache",
                 "journalctl -u gunicorn -S today \
                 | grep -e ERROR \
                 | awk '{ print $10\" \"$11\" \"$12\" \"$13 }' \

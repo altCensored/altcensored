@@ -425,12 +425,12 @@ def scraper_status():
                 "journalctl -n -u find_archive",
                 "systemctl status pgbackup",
                 "systemctl status pgsync",
-                "df /dev/sda1",
-                "du -c -h -s /var/cache/nginx/i_cache",
-                "du -c -h -s /var/cache/nginx/f_cache",
                 "journalctl -u gunicorn -n 20",
                 "systemctl --failed",
-                "systemctl status"
+                "systemctl status",
+                "df /dev/sda1",
+                "du -c -h -s /var/cache/nginx/i_cache",
+                "du -c -h -s /var/cache/nginx/f_cache"
                 ]
     local_command(commands)
     return render_template('admin/admin_messages.html')

@@ -423,40 +423,16 @@ def scraper_status():
                 "systemctl status 5080@upload_archivefull_firstrun",
                 "systemctl status 3proxy",
                 "journalctl -n -u find_archive",
-                "df /dev/sda1",
-#                "ls -lrt"
-                ]
-#   ssh_command(sys_name, commands)
-    local_command(commands)
-
-#  sys_name = 'web'
-    commands = ["systemctl status pgsync",
                 "systemctl status pgbackup",
-                "sudo -u postgres psql -c 'select current_timestamp - pg_postmaster_start_time() as uptime'",
-                "grep \"$(date +\"%Y-%m-%d\")\" /var/log/postgresql/postgresql-16-main.log \
-                | grep -e FATAL -e ERROR | awk '{ print $6\" \"$7\" \"$8\" \"$9\" \"$10\" \"$11\" \"$12\" \"$13\" \"$14\" \"$15 }' \
-                | sort | uniq -c | sort -rn"
-                ]
-#    ssh_command(sys_name, commands)
-    local_command(commands)
-
-    commands = ["grep \"$(date +\"%Y/%m/%d\")\" /var/log/nginx/error.log \
-                | grep -e [crit] -e [error] \
-                | awk '{ print $3\" \"$6\" \"$24\" \"$25\" \"$31$32 }' \
-                | sort | uniq -c | sort -rn",
-                "awk '{print $3}' /var/log/nginx/rt_cache.log  | sort | uniq -c | sort -r",
+                "systemctl status pgsync",
+                "df /dev/sda1",
                 "du -c -h -s /var/cache/nginx/i_cache",
                 "du -c -h -s /var/cache/nginx/f_cache",
-#                "journalctl -u gunicorn -S today \
-#                | grep -e ERROR \
-#                | awk '{ print $10\" \"$11\" \"$12\" \"$13 }' \
-#                | sort | uniq -c | sort -r",
                 "journalctl -u gunicorn -n 20",
                 "systemctl --failed",
                 "systemctl status"
                 ]
     local_command(commands)
-
     return render_template('admin/admin_messages.html')
 
 

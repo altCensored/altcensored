@@ -429,6 +429,7 @@ def scraper_status():
                 "systemctl status",
                 "systemctl --failed",
                 "df /dev/sda1",
+                "awk '{print $3}' /var/log/nginx/rt_cache.log  | sort | uniq -c | sort -r",
                 "du -c -h -s /var/cache/nginx/i_cache",
                 "du -c -h -s /var/cache/nginx/f_cache"
                 ]

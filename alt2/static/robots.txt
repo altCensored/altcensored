@@ -66,5 +66,5 @@ Disallow: /settings
 Disallow: /vpn
 Disallow: /auth
 Disallow: /newsletter
-Disallow: /donate
+Disallow: /theme
 Crawl-delay: 5

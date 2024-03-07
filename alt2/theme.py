@@ -14,4 +14,8 @@ def toggle():
             session['theme'] = 'light'
     else:
         session['theme'] = 'dark'
-    return redirect(request.args.get('original_url', '/'))
+
+    if "http" in (request.args.get('original_url')):
+        abort(500)
+    else:
+        return redirect(request.args.get('original_url', '/'))

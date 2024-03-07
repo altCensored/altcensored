@@ -841,3 +841,10 @@ def test6():
 @util.admin_login_required
 def test500():
     abort(500)
+
+@bp.route('/test7')
+@util.admin_login_required
+def test7():
+    a = request.remote_addr
+    #msg = (request.referrer)
+    return a

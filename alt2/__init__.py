@@ -202,6 +202,7 @@ def create_app(test_config=None):
             autoplay=util.get_autoplay(),
             looplist=util.get_looplist(),
             current_url=quote_plus(request.url),
+            current_path=quote_plus(request.full_path),
             navtabs=util.get_navtabs(),
             navtabs_index=util.get_navtabs_index(),
             usercount=util.get_usercount(),

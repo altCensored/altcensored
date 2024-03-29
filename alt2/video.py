@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, render_template, request, make_response, session, current_app, abort, flash)
+    Blueprint, render_template, request, make_response, session, current_app, abort, flash, Markup)
 from flask_babelplus import lazy_gettext
 from internetarchive import get_item
 from sqlalchemy import func, text, case
@@ -33,18 +33,10 @@ def index(page):
         if user.watchlater:
             watchlater = user.watchlater
 
-#    flash (lazy_gettext('\
-#    Download preferred videos; they will likely be blocked \
-#    '), 'error')
 
-#    flash (lazy_gettext('\
-#    Internet Archive / archive.org is starting to block access to 1.5 million videos archived over 5+ years \
-#    '), 'error')
-
-
-#    flash(lazy_gettext('\
-#    Download preferred videos. Internet Archive is blocking access: tinyurl.com/2pdfe3c2 \
-#    '), 'error')
+    flash(Markup('\
+    Download preferred videos. Internet Archive is <a href="/altCensored_InternetArchive.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">blocking access </a> \
+    '), 'error')
 
     return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater)
 
@@ -201,9 +193,9 @@ def watch():
             if video_id not in plist.videos:
                 playlist_titles.append(plist.title)
 
-    #    flash(lazy_gettext('\
-    #    Download preferred videos. Internet Archive is blocking access: tinyurl.com/2pdfe3c2 \
-    #    '), 'error')
+    flash(Markup('\
+    Download preferred videos. Internet Archive is <a href="/altCensored_InternetArchive.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">blocking access </a> \
+    '), 'error')
 
     return render_template('video/video_item.html', video_url=video_url, video_url_short=video_url_short,
                            video_id=video_id, channel=channel, video=video, videos=videos, cat_id=cat_id, tags=tags,

@@ -34,9 +34,9 @@ def index(page):
             watchlater = user.watchlater
 
 
-    flash(Markup('\
-    Download preferred videos. Internet Archive is <a href="/altCensored_InternetArchive.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">blocking access </a> \
-    '), 'error')
+#    flash(Markup('\
+#    Download preferred videos. Internet Archive is <a href="/altCensored_InternetArchive.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">blocking access </a> \
+#    '), 'error')
 
     return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater)
 
@@ -193,9 +193,9 @@ def watch():
             if video_id not in plist.videos:
                 playlist_titles.append(plist.title)
 
-    flash(Markup('\
-    Download preferred videos. Internet Archive is <a href="/altCensored_InternetArchive.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">blocking access </a> \
-    '), 'error')
+#    flash(Markup('\
+#    Download preferred videos. Internet Archive is <a href="/altCensored_InternetArchive.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">blocking access </a> \
+#    '), 'error')
 
     return render_template('video/video_item.html', video_url=video_url, video_url_short=video_url_short,
                            video_id=video_id, channel=channel, video=video, videos=videos, cat_id=cat_id, tags=tags,

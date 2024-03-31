@@ -44,6 +44,7 @@ csp = {
     ],
     'media-src': [
         '\'self\'',
+        '*.altcensored.com',
         'archive.org',
         '*.archive.org'
     ],

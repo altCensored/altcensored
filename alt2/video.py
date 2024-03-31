@@ -1,3 +1,4 @@
+import glob
 from flask import (
     Blueprint, render_template, request, make_response, session, current_app, abort, flash, Markup)
 from flask_babelplus import lazy_gettext
@@ -8,7 +9,7 @@ from sqlalchemy.orm.attributes import flag_modified
 from .database import db_session
 from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_user, User, Playlist
 from .pagination import Pagination
-import json, re
+import json
 from .util import videos_latest, videos_newest, videos_popular, get_videocount, get_playnext
 
 bp = Blueprint('video', __name__)
@@ -34,9 +35,9 @@ def index(page):
             watchlater = user.watchlater
 
 
-#    flash(Markup('\
-#    Download preferred videos. Internet Archive is <a href="/altCensored_InternetArchive.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">blocking access </a> \
-#    '), 'error')
+    flash(Markup('\
+    Some Videos Restricted by <a href="/altCensored_InternetArchive.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">Internet Archive</a> \
+    '), 'error')
 
     return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater)
 
@@ -161,13 +162,29 @@ def watch():
         IARCHIVEURL = current_app.config['IARCHIVEURL']
         video_url = IARCHIVEURL + video_id + "/" + filename
         video_url_short = IARCHIVEURL + video_id + "/"
-#        if "access-restricted-item" in item.metadata: raise Exception
+        if "access-restricted-item" in item.metadata: raise Exception
 #        if "altcen_hosted" in item.metadata: raise Exception
     except:
-        MYSERVER_URL = current_app.config['MYSERVER_URL']
-        video_url = MYSERVER_URL + "/videos/" + video_id
+#        MYSERVER_URL = current_app.config['MYSERVER_URL']
+#        video_url = MYSERVER_URL + "/videos/" + video_id
+
+        VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
+        video_url = VIDEOSERVER_URL + "/" + video_id
         IARCHIVEURL = current_app.config['IARCHIVEURL']
-        video_url_short = IARCHIVEURL + video_id + "/"
+        video_url_short = IARCHIVEURL + "/" + video_id
+        IARCHIVEITEMURL = current_app.config['IARCHIVEITEMURL']
+        ia_item_url = IARCHIVEITEMURL + video_id
+        IARCHIVEITEMFS = current_app.config['IARCHIVEITEMFS']
+        ia_item_fs = IARCHIVEITEMFS + video_id
+
+        if glob.glob(ia_item_fs + '.*'):
+            flash(Markup('Playing locally: \
+            <a href="' + str(ia_item_url) +'" class="alert-link" target="_blank" rel="noopener noreferrer">Item Restricted</a> \
+            by <a href="/altCensored_InternetArchive.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">Internet Archive</a>'), 'error')
+        else:
+            flash(Markup(' \
+            <a href="' + str(ia_item_url) +'" class="alert-link" target="_blank" rel="noopener noreferrer">Item Restricted</a> \
+            by <a href="/altCensored_InternetArchive.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">Internet Archive</a>'), 'error')
 
     playlist_titles = []
     not_in_watchlater = None
@@ -222,8 +239,11 @@ def embed(video_id):
         if "access-restricted-item" in item.metadata: raise Exception
         if "altcen_hosted" in item.metadata: raise Exception
     except:
-        MYSERVER_URL = current_app.config['MYSERVER_URL']
-        video_url = MYSERVER_URL + "/videos/" + video_id
+#        MYSERVER_URL = current_app.config['MYSERVER_URL']
+#        video_url = MYSERVER_URL + "/videos/" + video_id
+
+        VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
+        video_url = VIDEOSERVER_URL + "/" + video_id
 
     next_video = None
 

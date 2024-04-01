@@ -12,12 +12,16 @@ MYSERVER_TEST_URL="https://altCensored.com"
 VIDEO_THUMB_ERROR_IMAGE="https://altCensored.com/image_error.gif"
 IARCHIVEURL="https://archive.org/download/youtube-"
 IARCHIVEITEMURL="https://archive.org/details/youtube-"
-IARCHIVEITEMFS='/usr/share/nginx/videos/'
+#IARCHIVEITEMFS='/usr/share/nginx/videos/'
+IARCHIVEITEMFS='/home/lc/videos/'
 IPROXY=os.getenv('IPROXY')
 IPROXYBIG=os.getenv('IPROXYBIG')
 IPROXYTW=os.getenv('IPROXYTW')
 IPROXYTWBIG=os.getenv('IPROXYTWBIG')
 PROPAGATE_EXCEPTIONS=False
+
+IA_USER=os.getenv('IA_USER')
+IA_PASSWORD=os.getenv('IA_PASSWORD')
 
 SUPPORTED_LANGUAGES = {'en': 'English', 'de': 'Deutsch', 'es': 'Español', 'fr': 'Français', 'pt': 'Portuguese', 'nl': 'Nederlandse', 'it': 'Italiano', 'se': 'Sverige'}
 SUPPORTED_THEMES = {'light', 'dark'}

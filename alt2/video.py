@@ -2,7 +2,7 @@ import os
 from flask import (
     Blueprint, render_template, request, make_response, session, current_app, abort, flash, Markup)
 from flask_babelplus import lazy_gettext
-from internetarchive import get_item, download
+from internetarchive import get_item, download, get_session
 from sqlalchemy import func, text, case
 from sqlalchemy.orm.attributes import flag_modified
 
@@ -179,17 +179,21 @@ def watch():
             <a href="' + str(ia_item_url) +'" class="alert-link" target="_blank" rel="noopener noreferrer">Item Restricted</a> \
             by <a href="/altCensored_InternetArchive.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">Internet Archive</a>'), 'error')
         else:
+            c = {'cookies': {'logged-in-user': current_app.config['IA_USER'],
+                             'logged-in-sig': current_app.config['IA_PASSWORD'] }}
+            ia_session = get_session(config=c)
+            item = ia_session.get_item('youtube-' + video_id)
             video_files = [f.name for f in get_video_files(item)]
             rsps = item.download(video_files, verbose=True, destdir=IARCHIVEITEMFS, dry_run=False)
 
             if all([r.status_code == 200 for r in rsps]):
-#                old_file_full = (video_files[0])
-#                old_file_ext = (os.path.splitext(old_file_full)[1])
-#                new_file_full = video_id + old_file_ext
-#                os.rename(IARCHIVEITEMFS + video_id + "/" + old_file_full,IARCHIVEITEMFS + video_id + "/" + new_file_full)
-                flash('IA download PROBLEM')
+                old_file_full = (video_files[0])
+                old_file_ext = (os.path.splitext(old_file_full)[1])
+                new_file_full = video_id + old_file_ext
+                os.rename(IARCHIVEITEMFS + video_id + "/" + old_file_full,IARCHIVEITEMFS + video_id + "/" + new_file_full)
+#                flash('IA download PROBLEM')
             else:
-                flash('IA download SUCCESS')
+                pass
 
             flash(Markup(' \
             <a href="' + str(ia_item_url) +'" class="alert-link" target="_blank" rel="noopener noreferrer">Item Restricted</a> \

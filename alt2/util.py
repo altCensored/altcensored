@@ -948,3 +948,16 @@ def navtabs_index_cache():
 def print_session():
     for k, v in session.items():
         print(k, v)
+
+
+def get_video_files(item):
+    extensions = ['webm', 'mp4']
+
+    video_files = []
+    for ext in extensions:
+        for file in item.get_files(glob_pattern=f"*.{ext}"):
+            video_files.append(file)
+
+        if video_files:
+            break
+    return video_files

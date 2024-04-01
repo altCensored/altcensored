@@ -2,7 +2,7 @@ import os
 from flask import (
     Blueprint, render_template, request, make_response, session, current_app, abort, flash, Markup)
 from flask_babelplus import lazy_gettext
-from internetarchive import get_item
+from internetarchive import get_item, download
 from sqlalchemy import func, text, case
 from sqlalchemy.orm.attributes import flag_modified
 
@@ -10,7 +10,7 @@ from .database import db_session
 from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_user, User, Playlist
 from .pagination import Pagination
 import json
-from .util import videos_latest, videos_newest, videos_popular, get_videocount, get_playnext
+from .util import videos_latest, videos_newest, videos_popular, get_videocount, get_playnext, get_video_files
 
 bp = Blueprint('video', __name__)
 
@@ -179,6 +179,17 @@ def watch():
             <a href="' + str(ia_item_url) +'" class="alert-link" target="_blank" rel="noopener noreferrer">Item Restricted</a> \
             by <a href="/altCensored_InternetArchive.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">Internet Archive</a>'), 'error')
         else:
+            video_files = [f.name for f in get_video_files(item)]
+            rsps = item.download(video_files, verbose=True, destdir=IARCHIVEITEMFS, dry_run=False)
+
+            if all([r.status_code == 200 for r in rsps]):
+                old_file_full = (video_files[0])
+                old_file_ext = (os.path.splitext(old_file_full)[1])
+                new_file_full = video_id + old_file_ext
+                os.rename(IARCHIVEITEMFS + item_id + "/" + old_file_full,IARCHIVEITEMFS + item_id + "/" + new_file_full)
+            else:
+                pass
+
             flash(Markup(' \
             <a href="' + str(ia_item_url) +'" class="alert-link" target="_blank" rel="noopener noreferrer">Item Restricted</a> \
             by <a href="/altCensored_InternetArchive.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">Internet Archive</a>'), 'error')

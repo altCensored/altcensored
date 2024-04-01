@@ -180,7 +180,7 @@ def watch():
             by <a href="/altCensored_InternetArchive.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">Internet Archive</a>'), 'error')
         else:
             c = {'cookies': {'logged-in-user': current_app.config['IA_USER'],
-                             'logged-in-sig': current_app.config['IA_PASSWORD'] }}
+                             'logged-in-sig': current_app.config['IA_PASSWORD']}}
             ia_session = get_session(config=c)
             item = ia_session.get_item('youtube-' + video_id)
             video_files = [f.name for f in get_video_files(item)]

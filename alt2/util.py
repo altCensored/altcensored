@@ -960,4 +960,5 @@ def get_video_files(item):
 
         if video_files:
             break
+
     return video_files

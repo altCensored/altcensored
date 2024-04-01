@@ -1,4 +1,4 @@
-import glob
+import os
 from flask import (
     Blueprint, render_template, request, make_response, session, current_app, abort, flash, Markup)
 from flask_babelplus import lazy_gettext
@@ -165,11 +165,8 @@ def watch():
         if "access-restricted-item" in item.metadata: raise Exception
 #        if "altcen_hosted" in item.metadata: raise Exception
     except:
-#        MYSERVER_URL = current_app.config['MYSERVER_URL']
-#        video_url = MYSERVER_URL + "/videos/" + video_id
-
         VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
-        video_url = VIDEOSERVER_URL + "/" + video_id
+        video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
         IARCHIVEURL = current_app.config['IARCHIVEURL']
         video_url_short = IARCHIVEURL + "/" + video_id
         IARCHIVEITEMURL = current_app.config['IARCHIVEITEMURL']
@@ -177,7 +174,7 @@ def watch():
         IARCHIVEITEMFS = current_app.config['IARCHIVEITEMFS']
         ia_item_fs = IARCHIVEITEMFS + video_id
 
-        if glob.glob(ia_item_fs + '.*'):
+        if os.path.isdir(ia_item_fs):
             flash(Markup('Playing locally: \
             <a href="' + str(ia_item_url) +'" class="alert-link" target="_blank" rel="noopener noreferrer">Item Restricted</a> \
             by <a href="/altCensored_InternetArchive.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">Internet Archive</a>'), 'error')
@@ -243,7 +240,7 @@ def embed(video_id):
 #        video_url = MYSERVER_URL + "/videos/" + video_id
 
         VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
-        video_url = VIDEOSERVER_URL + "/" + video_id
+        video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
 
     next_video = None
 

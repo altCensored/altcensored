@@ -172,7 +172,7 @@ def watch():
         IARCHIVEITEMURL = current_app.config['IARCHIVEITEMURL']
         ia_item_url = IARCHIVEITEMURL + video_id
         IARCHIVEITEMFS = current_app.config['IARCHIVEITEMFS']
-        ia_item_fs = IARCHIVEITEMFS + video_id
+        ia_item_fs = IARCHIVEITEMFS  + "youtube-" + video_id
 
         if os.path.isdir(ia_item_fs):
             flash(Markup('Playing locally: \

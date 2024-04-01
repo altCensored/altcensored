@@ -182,13 +182,13 @@ def watch():
             video_files = [f.name for f in get_video_files(item)]
             rsps = item.download(video_files, verbose=True, destdir=IARCHIVEITEMFS, dry_run=False)
 
-            if all([r.status_code == 200 for r in rsps]):
-                old_file_full = (video_files[0])
-                old_file_ext = (os.path.splitext(old_file_full)[1])
-                new_file_full = video_id + old_file_ext
-                os.rename(IARCHIVEITEMFS + video_id + "/" + old_file_full,IARCHIVEITEMFS + video_id + "/" + new_file_full)
-            else:
-                pass
+#            if all([r.status_code == 200 for r in rsps]):
+#                old_file_full = (video_files[0])
+#                old_file_ext = (os.path.splitext(old_file_full)[1])
+#                new_file_full = video_id + old_file_ext
+#                os.rename(IARCHIVEITEMFS + video_id + "/" + old_file_full,IARCHIVEITEMFS + video_id + "/" + new_file_full)
+#            else:
+#                pass
 
             flash(Markup(' \
             <a href="' + str(ia_item_url) +'" class="alert-link" target="_blank" rel="noopener noreferrer">Item Restricted</a> \

@@ -190,7 +190,7 @@ def watch():
                 old_file_full = (video_files[0])
                 old_file_ext = (os.path.splitext(old_file_full)[1])
                 new_file_full = video_id + old_file_ext
-                os.rename(IARCHIVEITEMFS + video_id + "/" + old_file_full,IARCHIVEITEMFS + video_id + "/" + new_file_full)
+                os.rename(IARCHIVEITEMFS + 'youtube-' + video_id + "/" + old_file_full,IARCHIVEITEMFS + 'youtube-' + video_id + "/" + new_file_full)
             else:
                 pass
             flash(Markup(' \

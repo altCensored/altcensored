@@ -135,6 +135,9 @@ style="outline:none;
       '</iframe>'
     };
 
+    player.share(shareOptions);
+
+
     var sources = document.getElementsByTagName('source'),
         i;
 
@@ -146,8 +149,6 @@ style="outline:none;
         }(i));
     }
 
-
-    player.share(shareOptions);
 
     var nextVideoURL;
     {% if next_video %}

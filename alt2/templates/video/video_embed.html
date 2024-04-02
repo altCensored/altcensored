@@ -72,7 +72,7 @@ style="outline:none;
 
   <source
     src="{{ video_url }}.webm"
-    type='video/webm' onerror="fallback(parentNode)">
+    type='video/webm'>
 
   <source
     src="{{ video_url }}.mp4"
@@ -92,20 +92,6 @@ style="outline:none;
 
 <script src="{{ url_for('static', filename='js/video.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/videojs-share.min.js') }}"></script>
-
-
-<script type="text/javascript">
- function fallback(video) {
-   // replace <video> with its contents
-   while (video.hasChildNodes()) {
-     if (video.firstChild instanceof HTMLSourceElement)
-       video.removeChild(video.firstChild);
-     else
-       video.parentNode.insertBefore(video.firstChild, video);
-   }
-   video.parentNode.removeChild(video);
- }
-</script>
 
 <script type="text/javascript">
   (function(){

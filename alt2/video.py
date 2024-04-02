@@ -168,7 +168,7 @@ def watch():
         VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
         video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
         IARCHIVEURL = current_app.config['IARCHIVEURL']
-        video_url_short = IARCHIVEURL + "/" + video_id
+        video_url_short = IARCHIVEURL + video_id + "/"
         IARCHIVEITEMURL = current_app.config['IARCHIVEITEMURL']
         ia_item_url = IARCHIVEITEMURL + video_id
         IARCHIVEITEMFS = current_app.config['IARCHIVEITEMFS']

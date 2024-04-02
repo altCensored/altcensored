@@ -92,6 +92,20 @@ style="outline:none;
 <script src="{{ url_for('static', filename='js/video.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/videojs-share.min.js') }}"></script>
 
+
+<script type="text/javascript">
+ function fallback(video) {
+   // replace <video> with its contents
+   while (video.hasChildNodes()) {
+     if (video.firstChild instanceof HTMLSourceElement)
+       video.removeChild(video.firstChild);
+     else
+       video.parentNode.insertBefore(video.firstChild, video);
+   }
+   video.parentNode.removeChild(video);
+ }
+</script>
+
 <script type="text/javascript">
   (function(){
     {% if playnext %}
@@ -136,19 +150,6 @@ style="outline:none;
     };
 
     player.share(shareOptions);
-
-
-    var sources = document.getElementsByTagName('source'),
-        i;
-
-    for (i = 0; i < sources.length; i++) {
-        (function (i) {
-            sources[i].addEventListener('error', function (e) {
-                console.log('Error loading: '+e.target.src);
-            });
-        }(i));
-    }
-
 
     var nextVideoURL;
     {% if next_video %}

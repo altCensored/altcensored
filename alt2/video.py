@@ -236,6 +236,7 @@ def test1():
     video_id = '7-tUV0cnyv8'
     video_id = 'c7BJ-VgSumw'
     video_id = 'C4tT99haZXE'
+    video_id = 't25ptPWc1NI'
 
     ia_url = "https://archive.org/download/youtube-" + video_id + "/" + video_id
     ia_url = "https://videos.altcensored.com/youtube-" + video_id + "/" + video_id

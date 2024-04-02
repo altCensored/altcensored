@@ -230,6 +230,29 @@ def watch():
                            playlist=playlist, userlist=userlist, not_in_watchlater=not_in_watchlater,
                            playlist_titles=playlist_titles)
 
+@bp.route("/test1")
+def test1():
+    video_id = 'b9xIyw4dQZo'
+    video_id = '7-tUV0cnyv8'
+    video_id = 'c7BJ-VgSumw'
+    video_id = 'C4tT99haZXE'
+
+    ia_url = "https://archive.org/download/youtube-" + video_id + "/" + video_id
+    ia_url = "https://videos.altcensored.com/youtube-" + video_id + "/" + video_id
+
+
+    return render_template('video/test1.html',ia_url=ia_url)
+
+@bp.route("/test2")
+def test2():
+    video_id = 'b9xIyw4dQZo'
+    video_id = '7-tUV0cnyv8'
+
+    ia_url = "https://archive.org/download/youtube-" + video_id + "/" + video_id
+    ia_url = "https://videos.altcensored.com/youtube-" + video_id + "/" + video_id
+
+
+    return render_template('video/test2.html',ia_url=ia_url)
 
 @bp.route('/embed/<video_id>')
 def embed(video_id):

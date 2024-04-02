@@ -1,0 +1,44 @@
+<head>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/darktheme.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/video-js.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/videojs-share.min.css') }}">
+
+</head>
+
+<video id="video-player" class="video-js" preload="auto" playsinline outline="none" controls
+data-setup='{ "playbackRates": [0.5, 1, 1.25, 1.5, 1.75, 2] }'
+style="outline:none;
+    background-color:#000;
+    background-size:cover;
+    display: inline-block;
+    vertical-align: middle;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;"
+>
+   <source
+    src="{{ ia_url }}.mp4"
+    type="video/mp4" />
+  <source
+    src="{{ ia_url }}.webm"
+    type='video/webm' />
+  <source
+    src="{{ ia_url }}.ogv"
+    type="video/ogg" />
+   <source
+    src="{{ ia_url }}.mkv"
+    type="video/mp4" />
+</video>
+
+<script src="{{ url_for('static', filename='js/video.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/videojs-share.min.js') }}"></script>

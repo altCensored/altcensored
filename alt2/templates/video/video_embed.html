@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-
 <head>
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/darktheme.css') }}">
@@ -66,24 +64,26 @@ style="outline:none;
     height: 100%;
     width: 100%;
     overflow-wrap: break-word;
-    word-wrap: break-word;">
+    word-wrap: break-word;"
+>
 
 {% endif %}
+
   <source
     src="{{ video_url }}.webm"
-    type='video/webm'>
+    type='video/webm' />
 
   <source
     src="{{ video_url }}.mp4"
-    type="video/mp4">
+    type="video/mp4" />
 
   <source
     src="{{ video_url }}.ogv"
-    type="video/ogg">
+    type="video/ogg" />
 
   <source
     src="{{ video_url }}.mkv"
-    type="video/mp4">
+    type="video/mp4" />
 
 
 </video>

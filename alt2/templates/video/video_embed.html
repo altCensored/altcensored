@@ -135,6 +135,18 @@ style="outline:none;
       '</iframe>'
     };
 
+    var sources = document.getElementsByTagName('source'),
+        i;
+
+    for (i = 0; i < sources.length; i++) {
+        (function (i) {
+            sources[i].addEventListener('error', function (e) {
+                console.log('Error loading: '+e.target.src);
+            });
+        }(i));
+    }
+
+
     player.share(shareOptions);
 
     var nextVideoURL;

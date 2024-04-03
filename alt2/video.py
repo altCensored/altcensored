@@ -239,10 +239,11 @@ def test1():
     video_id = 't25ptPWc1NI'
 
     ia_url = "https://archive.org/download/youtube-" + video_id + "/" + video_id
-    ia_url = "https://videos.altcensored.com/youtube-" + video_id + "/" + video_id
+    ac_url = "https://videos.altcensored.com/youtube-" + video_id + "/" + video_id
 
 
-    return render_template('video/test1.html',ia_url=ia_url)
+#    return render_template('video/test1.html',video_url=ac_url)
+    return render_template('video/video_embed.html', video_url=ac_url)
 
 @bp.route("/test2")
 def test2():

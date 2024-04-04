@@ -10,7 +10,7 @@ from .database import db_session
 from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_user, User, Playlist
 from .pagination import Pagination
 import json
-from .util import videos_latest, videos_newest, videos_popular, get_videocount, get_playnext, get_video_files
+from .util import videos_latest, videos_newest, videos_popular, get_videocount, get_playnext, get_video_files, check_video_files
 
 bp = Blueprint('video', __name__)
 
@@ -33,11 +33,6 @@ def index(page):
         user = User.query.filter(User.id == session['user']['id']).scalar()
         if user.watchlater:
             watchlater = user.watchlater
-
-
-    flash(Markup('\
-    Some Videos Restricted by <a href="/altCensored_InternetArchive.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">Internet Archive</a> \
-    '), 'error')
 
     return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater)
 
@@ -154,48 +149,49 @@ def watch():
                                                    Mv_Video.extractor_data != video_id) \
             .order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE)
 
-    try:
-        item = get_item('youtube-' + video_id)
-        fileitem = next(item for item in item.files if item["format"] == "JSON")
-        filenamelong = (fileitem['name'])
-        filename = filenamelong[:-10]
-        IARCHIVEURL = current_app.config['IARCHIVEURL']
-        video_url = IARCHIVEURL + video_id + "/" + filename
-        video_url_short = IARCHIVEURL + video_id + "/"
-        if "access-restricted-item" in item.metadata: raise Exception
-        if "altcen_hosted" in item.metadata: raise Exception
-    except:
-        VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
-        video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
-        IARCHIVEURL = current_app.config['IARCHIVEURL']
-        video_url_short = IARCHIVEURL + video_id + "/"
-        IARCHIVEITEMURL = current_app.config['IARCHIVEITEMURL']
-        ia_item_url = IARCHIVEITEMURL + video_id
-        IARCHIVEITEMFS = current_app.config['IARCHIVEITEMFS']
-        ia_item_fs = IARCHIVEITEMFS  + "youtube-" + video_id
+    IARCHIVEURL = current_app.config['IARCHIVEURL']
+    IARCHIVEITEMFS = current_app.config['IARCHIVEITEMFS']
+    VIDEOSERVER_URL = "https://videos.altCensored.com"
+    video_url_short = IARCHIVEURL + video_id + "/"
 
-        if os.path.isdir(ia_item_fs):
-            flash(Markup('Playing locally: \
-            <a href="' + str(ia_item_url) +'" class="alert-link" target="_blank" rel="noopener noreferrer">Item Restricted</a> \
-            by <a href="/altCensored_InternetArchive.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">Internet Archive</a>'), 'error')
+    c = {'cookies': {'logged-in-user': current_app.config['IA_USER'],
+                     'logged-in-sig': current_app.config['IA_PASSWORD']}}
+    ia = get_session(config=c)
+    ia_item = ia.get_item('youtube-' + video_id)
+    ia_item_local = IARCHIVEITEMFS + "youtube-" + video_id
+
+#    IARCHIVEITEMURL = current_app.config['IARCHIVEITEMURL']
+#    ia_item_url = IARCHIVEITEMURL + video_id
+
+    if ia_item.exists == False:
+        if os.path.isdir(ia_item_local):
+            video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
         else:
-            c = {'cookies': {'logged-in-user': current_app.config['IA_USER'],
-                             'logged-in-sig': current_app.config['IA_PASSWORD']}}
-            ia_session = get_session(config=c)
-            item = ia_session.get_item('youtube-' + video_id)
-            video_files = [f.name for f in get_video_files(item)]
-            rsps = item.download(video_files, verbose=True, destdir=IARCHIVEITEMFS, dry_run=False)
-
-            if all([r.status_code == 200 for r in rsps]):
-                old_file_full = (video_files[0])
-                old_file_ext = (os.path.splitext(old_file_full)[1])
-                new_file_full = video_id + old_file_ext
-                os.rename(IARCHIVEITEMFS + 'youtube-' + video_id + "/" + old_file_full,IARCHIVEITEMFS + 'youtube-' + video_id + "/" + new_file_full)
+            video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
+    else:
+        if "access-restricted-item" in ia_item.metadata or "altcen_hosted" in ia_item.metadata:
+            if os.path.isdir(ia_item_local):
+                video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
             else:
-                pass
-            flash(Markup(' \
-            <a href="' + str(ia_item_url) +'" class="alert-link" target="_blank" rel="noopener noreferrer">Item Restricted</a> \
-            by <a href="/altCensored_InternetArchive.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">Internet Archive</a>'), 'error')
+                video_files = [f.name for f in get_video_files(ia_item)]
+                rsps = ia_item.download(video_files, verbose=True, destdir=IARCHIVEITEMFS, dry_run=False)
+
+                if all([r.status_code == 200 for r in rsps]):
+                    old_file_full = (video_files[0])
+                    old_file_ext = (os.path.splitext(old_file_full)[1])
+                    new_file_full = video_id + old_file_ext
+                    os.rename(IARCHIVEITEMFS + 'youtube-' + video_id + "/" + old_file_full,
+                              IARCHIVEITEMFS + 'youtube-' + video_id + "/" + new_file_full)
+                    video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
+                else:
+                    abort(404)
+        else:
+            full_filename = check_video_files(ia_item)
+            if full_filename:
+                filename = os.path.splitext(full_filename)[0]
+                video_url = IARCHIVEURL + video_id + "/" + filename
+            else:
+                video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
 
     playlist_titles = []
     not_in_watchlater = None
@@ -220,10 +216,6 @@ def watch():
         for plist in plists:
             if video_id not in plist.videos:
                 playlist_titles.append(plist.title)
-
-#    flash(Markup('\
-#    Download preferred videos. Internet Archive is <a href="/altCensored_InternetArchive.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">blocking access </a> \
-#    '), 'error')
 
     return render_template('video/video_item.html', video_url=video_url, video_url_short=video_url_short,
                            video_id=video_id, channel=channel, video=video, videos=videos, cat_id=cat_id, tags=tags,
@@ -265,21 +257,47 @@ def embed(video_id):
     playlist = request.args.get('playlist', None)
     userlist = request.args.get('userlist', None)
 
-    try:
-        item = get_item('youtube-' + video_id)
-        fileitem = next(item for item in item.files if item["format"] == "JSON")
-        filenamelong = (fileitem['name'])
-        filename = filenamelong[:-10]
-        IARCHIVEURL = current_app.config['IARCHIVEURL']
-        video_url = IARCHIVEURL + video_id + "/" + filename
-        if "access-restricted-item" in item.metadata: raise Exception
-        if "altcen_hosted" in item.metadata: raise Exception
-    except:
-#        MYSERVER_URL = current_app.config['MYSERVER_URL']
-#        video_url = MYSERVER_URL + "/videos/" + video_id
+    IARCHIVEURL = current_app.config['IARCHIVEURL']
+    IARCHIVEITEMFS = current_app.config['IARCHIVEITEMFS']
+    VIDEOSERVER_URL = "https://videos.altCensored.com"
+    video_url_short = IARCHIVEURL + video_id + "/"
 
-        VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
-        video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
+    c = {'cookies': {'logged-in-user': current_app.config['IA_USER'],
+                     'logged-in-sig': current_app.config['IA_PASSWORD']}}
+    ia = get_session(config=c)
+    ia_item = ia.get_item('youtube-' + video_id)
+    ia_item_local = IARCHIVEITEMFS + "youtube-" + video_id
+
+    if ia_item.exists == False:
+        if os.path.isdir(ia_item_local):
+            video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
+        else:
+            video_id = 'unavailable'
+            video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
+    else:
+        if "access-restricted-item" in ia_item.metadata or "altcen_hosted" in ia_item.metadata:
+            if os.path.isdir(ia_item_local):
+                video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
+            else:
+                video_files = [f.name for f in get_video_files(ia_item)]
+                rsps = ia_item.download(video_files, verbose=True, destdir=IARCHIVEITEMFS, dry_run=False)
+
+                if all([r.status_code == 200 for r in rsps]):
+                    old_file_full = (video_files[0])
+                    old_file_ext = (os.path.splitext(old_file_full)[1])
+                    new_file_full = video_id + old_file_ext
+                    os.rename(IARCHIVEITEMFS + 'youtube-' + video_id + "/" + old_file_full,
+                              IARCHIVEITEMFS + 'youtube-' + video_id + "/" + new_file_full)
+                    video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
+                else:
+                    abort(404)
+        else:
+            full_filename = check_video_files(ia_item)
+            if full_filename:
+                filename = os.path.splitext(full_filename)[0]
+                video_url = IARCHIVEURL + video_id + "/" + filename
+            else:
+                video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
 
     next_video = None
 

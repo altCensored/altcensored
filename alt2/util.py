@@ -962,3 +962,13 @@ def get_video_files(item):
             break
 
     return video_files
+
+
+def check_video_files(ia_item):
+    files_list = (ia_item.item_metadata['files'])
+    extensionsToCheck = ['.webm', '.mp4', '.ogv', '.mkv']
+    filename = None
+    for x in files_list:
+        if x['source']=='original' and any (ext in x['name'] for ext in extensionsToCheck):
+            filename = (x.get("name"))
+    return (filename)

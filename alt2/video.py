@@ -185,10 +185,14 @@ def watch():
                 else:
                     abort(404)
         else:
-            full_filename = check_video_files(ia_item)
-            if full_filename:
-                filename = os.path.splitext(full_filename)[0]
-                video_url = IARCHIVEURL + video_id + "/" + filename
+            video_files = [f.name for f in get_video_files(ia_item)]
+            if video_files:
+                full_filename = check_video_files(ia_item)
+                if full_filename:
+                    filename = os.path.splitext(full_filename)[0]
+                    video_url = IARCHIVEURL + video_id + "/" + filename
+                else:
+                    pass
             else:
                 video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
 
@@ -291,11 +295,16 @@ def embed(video_id):
                 else:
                     abort(404)
         else:
-            full_filename = check_video_files(ia_item)
-            if full_filename:
-                filename = os.path.splitext(full_filename)[0]
-                video_url = IARCHIVEURL + video_id + "/" + filename
+            video_files = [f.name for f in get_video_files(ia_item)]
+            if video_files:
+                full_filename = check_video_files(ia_item)
+                if full_filename:
+                    filename = os.path.splitext(full_filename)[0]
+                    video_url = IARCHIVEURL + video_id + "/" + filename
+                else:
+                    pass
             else:
+                video_id = 'unavailable'
                 video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
 
     next_video = None

@@ -160,6 +160,8 @@ def watch():
     ia_item = ia.get_item('youtube-' + video_id)
     ia_item_local = IARCHIVEITEMFS + "youtube-" + video_id
 
+
+
     if ia_item.exists == False:
         if os.path.isdir(ia_item_local):
             video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
@@ -183,7 +185,7 @@ def watch():
                 else:
                     abort(404)
         else:
-            full_filename = get_video_files(ia_item)
+            full_filename = check_video_files(ia_item)
             if full_filename:
                 filename = os.path.splitext(full_filename)[0]
                 video_url = IARCHIVEURL + video_id + "/" + filename
@@ -289,12 +291,11 @@ def embed(video_id):
                 else:
                     abort(404)
         else:
-            full_filename = get_video_files(ia_item)
+            full_filename = check_video_files(ia_item)
             if full_filename:
                 filename = os.path.splitext(full_filename)[0]
                 video_url = IARCHIVEURL + video_id + "/" + filename
             else:
-                video_id = 'unavailable'
                 video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
 
     next_video = None

@@ -1,6 +1,25 @@
 <!doctype html>
+<head>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/darktheme.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/video-js.min.css') }}">
 
-<video controls
+  <style>
+    .vjs-button.vjs-control.vjs-next-button {
+      position: relative;
+      font-size: 2.2em;
+      width: 2em;
+      cursor: pointer;
+    }
+    .vjs-big-play-button:before {
+      display: block !important;
+    }
+  </style>
+</head>
+
+<html>
+<body>
+
+<video id="video-player" class="video-js" preload="auto" playsinline outline="none" controls
 data-setup='{ "playbackRates": [0.5, 1, 1.25, 1.5, 1.75, 2] }'
 style="outline:none;
     background-color:#000;
@@ -32,6 +51,71 @@ style="outline:none;
     src="{{ video_url }}.ogv"
     type="video/ogg" />
   <source
-    src="{{ video_url }}.mkv"
-    type="video/mp4" />
+    src="{{ video_url }}.mkv" />
 </video>
+
+<script src="{{ url_for('static', filename='js/video.min.js') }}"></script>
+
+<script type="text/javascript">
+  (function(){
+    {% if playnext %}
+    var autoplayEnabled = true;
+    {% else %}
+    var autoplayEnabled = false;
+    {% endif %}
+    var player = videojs('video-player');
+
+    // added to work with altCen, and changed 'url' below
+    var replacedStr1 =  window.location.href.replace("?", "&amp");
+    var replacedStr2 =  replacedStr1.replace("embed/", "watch?v=");
+
+
+    var nextVideoURL;
+    {% if next_video %}
+      {% if playlist %}
+        nextVideoURL = "/watch?v={{next_video}}&playlist={{playlist.hashid}}"
+      {% elif userlist %}
+        nextVideoURL = "/watch?v={{next_video}}&userlist={{userlist}}"
+      {% else %}
+        nextVideoURL = "/watch?v={{next_video}}"
+      {% endif %}
+    {% endif %}
+    var Button = videojs.getComponent('Button');
+
+    class NextButton extends Button {
+      buildCSSClass() {
+        return 'vjs-next-button vjs-icon-next-item vjs-button vjs-control';
+      }
+      handleClick(event){
+        window.parent.location = nextVideoURL;
+      }
+    }
+
+    videojs.registerComponent('NextButton', NextButton);
+    if(autoplayEnabled && nextVideoURL){
+      var nextButton = player.controlBar.addChild('NextButton', {}, 1);
+    }
+
+    player.on('ended', function(){
+      if(nextVideoURL && autoplayEnabled){
+        window.parent.location = nextVideoURL;
+      };
+    });
+
+    window.addEventListener('message', function(e) {
+      var msg = JSON.parse(e.data);
+      if(msg.type === 'toggle-play-next'){
+        var checked = msg.checked;
+        autoplayEnabled = checked;
+        if(!checked){
+          player.controlBar.removeChild(nextButton);
+        } else {
+          nextButton = player.controlBar.addChild('NextButton', {}, 1);
+        }
+      }
+    })
+  })();
+</script>
+
+</body>
+</html>

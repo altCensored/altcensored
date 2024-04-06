@@ -232,6 +232,7 @@ def test1():
     video_id = 'c7BJ-VgSumw'
 #    video_id = 'C4tT99haZXE'
 #    video_id = 't25ptPWc1NI'
+    video_id = '0kX-1OOrU5M' # orig ogv, mp4
 
     ia_url = "https://archive.org/download/youtube-" + video_id + "/" + video_id
     ac_url = "https://videos.altcensored.com/youtube-" + video_id + "/" + video_id

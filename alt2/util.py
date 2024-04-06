@@ -951,7 +951,7 @@ def print_session():
 
 
 def get_video_files(item):
-    extensions = ['webm', 'mp4', 'mkv', 'ogv']
+    extensions = ['webm', 'mp4', 'ogv', 'mkv']
 
     video_files = []
     for ext in extensions:

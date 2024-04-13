@@ -193,8 +193,13 @@ def watch():
                     video_url = IARCHIVEURL + video_id + "/" + filename
                 else:
                     pass
+
             else:
-                video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
+                if os.path.isdir(ia_item_local):
+                    video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
+                else:
+                    video_id = 'unavailable'
+                    video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
 
     playlist_titles = []
     not_in_watchlater = None
@@ -305,8 +310,11 @@ def embed(video_id):
                 else:
                     pass
             else:
-                video_id = 'unavailable'
-                video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
+                if os.path.isdir(ia_item_local):
+                    video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
+                else:
+                    video_id = 'unavailable'
+                    video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
 
     next_video = None
 

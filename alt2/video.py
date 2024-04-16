@@ -161,7 +161,6 @@ def watch():
     ia_item_local = IARCHIVEITEMFS + "youtube-" + video_id
 
 
-
     if ia_item.exists == False:
         if os.path.isdir(ia_item_local):
             video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
@@ -195,11 +194,8 @@ def watch():
                     pass
 
             else:
-                if os.path.isdir(ia_item_local):
-                    video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
-                else:
-                    video_id = 'unavailable'
-                    video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
+                video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
+
 
     playlist_titles = []
     not_in_watchlater = None

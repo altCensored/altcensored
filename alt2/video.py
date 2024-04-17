@@ -17,7 +17,6 @@ bp = Blueprint('video', __name__)
 PER_PAGE = 24
 CHANN_MAX_RESULT = 28
 
-
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
 def index(page):
@@ -266,7 +265,7 @@ def embed(video_id):
     IARCHIVEURL = current_app.config['IARCHIVEURL']
     IARCHIVEITEMFS = current_app.config['IARCHIVEITEMFS']
     VIDEOSERVER_URL = "https://videos.altCensored.com"
-    fbook_app_id = current_app.config['FBOOK_APP_ID']
+    video_url_short = IARCHIVEURL + video_id + "/"
 
     c = {'cookies': {'logged-in-user': current_app.config['IA_USER'],
                      'logged-in-sig': current_app.config['IA_PASSWORD']}}
@@ -368,7 +367,7 @@ def embed(video_id):
                 next_video = None
 
     return render_template('video/video_embed.html', video_url=video_url, next_video=next_video, playlist=playlist,
-                           userlist=userlist, fbook_app_id=fbook_app_id)
+                           userlist=userlist)
 
 @bp.route("/search", defaults={'page': 1})
 @bp.route('/search/page/<int:page>')

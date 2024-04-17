@@ -59,4 +59,3 @@ CACHE_REDIS_HOST=os.getenv('CACHE_REDIS_HOST')
 CACHE_REDIS_DB=1
 
 REV_ID = os.getenv('REV_ID')
-FBOOK_APP_ID = os.getenv('FBOOK_APP_ID')

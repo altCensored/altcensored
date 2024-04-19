@@ -51,6 +51,7 @@ class Entity(Base):
     addeddate = Column(DateTime, nullable=False)
     filesize_approx = Column(Integer, nullable=True)
     live_status = Column(String, nullable=True)
+    restricted_ia = Column(Boolean, nullable=True)
 
     def __init__(self, type=None, prev=None):
         self.id = id
@@ -82,7 +83,8 @@ class Entity(Base):
         self.sync_iadate = sync_iadate
         self.addeddate = addeddate
         self.filesize_approx = filesize_approx
-
+        self.live_status = live_status
+        self.restricted_ia = restricted_ia
 
     def __repr__(self):
         return '<Entity %r>' % (self.id)
@@ -328,7 +330,6 @@ class Mv_Video(Base):
     __tablename__ = 'mv_video'
     id = Column(Integer, nullable=False, unique=True)
     extractor_data = Column(String, primary_key=True, nullable=False)
-    rating = Column(Integer, nullable=True)
     published = Column(DateTime, nullable=True)
     title = Column(String, nullable=True)
     thumbnail = Column(String, nullable=True)
@@ -340,6 +341,8 @@ class Mv_Video(Base):
     category = Column(String, nullable=True)
     tags = Column(String, nullable=True)
     document = Column(String, nullable=True)
+    exists_ia = Column(Boolean, nullable=True)
+    restricted_ia = Column(Boolean, nullable=True)
 
     def __init__(self, extractor_data=None, allow=None):
         self.id = id

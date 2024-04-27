@@ -10,6 +10,8 @@ def toggle():
     try:
         if "http" in (request.args.get('original_url')):
             abort(404)
+    except:
+        pass
 
     finally:
         if 'theme' in session:

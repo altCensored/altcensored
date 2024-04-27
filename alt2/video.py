@@ -5,6 +5,7 @@ from flask_babelplus import lazy_gettext
 from internetarchive import get_item, download, get_session
 from sqlalchemy import func, text, case
 from sqlalchemy.orm.attributes import flag_modified
+from urllib import parse
 
 from .database import db_session
 from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_user, User, Playlist
@@ -302,7 +303,8 @@ def embed(video_id):
                 full_filename = check_video_files(ia_item)
                 if full_filename:
                     filename = os.path.splitext(full_filename)[0]
-                    video_url = IARCHIVEURL + video_id + "/" + filename
+                    filename_escaped = parse.quote(filename, safe='')
+                    video_url = IARCHIVEURL + video_id + "/" + filename_escaped
                 else:
                     pass
             else:

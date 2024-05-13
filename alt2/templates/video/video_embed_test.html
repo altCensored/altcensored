@@ -19,7 +19,7 @@
 <html>
 <body>
 
-<video id="video-player" class="video-js" preload="auto" playsinline outline="none" controls
+<video id="video-player" class="video-js" preload="auto" outline="none" playsinline controls
 data-setup='{ "playbackRates": [0.5, 1, 1.25, 1.5, 1.75, 2] }'
 style="outline:none;
     background-color:#000;
@@ -40,7 +40,6 @@ style="outline:none;
     overflow-wrap: break-word;
     word-wrap: break-word;"
 >
-
   <source
     src="{{ video_url }}.webm"
     type='video/webm' />
@@ -58,62 +57,8 @@ style="outline:none;
 
 <script type="text/javascript">
   (function(){
-    {% if playnext %}
-    var autoplayEnabled = true;
-    {% else %}
-    var autoplayEnabled = false;
-    {% endif %}
-    var player = videojs('video-player');
-
-    // added to work with altCen, and changed 'url' below
-    var replacedStr1 =  window.location.href.replace("?", "&amp");
-    var replacedStr2 =  replacedStr1.replace("embed/", "watch?v=");
-
-
-    var nextVideoURL;
-    {% if next_video %}
-      {% if playlist %}
-        nextVideoURL = "/watch?v={{next_video}}&playlist={{playlist.hashid}}"
-      {% elif userlist %}
-        nextVideoURL = "/watch?v={{next_video}}&userlist={{userlist}}"
-      {% else %}
-        nextVideoURL = "/watch?v={{next_video}}"
-      {% endif %}
-    {% endif %}
-    var Button = videojs.getComponent('Button');
-
-    class NextButton extends Button {
-      buildCSSClass() {
-        return 'vjs-next-button vjs-icon-next-item vjs-button vjs-control';
-      }
-      handleClick(event){
-        window.parent.location = nextVideoURL;
-      }
-    }
-
-    videojs.registerComponent('NextButton', NextButton);
-    if(autoplayEnabled && nextVideoURL){
-      var nextButton = player.controlBar.addChild('NextButton', {}, 1);
-    }
-
-    player.on('ended', function(){
-      if(nextVideoURL && autoplayEnabled){
-        window.parent.location = nextVideoURL;
-      };
-    });
-
-    window.addEventListener('message', function(e) {
-      var msg = JSON.parse(e.data);
-      if(msg.type === 'toggle-play-next'){
-        var checked = msg.checked;
-        autoplayEnabled = checked;
-        if(!checked){
-          player.controlBar.removeChild(nextButton);
-        } else {
-          nextButton = player.controlBar.addChild('NextButton', {}, 1);
-        }
-      }
-    })
+    var player = videojs('video-player', {
+    controlBar: {skipButtons: {backward:10, forward:10}} });
   })();
 </script>
 

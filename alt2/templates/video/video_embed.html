@@ -10,9 +10,6 @@
       width: 2em;
       cursor: pointer;
     }
-    .vjs-big-play-button:before {
-      display: block !important;
-    }
   </style>
 </head>
 
@@ -22,7 +19,7 @@
 {% if autoplay is true%}
 
 <video id="video-player" class="video-js" preload="auto" playsinline autoplay outline="none" controls
-data-setup='{ "playbackRates": [0.5, 1, 1.25, 1.5, 1.75, 2] }'
+data-setup='{ "playbackRates": [0.5, 1, 1.25, 1.5, 1.75, 2], "controlBar": {"skipButtons": {"backward":10,"forward":10}} }'
 style="outline:none;
     background-color:#000;
     background-size:cover;
@@ -45,7 +42,7 @@ style="outline:none;
 {% else %}
 
 <video id="video-player" class="video-js" preload="auto" playsinline outline="none" controls
-data-setup='{ "playbackRates": [0.5, 1, 1.25, 1.5, 1.75, 2] }'
+data-setup='{ "playbackRates": [0.5, 1, 1.25, 1.5, 1.75, 2], "controlBar": {"skipButtons": {"backward":10,"forward":10}} }'
 style="outline:none;
     background-color:#000;
     background-size:cover;

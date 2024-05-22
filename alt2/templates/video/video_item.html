@@ -69,9 +69,11 @@
             <div class="h-box">
 
 
-<div class="shareon" data-url="{{ config['MYSERVER_URL'] }}/watch?v={{ video_id }}">
+<div class="shareon" data-url="{{ config['MYSERVER_URL'] }}/watch?v={{ video_id }}"
+     data-title="{{ video['title'] | truncate(60, False, '') | pprint + '; Channel: ' + video['ytc_title'] | truncate(50, False, '') | pprint +
+     '\n' }}">
   <a class="facebook" data-fb-app-id="225377455209362" data-hashtags="Censorship2024"></a>
-  <a class="twitter" data-via="altCensored" data-hashtags="Censorship2024,FreeSpeech"></a>
+  <a class="twitter" data-hashtags="RemovedFromYoutube"></a>
   <a class="telegram"</a>
   <a class="copy-url"></a>
   <a class="whatsapp"></a>

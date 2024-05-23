@@ -88,12 +88,16 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
                 <h3>{{ channel['ytc_title'] }}</h3></a>
             {% if channel['ytc_deleted'] %}
             <div class="shareon" data-url="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}"
-                 data-title="YouTube Channel {{channel['ytc_title']|truncate(60,False,'')|pprint}} TERMINATED {{channel['ytc_deleteddate'].strftime('%m/%d/%y')}}
-(Watch/Share #Censored videos: together we show what they hide) #RemovedFromYouTube">
+                 data-title="YouTube Channel {{channel['ytc_title']|truncate(60,False,'')|pprint}} TERMINATED {{channel['ytc_deleteddate'].strftime('%m/%d/%y')}}; {{channel['limited']}} #Censored Videos
+(Watch/Share #Censored videos: together we show what they hide) #RemovedFromYouTube #FreeSpeech">
+            {% elif channel['limited'] %}
+            <div class="shareon" data-url="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}"
+                 data-title="YouTube Channel {{channel['ytc_title']|truncate(60,False,'')|pprint}} being Archived in case of Removal; {{channel['limited']}} #Censored Videos
+(Videos Appear if #RemovedFromYouTube: we show what they hide) #FreeSpeech">
             {% else %}
             <div class="shareon" data-url="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}"
                  data-title="YouTube Channel {{channel['ytc_title']|truncate(60,False,'')|pprint}} being Archived in case of Removal
-(Videos Appear if #RemovedFromYouTube : together we show what they hide) #FreeSpeech">
+(Videos Appear if #RemovedFromYouTube: we show what they hide) #FreeSpeech">
             {% endif %}
               <a class="facebook" data-fb-app-id="225377455209362" data-hashtags="RemovedFromYouTube"></a>
               <a class="twitter" ></a>

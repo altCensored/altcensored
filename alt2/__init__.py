@@ -61,9 +61,7 @@ csp = {
     ],
     'frame-ancestors': [
         '*',
-        'data:',
-        '*.x.com',
-        '*.twitter.com'
+        'data:'
     ]
 }
 

@@ -58,6 +58,12 @@ csp = {
     ],
     'frame-src': [
         '*'
+    ],
+    'frame-ancestors': [
+        '*',
+        'data:',
+        '*.x.com',
+        '*.twitter.com'
     ]
 }
 

@@ -21,9 +21,12 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
 <meta name="altcen_title" content="{% block title %}{{ channel['ytc_title'] | striptags | truncate(length=56,killwords=False,end='',leeway=0) }}{% endblock %}">
 <meta name="altcen_meta_description" content="{% block description %}Limited Censored YouTube Video Channel: {{ channel['ytc_title'] }}: {{ channel['ytc_description'] }} (Created on {{ channel['ytc_publishedat'].strftime('%b %e, %G') }}){% endblock %}">
 
+<link rel="stylesheet" href="{{ url_for('static', filename='css/shareon.css') }}">
+
 {% endblock %}
 
 {% block content %}
+<script src="{{ url_for('static', filename='js/shareon.iife.js') }}" defer init></script>
     {% with active_nav='channel' %}
         {% include "widgets/navtabs.html" %}
     {% endwith %}
@@ -83,6 +86,23 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
             <div class="h-box">
             <a href="{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}">
                 <h3>{{ channel['ytc_title'] }}</h3></a>
+            {% if channel['ytc_deleted'] %}
+            <div class="shareon" data-url="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}"
+                 data-title="YouTube Channel {{channel['ytc_title']|truncate(60,False,'')|pprint}} TERMINATED {{channel['ytc_deleteddate'].strftime('%m/%d/%y')}}
+(Watch/Share #Censored videos: together we show what they hide) #RemovedFromYouTube">
+            {% else %}
+            <div class="shareon" data-url="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}"
+                 data-title="YouTube Channel {{channel['ytc_title']|truncate(60,False,'')|pprint}} being Archived in case of Removal
+(Videos Appear if #RemovedFromYouTube : together we show what they hide) #FreeSpeech">
+            {% endif %}
+              <a class="facebook" data-fb-app-id="225377455209362" data-hashtags="RemovedFromYouTube"></a>
+              <a class="twitter" ></a>
+              <a class="telegram"</a>
+              <a class="copy-url"></a>
+              <a class="whatsapp"></a>
+              <a class="email"></a>
+            </div>
+
                   {% if channel['ytc_description']  is not none %}
                       {{ channel['ytc_description'] | linkify | safe | nl2br | truncate (1000) }}
                   {% endif %}

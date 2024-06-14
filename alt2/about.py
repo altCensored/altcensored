@@ -1,4 +1,4 @@
-from flask import (Blueprint, render_template)
+from flask import (Blueprint, render_template, flash, Markup)
 from .models import Mv_Channel
 from .util import get_archivechannelcount
 
@@ -10,6 +10,10 @@ def index():
     archivechannelcount = get_archivechannelcount()
     channels = Mv_Channel.query.all()
 
+
+    flash(Markup('\
+    Download preferred videos, Internet Archive is <a href="/Internet_Archive_Blocks_Access.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">beginnng to block access </a> \
+    '), 'error')
     return render_template('about/about_index.html', channels=channels, archchancount=archivechannelcount)
 
 @bp.route('/example')

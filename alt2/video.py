@@ -35,6 +35,11 @@ def index(page):
         if user.watchlater:
             watchlater = user.watchlater
 
+    flash(Markup('\
+    Download preferred videos, Internet Archive is <a href="/Internet_Archive_Blocks_Access.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">beginning to block access </a> \
+    '), 'error')
+
+
     return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater)
 
 @bp.route('/new', defaults={'page': 1})
@@ -221,6 +226,10 @@ def watch():
         for plist in plists:
             if video_id not in plist.videos:
                 playlist_titles.append(plist.title)
+
+    flash(Markup('\
+    Download preferred videos, Internet Archive is <a href="/Internet_Archive_Blocks_Access.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">beginnng to block access </a> \
+    '), 'error')
 
     return render_template('video/video_item.html', video_url=video_url, video_url_short=video_url_short,
                            video_id=video_id, channel=channel, video=video, videos=videos, cat_id=cat_id, tags=tags,

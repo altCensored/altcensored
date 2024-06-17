@@ -27,7 +27,6 @@ PROPAGATE_EXCEPTIONS=False
 IA_USER=os.getenv('IA_USER')
 IA_PASSWORD=os.getenv('IA_PASSWORD')
 
-
 SUPPORTED_LANGUAGES = {'en': 'English', 'de': 'Deutsch', 'es': 'Español', 'fr': 'Français', 'pt': 'Portuguese', 'nl': 'Nederlandse', 'it': 'Italiano', 'se': 'Sverige'}
 SUPPORTED_THEMES = {'light', 'dark'}
 DEFAULT_THEME = 'light'
@@ -65,3 +64,7 @@ CACHE_REDIS_DB=1
 REV_ID = os.getenv('REV_ID')
 
 SENTRY_DSN = os.getenv('SENTRY_DSN')
+
+AC_S3_ENDPOINT=os.getenv('AC_S3_ENDPOINT')
+AC_S3_ACCESS_KEY=os.getenv('AC_S3_ACCESS_KEY')
+AC_S3_SECRET_KEY=os.getenv('AC_S3_SECRET_KEY')

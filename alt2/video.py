@@ -12,6 +12,7 @@ from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_us
 from .pagination import Pagination
 import json
 from .util import videos_latest, videos_newest, videos_popular, get_videocount, get_playnext, get_video_files, check_video_files
+from minio import Minio
 
 bp = Blueprint('video', __name__)
 
@@ -166,6 +167,10 @@ def watch():
     ia_item = ia.get_item('youtube-' + video_id)
     ia_item_local = IARCHIVEITEMFS + "youtube-" + video_id
 
+    client = Minio(current_app.config['AC_S3_ENDPOINT'],
+        access_key=current_app.config['AC_S3_ACCESS_KEY'],
+        secret_key=current_app.config['AC_S3_SECRET_KEY']
+    )
 
     if ia_item.exists == False:
         if os.path.isdir(ia_item_local):

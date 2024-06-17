@@ -157,7 +157,7 @@ def watch():
 
     IARCHIVEURL = current_app.config['IARCHIVEURL']
     IARCHIVEITEMFS = current_app.config['IARCHIVEITEMFS']
-    VIDEOSERVER_URL = "https://videos.altCensored.com"
+    VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
     video_url_short = IARCHIVEURL + video_id + "/"
 
     c = {'cookies': {'logged-in-user': current_app.config['IA_USER'],
@@ -274,7 +274,7 @@ def embed(video_id):
 
     IARCHIVEURL = current_app.config['IARCHIVEURL']
     IARCHIVEITEMFS = current_app.config['IARCHIVEITEMFS']
-    VIDEOSERVER_URL = "https://videos.altCensored.com"
+    VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
     video_url_short = IARCHIVEURL + video_id + "/"
 
     c = {'cookies': {'logged-in-user': current_app.config['IA_USER'],

@@ -12,10 +12,12 @@ VIDEO_THUMB_ERROR_IMAGE="https://altCensored.com/image_error.webp"
 IARCHIVEURL="https://archive.org/download/youtube-"
 IARCHIVEITEMURL="https://archive.org/details/youtube-"
 
-IARCHIVEITEMFS='/usr/share/nginx/videos/'
+IARCHIVEITEMFS=os.getenv('IARCHIVEITEMFS')
+#IARCHIVEITEMFS='/usr/share/nginx/videos/'
 #IARCHIVEITEMFS='/home/lc/videos/'
-VIDEOSERVER_URL="https://videos.altCensored.com"
-#VIDEOSERVER_URL="https://s3a.altCensored.com/videos"
+VIDEOSERVER_URL=os.getenv('VIDEOSERVER_URL')
+#VIDEOSERVER_URL="https://videos.altCensored.com"
+#VIDEOSERVER_URL="https://s3.altCensored.com/videos"
 
 IPROXY=os.getenv('IPROXY')
 IPROXYBIG=os.getenv('IPROXYBIG')

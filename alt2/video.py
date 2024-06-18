@@ -12,9 +12,11 @@ from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_us
 from .pagination import Pagination
 import json
 from .util import videos_latest, videos_newest, videos_popular, get_videocount, get_playnext, get_video_files, check_video_files
+from . import config
 from minio import Minio
 
 bp = Blueprint('video', __name__)
+FLASH_MSG = config.FLASH_MSG
 
 PER_PAGE = 24
 CHANN_MAX_RESULT = 28
@@ -36,9 +38,8 @@ def index(page):
         if user.watchlater:
             watchlater = user.watchlater
 
-    flash(Markup('\
-    Download preferred videos, Internet Archive has changed access on some items\
-    '), 'error')
+    if FLASH_MSG is not None:
+        flash(Markup(FLASH_MSG), 'error')
 
     return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater)
 
@@ -231,9 +232,8 @@ def watch():
             if video_id not in plist.videos:
                 playlist_titles.append(plist.title)
 
-    flash(Markup('\
-    Download preferred videos, Internet Archive has changed access on some items</a> \
-    '), 'error')
+    if FLASH_MSG is not None:
+        flash(Markup(FLASH_MSG), 'error')
 
     return render_template('video/video_item.html', video_url=video_url, video_url_short=video_url_short,
                            video_id=video_id, channel=channel, video=video, videos=videos, cat_id=cat_id, tags=tags,

@@ -70,3 +70,6 @@ SENTRY_DSN = os.getenv('SENTRY_DSN')
 AC_S3_ENDPOINT=os.getenv('AC_S3_ENDPOINT')
 AC_S3_ACCESS_KEY=os.getenv('AC_S3_ACCESS_KEY')
 AC_S3_SECRET_KEY=os.getenv('AC_S3_SECRET_KEY')
+
+FLASH_MSG  = "Download preferred videos, Internet Archive has changed access on some items"
+#FLASH_MSG = None

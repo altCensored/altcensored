@@ -1,8 +1,11 @@
 from flask import (Blueprint, render_template, flash, Markup)
 from .models import Mv_Channel
 from .util import get_archivechannelcount
+from . import config
 
 bp = Blueprint('about', __name__, url_prefix='/about' )
+FLASH_MSG = config.FLASH_MSG
+
 
 @bp.route('/')
 def index():
@@ -10,10 +13,9 @@ def index():
     archivechannelcount = get_archivechannelcount()
     channels = Mv_Channel.query.all()
 
+    if FLASH_MSG is not None:
+        flash(Markup(FLASH_MSG), 'error')
 
-    flash(Markup('\
-    Download preferred videos, Internet Archive has changed access on some items \
-    '), 'error')
     return render_template('about/about_index.html', channels=channels, archchancount=archivechannelcount)
 
 @bp.route('/example')

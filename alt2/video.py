@@ -19,10 +19,10 @@ bp = Blueprint('video', __name__)
 PER_PAGE = 24
 CHANN_MAX_RESULT = 28
 
+
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
 def index(page):
-#    print_session()
     offset = ((int(page) - 1) * PER_PAGE)
     order = 'latest'
     videos = videos_latest(PER_PAGE, offset)
@@ -37,9 +37,8 @@ def index(page):
             watchlater = user.watchlater
 
     flash(Markup('\
-    Download preferred videos, Internet Archive is <a href="/Internet_Archive_Blocks_Access.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">beginning to block access </a> \
+    Download preferred videos, Internet Archive has changed access on some items\
     '), 'error')
-
 
     return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater)
 
@@ -233,7 +232,7 @@ def watch():
                 playlist_titles.append(plist.title)
 
     flash(Markup('\
-    Download preferred videos, Internet Archive is <a href="/Internet_Archive_Blocks_Access.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">beginnng to block access </a> \
+    Download preferred videos, Internet Archive has changed access on some items</a> \
     '), 'error')
 
     return render_template('video/video_item.html', video_url=video_url, video_url_short=video_url_short,

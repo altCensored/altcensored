@@ -12,7 +12,7 @@ def index():
 
 
     flash(Markup('\
-    Download preferred videos, Internet Archive is <a href="/Internet_Archive_Blocks_Access.pdf" class="alert-link" target="_blank" rel="noopener noreferrer">beginnng to block access </a> \
+    Download preferred videos, Internet Archive has changed access on some items \
     '), 'error')
     return render_template('about/about_index.html', channels=channels, archchancount=archivechannelcount)
 

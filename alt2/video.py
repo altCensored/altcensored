@@ -158,8 +158,11 @@ def watch():
 
     IARCHIVEURL = current_app.config['IARCHIVEURL']
     IARCHIVEITEMFS = current_app.config['IARCHIVEITEMFS']
-    VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
+    IARCHIVEITEMURL = current_app.config['IARCHIVEITEMURL']
     video_url_short = IARCHIVEURL + video_id + "/"
+    video_url_download = IARCHIVEITEMURL + video_id
+
+    VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
 
     c = {'cookies': {'logged-in-user': current_app.config['IA_USER'],
                      'logged-in-sig': current_app.config['IA_PASSWORD']}}
@@ -179,7 +182,10 @@ def watch():
             video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
     else:
         if "access-restricted-item" in ia_item.metadata or "altcen_hosted" in ia_item.metadata:
-            if os.path.isdir(ia_item_local):
+            global FLASH_MSG
+#            FLASH_MSG += "Internet Archive has changed access on some items"
+            FLASH_MSG = 'Internet Archive has limited access on <a href=' + video_url_download + ' class="alert-link" target="_blank" rel="noopener noreferrer">this item</a>'
+  h          if os.path.isdir(ia_item_local):
                 video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
             else:
                 video_files = [f.name for f in get_video_files(ia_item)]
@@ -238,7 +244,7 @@ def watch():
     return render_template('video/video_item.html', video_url=video_url, video_url_short=video_url_short,
                            video_id=video_id, channel=channel, video=video, videos=videos, cat_id=cat_id, tags=tags,
                            playlist=playlist, userlist=userlist, not_in_watchlater=not_in_watchlater,
-                           playlist_titles=playlist_titles)
+                           playlist_titles=playlist_titles, video_url_download=video_url_download)
 
 @bp.route("/test1")
 def test1():

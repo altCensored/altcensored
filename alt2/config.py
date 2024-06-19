@@ -9,12 +9,14 @@ MYSERVER_NAME="altCensored.com"
 MYSERVER_URL="https://altCensored.com"
 MYSERVER_TEST_URL="https://altCensored.com"
 VIDEO_THUMB_ERROR_IMAGE="https://altCensored.com/image_error.webp"
+
 IARCHIVEURL="https://archive.org/download/youtube-"
 IARCHIVEITEMURL="https://archive.org/details/youtube-"
 
 IARCHIVEITEMFS=os.getenv('IARCHIVEITEMFS')
 #IARCHIVEITEMFS='/usr/share/nginx/videos/'
 #IARCHIVEITEMFS='/home/lc/videos/'
+
 VIDEOSERVER_URL=os.getenv('VIDEOSERVER_URL')
 #VIDEOSERVER_URL="https://videos.altCensored.com"
 #VIDEOSERVER_URL="https://s3.altCensored.com/videos"
@@ -71,5 +73,5 @@ AC_S3_ENDPOINT=os.getenv('AC_S3_ENDPOINT')
 AC_S3_ACCESS_KEY=os.getenv('AC_S3_ACCESS_KEY')
 AC_S3_SECRET_KEY=os.getenv('AC_S3_SECRET_KEY')
 
-FLASH_MSG  = "Download preferred videos, Internet Archive has changed access on some items"
+FLASH_MSG  = "Download preferred videos, Internet Archive is limiting access"
 #FLASH_MSG = None

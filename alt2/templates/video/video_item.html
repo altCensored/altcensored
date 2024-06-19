@@ -83,9 +83,15 @@
                 {{ gettext('View on') }} YouTube
               </a>
               <br>
-              <a href="{{ video_url_short ~ 'youtube-' ~ video_id ~ '_archive.torrent' }}">
+<!--              <a href="{{ video_url_short ~ 'youtube-' ~ video_id ~ '_archive.torrent' }}">
                 {{ gettext('Download Torrent') }}
               </a>
+--!>
+
+              <a href="{{ video_url_download }}" target="_blank">
+                {{ gettext('Item on Internet Archive') }}
+              </a>
+
                 <p></p>
               YouTube {{ gettext('Views') }}:&nbsp;{{ video['yt_views']|commafy }}
               <br>

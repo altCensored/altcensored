@@ -101,6 +101,8 @@ def watch():
     playlist = request.args.get('playlist', None)
     userlist = request.args.get('userlist', None)
 
+    NEW_FLASH_MSG = None
+
     if video_id is None:
         abort(404)
     video = Mv_Video.query.get(video_id)
@@ -182,10 +184,10 @@ def watch():
             video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
     else:
         if "access-restricted-item" in ia_item.metadata or "altcen_hosted" in ia_item.metadata:
-            global FLASH_MSG
+
 #            FLASH_MSG += "Internet Archive has changed access on some items"
 #            FLASH_MSG = 'Internet Archive has limited access on <a href=' + video_url_download + ' class="alert-link" target="_blank" rel="noopener noreferrer">this item</a>'
-            FLASH_MSG = 'Internet Archive has limited access on <a href=' + video_url_download + ' class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">this item</a>'
+            NEW_FLASH_MSG = 'Internet Archive has limited access on <a href=' + video_url_download + ' class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">this item</a>'
 
             if os.path.isdir(ia_item_local):
                 video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
@@ -240,40 +242,20 @@ def watch():
             if video_id not in plist.videos:
                 playlist_titles.append(plist.title)
 
-    if FLASH_MSG is not None:
-        flash(Markup(FLASH_MSG), 'error')
+#    if FLASH_MSG is not None:
+#        flash(Markup(FLASH_MSG), 'error')
+
+    if NEW_FLASH_MSG is not None:
+        flash(Markup(NEW_FLASH_MSG), 'error')
+    else:
+        if FLASH_MSG is not None:
+            flash(Markup(FLASH_MSG), 'error')
 
     return render_template('video/video_item.html', video_url=video_url, video_url_short=video_url_short,
                            video_id=video_id, channel=channel, video=video, videos=videos, cat_id=cat_id, tags=tags,
                            playlist=playlist, userlist=userlist, not_in_watchlater=not_in_watchlater,
                            playlist_titles=playlist_titles, video_url_download=video_url_download)
 
-@bp.route("/test1")
-def test1():
-    video_id = 'b9xIyw4dQZo'
-    video_id = '7-tUV0cnyv8'
-    video_id = 'c7BJ-VgSumw'
-#    video_id = 'C4tT99haZXE'
-#    video_id = 't25ptPWc1NI'
-    video_id = '0kX-1OOrU5M' # orig ogv, mp4
-
-    ia_url = "https://archive.org/download/youtube-" + video_id + "/" + video_id
-    ac_url = "https://videos.altcensored.com/youtube-" + video_id + "/" + video_id
-
-
-#    return render_template('video/test1.html',video_url=ac_url)
-    return render_template('video/video_embed_test.html', video_url=ac_url)
-
-@bp.route("/test2")
-def test2():
-    video_id = 'b9xIyw4dQZo'
-    video_id = '7-tUV0cnyv8'
-
-    ia_url = "https://archive.org/download/youtube-" + video_id + "/" + video_id
-    ia_url = "https://videos.altcensored.com/youtube-" + video_id + "/" + video_id
-
-
-    return render_template('video/test2.html',ia_url=ia_url)
 
 @bp.route('/embed/<video_id>')
 def embed(video_id):
@@ -687,3 +669,32 @@ def play_next():
         return json.dumps({'playnext': session['playnext']})
     else:
         return json.dumps({'playnext': session['playnext']})
+
+
+@bp.route("/test1")
+def test1():
+    video_id = 'b9xIyw4dQZo'
+    video_id = '7-tUV0cnyv8'
+    video_id = 'c7BJ-VgSumw'
+#    video_id = 'C4tT99haZXE'
+#    video_id = 't25ptPWc1NI'
+    video_id = '0kX-1OOrU5M' # orig ogv, mp4
+
+    ia_url = "https://archive.org/download/youtube-" + video_id + "/" + video_id
+    ac_url = "https://videos.altcensored.com/youtube-" + video_id + "/" + video_id
+
+
+#    return render_template('video/test1.html',video_url=ac_url)
+    return render_template('video/video_embed_test.html', video_url=ac_url)
+
+
+@bp.route("/test2")
+def test2():
+    video_id = 'b9xIyw4dQZo'
+    video_id = '7-tUV0cnyv8'
+
+    ia_url = "https://archive.org/download/youtube-" + video_id + "/" + video_id
+    ia_url = "https://videos.altcensored.com/youtube-" + video_id + "/" + video_id
+
+
+    return render_template('video/test2.html',ia_url=ia_url)

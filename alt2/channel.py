@@ -1,4 +1,4 @@
-from flask import (Blueprint, render_template, session, make_response, request, jsonify, abort)
+from flask import (Blueprint, render_template, session, make_response, request, jsonify, abort, flash,Markup)
 from sqlalchemy import func
 from .database import db_session
 from .models import Mv_Video, Mv_Channel, User
@@ -8,23 +8,27 @@ from .util import (channels_latest, channels_deleted, channels_popular, channels
                    channeli, channeli_videocount, channeli_videos_newest, channeli_videos_popular,
                    get_channelcount, get_delchannelcount, get_archivechannelcount
                    )
+from . import config
 
 bp = Blueprint('channel', __name__, url_prefix='/channel' )
 
 PER_PAGE = 24
 PER_PAGE_FEED = 100
+FLASH_MSG = config.FLASH_MSG
 
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
 def index(page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'latest'
-#    channels = Mv_Channel.query.limit(PER_PAGE).offset(offset)
     channels = channels_latest(PER_PAGE, offset)
     if not channels and page != 1:
         abort(404)
     get_channelcount()
     pagination = Pagination(page, PER_PAGE, session['channelcount'])
+    if FLASH_MSG is not None:
+        flash(Markup(FLASH_MSG), 'error')
+
     return render_template('channel/channel_index.html', pagination=pagination, channels=channels, order=order)
 
 
@@ -87,6 +91,9 @@ def new(page):
         abort(404)
     get_channelcount()
     pagination = Pagination(page, PER_PAGE, session['channelcount'])
+    if FLASH_MSG is not None:
+        flash(Markup(FLASH_MSG), 'error')
+
     return render_template('channel/channel_index.html', pagination=pagination, channels=channels, order=order)
 
 
@@ -101,6 +108,9 @@ def popular(page):
         abort(404)
     get_channelcount()
     pagination = Pagination(page, PER_PAGE, session['channelcount'])
+    if FLASH_MSG is not None:
+        flash(Markup(FLASH_MSG), 'error')
+
     return render_template('channel/channel_index.html', pagination=pagination, channels=channels, order=order)
 
 
@@ -117,6 +127,9 @@ def deleted(page):
         abort(404)
     get_delchannelcount()
     pagination = Pagination(page, PER_PAGE, session['delchannelcount'])
+    if FLASH_MSG is not None:
+        flash(Markup(FLASH_MSG), 'error')
+
     return render_template('channel/channel_index.html', 
 #        pagination=pagination, channels=channels, channelcount=channelcount, videocount=videocount, order=order)
         pagination = pagination, channels = channels, channelcount=session['delchannelcount'], order=order)
@@ -153,6 +166,9 @@ def limited(page):
         abort(404)
     get_channelcount()
     pagination = Pagination(page, PER_PAGE, session['channelcount'])
+    if FLASH_MSG is not None:
+        flash(Markup(FLASH_MSG), 'error')
+
     return render_template('channel/channel_index.html', pagination=pagination, channels=channels, order=order)
 
 
@@ -168,6 +184,9 @@ def archived(page):
         abort(404)
     get_archivechannelcount()
     pagination = Pagination(page, PER_PAGE, session['archivechannelcount'])
+    if FLASH_MSG is not None:
+        flash(Markup(FLASH_MSG), 'error')
+
     return render_template('channel/channel_index.html', pagination=pagination, channels=channels, channelcount=session['archivechannelcount'], order=order)
 
 
@@ -206,6 +225,9 @@ def item(ytc_id,page):
         user = User.query.filter(User.id == session['user']['id']).scalar()
         if user.watchlater:
             watchlater = user.watchlater
+    if FLASH_MSG is not None:
+        flash(Markup(FLASH_MSG), 'error')
+
     return render_template('channel/channel_item.html', pagination=pagination, channel=channel, videos=videos, videocount=videocount, order=order, watchlater=watchlater)
 
 

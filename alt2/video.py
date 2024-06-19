@@ -12,8 +12,8 @@ from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_us
 from .pagination import Pagination
 import json
 from .util import videos_latest, videos_newest, videos_popular, get_videocount, get_playnext, get_video_files, check_video_files
-from . import config
 from minio import Minio
+from . import config
 
 bp = Blueprint('video', __name__)
 FLASH_MSG = config.FLASH_MSG
@@ -37,7 +37,6 @@ def index(page):
         user = User.query.filter(User.id == session['user']['id']).scalar()
         if user.watchlater:
             watchlater = user.watchlater
-
     if FLASH_MSG is not None:
         flash(Markup(FLASH_MSG), 'error')
 
@@ -58,6 +57,9 @@ def new(page):
         user = User.query.filter(User.id == session['user']['id']).scalar()
         if user.watchlater:
             watchlater = user.watchlater
+    if FLASH_MSG is not None:
+        flash(Markup(FLASH_MSG), 'error')
+
     return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater)
 
 
@@ -76,6 +78,9 @@ def popular(page):
         user = User.query.filter(User.id == session['user']['id']).scalar()
         if user.watchlater:
             watchlater = user.watchlater
+    if FLASH_MSG is not None:
+        flash(Markup(FLASH_MSG), 'error')
+
     return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater)
 
 

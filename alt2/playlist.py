@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, session, render_template, request, flash, redirect, url_for, app, abort
+    Blueprint, session, render_template, request, flash, redirect, url_for, abort, Markup
 )
 from sqlalchemy import func, case
 from sqlalchemy.orm.attributes import flag_modified
@@ -10,7 +10,7 @@ from datetime import timezone
 from .database import db_session
 from .models import User, Playlist, Mv_Video, Counter
 from .pagination import Pagination
-from . import util
+from . import (util,config)
 from .util import (
     login_required, str_to_bool, title_exists, get_playlistcount
     )
@@ -20,6 +20,7 @@ no_profanity = lazy_gettext('Profanity forbidden')
 title_exist = lazy_gettext('Title exists')
 
 PER_PAGE = 24
+FLASH_MSG = config.FLASH_MSG
 
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
@@ -28,11 +29,12 @@ def index(page):
     order = 'newest'
     playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
         .order_by(Playlist.updated.desc()).limit(PER_PAGE).offset(offset)
-#    playlists = playlists_newest(PER_PAGE, offset)
     if not playlists and page != 1:
         abort(404)
     playlistcount = get_playlistcount()
     pagination = Pagination(page, PER_PAGE, playlistcount)
+    if FLASH_MSG is not None:
+        flash(Markup(FLASH_MSG), 'error')
 
     return render_template('playlist/playlist_index.html',
                            pagination=pagination, playlists=playlists, playlistcount=playlistcount, order=order)
@@ -49,6 +51,8 @@ def popular(page):
         abort(404)
     playlistcount = get_playlistcount()
     pagination = Pagination(page, PER_PAGE, playlistcount)
+    if FLASH_MSG is not None:
+        flash(Markup(FLASH_MSG), 'error')
 
     return render_template('playlist/playlist_index.html',
                            pagination=pagination, playlists=playlists, playlistcount=playlistcount, order=order)

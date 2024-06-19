@@ -184,7 +184,9 @@ def watch():
         if "access-restricted-item" in ia_item.metadata or "altcen_hosted" in ia_item.metadata:
             global FLASH_MSG
 #            FLASH_MSG += "Internet Archive has changed access on some items"
-            FLASH_MSG = 'Internet Archive has limited access on <a href=' + video_url_download + ' class="alert-link" target="_blank" rel="noopener noreferrer">this item</a>'
+#            FLASH_MSG = 'Internet Archive has limited access on <a href=' + video_url_download + ' class="alert-link" target="_blank" rel="noopener noreferrer">this item</a>'
+            FLASH_MSG = 'Internet Archive has limited access on <a href=' + video_url_download + ' class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">this item</a>'
+
             if os.path.isdir(ia_item_local):
                 video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
             else:

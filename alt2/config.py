@@ -74,4 +74,6 @@ AC_S3_ACCESS_KEY=os.getenv('AC_S3_ACCESS_KEY')
 AC_S3_SECRET_KEY=os.getenv('AC_S3_SECRET_KEY')
 
 FLASH_MSG  = "Download preferred videos, Internet Archive is limiting access"
+FLASH_MSG = 'Download preferred videos, Internet Archive is <a href=https://archive.org/details/youtube-nLtFik-CjiE class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">limiting access</a>'
+#FLASH_MSG  = "Download preferred videos, Internet Archive is limiting access"
 #FLASH_MSG = None

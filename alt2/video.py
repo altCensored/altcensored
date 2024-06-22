@@ -171,9 +171,7 @@ def watch():
 
     VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
 
-    c = {'cookies': {'logged-in-user': current_app.config['IA_USER'],
-                     'logged-in-sig': current_app.config['IA_PASSWORD']}}
-    ia = get_session(config=c)
+    ia = get_session()
     ia_item = ia.get_item('youtube-' + video_id)
     ia_item_local = IARCHIVEITEMFS + "youtube-" + video_id
 

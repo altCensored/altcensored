@@ -28,9 +28,6 @@ IPROXYTW=os.getenv('IPROXYTW')
 IPROXYTWBIG=os.getenv('IPROXYTWBIG')
 PROPAGATE_EXCEPTIONS=False
 
-IA_USER=os.getenv('IA_USER')
-IA_PASSWORD=os.getenv('IA_PASSWORD')
-
 SUPPORTED_LANGUAGES = {'en': 'English', 'de': 'Deutsch', 'es': 'Español', 'fr': 'Français', 'pt': 'Portuguese', 'nl': 'Nederlandse', 'it': 'Italiano', 'se': 'Sverige'}
 SUPPORTED_THEMES = {'light', 'dark'}
 DEFAULT_THEME = 'light'

@@ -248,7 +248,7 @@ def watch():
 #    if FLASH_MSG is not None:
 #        flash(Markup(FLASH_MSG), 'error')
 
-    FLASH_MSG = '<a href=' + video_url_download + ' class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">Download<a> preferred videos, Internet Archive is <a href=https://archive.org/details/youtube-Gv4jjFgIP_g class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">limiting access on some items</a>'
+#    FLASH_MSG = '<a href=' + video_url_download + ' class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">Download<a> preferred videos, Internet Archive is <a href=https://archive.org/details/youtube-Gv4jjFgIP_g class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">limiting access on some items</a>'
 
     if NEW_FLASH_MSG is not None:
         flash(Markup(NEW_FLASH_MSG), 'error')
@@ -365,7 +365,6 @@ def embed(video_id):
                 idx = (videos_extractor_list).index(video.extractor_data)
             except:
                 idx = len(videos_extractor_list)
-#            listlen = len(videos_extractor_list)
             next_video = (videos_extractor_list).pop(idx - 1)
             try:
                 videos_extractor_list.remove(video_id)

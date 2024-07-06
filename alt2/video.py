@@ -186,7 +186,7 @@ def watch():
         else:
             video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
     else:
-        if "access-restricted-item" in ia_item.metadata or "altcen_hosted" in ia_item.metadata:
+        if "access-restricted-item" in ia_item.metadata or "altcen_hosted" in ia_item.metadata or ia_item.is_dark:
 
 #            FLASH_MSG += "Internet Archive has changed access on some items"
 #            FLASH_MSG = 'Internet Archive has limited access on <a href=' + video_url_download + ' class="alert-link" target="_blank" rel="noopener noreferrer">this item</a>'

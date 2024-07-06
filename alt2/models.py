@@ -52,6 +52,7 @@ class Entity(Base):
     filesize_approx = Column(Integer, nullable=True)
     live_status = Column(String, nullable=True)
     restricted_ia = Column(Boolean, nullable=True)
+    exists_ac = Column(Boolean, nullable=True)
 
     def __init__(self, type=None, prev=None):
         self.id = id
@@ -343,6 +344,7 @@ class Mv_Video(Base):
     document = Column(String, nullable=True)
     exists_ia = Column(Boolean, nullable=True)
     restricted_ia = Column(Boolean, nullable=True)
+    exists_ac = Column(Boolean, nullable=True)
 
     def __init__(self, extractor_data=None, allow=None):
         self.id = id

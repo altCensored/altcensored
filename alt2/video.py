@@ -11,7 +11,8 @@ from .database import db_session
 from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_user, User, Playlist
 from .pagination import Pagination
 import json
-from .util import videos_latest, videos_newest, videos_popular, get_videocount, get_playnext, get_video_files, check_video_files
+from .util import (videos_latest, videos_newest, videos_popular, get_videocount, get_playnext,
+                   get_video_files, check_video_files, ac_object_exist)
 from minio import Minio
 from . import config
 
@@ -164,61 +165,32 @@ def watch():
             .order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE)
 
     IARCHIVEURL = current_app.config['IARCHIVEURL']
-    IARCHIVEITEMFS = current_app.config['IARCHIVEITEMFS']
     IARCHIVEITEMURL = current_app.config['IARCHIVEITEMURL']
+    VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
     video_url_short = IARCHIVEURL + video_id + "/"
     video_url_download = IARCHIVEITEMURL + video_id
 
-    VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
-
     ia = get_session()
     ia_item = ia.get_item('youtube-' + video_id)
-    ia_item_local = IARCHIVEITEMFS + "youtube-" + video_id
 
     client = Minio(current_app.config['AC_S3_ENDPOINT'],
         access_key=current_app.config['AC_S3_ACCESS_KEY'],
         secret_key=current_app.config['AC_S3_SECRET_KEY']
     )
 
-    if ia_item.exists == False:
-        if os.path.isdir(ia_item_local):
-            video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
-        else:
-            video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
+#    if video.exists_ac:
+    if ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id):
+        video_url = VIDEOSERVER_URL + video_id + "/" + video_id
+    elif ia_item.exists and not ia_item.is_dark and "access-restricted-item" not in ia_item.metadata  and "altcen_hosted" not in ia_item.metadata:
+        video_files = [f.name for f in get_video_files(ia_item)]
+        if video_files:
+            full_filename = check_video_files(ia_item)
+            if full_filename:
+                filename = os.path.splitext(full_filename)[0]
+                video_url = IARCHIVEURL + video_id + "/" + filename
     else:
-        if "access-restricted-item" in ia_item.metadata or "altcen_hosted" in ia_item.metadata or ia_item.is_dark:
-
-#            FLASH_MSG += "Internet Archive has changed access on some items"
-#            FLASH_MSG = 'Internet Archive has limited access on <a href=' + video_url_download + ' class="alert-link" target="_blank" rel="noopener noreferrer">this item</a>'
-            NEW_FLASH_MSG = 'Internet Archive has limited access on <a href=' + video_url_download + ' class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">this item</a>'
-
-            if os.path.isdir(ia_item_local):
-                video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
-            else:
-                video_files = [f.name for f in get_video_files(ia_item)]
-                rsps = ia_item.download(video_files, verbose=True, destdir=IARCHIVEITEMFS, dry_run=False)
-
-                if all([r.status_code == 200 for r in rsps]):
-                    old_file_full = (video_files[0])
-                    old_file_ext = (os.path.splitext(old_file_full)[1])
-                    new_file_full = video_id + old_file_ext
-                    os.rename(IARCHIVEITEMFS + 'youtube-' + video_id + "/" + old_file_full,
-                              IARCHIVEITEMFS + 'youtube-' + video_id + "/" + new_file_full)
-                    video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
-                else:
-                    abort(404)
-        else:
-            video_files = [f.name for f in get_video_files(ia_item)]
-            if video_files:
-                full_filename = check_video_files(ia_item)
-                if full_filename:
-                    filename = os.path.splitext(full_filename)[0]
-                    video_url = IARCHIVEURL + video_id + "/" + filename
-                else:
-                    pass
-
-            else:
-                video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
+        NEW_FLASH_MSG = 'Internet Archive has limited access on <a href=' + video_url_download + ' class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">this item</a>'
+        video_url = VIDEOSERVER_URL + 'unavailable/unavailable'
 
 
     playlist_titles = []
@@ -265,60 +237,35 @@ def watch():
 @bp.route('/embed/<video_id>')
 def embed(video_id):
     video = Mv_Video.query.get(video_id)
-    if video is None:
+    if video_id is None:
         abort(404)
 
     playlist = request.args.get('playlist', None)
     userlist = request.args.get('userlist', None)
 
     IARCHIVEURL = current_app.config['IARCHIVEURL']
-    IARCHIVEITEMFS = current_app.config['IARCHIVEITEMFS']
     VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
-    video_url_short = IARCHIVEURL + video_id + "/"
 
     ia = get_session()
     ia_item = ia.get_item('youtube-' + video_id)
-    ia_item_local = IARCHIVEITEMFS + "youtube-" + video_id
 
-    if ia_item.exists == False:
-        if os.path.isdir(ia_item_local):
-            video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
-        else:
-            video_id = 'unavailable'
-            video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
+    client = Minio(current_app.config['AC_S3_ENDPOINT'],
+                   access_key=current_app.config['AC_S3_ACCESS_KEY'],
+                   secret_key=current_app.config['AC_S3_SECRET_KEY']
+                   )
+
+    #    if video.exists_ac:
+    if ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id):
+        video_url = VIDEOSERVER_URL + video_id + "/" + video_id
+    elif ia_item.exists and not ia_item.is_dark and "access-restricted-item" not in ia_item.metadata  and "altcen_hosted" not in ia_item.metadata:
+        video_files = [f.name for f in get_video_files(ia_item)]
+        if video_files:
+            full_filename = check_video_files(ia_item)
+            if full_filename:
+                filename = os.path.splitext(full_filename)[0]
+                video_url = IARCHIVEURL + video_id + "/" + filename
     else:
-        if "access-restricted-item" in ia_item.metadata or "altcen_hosted" in ia_item.metadata:
-            if os.path.isdir(ia_item_local):
-                video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
-            else:
-                video_files = [f.name for f in get_video_files(ia_item)]
-                rsps = ia_item.download(video_files, verbose=True, destdir=IARCHIVEITEMFS, dry_run=False)
-
-                if all([r.status_code == 200 for r in rsps]):
-                    old_file_full = (video_files[0])
-                    old_file_ext = (os.path.splitext(old_file_full)[1])
-                    new_file_full = video_id + old_file_ext
-                    os.rename(IARCHIVEITEMFS + 'youtube-' + video_id + "/" + old_file_full,
-                              IARCHIVEITEMFS + 'youtube-' + video_id + "/" + new_file_full)
-                    video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
-                else:
-                    abort(404)
-        else:
-            video_files = [f.name for f in get_video_files(ia_item)]
-            if video_files:
-                full_filename = check_video_files(ia_item)
-                if full_filename:
-                    filename = os.path.splitext(full_filename)[0]
-                    filename_escaped = parse.quote(filename, safe='')
-                    video_url = IARCHIVEURL + video_id + "/" + filename_escaped
-                else:
-                    pass
-            else:
-                if os.path.isdir(ia_item_local):
-                    video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
-                else:
-                    video_id = 'unavailable'
-                    video_url = VIDEOSERVER_URL + "/youtube-" + video_id + "/" + video_id
+        video_url = VIDEOSERVER_URL + 'unavailable/unavailable'
 
     next_video = None
 

@@ -69,6 +69,7 @@ REV_ID = os.getenv('REV_ID')
 SENTRY_DSN = os.getenv('SENTRY_DSN')
 
 AC_S3_ENDPOINT=os.getenv('AC_S3_ENDPOINT')
+AC_S3_BUCKET=os.getenv('AC_S3_BUCKET')
 AC_S3_ACCESS_KEY=os.getenv('AC_S3_ACCESS_KEY')
 AC_S3_SECRET_KEY=os.getenv('AC_S3_SECRET_KEY')
 

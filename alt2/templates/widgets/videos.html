@@ -15,6 +15,7 @@
 
             <div class="thumbnail">
 
+<!--
           {% if  video['exists_ac'] %}
               <img class="thumbnail" src="{{ config.ACIPROXYHUGE~ config.VIDEOSERVER_URL ~ video['extractor_data'] ~ '/' ~ video['thumbnail'] }}"
                    onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
@@ -23,10 +24,10 @@
                    onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
 
           {% endif %}
-<!--
-              <img class="thumbnail" src="{{ config.IPROXY ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}"
-                   onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
 -->
+              <img class="thumbnail" src="{{ config.IPROXYHUGE~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['thumbnail'] }}"
+                   onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
+
 
               {% if video['duration']  is not none %}
                 <p class="length">{{ video['duration'] | hourminsec }}</p>

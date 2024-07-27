@@ -6,7 +6,7 @@ dbase = config.SQLALCHEMY_DATABASE_URI
 
 engine = create_engine(dbase,
                        pool_size=10,
-                       max_overflow=200,
+                       max_overflow=300,
 #                       echo=True,
 #                       echo_pool="debug",
 #                       pool_use_lifo=True,

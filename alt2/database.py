@@ -5,8 +5,8 @@ from . import config
 dbase = config.SQLALCHEMY_DATABASE_URI
 
 engine = create_engine(dbase,
-                       pool_size=10,
-                       max_overflow=300,
+                       pool_size=50,
+                       max_overflow=500,
 #                       echo=True,
 #                       echo_pool="debug",
 #                       pool_use_lifo=True,

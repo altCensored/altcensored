@@ -236,8 +236,10 @@ def watch():
 
 @bp.route('/embed/<video_id>')
 def embed(video_id):
-    video = Mv_Video.query.get(video_id)
     if video_id is None:
+        abort(404)
+    video = Mv_Video.query.get(video_id)
+    if video is None:
         abort(404)
 
     playlist = request.args.get('playlist', None)

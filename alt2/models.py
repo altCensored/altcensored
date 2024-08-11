@@ -41,7 +41,7 @@ class Entity(Base):
     category = Column(String, nullable=True)
     rating = Column(Integer, nullable=True)
     thumbnail = Column(String, nullable=True)
-    alt_url1 = Column(String, nullable=True)
+    thumbnail_ac = Column(String, nullable=True)
     alt_url2 = Column(String, nullable=True)
     duration = Column(String, nullable=True)
     sync_ia = Column(Boolean, nullable=True)
@@ -52,7 +52,11 @@ class Entity(Base):
     filesize_approx = Column(Integer, nullable=True)
     live_status = Column(String, nullable=True)
     restricted_ia = Column(Boolean, nullable=True)
+    loggedin_ia = Column(Boolean, nullable=True)
+    uploadother_ia = Column(Boolean, nullable=True)
     exists_ac = Column(Boolean, nullable=True)
+    dark_ia = Column(Boolean, nullable=True)
+    exists_ac_mkv = Column(Boolean, nullable=True)
 
     def __init__(self, type=None, prev=None):
         self.id = id
@@ -86,6 +90,11 @@ class Entity(Base):
         self.filesize_approx = filesize_approx
         self.live_status = live_status
         self.restricted_ia = restricted_ia
+        self.loggedin_ia = loggedin_ia
+        self.uploadother_ia = uploadother_ia
+        self.exists_ac = exists_ac
+        self.dark_ia = dark_ia
+        self.exists_ac_mkv = exists_ac_mkv
 
     def __repr__(self):
         return '<Entity %r>' % (self.id)

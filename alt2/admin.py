@@ -167,9 +167,9 @@ def add_channel():
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' nohup youtube-sync -p /home/m2np3/m2np3 --proxy socks5://127.0.0.1:5080 --cookies /home/m2np3/rocketfuel_cookies.txt '
+        params2 = ' nohup yt-syncac '
         params3 = ' -delta '
-        params4 = ' > /root/nohup_ssh.out 2>&1 &'
+        params4 = ' > $HOME/nohup_ssh.out 2>&1 &'
 
         command = params1 + params2 + action + " " + channel_url + params3 + delta + params4
         commands = [command]
@@ -331,10 +331,10 @@ def status_channel():
         sys_name = 'scraper'
         channel_id = (request.form['channel_id'])
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
-        action = 'status_short'
+        action = 'status'
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' m2np3ac --proxy socks5://127.0.0.1:5080 '
+        params2 = ' yt-syncac '
         command = params1 + params2 + action + " " + channel_url
         commands = [command]
 #        ssh_command(sys_name, commands)

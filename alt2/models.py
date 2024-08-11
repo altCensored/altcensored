@@ -75,7 +75,7 @@ class Entity(Base):
         self.category = category
         self.rating = rating
         self.thumbnail = thumbnail
-        self.alt_url1 = alt_url1
+        self.thumbnail_ac = thumbnail_ac
         self.alt_url2 = alt_url2
         self.duration = duration
         self.sync_ia = sync_ia

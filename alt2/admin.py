@@ -334,7 +334,7 @@ def status_channel():
         action = 'status_short'
 
         params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' youtube-sync -p /home/m2np3/m2np3 --proxy socks5://127.0.0.1:5080 '
+        params2 = ' m2np3ac --proxy socks5://127.0.0.1:5080 '
         command = params1 + params2 + action + " " + channel_url
         commands = [command]
 #        ssh_command(sys_name, commands)

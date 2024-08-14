@@ -158,27 +158,24 @@ def video_data():
 @util.admin_login_required
 def add_channel():
     title = request.args.get('title', 'Add')
-    ddays = request.args.get('ddays', '')
+    ddays = request.args.get('ddays', '5')
     if request.method == 'POST':
-        sys_name = 'scraper'
         channel_id = (request.form['channel_id'])
-        action = 'afs'
+        action = ' afs '
         delta = (request.form['delta'])
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
 
-        params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' nohup yt-syncac '
-        params3 = ' -delta '
-        params4 = ' > $HOME/nohup_ssh.out 2>&1 &'
+        params1 = ' yt-syncac '
+        params2 = ' -delta '
+        params3 = ' > $HOME/nohup_ssh.out 2>&1 &'
 
-        command = params1 + params2 + action + " " + channel_url + params3 + delta + params4
+        command = params1 + action + channel_url + params2 + delta + params3
         commands = [command]
         try:
-#            ssh_command(sys_name, commands)
             local_command(commands)
             flash(channel_id + " added using afs")
         except:
-            flash(channel_id + " NOT added usiing afs")
+            flash(channel_id + " NOT added using afs")
 
     return render_template('admin/admin_channels.html', title=title, ddays=ddays)
 
@@ -253,18 +250,33 @@ def update_channel():
 def disable_channel():
     title = "Disable"
     if request.method == 'POST':
-        sys_name = 'scraper'
         channel_id = (request.form['channel_id'])
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
-        action = 'disable'
+        action = ' disable '
 
-        params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' youtube-sync -p /home/m2np3/m2np3 --proxy socks5://127.0.0.1:5080 '
-        params3 = ' > /root/nohup_ssh.out 2>&1 &'
+        params1 = ' yt-syncac '
+        params2 = ' > $HOME/nohup_ssh.out 2>&1 &'
 
-        command = params1 + params2 + action + " " + channel_url + params3
+        command = params1 + action + channel_url + params2
         commands = [command]
-#        ssh_command(sys_name, commands)
+        local_command(commands)
+    return render_template('admin/admin_channels.html', title=title)
+
+
+@bp.route('/enable_channel', methods=['GET', 'POST'])
+@util.admin_login_required
+def enable_channel():
+    title = "Enable"
+    if request.method == 'POST':
+        channel_id = (request.form['channel_id'])
+        channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
+        action = ' enable '
+
+        params1 = ' yt-syncac '
+        params2 = ' > $HOME/nohup_ssh.out 2>&1 &'
+
+        command = params1 + action + channel_url + params2
+        commands = [command]
         local_command(commands)
     return render_template('admin/admin_channels.html', title=title)
 
@@ -274,18 +286,15 @@ def disable_channel():
 def remove_channel():
     title = "Remove"
     if request.method == 'POST':
-        sys_name = 'scraper'
         channel_id = (request.form['channel_id'])
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
-        action = 'remove'
+        action = ' remove '
 
-        params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' youtube-sync -p /home/m2np3/m2np3 --proxy socks5://127.0.0.1:5080 '
-        params3 = ' > /root/nohup_ssh.out 2>&1 &'
+        params1 = ' yt-syncac '
+        params2 = ' > $HOME/nohup_ssh.out 2>&1 &'
 
-        command = params1 + params2 + action + " " + channel_url + params3
+        command = params1 + action + channel_url + params2
         commands = [command]
-#        ssh_command(sys_name, commands)
         local_command(commands)
 
         if channel_partial_remove(channel_id):
@@ -301,24 +310,23 @@ def remove_channel():
     return render_template('admin/admin_channels.html', title=title)
 
 
-@bp.route('/resync_channel', methods=['GET', 'POST'])
+@bp.route('/mirror_channel', methods=['GET', 'POST'])
 @util.admin_login_required
-def resync_channel():
-    title = "Resync"
+def mirror_channel():
+    title = "Mirror"
     if request.method == 'POST':
-        sys_name = 'scraper'
+        sys_name = 's3a'
         channel_id = (request.form['channel_id'])
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
-        action = 'resync_all'
+        action = ' mirror '
+        cookie = ' -cf $COOKIE_FILE'
 
-        params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' nohup youtube-sync -p /home/m2np3/m2np3 --proxy socks5://127.0.0.1:5080 --cookies /home/m2np3/rocketfuel_cookies.txt '
-        params3 = ' -f > /root/nohup_ssh.out 2>&1 &'
+        params1 = ' nohup yt-syncac '
+        params2 = ' -f > /root/nohup_ssh.out 2>&1 &'
 
-        command = params1 + params2 + action + " " + channel_url + params3
+        command = params1 + action + channel_url + cookie + params2
         commands = [command]
-#        ssh_command(sys_name, commands)
-        local_command(commands)
+        ssh_command(sys_name, commands)
 
     return render_template('admin/admin_channels.html', title=title)
 
@@ -328,16 +336,14 @@ def resync_channel():
 def status_channel():
     title = "Status"
     if request.method == 'POST':
-        sys_name = 'scraper'
         channel_id = (request.form['channel_id'])
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
-        action = 'status'
+        action = ' status '
 
-        params1 = 'ALTC_DATABASE_URL=' + config.SQLALCHEMY_DATABASE_URI
-        params2 = ' yt-syncac '
-        command = params1 + params2 + action + " " + channel_url
+        params1 = ' yt-syncac '
+
+        command = params1 + action + channel_url
         commands = [command]
-#        ssh_command(sys_name, commands)
         local_command(commands)
 
         return render_template('admin/admin_messages.html')

@@ -25,28 +25,20 @@
                   Update Channel</a>
             </p>
             <p>
-              <a href="{{ url_for('admin.update_channel', title='Update_Full', atype='full') }}">
-                  Update Channel Full</a>
+              <a href="{{ url_for('admin.enable_channel') }}">
+                  Enable Channel</a>
             </p>
             <p>
-              <a href="{{ url_for('admin.update_channel', title='Update_Full_30', atype='full', ddays='30') }}">
-                  Update Channel Full 30</a>
-            </p>
-            <p>
-              <a href="{{ url_for('admin.update_channel', title='Update_Part', atype='partial') }}">
-                  Update Channel Part</a>
-            </p>
-            <p>
-              <a href="{{ url_for('admin.update_channel', title='Update_Part_30', atype='partial', ddays='30') }}">
-                  Update Channel Part 30</a>
+              <a href="{{ url_for('admin.disable_channel') }}">
+                  Disable Channel</a>
             </p>
             <p>
               <a href="{{ url_for('admin.remove_channel') }}">
                   Remove Channel</a>
             </p>
             <p>
-              <a href="{{ url_for('admin.resync_channel') }}">
-                  Resync Channel</a>
+              <a href="{{ url_for('admin.mirror_channel') }}">
+                  Mirror Channel</a>
             </p>
             <p>
               <a href="{{ url_for('admin.status_channel') }}">
@@ -93,7 +85,6 @@
                   VPN Connection Update</a>
             </p>
             <p>
-
             </p>
               <a href="{{ url_for('vpn.reset_confirm') }}">
                   VPN Connection Reset</a>

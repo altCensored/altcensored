@@ -313,9 +313,10 @@ def remove_channel():
 @bp.route('/mirror_channel', methods=['GET', 'POST'])
 @util.admin_login_required
 def mirror_channel():
+    s3_server = current_app.config['AC_S3_ENDPOINT']
     title = "Mirror"
     if request.method == 'POST':
-        sys_name = 's3a'
+        sys_name = s3_server
         channel_id = (request.form['channel_id'])
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
         action = ' mirror '

@@ -343,6 +343,7 @@ class Mv_Video(Base):
     published = Column(DateTime, nullable=True)
     title = Column(String, nullable=True)
     thumbnail = Column(String, nullable=True)
+    thumbnail_ac = Column(String, nullable=True)
     yt_views = Column(Integer, nullable=True)
     duration = Column(String, nullable=True)
     ytc_title = Column(String, nullable=True)
@@ -362,6 +363,7 @@ class Mv_Video(Base):
         self.published = published
         self.title = title
         self.thumbnail = thumbnail
+        self.thumbnail_ac = thumbnail_ac
         self.yt_views = yt_views
         self.duration = duration
         self.ytc_title = ytc_title

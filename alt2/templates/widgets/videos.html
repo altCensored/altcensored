@@ -17,7 +17,7 @@
 
 
           {% if  video['exists_ac'] %}
-              <img class="thumbnail" src="{{ config.ACIPROXYHUGE~ config.VIDEOSERVER_URL ~ video['extractor_data'] ~ '/' ~ video['thumbnail_ac'] }}"
+              <img class="thumbnail" src="{{ config.ACIPROXYHUGE~ config.IMAGESERVER_URL ~ video['extractor_data'] ~ '/' ~ video['thumbnail_ac'] }}"
                    onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
           {% else %}
               <img class="thumbnail" src="{{ config.IPROXYHUGE~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['thumbnail'] }}"

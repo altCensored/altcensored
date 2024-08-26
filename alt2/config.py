@@ -21,6 +21,8 @@ VIDEOSERVER_URL=os.getenv('VIDEOSERVER_URL')
 #VIDEOSERVER_URL="https://videos.altCensored.com"
 #VIDEOSERVER_URL="https://s3.altCensored.com/videos"
 
+IMAGESERVER_URL=os.getenv('IMAGESERVER_URL')
+
 IPROXY=os.getenv('IPROXY')
 IPROXYBIG=os.getenv('IPROXYBIG')
 IPROXYHUGE=os.getenv('IPROXYHUGE')

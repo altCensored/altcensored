@@ -245,6 +245,24 @@ def update_channel():
     return render_template('admin/admin_channels.html', title=title, ddays=ddays, atype=atype)
 
 
+@bp.route('/enable_channel', methods=['GET', 'POST'])
+@util.admin_login_required
+def enable_channel():
+    title = "Enable"
+    if request.method == 'POST':
+        channel_id = (request.form['channel_id'])
+        channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
+        action = ' enable '
+
+        params1 = ' yt-syncac '
+        params2 = ' > $HOME/nohup_ssh.out 2>&1 &'
+
+        command = params1 + action + channel_url + params2
+        commands = [command]
+        local_command(commands)
+    return render_template('admin/admin_channels.html', title=title)
+
+
 @bp.route('/disable_channel', methods=['GET', 'POST'])
 @util.admin_login_required
 def disable_channel():
@@ -263,14 +281,14 @@ def disable_channel():
     return render_template('admin/admin_channels.html', title=title)
 
 
-@bp.route('/enable_channel', methods=['GET', 'POST'])
+@bp.route('/resync_channel', methods=['GET', 'POST'])
 @util.admin_login_required
-def enable_channel():
-    title = "Enable"
+def resync_channel():
+    title = "Resync"
     if request.method == 'POST':
         channel_id = (request.form['channel_id'])
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
-        action = ' enable '
+        action = ' resync '
 
         params1 = ' yt-syncac '
         params2 = ' > $HOME/nohup_ssh.out 2>&1 &'

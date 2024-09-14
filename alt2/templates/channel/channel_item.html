@@ -28,7 +28,7 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
 {% endblock %}
 
 {% block content %}
-<script src="{{ url_for('static', filename='js/shareon.js') }}" defer init></script>
+<script src="{{ url_for('static', filename='js/shareon.iife.js') }}" defer init></script>
     {% with active_nav='channel' %}
         {% include "widgets/navtabs.html" %}
     {% endwith %}

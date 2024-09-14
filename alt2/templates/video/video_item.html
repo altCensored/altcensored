@@ -32,7 +32,9 @@
 <meta name="altcen_meta_description" content="{% block description %}Limited Censored YouTube Video: {{ video['description'] }} (Published on {{ video['published'].strftime('%b %e, %G') }}){% endblock %}>
 <link rel="image_src" href="{% block imagesrc %}{{ config.IPROXY ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}{% endblock %}">
 
+<!--
 <link rel="stylesheet" href="{{ url_for('static', filename='css/shareon.css') }}">
+-->
 
 {% endblock %}
 {% block content %}

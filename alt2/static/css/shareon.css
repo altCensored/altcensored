@@ -92,76 +92,6 @@
   background-image: url("icons/facebook.svg");
 }
 
-.shareon > .fediverse {
-  background-color: #8a54af;
-}
-.shareon > .fediverse:before {
-  background-image: url("icons/fediverse.svg");
-}
-
-.shareon > .linkedin {
-  background-color: #0a66c2;
-}
-.shareon > .linkedin:before {
-  background-image: url("icons/linkedin-in.svg");
-}
-.shareon > .linkedin:not(:empty):before {
-  background-image: url("icons/linkedin.svg");
-}
-
-.shareon > .mastodon {
-  background-color: #6364ff;
-}
-.shareon > .mastodon:before {
-  background-image: url("icons/mastodon.svg");
-}
-
-.shareon > .messenger {
-  background-color: #00b2ff;
-}
-.shareon > .messenger:before {
-  background-image: url("icons/messenger.svg");
-}
-
-.shareon > .odnoklassniki {
-  background-color: #ee8208;
-}
-.shareon > .odnoklassniki:before {
-  background-image: url("icons/odnoklassniki.svg");
-}
-
-.shareon > .pinterest {
-  background-color: #bd081c;
-}
-.shareon > .pinterest:before {
-  background-image: url("icons/pinterest.svg");
-}
-
-.shareon > .pocket {
-  background-color: #ef3f56;
-}
-.shareon > .pocket:before {
-  background-image: url("icons/pocket.svg");
-}
-
-.shareon > .print:before {
-  background-image: url("icons/print.svg");
-}
-
-.shareon > .reddit {
-  background-color: #ff4500;
-}
-.shareon > .reddit:before {
-  background-image: url("icons/reddit.svg");
-}
-
-.shareon > .teams {
-  background-color: #6264a7;
-}
-.shareon > .teams:before {
-  background-image: url("icons/teams.svg");
-}
-
 .shareon > .telegram {
   background-color: #26a5e4;
 }
@@ -169,36 +99,11 @@
   background-image: url("icons/telegram.svg");
 }
 
-.shareon > .tumblr {
-  background-color: #36465d;
-}
-.shareon > .tumblr:before {
-  background-image: url("icons/tumblr.svg");
-}
-
 .shareon > .twitter {
   background-color: #1d9bf0;
 }
 .shareon > .twitter:before {
   background-image: url("icons/twitter.svg");
-}
-
-.shareon > .viber {
-  background-color: #7360f2;
-}
-.shareon > .viber:before {
-  background-image: url("icons/viber.svg");
-}
-
-.shareon > .vkontakte {
-  background-color: #0077ff;
-}
-.shareon > .vkontakte:before {
-  background-image: url("icons/vkontakte.svg");
-}
-
-.shareon > .web-share:before {
-  background-image: url("icons/web-share.svg");
 }
 
 .shareon > .whatsapp {

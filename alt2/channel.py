@@ -1,4 +1,5 @@
-from flask import (Blueprint, render_template, session, make_response, request, jsonify, abort, flash,Markup)
+from flask import (Blueprint, render_template, session, make_response, request, jsonify, abort, flash)
+from markupsafe import Markup
 from sqlalchemy import func
 from .database import db_session
 from .models import Mv_Video, Mv_Channel, User

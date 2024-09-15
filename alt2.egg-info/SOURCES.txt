@@ -1,20 +1,27 @@
+LICENSE
+README.md
 setup.py
-alt2/__init__ - Copy.py
 alt2/__init__.py
 alt2/about.py
+alt2/admin.py
 alt2/auth.py
-alt2/blog.py
+alt2/cache.py
 alt2/category.py
 alt2/channel.py
 alt2/config.py
 alt2/database.py
-alt2/db.py
+alt2/donate.py
 alt2/language.py
 alt2/models.py
+alt2/newsletter.py
 alt2/pagination.py
-alt2/settings - Copy.py
+alt2/playlist.py
 alt2/settings.py
+alt2/theme.py
+alt2/user.py
+alt2/util.py
 alt2/video.py
+alt2/vpn.py
 alt2.egg-info/PKG-INFO
 alt2.egg-info/SOURCES.txt
 alt2.egg-info/dependency_links.txt

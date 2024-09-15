@@ -1,4 +1,5 @@
-from flask import (Blueprint, render_template, flash, Markup)
+from flask import (Blueprint, render_template, flash)
+from markupsafe import Markup
 from .models import Mv_Channel
 from .util import get_archivechannelcount
 from . import config

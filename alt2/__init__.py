@@ -1,10 +1,10 @@
 import os, re, logging
 from flask import Flask, request, url_for, render_template, g, has_request_context
-from jinja2 import pass_eval_context, Markup
+from jinja2 import pass_eval_context
 from flask_babelplus import Babel, lazy_gettext
 from urllib.parse import quote_plus
 from flask_qrcode import QRcode
-from markupsafe import escape
+from markupsafe import escape, Markup
 import timeago, datetime
 from datetime import timezone
 import bleach

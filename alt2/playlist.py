@@ -1,6 +1,7 @@
 from flask import (
-    Blueprint, session, render_template, request, flash, redirect, url_for, abort, Markup
+    Blueprint, session, render_template, request, flash, redirect, url_for, abort
 )
+from markupsafe import Markup
 from sqlalchemy import func, case
 from sqlalchemy.orm.attributes import flag_modified
 from hashids import Hashids

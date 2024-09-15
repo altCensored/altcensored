@@ -1,9 +1,10 @@
 import os
 from flask import (
-    Blueprint, render_template, request, make_response, session, current_app, abort, flash, Markup)
+    Blueprint, render_template, request, make_response, session, current_app, abort, flash)
 from flask_babelplus import lazy_gettext
 from internetarchive import get_item, download, get_session
-from sqlalchemy import func, text, case
+from markupsafe import Markup
+from sqlalchemy import func, text, case, select
 from sqlalchemy.orm.attributes import flag_modified
 from urllib import parse
 
@@ -111,7 +112,7 @@ def watch():
 
     if video_id is None:
         abort(404)
-    video = Mv_Video.query.get(video_id)
+    video = db_session.execute(select(Mv_Video).filter(Mv_Video.extractor_data == video_id)).scalar()
     if video is None:
         abort(404)
 
@@ -130,10 +131,12 @@ def watch():
         cat_id = category.cat_id
     except:
         cat_id = 25
-    channel = Mv_Channel.query.get(video.ytc_id)
+#    channel = Mv_Channel.query.get(video.ytc_id)
+    channel = db_session.execute(select(Mv_Channel).filter(Mv_Channel.ytc_id == video.ytc_id)).scalar()
 
     if playlist:
-        playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
+#        playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
+        playlist = db_session.execute(select(Playlist).filter(Playlist.hashid == playlist)).scalar()
         if playlist is None:
             abort(404)
         ordering = case(
@@ -238,7 +241,8 @@ def watch():
 def embed(video_id):
     if video_id is None:
         abort(404)
-    video = Mv_Video.query.get(video_id)
+#    video = Mv_Video.query.get(video_id)
+    video = db_session.execute(select(Mv_Video).filter(Mv_Video.extractor_data == video_id)).scalar()
     if video is None:
         abort(404)
 

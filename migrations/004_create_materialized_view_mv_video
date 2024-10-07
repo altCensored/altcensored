@@ -1,0 +1,34 @@
+-- public.mv_video source
+
+CREATE MATERIALIZED VIEW public.mv_video
+TABLESPACE pg_default
+AS SELECT entity.id,
+    entity.prev,
+    entity.extractor_data,
+    entity.allow,
+    entity.rating,
+    entity.published,
+    entity.title,
+    entity.thumbnail,
+    entity.thumbnail_ac,
+    entity.yt_views,
+    entity.duration,
+    entity.description,
+    entity.category,
+    entity.tags,
+    entity.exists_ia,
+    entity.restricted_ia,
+    entity.exists_ac,
+    source.ytc_title,
+    source.ytc_id,
+    setweight(to_tsvector(COALESCE(entity.extractor_data, ''::character varying)::text), 'C'::"char") || (setweight(to_tsvector(COALESCE(entity.title, ''::character varying)::text), 'C'::"char") || (setweight(to_tsvector(COALESCE(entity.description, ''::character varying)::text), 'C'::"char") || (setweight(to_tsvector(COALESCE(entity.category, ''::character varying)::text), 'D'::"char") || (setweight(to_tsvector(COALESCE(source.ytc_title, ''::character varying)::text), 'C'::"char") || (setweight(to_tsvector(COALESCE(source.ytc_id, ''::character varying)::text), 'D'::"char") || setweight(to_tsvector(COALESCE(entity.tags, ''::character varying)::text), 'D'::"char")))))) AS document
+   FROM entity
+     JOIN content ON content.video_id = entity.id
+     JOIN source ON source.id = content.source_id
+  WHERE ((entity.views = 0 AND entity.likes = 0 AND entity.dislikes = 0 AND entity.yt_views <> 0 AND entity.allow) or (entity.yt_deleted AND entity.allow) or entity.force_ac) AND (entity.exists_ia OR entity.exists_ac)
+  GROUP BY entity.id, source.ytc_title, source.ytc_id
+  ORDER BY entity.id DESC
+WITH DATA;
+
+-- View indexes:
+CREATE INDEX video_document_gin_idx2 ON public.mv_video USING gin (document);

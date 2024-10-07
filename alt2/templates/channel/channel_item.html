@@ -48,36 +48,25 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
                 <div class="pure-u-1-2">
                   <div class=header_left>
                     <b>
-                    &nbsp;{{ gettext('Limited') }}: {{ channel['limited']|commafy }}</b><br>
-                    &nbsp;{{ gettext('Videos') }}: {{ channel['total']|commafy }}<br>
+                    &nbsp;{{ gettext('Censored') }}: {{ channel['limited']|commafy }}</b><br>
+                     {% if not channel['ytc_deleted'] %}
+                      &nbsp;{{ gettext('Archived') }}: {{ channel['archived']|commafy }}<br>
+                     {% endif %}
+                      &nbsp;{{ gettext('Total') }}: {{ channel['total']|commafy }}<br>
                     &nbsp;{{ gettext('Views') }}: {{ channel['ytc_viewcount']|commafy }}<br>
                     &nbsp;{{ gettext('Subscribers') }}: {{ channel['ytc_subscribercount']|commafy }}<br>
                     {% if channel['ytc_deleted'] %}
                     {% else %}
-                    &nbsp;{{ gettext('Monitor') }}:
-                    {% if channel.allow %}
-                        {{ gettext('True') }}<br>
-                    {% else %}
-                        {{ gettext('False') }}<br>
-                    {% endif %}
-                    &nbsp;{{ gettext('Archive') }}:
-                    {% if channel.ytc_archive %}
-                        {{ gettext('Full') }}<br>
-                    {% elif channel.ytc_partarchive %}
-                        {{ gettext('Partial') }}<br>
-                    {% elif channel.ytc_latestarchive %}
-                        {{ gettext('Latest') }}<br>
-                    {% else %}
-                        {{ gettext('None') }}<br>
-                    {% endif %}
+                      <br>
                     {% endif %}
                     &nbsp;<b><a style="width:100%;" href="https://www.youtube.com/channel/{{ channel['ytc_id'] }}" target="_blank">YouTube {{ gettext('Channel') }}</a></b><br>
                     &nbsp;<b><a style="width:100%;" href="https://www.socialblade.com/youtube/channel/{{ channel['ytc_id'] }}" target="_blank">SocialBlade {{ gettext('Stats') }}</a></b>
                   <p></p>
-                      <b>&nbsp;{{ gettext('Created') }} {{ channel['ytc_publishedat'].strftime('%b %e, %G') }}</b><br>
+                      <b>&nbsp;{{ gettext('Created:') }} {{ channel['ytc_publishedat'].strftime('%b %e, %G') }}</b><br>
+                      <b>&nbsp;{{ gettext('Added:') }} {{ channel['ytc_addeddate'].strftime('%b %e, %G') }}</b><br>
                        {% if channel['ytc_deleted'] %}
                          <span style="color: red; ">
-                             <b>&nbsp;{{ gettext('Deleted') }} {{ channel['ytc_deleteddate'].strftime('%b %e, %G') }}</span></b>
+                             <b>&nbsp;{{ gettext('Deleted:') }} {{ channel['ytc_deleteddate'].strftime('%b %e, %G') }}</span></b>
                        {% endif %}
                   </div>
                 </div>

@@ -1,0 +1,38 @@
+-- public.mv_channel source
+
+CREATE MATERIALIZED VIEW public.mv_channel
+TABLESPACE pg_default
+AS SELECT source.id,
+    source.ytc_id,
+    source.url,
+    source.ytc_title,
+    source.ytc_publishedat,
+    source.ytc_thumbnailurl,
+    source.ytc_viewcount,
+    source.ytc_subscribercount,
+    source.ytc_description,
+    source.ytc_customurl,
+    source.ytc_deleted,
+    source.ytc_archive,
+    source.ytc_deleteddate,
+    source.ytc_addeddate,
+    source.ytc_partarchive,
+    source.ytc_latestarchive,
+    source.delta,
+    ( SELECT entity_1.allow
+           FROM entity entity_1
+          WHERE source.id = entity_1.id) AS allow,
+    count(source.id) AS total,
+    count(source.id) FILTER (WHERE ((entity.views = 0 AND entity.likes = 0 AND entity.dislikes = 0 AND entity.yt_views <> 0) or entity.yt_deleted or entity.force_ac) AND (entity.exists_ia OR entity.exists_ac) AND entity.allow) AS limited,
+    count(source.id) FILTER (WHERE entity.allow AND entity.published IS NOT NULL AND (entity.exists_ia OR entity.exists_ac)) AS archived,
+    setweight(to_tsvector(COALESCE(source.ytc_id, ''::character varying)::text), 'A'::"char") || (setweight(to_tsvector(COALESCE(source.ytc_title, ''::character varying)::text), 'A'::"char") || (setweight(to_tsvector(COALESCE(source.ytc_description, ''::character varying)::text), 'A'::"char") || setweight(to_tsvector(COALESCE(source.ytc_customurl, ''::character varying)::text), 'A'::"char"))) AS document
+   FROM entity
+     JOIN content ON content.video_id = entity.id
+     JOIN source ON source.id = content.source_id
+  GROUP BY source.id
+ HAVING count(source.id) > 0
+  ORDER BY source.id DESC
+WITH DATA;
+
+-- View indexes:
+CREATE INDEX channel_document_gin_idx ON public.mv_channel USING gin (document);

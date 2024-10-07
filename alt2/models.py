@@ -388,6 +388,7 @@ class Mv_Channel(Base):
     ytc_subscribercount = Column(Integer, nullable=True)
     total = Column(Integer, nullable=True)
     limited = Column(Integer, nullable=True)
+    archived = Column(Integer, nullable=True)
     ytc_description = Column(String, nullable=True)
     ytc_deleted = Column(String, nullable=True)
     ytc_archive = Column(String, nullable=True)
@@ -408,6 +409,7 @@ class Mv_Channel(Base):
         self.ytc_subscribercount = ytc_subscribercount
         self.total = total
         self.limited = limited
+        self.archived = archived
         self.ytc_description = ytc_description
         self.ytc_deleted = ytc_deleted
         self.ytc_archive = ytc_archive

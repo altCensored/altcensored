@@ -240,6 +240,13 @@ def create_app(test_config=None):
             app.logger.error(e)
         return render_template('video/500.html'), 500
 
+    def service_unavailable(e):
+        if has_request_context():
+            app.logger.error('503 Service Unavailable: %s', request.url)
+        else:
+            app.logger.error(e)
+        return render_template('video/503.html'), 503
+
     @app.template_filter('time_diff')
     def time_diff(s):
         now = datetime.datetime.now(timezone.utc) + datetime.timedelta(seconds=60 * 3.4)
@@ -248,6 +255,7 @@ def create_app(test_config=None):
     app.register_error_handler(400, bad_request)
     app.register_error_handler(404, page_not_found)
     app.register_error_handler(500, internal_server_error)
+    app.register_error_handler(503, service_unavailable)
 
     from .database import db_session
 

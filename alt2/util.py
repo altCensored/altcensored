@@ -1,20 +1,23 @@
 import functools, os, string, random, subprocess, requests, datetime, qrcode, base64
 import boto3
 
+from better_profanity import profanity
+from captcha.image import ImageCaptcha
+from datetime import timezone
+from email_validator import validate_email, EmailNotValidError
 from flask import (
     session, request, redirect, render_template, url_for, current_app, flash
 )
+from flask_babelplus import lazy_gettext
+from http.client import HTTPSConnection
+from io import BytesIO
+from itsdangerous import URLSafeTimedSerializer
+from mailjet_rest import Client
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-from itsdangerous import URLSafeTimedSerializer
-from better_profanity import profanity
 from sqlalchemy import func
-from captcha.image import ImageCaptcha
-from email_validator import validate_email, EmailNotValidError
-from mailjet_rest import Client
-from flask_babelplus import lazy_gettext
-from datetime import timezone
-from io import BytesIO
+from urllib.parse import urlparse
+
 from .database import db_session
 from .models import Translation, Playlist, Mv_Channel, Mv_Video, User, \
     Email_list, Channels, Channels_part, Vpn_node, Vpn_conn, Entity, Source
@@ -978,3 +981,24 @@ def ac_object_exist(client, s3_bucket, itemname: str) -> bool:
     objects = client.list_objects(s3_bucket, prefix=itemname)
     if any(True for _ in objects):
         return True
+
+
+def site_is_online(url, timeout=1):
+    """Return True if the target URL is online.
+
+    Raise an exception otherwise.
+    """
+    error = Exception("unknown error")
+    parser = urlparse(url)
+    host = parser.netloc or parser.path.split("/")[0]
+    for port in (80, 443):
+        connection = HTTPSConnection(host=host, port=port, timeout=timeout)
+        try:
+            connection.request("HEAD", "/")
+            return True
+        except Exception as e:
+            error = e
+        finally:
+            connection.close()
+#    raise error
+    return False

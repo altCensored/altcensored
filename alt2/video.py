@@ -13,7 +13,7 @@ from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_us
 from .pagination import Pagination
 import json
 from .util import (videos_latest, videos_newest, videos_popular, get_videocount, get_playnext,
-                   get_video_files, check_video_files, ac_object_exist)
+                   get_video_files, check_video_files, ac_object_exist, site_is_online)
 from minio import Minio
 from . import config
 
@@ -42,7 +42,9 @@ def index(page):
     if FLASH_MSG is not None:
         flash(Markup(FLASH_MSG), 'error')
 
-    return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater)
+    return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order,
+                           watchlater=watchlater)
+
 
 @bp.route('/new', defaults={'page': 1})
 @bp.route('/new/page/<int:page>')
@@ -62,13 +64,14 @@ def new(page):
     if FLASH_MSG is not None:
         flash(Markup(FLASH_MSG), 'error')
 
-    return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater)
+    return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order,
+                           watchlater=watchlater)
 
 
 @bp.route('/popular', defaults={'page': 1})
 @bp.route('/popular/page/<int:page>')
 def popular(page):
-    offset = ((int(page)-1) * PER_PAGE)
+    offset = ((int(page) - 1) * PER_PAGE)
     order = 'popular'
     videos = videos_popular(PER_PAGE, offset)
     if not videos and page != 1:
@@ -83,7 +86,8 @@ def popular(page):
     if FLASH_MSG is not None:
         flash(Markup(FLASH_MSG), 'error')
 
-    return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order, watchlater=watchlater)
+    return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order,
+                           watchlater=watchlater)
 
 
 @bp.route('/feed', defaults={'page': 1})
@@ -106,7 +110,7 @@ def feed(page):
 def watch():
     video_id = request.args.get('v', None)
     playlist = request.args.get('playlist', None)
-    userlist = request.args.get('userlist', None)
+    userlist: str | None = request.args.get('userlist', None)
 
     NEW_FLASH_MSG = None
 
@@ -123,19 +127,17 @@ def watch():
 
     try:
         tags = tagstring.split(",")
-    except:
+    except Exception:
         tags = None
 
     try:
         category = Mv_Category.query.filter_by(cat_name=cat_name).first()
         cat_id = category.cat_id
-    except:
+    except Exception:
         cat_id = 25
-#    channel = Mv_Channel.query.get(video.ytc_id)
     channel = db_session.execute(select(Mv_Channel).filter(Mv_Channel.ytc_id == video.ytc_id)).scalar()
 
     if playlist:
-#        playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
         playlist = db_session.execute(select(Playlist).filter(Playlist.hashid == playlist)).scalar()
         if playlist is None:
             abort(404)
@@ -169,34 +171,40 @@ def watch():
 
     IARCHIVEURL = current_app.config['IARCHIVEURL']
     IARCHIVEITEMURL = current_app.config['IARCHIVEITEMURL']
+    IARCHIVEMETAURL = current_app.config['IARCHIVEMETAURL']
     VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
     video_url_short = IARCHIVEURL + video_id + "/"
     video_url_download = IARCHIVEITEMURL + video_id
 
     client = Minio(current_app.config['AC_S3_ENDPOINT'],
-        access_key=current_app.config['AC_S3_ACCESS_KEY'],
-        secret_key=current_app.config['AC_S3_SECRET_KEY']
-    )
+                   access_key=current_app.config['AC_S3_ACCESS_KEY'],
+                   secret_key=current_app.config['AC_S3_SECRET_KEY']
+                   )
 
     if ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id):
         video_url = VIDEOSERVER_URL + video_id + "/" + video_id
 
     else:
-        ia = get_session()
-        ia_item = ia.get_item('youtube-' + video_id)
+        ia_meta = IARCHIVEMETAURL+video_id
+        print(ia_meta)
 
-        if ia_item.exists and not ia_item.is_dark and "access-restricted-item" not in ia_item.metadata  and "altcen_hosted" not in ia_item.metadata:
-            video_files = [f.name for f in get_video_files(ia_item)]
-            if video_files:
-                full_filename = check_video_files(ia_item)
-                if full_filename:
-                    filename = os.path.splitext(full_filename)[0]
-                    video_url = IARCHIVEURL + video_id + "/" + filename
+        if site_is_online(ia_meta):
+            ia = get_session()
+            ia_item = ia.get_item('youtube-' + video_id)
 
+            if ia_item.exists and not ia_item.is_dark and "access-restricted-item" not in ia_item.metadata  and "altcen_hosted" not in ia_item.metadata:
+                video_files = [f.name for f in get_video_files(ia_item)]
+                if video_files:
+                    full_filename = check_video_files(ia_item)
+                    if full_filename:
+                        filename = os.path.splitext(full_filename)[0]
+                        video_url = IARCHIVEURL + video_id + "/" + filename
+
+            else:
+                NEW_FLASH_MSG = f'Internet Archive has limited access on <a href={video_url_download} class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">this item</a>'
+                video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
         else:
-            NEW_FLASH_MSG = 'Internet Archive has limited access on <a href=' + video_url_download + ' class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">this item</a>'
-            video_url = VIDEOSERVER_URL + 'unavailable/unavailable'
-
+            abort(503)
 
     playlist_titles = []
     not_in_watchlater = None
@@ -206,7 +214,7 @@ def watch():
 
         try:
             user.watched += [video.extractor_data]
-        except:
+        except Exception:
             user.watched = [video.extractor_data]
 
         user.watched = list(dict.fromkeys(user.watched))
@@ -222,10 +230,13 @@ def watch():
             if video_id not in plist.videos:
                 playlist_titles.append(plist.title)
 
-#    if FLASH_MSG is not None:
-#        flash(Markup(FLASH_MSG), 'error')
+    #    if FLASH_MSG is not None:
+    #        flash(Markup(FLASH_MSG), 'error')
 
-#    FLASH_MSG = '<a href=' + video_url_download + ' class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">Download<a> preferred videos, Internet Archive is <a href=https://archive.org/details/youtube-Gv4jjFgIP_g class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">limiting access on some items</a>'
+    # FLASH_MSG = '<a href=' + video_url_download + ' class="alert-link" target="_blank" rel="noopener noreferrer" span
+    # style="color: darkorange;">Download<a> preferred videos, Internet Archive is <a
+    # href=https://archive.org/details/youtube-Gv4jjFgIP_g class="alert-link" target="_blank" rel="noopener
+    # noreferrer" span style="color: darkorange;">limiting access on some items</a>'
 
     if NEW_FLASH_MSG is not None:
         flash(Markup(NEW_FLASH_MSG), 'error')
@@ -243,7 +254,6 @@ def watch():
 def embed(video_id):
     if video_id is None:
         abort(404)
-#    video = Mv_Video.query.get(video_id)
     video = db_session.execute(select(Mv_Video).filter(Mv_Video.extractor_data == video_id)).scalar()
     if video is None:
         abort(404)
@@ -266,7 +276,7 @@ def embed(video_id):
         ia = get_session()
         ia_item = ia.get_item('youtube-' + video_id)
 
-        if ia_item.exists and not ia_item.is_dark and "access-restricted-item" not in ia_item.metadata  and "altcen_hosted" not in ia_item.metadata:
+        if ia_item.exists and not ia_item.is_dark and "access-restricted-item" not in ia_item.metadata and "altcen_hosted" not in ia_item.metadata:
             video_files = [f.name for f in get_video_files(ia_item)]
             if video_files:
                 full_filename = check_video_files(ia_item)
@@ -309,11 +319,11 @@ def embed(video_id):
     else:
         try:
             videos = db_session.query(Mv_Video.extractor_data).filter(Mv_Video.ytc_id == video.ytc_id,
-                                                                  Mv_Video.published <= session['first_vid_pub']) \
-            .order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE)
+                                                                      Mv_Video.published <= session['first_vid_pub']) \
+                .order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE)
         except:
             videos = db_session.query(Mv_Video.extractor_data).filter(Mv_Video.ytc_id == video.ytc_id) \
-            .order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE)
+                .order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE)
 
         if videos.count() > 1:
             videos_extractor_list = [r[0] for r in videos]
@@ -334,10 +344,11 @@ def embed(video_id):
     return render_template('video/video_embed.html', video_url=video_url, next_video=next_video, playlist=playlist,
                            userlist=userlist)
 
+
 @bp.route("/search", defaults={'page': 1})
 @bp.route('/search/page/<int:page>')
 def search(page):
-    offset = ((int(page)-1) * PER_PAGE)
+    offset = ((int(page) - 1) * PER_PAGE)
     rawsearch = request.args.get('q', None)
     if rawsearch is None:
         abort(404)
@@ -352,38 +363,43 @@ def search(page):
 
     my_to_tsquery_video = text("mv_video.document @@ websearch_to_tsquery(:search)")
     my_ts_rank_video = text("ts_rank(mv_video.document, websearch_to_tsquery(:search)) DESC")
-    videos = db_session.query(Mv_Video).\
-        filter(my_to_tsquery_video).\
-        order_by(my_ts_rank_video).\
-        limit(PER_PAGE).offset(offset).\
+    videos = db_session.query(Mv_Video). \
+        filter(my_to_tsquery_video). \
+        order_by(my_ts_rank_video). \
+        limit(PER_PAGE).offset(offset). \
         params(search=search).all()
 
     my_to_tsquery_channel = text("Mv_Channel.document @@ websearch_to_tsquery(:search)")
     my_ts_rank_channel = text("ts_rank(Mv_Channel.document, websearch_to_tsquery(:search)) DESC")
-    channels = db_session.query(Mv_Channel).\
-        filter(my_to_tsquery_channel).\
-        order_by(my_ts_rank_channel).\
+    channels = db_session.query(Mv_Channel). \
+        filter(my_to_tsquery_channel). \
+        order_by(my_ts_rank_channel). \
         params(search=search).all()
 
     my_to_tsquery_playlist = text("Mv_Playlist.document @@ websearch_to_tsquery(:search)")
     my_ts_rank_playlist = text("ts_rank(Mv_Playlist.document, websearch_to_tsquery(:search)) DESC")
-    searchplaylists = db_session.query(Mv_Playlist).\
-        filter((Mv_Playlist.public),(my_to_tsquery_playlist)).\
-        order_by(my_ts_rank_playlist).\
+    searchplaylists = db_session.query(Mv_Playlist). \
+        filter((Mv_Playlist.public), (my_to_tsquery_playlist)). \
+        order_by(my_ts_rank_playlist). \
         params(search=search).all()
 
     my_to_tsquery_altcen_user = text("Mv_Altcen_user.document @@ websearch_to_tsquery(:search)")
     my_ts_rank_altcen_user = text("ts_rank(Mv_Altcen_user.document, websearch_to_tsquery(:search)) DESC")
-    altcen_users = db_session.query(Mv_Altcen_user).\
-        filter((Mv_Altcen_user.public),(my_to_tsquery_altcen_user)).\
-        order_by(my_ts_rank_altcen_user).\
-        limit(PER_PAGE).offset(offset).\
+    altcen_users = db_session.query(Mv_Altcen_user). \
+        filter((Mv_Altcen_user.public), (my_to_tsquery_altcen_user)). \
+        order_by(my_ts_rank_altcen_user). \
+        limit(PER_PAGE).offset(offset). \
         params(search=search).all()
 
-    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
-    channcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(my_to_tsquery_channel).params(search=search).scalar()
-    searchplaylistcount = db_session.query(func.count(Mv_Playlist.id)).filter(my_to_tsquery_playlist).params(search=search).scalar()
-    usercount = db_session.query(func.count(Mv_Altcen_user.id)). filter((Mv_Altcen_user.public),(my_to_tsquery_altcen_user)).params(search=search).scalar()
+    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(
+        search=search).scalar()
+    channcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(my_to_tsquery_channel).params(
+        search=search).scalar()
+    searchplaylistcount = db_session.query(func.count(Mv_Playlist.id)).filter(my_to_tsquery_playlist).params(
+        search=search).scalar()
+    usercount = db_session.query(func.count(Mv_Altcen_user.id)).filter((Mv_Altcen_user.public),
+                                                                       (my_to_tsquery_altcen_user)).params(
+        search=search).scalar()
 
     pagination = Pagination(page, PER_PAGE, videocount)
 
@@ -400,16 +416,17 @@ def search(page):
 
     if not videos and page != 1:
         abort(404)
-    return render_template('video/video_search.html', videos=videos, pagination=pagination, usercount=usercount,\
-                           channcount=channcount, searchplaylistcount=searchplaylistcount, rawsearch=rawsearch,\
-                           searchplaylists=searchplaylists, altcen_users=altcen_users,\
-                           order=order, channels=channels, videocount=videocount, watchlater=watchlater, playlist=playlist)
+    return render_template('video/video_search.html', videos=videos, pagination=pagination, usercount=usercount, \
+                           channcount=channcount, searchplaylistcount=searchplaylistcount, rawsearch=rawsearch, \
+                           searchplaylists=searchplaylists, altcen_users=altcen_users, \
+                           order=order, channels=channels, videocount=videocount, watchlater=watchlater,
+                           playlist=playlist)
 
 
 @bp.route("/search/latest", defaults={'page': 1})
 @bp.route('/search/latest/page/<int:page>')
 def search_latest(page):
-    offset = ((int(page)-1) * PER_PAGE)
+    offset = ((int(page) - 1) * PER_PAGE)
     rawsearch = request.args.get('q', None)
     if rawsearch is None:
         abort(404)
@@ -423,38 +440,42 @@ def search_latest(page):
         search = (search.lower().partition("youtube.com/channel/")[2])
 
     my_to_tsquery_video = text("mv_video.document @@ websearch_to_tsquery(:search)")
-    videos = db_session.query(Mv_Video).\
-        filter(my_to_tsquery_video).\
-        order_by(Mv_Video.id.desc()).\
-        limit(PER_PAGE).offset(offset).\
+    videos = db_session.query(Mv_Video). \
+        filter(my_to_tsquery_video). \
+        order_by(Mv_Video.id.desc()). \
+        limit(PER_PAGE).offset(offset). \
         params(search=search).all()
 
     my_to_tsquery_channel = text("Mv_Channel.document @@ websearch_to_tsquery(:search)")
     my_ts_rank_channel = text("ts_rank(Mv_Channel.document, websearch_to_tsquery(:search)) DESC")
-    channels = db_session.query(Mv_Channel).\
-        filter(my_to_tsquery_channel).\
-        order_by(my_ts_rank_channel).\
+    channels = db_session.query(Mv_Channel). \
+        filter(my_to_tsquery_channel). \
+        order_by(my_ts_rank_channel). \
         params(search=search).all()
 
     my_to_tsquery_playlist = text("Mv_Playlist.document @@ websearch_to_tsquery(:search)")
     my_ts_rank_playlist = text("ts_rank(Mv_Playlist.document, websearch_to_tsquery(:search)) DESC")
-    searchplaylists = db_session.query(Mv_Playlist).\
-        filter((Mv_Playlist.public),(my_to_tsquery_playlist)).\
-        order_by(my_ts_rank_playlist).\
+    searchplaylists = db_session.query(Mv_Playlist). \
+        filter((Mv_Playlist.public), (my_to_tsquery_playlist)). \
+        order_by(my_ts_rank_playlist). \
         params(search=search).all()
 
     my_to_tsquery_altcen_user = text("Mv_Altcen_user.document @@ websearch_to_tsquery(:search)")
     my_ts_rank_altcen_user = text("ts_rank(Mv_Altcen_user.document, websearch_to_tsquery(:search)) DESC")
-    altcen_users = db_session.query(Mv_Altcen_user).\
-        filter((Mv_Altcen_user.public),(my_to_tsquery_altcen_user)).\
-        order_by(my_ts_rank_altcen_user).\
-        limit(PER_PAGE).offset(offset).\
+    altcen_users = db_session.query(Mv_Altcen_user). \
+        filter((Mv_Altcen_user.public), (my_to_tsquery_altcen_user)). \
+        order_by(my_ts_rank_altcen_user). \
+        limit(PER_PAGE).offset(offset). \
         params(search=search).all()
 
-    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
-    channcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(my_to_tsquery_channel).params(search=search).scalar()
-    searchplaylistcount = db_session.query(func.count(Mv_Playlist.id)).filter(my_to_tsquery_playlist).params(search=search).scalar()
-    usercount = db_session.query(func.count(Mv_Altcen_user.id)).filter(my_to_tsquery_altcen_user).params(search=search).scalar()
+    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(
+        search=search).scalar()
+    channcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(my_to_tsquery_channel).params(
+        search=search).scalar()
+    searchplaylistcount = db_session.query(func.count(Mv_Playlist.id)).filter(my_to_tsquery_playlist).params(
+        search=search).scalar()
+    usercount = db_session.query(func.count(Mv_Altcen_user.id)).filter(my_to_tsquery_altcen_user).params(
+        search=search).scalar()
 
     pagination = Pagination(page, PER_PAGE, videocount)
 
@@ -471,16 +492,17 @@ def search_latest(page):
 
     if not videos and page != 1:
         abort(404)
-    return render_template('video/video_search.html', videos=videos, pagination=pagination, usercount=usercount,\
-                           channcount=channcount, searchplaylistcount=searchplaylistcount, rawsearch=rawsearch,\
-                           searchplaylists=searchplaylists, altcen_users=altcen_users,\
-                           order=order, channels=channels, videocount=videocount, watchlater=watchlater, playlist=playlist)
+    return render_template('video/video_search.html', videos=videos, pagination=pagination, usercount=usercount, \
+                           channcount=channcount, searchplaylistcount=searchplaylistcount, rawsearch=rawsearch, \
+                           searchplaylists=searchplaylists, altcen_users=altcen_users, \
+                           order=order, channels=channels, videocount=videocount, watchlater=watchlater,
+                           playlist=playlist)
 
 
 @bp.route("/search/new", defaults={'page': 1})
 @bp.route('/search/new/page/<int:page>')
 def search_new(page):
-    offset = ((int(page)-1) * PER_PAGE)
+    offset = ((int(page) - 1) * PER_PAGE)
     rawsearch = request.args.get('q', None)
     if rawsearch is None:
         abort(404)
@@ -494,38 +516,42 @@ def search_new(page):
         search = (search.lower().partition("youtube.com/channel/")[2])
 
     my_to_tsquery_video = text("mv_video.document @@ websearch_to_tsquery(:search)")
-    videos = db_session.query(Mv_Video).\
-        filter(my_to_tsquery_video).\
-        order_by(Mv_Video.published.desc()).\
-        limit(PER_PAGE).offset(offset).\
+    videos = db_session.query(Mv_Video). \
+        filter(my_to_tsquery_video). \
+        order_by(Mv_Video.published.desc()). \
+        limit(PER_PAGE).offset(offset). \
         params(search=search).all()
 
     my_to_tsquery_channel = text("Mv_Channel.document @@ websearch_to_tsquery(:search)")
     my_ts_rank_channel = text("ts_rank(Mv_Channel.document, websearch_to_tsquery(:search)) DESC")
-    channels = db_session.query(Mv_Channel).\
-        filter(my_to_tsquery_channel).\
-        order_by(my_ts_rank_channel).\
+    channels = db_session.query(Mv_Channel). \
+        filter(my_to_tsquery_channel). \
+        order_by(my_ts_rank_channel). \
         params(search=search).all()
 
     my_to_tsquery_playlist = text("Mv_Playlist.document @@ websearch_to_tsquery(:search)")
     my_ts_rank_playlist = text("ts_rank(Mv_Playlist.document, websearch_to_tsquery(:search)) DESC")
-    searchplaylists = db_session.query(Mv_Playlist).\
-        filter((Mv_Playlist.public),(my_to_tsquery_playlist)).\
-        order_by(my_ts_rank_playlist).\
+    searchplaylists = db_session.query(Mv_Playlist). \
+        filter((Mv_Playlist.public), (my_to_tsquery_playlist)). \
+        order_by(my_ts_rank_playlist). \
         params(search=search).all()
 
     my_to_tsquery_altcen_user = text("Mv_Altcen_user.document @@ websearch_to_tsquery(:search)")
     my_ts_rank_altcen_user = text("ts_rank(Mv_Altcen_user.document, websearch_to_tsquery(:search)) DESC")
-    altcen_users = db_session.query(Mv_Altcen_user).\
-        filter((Mv_Altcen_user.public),(my_to_tsquery_altcen_user)).\
-        order_by(my_ts_rank_altcen_user).\
-        limit(PER_PAGE).offset(offset).\
+    altcen_users = db_session.query(Mv_Altcen_user). \
+        filter((Mv_Altcen_user.public), (my_to_tsquery_altcen_user)). \
+        order_by(my_ts_rank_altcen_user). \
+        limit(PER_PAGE).offset(offset). \
         params(search=search).all()
 
-    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
-    channcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(my_to_tsquery_channel).params(search=search).scalar()
-    searchplaylistcount = db_session.query(func.count(Mv_Playlist.id)).filter(my_to_tsquery_playlist).params(search=search).scalar()
-    usercount = db_session.query(func.count(Mv_Altcen_user.id)).filter(my_to_tsquery_altcen_user).params(search=search).scalar()
+    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(
+        search=search).scalar()
+    channcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(my_to_tsquery_channel).params(
+        search=search).scalar()
+    searchplaylistcount = db_session.query(func.count(Mv_Playlist.id)).filter(my_to_tsquery_playlist).params(
+        search=search).scalar()
+    usercount = db_session.query(func.count(Mv_Altcen_user.id)).filter(my_to_tsquery_altcen_user).params(
+        search=search).scalar()
 
     pagination = Pagination(page, PER_PAGE, videocount)
 
@@ -542,16 +568,17 @@ def search_new(page):
 
     if not videos and page != 1:
         abort(404)
-    return render_template('video/video_search.html', videos=videos, pagination=pagination, usercount=usercount,\
-                           channcount=channcount, searchplaylistcount=searchplaylistcount, rawsearch=rawsearch,\
-                           searchplaylists=searchplaylists, altcen_users=altcen_users,\
-                           order=order, channels=channels, videocount=videocount, watchlater=watchlater, playlist=playlist)
+    return render_template('video/video_search.html', videos=videos, pagination=pagination, usercount=usercount, \
+                           channcount=channcount, searchplaylistcount=searchplaylistcount, rawsearch=rawsearch, \
+                           searchplaylists=searchplaylists, altcen_users=altcen_users, \
+                           order=order, channels=channels, videocount=videocount, watchlater=watchlater,
+                           playlist=playlist)
 
 
 @bp.route("/search/popular", defaults={'page': 1})
 @bp.route('/search/popular/page/<int:page>')
 def search_popular(page):
-    offset = ((int(page)-1) * PER_PAGE)
+    offset = ((int(page) - 1) * PER_PAGE)
     rawsearch = request.args.get('q', None)
     if rawsearch is None:
         abort(404)
@@ -565,38 +592,42 @@ def search_popular(page):
         search = (search.lower().partition("youtube.com/channel/")[2])
 
     my_to_tsquery_video = text("mv_video.document @@ websearch_to_tsquery(:search)")
-    videos = db_session.query(Mv_Video).\
-        filter(my_to_tsquery_video).\
-        order_by(Mv_Video.yt_views.desc()).\
-        limit(PER_PAGE).offset(offset).\
+    videos = db_session.query(Mv_Video). \
+        filter(my_to_tsquery_video). \
+        order_by(Mv_Video.yt_views.desc()). \
+        limit(PER_PAGE).offset(offset). \
         params(search=search).all()
 
     my_to_tsquery_channel = text("Mv_Channel.document @@ websearch_to_tsquery(:search)")
     my_ts_rank_channel = text("ts_rank(Mv_Channel.document, websearch_to_tsquery(:search)) DESC")
-    channels = db_session.query(Mv_Channel).\
-        filter(my_to_tsquery_channel).\
-        order_by(my_ts_rank_channel).\
+    channels = db_session.query(Mv_Channel). \
+        filter(my_to_tsquery_channel). \
+        order_by(my_ts_rank_channel). \
         params(search=search).all()
 
     my_to_tsquery_playlist = text("Mv_Playlist.document @@ websearch_to_tsquery(:search)")
     my_ts_rank_playlist = text("ts_rank(Mv_Playlist.document, websearch_to_tsquery(:search)) DESC")
-    searchplaylists = db_session.query(Mv_Playlist).\
-        filter((Mv_Playlist.public),(my_to_tsquery_playlist)).\
-        order_by(my_ts_rank_playlist).\
+    searchplaylists = db_session.query(Mv_Playlist). \
+        filter((Mv_Playlist.public), (my_to_tsquery_playlist)). \
+        order_by(my_ts_rank_playlist). \
         params(search=search).all()
 
     my_to_tsquery_altcen_user = text("Mv_Altcen_user.document @@ websearch_to_tsquery(:search)")
     my_ts_rank_altcen_user = text("ts_rank(Mv_Altcen_user.document, websearch_to_tsquery(:search)) DESC")
-    altcen_users = db_session.query(Mv_Altcen_user).\
-        filter((Mv_Altcen_user.public),(my_to_tsquery_altcen_user)).\
-        order_by(my_ts_rank_altcen_user).\
-        limit(PER_PAGE).offset(offset).\
+    altcen_users = db_session.query(Mv_Altcen_user). \
+        filter((Mv_Altcen_user.public), (my_to_tsquery_altcen_user)). \
+        order_by(my_ts_rank_altcen_user). \
+        limit(PER_PAGE).offset(offset). \
         params(search=search).all()
 
-    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
-    channcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(my_to_tsquery_channel).params(search=search).scalar()
-    searchplaylistcount = db_session.query(func.count(Mv_Playlist.id)).filter(my_to_tsquery_playlist).params(search=search).scalar()
-    usercount = db_session.query(func.count(Mv_Altcen_user.id)).filter(my_to_tsquery_altcen_user).params(search=search).scalar()
+    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(
+        search=search).scalar()
+    channcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(my_to_tsquery_channel).params(
+        search=search).scalar()
+    searchplaylistcount = db_session.query(func.count(Mv_Playlist.id)).filter(my_to_tsquery_playlist).params(
+        search=search).scalar()
+    usercount = db_session.query(func.count(Mv_Altcen_user.id)).filter(my_to_tsquery_altcen_user).params(
+        search=search).scalar()
 
     pagination = Pagination(page, PER_PAGE, videocount)
 
@@ -613,10 +644,11 @@ def search_popular(page):
 
     if not videos and page != 1:
         abort(404)
-    return render_template('video/video_search.html', videos=videos, pagination=pagination, usercount=usercount,\
-                           channcount=channcount, searchplaylistcount=searchplaylistcount, rawsearch=rawsearch,\
-                           searchplaylists=searchplaylists, altcen_users=altcen_users,\
-                           order=order, channels=channels, videocount=videocount, watchlater=watchlater, playlist=playlist)
+    return render_template('video/video_search.html', videos=videos, pagination=pagination, usercount=usercount, \
+                           channcount=channcount, searchplaylistcount=searchplaylistcount, rawsearch=rawsearch, \
+                           searchplaylists=searchplaylists, altcen_users=altcen_users, \
+                           order=order, channels=channels, videocount=videocount, watchlater=watchlater,
+                           playlist=playlist)
 
 
 @bp.route('/play-next', methods=['GET', 'POST'])
@@ -624,7 +656,6 @@ def play_next():
     get_playnext()
     if request.method == 'POST':
         data = json.loads(request.data)
-#        session['playnext'] = data['checked']
         session['playnext'] = not session['playnext']
         return json.dumps({'playnext': session['playnext']})
     else:
@@ -636,15 +667,14 @@ def test1():
     video_id = 'b9xIyw4dQZo'
     video_id = '7-tUV0cnyv8'
     video_id = 'c7BJ-VgSumw'
-#    video_id = 'C4tT99haZXE'
-#    video_id = 't25ptPWc1NI'
-    video_id = '0kX-1OOrU5M' # orig ogv, mp4
+    #    video_id = 'C4tT99haZXE'
+    #    video_id = 't25ptPWc1NI'
+    video_id = '0kX-1OOrU5M'  # orig ogv, mp4
 
     ia_url = "https://archive.org/download/youtube-" + video_id + "/" + video_id
     ac_url = "https://videos.altcensored.com/youtube-" + video_id + "/" + video_id
 
-
-#    return render_template('video/test1.html',video_url=ac_url)
+    #    return render_template('video/test1.html',video_url=ac_url)
     return render_template('video/video_embed_test.html', video_url=ac_url)
 
 
@@ -656,5 +686,4 @@ def test2():
     ia_url = "https://archive.org/download/youtube-" + video_id + "/" + video_id
     ia_url = "https://videos.altcensored.com/youtube-" + video_id + "/" + video_id
 
-
-    return render_template('video/test2.html',ia_url=ia_url)
+    return render_template('video/test2.html', ia_url=ia_url)

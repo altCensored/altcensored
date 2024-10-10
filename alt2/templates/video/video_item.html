@@ -1,12 +1,21 @@
 {% extends 'base.html' %}
 {% block head %}
 
-<meta name="thumbnail" content="{{ config.IPROXY ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}">
-<meta name="keywords" content="{{ video['tags'] }}">
+{% if  video['exists_ac'] %}
+  <meta class="thumbnail" content="{{ config.ACIPROXYHUGE~ config.VIDEOSERVER_URL ~ video['extractor_data'] ~ '/' ~ video['thumbnail_ac'] }}"
+{% else %}
+  <meta name="thumbnail" content="{{ config.IPROXY ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}">
+{% endif %}
 
+<meta name="keywords" content="{{ video['tags'] }}">
 <meta name="twitter:card" content="player">
 
-<meta name="twitter:image" content="{{ config.IPROXY ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}">
+{% if  video['exists_ac'] %}
+  <meta name="twitter:image" content="{{ config.ACIPROXYHUGE~ config.VIDEOSERVER_URL ~ video['extractor_data'] ~ '/' ~ video['thumbnail_ac'] }}"
+{% else %}
+  <meta name="twitter:image" content="{{ config.IPROXY ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}">
+{% endif %}
+
 
 <meta name="twitter:url" content="{{ config['MYSERVER_URL'] }}/watch?v={{ video_id }}">
 <meta name="twitter:player" content="{{ config['MYSERVER_URL'] }}/embed/{{ video_id }}">
@@ -32,15 +41,10 @@
 <meta name="altcen_meta_description" content="{% block description %}Limited Censored YouTube Video: {{ video['description'] }} (Published on {{ video['published'].strftime('%b %e, %G') }}){% endblock %}>
 <link rel="image_src" href="{% block imagesrc %}{{ config.IPROXY ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}{% endblock %}">
 
-<!--
-<link rel="stylesheet" href="{{ url_for('static', filename='css/shareon.css') }}">
--->
-
 {% endblock %}
 {% block content %}
 
 <script src="{{ url_for('static', filename='js/shareon.iife.js') }}" defer init></script>
-
 
 <div class="pure-g">
   <div class="pure-u-1 pure-u-md-2-24"></div>
@@ -85,10 +89,6 @@
                 {{ gettext('View on') }} YouTube
               </a>
               <br>
-<!--              <a href="{{ video_url_short ~ 'youtube-' ~ video_id ~ '_archive.torrent' }}">
-                {{ gettext('Download Torrent') }}
-              </a>
--->
 
               <a href="{{ video_url_download }}" target="_blank">
                 {{ gettext('Item on Internet Archive') }}
@@ -200,15 +200,6 @@
               <img class="thumbnail" src="{{ config.IPROXYHUGE~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['thumbnail'] }}"
                    onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
           {% endif %}
-
-<!--
-              <img class="thumbnail" src="{{ config.IPROXYHUGE~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['thumbnail'] }}"
-                 onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
-
-
-              <img class="thumbnail" src="{{ config.IPROXY ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}"
-                   onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
--->
 
                 {% if video['duration']  is not none %}
                 <p class="length">{{ video['duration'] | hourminsec }}</p>

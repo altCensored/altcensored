@@ -173,27 +173,29 @@ def watch():
     video_url_short = IARCHIVEURL + video_id + "/"
     video_url_download = IARCHIVEITEMURL + video_id
 
-    ia = get_session()
-    ia_item = ia.get_item('youtube-' + video_id)
-
     client = Minio(current_app.config['AC_S3_ENDPOINT'],
         access_key=current_app.config['AC_S3_ACCESS_KEY'],
         secret_key=current_app.config['AC_S3_SECRET_KEY']
     )
 
-#    if video.exists_ac:
     if ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id):
         video_url = VIDEOSERVER_URL + video_id + "/" + video_id
-    elif ia_item.exists and not ia_item.is_dark and "access-restricted-item" not in ia_item.metadata  and "altcen_hosted" not in ia_item.metadata:
-        video_files = [f.name for f in get_video_files(ia_item)]
-        if video_files:
-            full_filename = check_video_files(ia_item)
-            if full_filename:
-                filename = os.path.splitext(full_filename)[0]
-                video_url = IARCHIVEURL + video_id + "/" + filename
+
     else:
-        NEW_FLASH_MSG = 'Internet Archive has limited access on <a href=' + video_url_download + ' class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">this item</a>'
-        video_url = VIDEOSERVER_URL + 'unavailable/unavailable'
+        ia = get_session()
+        ia_item = ia.get_item('youtube-' + video_id)
+
+        if ia_item.exists and not ia_item.is_dark and "access-restricted-item" not in ia_item.metadata  and "altcen_hosted" not in ia_item.metadata:
+            video_files = [f.name for f in get_video_files(ia_item)]
+            if video_files:
+                full_filename = check_video_files(ia_item)
+                if full_filename:
+                    filename = os.path.splitext(full_filename)[0]
+                    video_url = IARCHIVEURL + video_id + "/" + filename
+
+        else:
+            NEW_FLASH_MSG = 'Internet Archive has limited access on <a href=' + video_url_download + ' class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">this item</a>'
+            video_url = VIDEOSERVER_URL + 'unavailable/unavailable'
 
 
     playlist_titles = []
@@ -252,26 +254,29 @@ def embed(video_id):
     IARCHIVEURL = current_app.config['IARCHIVEURL']
     VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
 
-    ia = get_session()
-    ia_item = ia.get_item('youtube-' + video_id)
-
     client = Minio(current_app.config['AC_S3_ENDPOINT'],
                    access_key=current_app.config['AC_S3_ACCESS_KEY'],
                    secret_key=current_app.config['AC_S3_SECRET_KEY']
                    )
 
-    #    if video.exists_ac:
     if ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id):
         video_url = VIDEOSERVER_URL + video_id + "/" + video_id
-    elif ia_item.exists and not ia_item.is_dark and "access-restricted-item" not in ia_item.metadata  and "altcen_hosted" not in ia_item.metadata:
-        video_files = [f.name for f in get_video_files(ia_item)]
-        if video_files:
-            full_filename = check_video_files(ia_item)
-            if full_filename:
-                filename = os.path.splitext(full_filename)[0]
-                video_url = IARCHIVEURL + video_id + "/" + filename
+
     else:
-        video_url = VIDEOSERVER_URL + 'unavailable/unavailable'
+        ia = get_session()
+        ia_item = ia.get_item('youtube-' + video_id)
+
+        if ia_item.exists and not ia_item.is_dark and "access-restricted-item" not in ia_item.metadata  and "altcen_hosted" not in ia_item.metadata:
+            video_files = [f.name for f in get_video_files(ia_item)]
+            if video_files:
+                full_filename = check_video_files(ia_item)
+                if full_filename:
+                    filename = os.path.splitext(full_filename)[0]
+                    video_url = IARCHIVEURL + video_id + "/" + filename
+
+        else:
+            NEW_FLASH_MSG = 'Internet Archive has limited access on <a href=' + video_url_download + ' class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">this item</a>'
+            video_url = VIDEOSERVER_URL + 'unavailable/unavailable'
 
     next_video = None
 

@@ -48,9 +48,13 @@
                                                 </div>
                                                   <div class="pure-u-1-2" style="text-align:left">
                                                     <a href="{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}">
-                                                    {{ gettext('Limited') }}: {{ channel['limited']|commafy }}
+                                                    {{ gettext('Censored') }}: {{ channel['limited']|commafy }}
                                                     </a>
                                               <br>
+                                             {% if not channel['ytc_deleted'] %}
+                                              {{ gettext('Archived') }}: {{ channel['archived']|commafy}}
+                                              <br>
+                                             {% endif %}
                                               {{ gettext('Total') }}: {{ channel['total']|commafy }}
                                             <br>
                                              {{ gettext('Views') }}: {{ channel['ytc_viewcount'] | viewdisplay }}
@@ -65,12 +69,6 @@
                                                  {{ gettext('Monitor') }}:
                                                  {% if channel.allow %}{{ gettext('True') }}<br>
                                                      {% else %}{{ gettext('False') }}<br>
-                                                 {% endif %}
-                                                 {{ gettext('Archive') }}:
-                                                 {% if channel.ytc_archive %}{{ gettext('Full') }}<br>
-                                                     {% elif channel.ytc_partarchive %}{{ gettext('Part') }}<br>
-                                                     {% elif channel.ytc_latestarchive %}{{ gettext('Latest') }}<br>
-                                                     {% else %}{{ gettext('None') }}<br>
                                                  {% endif %}
                                              {% endif %}
                                     </div>

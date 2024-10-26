@@ -132,6 +132,7 @@ class Source(Base):
     ytc_partarchive = Column(Boolean, nullable=False, default=False)
     ytc_latestarchive = Column(Boolean, nullable=False, default=False)
     next_resync = Column(DateTime, nullable=True)
+    ytc_thumbnail = Column(String, nullable=True)
 
     def __init__(self, next=None, delta=None):
         self.id = id
@@ -156,7 +157,8 @@ class Source(Base):
         self.ytc_addeddate = ytc_addeddate
         self.ytc_partarchive = ytc_partarchive
         self.ytc_latestarchive = ytc_latestarchive
-
+        self.next_resync = next_resync
+        self.ytc_thumbnail = ytc_thumbnail
     def __repr__(self):
         return '<Source %r>' % (self.id)
 
@@ -359,7 +361,6 @@ class Mv_Video(Base):
     def __init__(self, extractor_data=None, allow=None):
         self.id = id
         self.extractor_data = extractor_data
-        self.rating = rating
         self.published = published
         self.title = title
         self.thumbnail = thumbnail
@@ -383,6 +384,7 @@ class Mv_Channel(Base):
     ytc_id = Column(String, primary_key=True, nullable=False)
     ytc_title = Column(String, nullable=True)
     ytc_publishedat = Column(DateTime, nullable=True)
+    ytc_thumbnail = Column(String, nullable=True)
     ytc_thumbnailurl = Column(String, nullable=True)
     ytc_viewcount = Column(Integer, nullable=True)
     ytc_subscribercount = Column(Integer, nullable=True)
@@ -404,6 +406,7 @@ class Mv_Channel(Base):
         self.ytc_id = ytc_id
         self.ytc_title = ytc_title
         self.ytc_publishedat = ytc_publishedat
+        self.ytc_thumbnail = ytc_thumbnail
         self.ytc_thumbnailurl = ytc_thumbnailurl
         self.ytc_viewcount = ytc_viewcount
         self.ytc_subscribercount = ytc_subscribercount
@@ -414,11 +417,12 @@ class Mv_Channel(Base):
         self.ytc_deleted = ytc_deleted
         self.ytc_archive = ytc_archive
         self.allow = allow
+        self.delta = delta
         self.ytc_deleteddate = ytc_deleteddate
         self.ytc_addeddate = ytc_addeddate
         self.ytc_partarchive = ytc_partarchive
         self.ytc_latestarchive = ytc_latestarchive
-        self.delta = delta
+        self.ytc_thumbnail = ytc_thumbnail
 
     def __repr__(self):
         return '<Mv_Channel %r>' % (self.ytc_id)

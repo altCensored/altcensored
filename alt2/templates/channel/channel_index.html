@@ -101,9 +101,14 @@
                                 <a href="{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}">
                                     <div class="thumbnail">
                                         <left>
+<!--
                                             <img style="width:97%"
-                                                 src="{{ channel['ytc_thumbnailurl'] | reverse | replace('88','671', 1) | reverse  }}"
+                                            src="{{ channel['ytc_thumbnailurl'] | reverse | replace('88','671', 1) | reverse  }}"
                                             onerror="this.onerror=null;this.src='https://{{ config['MYSERVER_NAME'] }}/channel_unnamed.jpg';" >
+-->
+                                              <img style="width:95%"
+                                                   src="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['ytc_thumbnail'] }}"
+                                                   onerror="this.onerror=null;this.src='{{ config.CHANNEL_THUMB_ERROR_IMAGE }}';">
                                             </style>
                                             </left>
                                             </div>

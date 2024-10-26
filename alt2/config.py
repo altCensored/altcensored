@@ -9,6 +9,7 @@ MYSERVER_NAME="altCensored.com"
 MYSERVER_URL="https://altCensored.com"
 MYSERVER_TEST_URL="https://altCensored.com"
 VIDEO_THUMB_ERROR_IMAGE="https://altCensored.com/image_error.webp"
+CHANNEL_THUMB_ERROR_IMAGE="https://altCensored.com/channel_unnamed.jpg"
 
 IARCHIVEURL="https://archive.org/download/youtube-"
 IARCHIVEITEMURL="https://archive.org/details/youtube-"
@@ -29,6 +30,7 @@ IPROXYTWBIG=os.getenv('IPROXYTWBIG')
 PROPAGATE_EXCEPTIONS=False
 
 ACIPROXYHUGE=os.getenv('ACIPROXYHUGE')
+ACIPROXY=os.getenv('ACIPROXY')
 
 SUPPORTED_LANGUAGES = {'en': 'English', 'de': 'Deutsch', 'es': 'Español', 'fr': 'Français', 'pt': 'Portuguese', 'nl': 'Nederlandse', 'it': 'Italiano', 'se': 'Sverige'}
 SUPPORTED_THEMES = {'light', 'dark'}

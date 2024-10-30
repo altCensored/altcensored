@@ -188,23 +188,23 @@ def watch():
         ia_meta = IARCHIVEMETAURL+video_id
         print(ia_meta)
 
-        if site_is_online(ia_meta):
-            ia = get_session()
-            ia_item = ia.get_item('youtube-' + video_id)
+#        if site_is_online(ia_meta):
+        ia = get_session()
+        ia_item = ia.get_item('youtube-' + video_id)
 
-            if ia_item.exists and not ia_item.is_dark and "access-restricted-item" not in ia_item.metadata  and "altcen_hosted" not in ia_item.metadata:
-                video_files = [f.name for f in get_video_files(ia_item)]
-                if video_files:
-                    full_filename = check_video_files(ia_item)
-                    if full_filename:
-                        filename = os.path.splitext(full_filename)[0]
-                        video_url = IARCHIVEURL + video_id + "/" + filename
+        if ia_item.exists and not ia_item.is_dark and "access-restricted-item" not in ia_item.metadata  and "altcen_hosted" not in ia_item.metadata:
+            video_files = [f.name for f in get_video_files(ia_item)]
+            if video_files:
+                full_filename = check_video_files(ia_item)
+                if full_filename:
+                    filename = os.path.splitext(full_filename)[0]
+                    video_url = IARCHIVEURL + video_id + "/" + filename
 
-            else:
-                NEW_FLASH_MSG = f'Internet Archive has limited access on <a href={video_url_download} class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">this item</a>'
-                video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
         else:
-            abort(503)
+            NEW_FLASH_MSG = f'Internet Archive has limited access on <a href={video_url_download} class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">this item</a>'
+            video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
+#        else:
+#            abort(503)
 
     playlist_titles = []
     not_in_watchlater = None

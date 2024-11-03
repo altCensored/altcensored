@@ -337,7 +337,7 @@ def mirror_channel():
         sys_name = s3_server
         channel_id = (request.form['channel_id'])
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
-        action = ' mirror '
+        action = ' mirror -ur '
         cookie = ' -cf $COOKIE_FILE'
 
         params1 = ' nohup yt-syncac '

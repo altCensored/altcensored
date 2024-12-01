@@ -33,6 +33,7 @@ jsonpatch
 jsonpointer
 mailjet-rest
 MarkupSafe
+minio
 monotonic
 packaging
 Pillow

@@ -82,8 +82,8 @@
                 "width": "30%",
                 "render": function ( data, type, row ) {
                     return data.length > 30 ?
-                    '<a href="'+row[1]+'">'+data.substr( 0, 30 ) +'…'+'</a>' :
-                        '<a href="'+row[1]+'">'+data+'</a>';
+                    '<a href= "{{ config['MYSERVER_URL'] }}' + '/channel/' +row[1]+'" target="_blank"">'+data.substr( 0, 30 ) +'…'+'</a>' :
+                        '<a href= "{{ config['MYSERVER_URL'] }}' + '/channel/' +row[1]+'" target="_blank"">'+data+'</a>';
                 }
             },
             {

@@ -98,12 +98,11 @@ def channel_data_all():
         ColumnDT(Mv_Channel.ytc_viewcount),
         ColumnDT(Mv_Channel.total),
         ColumnDT(Mv_Channel.limited),
+        ColumnDT(Mv_Channel.archive),
         ColumnDT(Mv_Channel.allow),
-        ColumnDT(func.to_char(Mv_Channel.delta, 'DDD')),
-        ColumnDT(Mv_Channel.ytc_partarchive),
-        ColumnDT(Mv_Channel.ytc_archive),
-        ColumnDT(func.to_char(Mv_Channel.ytc_publishedat, 'YYYY-mm-dd')),
-        ColumnDT(func.to_char(Mv_Channel.ytc_deleteddate, 'YYYY-mm-dd')),
+        ColumnDT(func.to_char(Mv_Channel.delta,'dd')),
+        ColumnDT(func.to_char(Mv_Channel.ytc_publishedat,'YYYY-mm-dd')),
+        ColumnDT(func.to_char(Mv_Channel.ytc_deleteddate,'YYYY-mm-dd')),
         ColumnDT(func.to_char(Mv_Channel.ytc_addeddate, 'YYYY-mm-dd')),
     ]
 
@@ -267,9 +266,11 @@ def enable_channel():
 @util.admin_login_required
 def disable_channel():
     title = "Disable"
-    if request.method == 'POST':
-        channel_id = (request.form['channel_id'])
-        channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
+    ytc_id = request.args.get('ytc_id', None)
+    if request.method == 'POST' or ytc_id is not None:
+        if not ytc_id:
+            ytc_id = (request.form['channel_id'])
+        channel_url = "https://www.youtube.com/playlist?list=UU" + (ytc_id[2:])
         action = ' disable '
 
         params1 = ' yt-syncac '

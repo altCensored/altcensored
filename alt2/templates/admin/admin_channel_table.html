@@ -43,14 +43,13 @@
                     <th>Channel ID</th>
                     <th>Subs</th>
                     <th>Views</th>
-                    <th>Vid</th>
-                    <th>Lim</th>
-                    <th>Mon</th>
+                    <th>Videos</th>
+                    <th>Censored</th>
+                    <th>Archived</th>
+                    <th>Enabled</th>
                     <th>Delta</th>
-                    <th>Part</th>
-                    <th>Full</th>
-                    <th>Creat</th>
-                    <th>Delet</th>
+                    <th>Created</th>
+                    <th>Deleted</th>
                     <th>Added</th>
                   </tr>
                 </thead>
@@ -79,11 +78,12 @@
         "columnDefs": [
             {
                 "targets": [ 0 ],
+                "width": "30%",
                 "className": 'dt-left',
                 "render": function ( data, type, row ) {
                     return data.length > 30 ?
-                    '<a href= "https://www.youtube.com/channel/' +row[1]+'">'+data.substr( 0, 30 ) +'…'+'</a>' :
-                        '<a href= "https://www.youtube.com/channel/' +row[1]+'">'+data+'</a>';
+                    '<a href="'+row[1]+'">'+data.substr( 0, 30 ) +'…'+'</a>' :
+                        '<a href="'+row[1]+'">'+data+'</a>';
                 }
             },
             {
@@ -92,37 +92,63 @@
                 "searchable": false
             },
             {
-                "targets": [2],
+                "targets": [ 2 ],
                 "className": 'dt-right',
+                "width": "8%",
                 "render": function ( data, type, row ) {
-                    return '<a href= "https://socialblade.com/youtube/channel/' +row[1]+'">'+data+'</a>';
+                    return data.length > 30 ?
+                    '<a href= "https://www.youtube.com/channel/' +row[1]+'" target="_blank">'+data.substr( 0, 30 ) +'…'+'</a>' :
+                        '<a href= "https://www.youtube.com/channel/' +row[1]+'" target="_blank">'+data+'</a>';
                 }
             },
             {
                 "targets": [ 3 ],
                 "className": 'dt-right',
+                "width": "8%",
                 "render": function ( data, type, row ) {
-                    return '<a href= "{{ config['MYSERVER_URL'] }}' + '/channel/' +row[1]+'">'+data+'</a>';
+                    return '<a href= "https://socialblade.com/youtube/channel/' +row[1]+'" target="_blank">'+data+'</a>';
                 }
             },
             {
                 "targets": [ 4 ],
                 "className": 'dt-right',
+                "width": "5%",
                 "render": function ( data, type, row ) {
-                    return '<a href= "{{ url_for('admin.video_table') }}' + '?ytc_id=' +row[1]+'">'+data+'</a>';
+                    return '<a href= "{{ url_for('admin.video_table') }}' + '?ytc_id=' +row[1]+'" target="_blank">'+data+'</a>';
                 }
             },
             {
                 "targets": [ 5 ],
                 "className": 'dt-right',
+                "width": "5%"
             },
             {
                 "targets": [ 6 ],
                 "className": 'dt-center',
+                "width": "5%"
             },
             {
                 "targets": [ 7 ],
                 "className": 'dt-center',
+                "width": "5%",
+                "render": function ( data, type, row ) {
+                    return '<a href= "{{ url_for('admin.disable_channel') }}' + '?ytc_id=' +row[1]+'" target="_blank">'+data+'</a>';
+                }
+            },
+            {
+                "targets": [ 8 ],
+                "className": 'dt-center',
+                "width": "8%"
+            },
+            {
+                "targets": [ 9 ],
+                "className": 'dt-center',
+                "width": "8%"
+            },
+            {
+                "targets": [ 10 ],
+                "className": 'dt-center',
+                "width": "8%"
             }
         ]
       });

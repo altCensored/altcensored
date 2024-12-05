@@ -20,6 +20,8 @@ AS SELECT source.id,
     source.ytc_partarchive,
     source.ytc_latestarchive,
     source.delta,
+    source.was_full,
+    MAX(entity.published) as newest_video,
     ( SELECT entity_1.allow
            FROM entity entity_1
           WHERE source.id = entity_1.id) AS allow,

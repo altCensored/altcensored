@@ -171,6 +171,16 @@ class Source(Base):
     def __repr__(self):
         return '<Source %r>' % (self.id)
 
+    def to_dict(self):
+        print(self.delta_short)
+        return {
+            'id': self.id,
+            'ytc_id': self.ytc_id,
+            'ytc_title': self.ytc_title,
+#            'ytc_enable': self.ytc_enable,
+            'delta_short': self.delta_short,
+        }
+
 
 class Category(Base):
     __tablename__ = 'category'

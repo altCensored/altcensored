@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <title>Server-Driven Table</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/mermaid.min.css') }}">
+    <style>
+      body {
+        font-family: Sans-Serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <h1>Server-Driven Table</h1>
+      <hr>
+      <div id="table"></div>
+    </div>
+  <script src="{{ url_for('static', filename='js/gridjs.umd.js') }}"></script>
+    <script>
+      const updateUrl = (prev, query) => {
+        return prev + (prev.indexOf('?') >= 0 ? '&' : '?') + new URLSearchParams(query).toString();
+      };
+
+      new gridjs.Grid({
+        columns: [
+          { id: 'id', name: 'ID' },
+          { id: 'ytc_id', name: 'ytc_id' },
+          { id: 'ytc_title', name: 'ytc_title', sort: false },
+          { id: 'delta_short', name: 'delta_short', sort: false },
+        ],
+        server: {
+          url: '{{ url_for('admin.channel_table_new_data') }}',
+          then: results => results.data,
+          total: results => results.total,
+        },
+        search: {
+          enabled: true,
+          server: {
+            url: (prev, search) => {
+              return updateUrl(prev, {search});
+            },
+          },
+        },
+        sort: {
+          enabled: true,
+          multiColumn: true,
+          server: {
+            url: (prev, columns) => {
+              const columnIds = ['id', 'ytc_id', 'ytc_title', 'delta_short'];
+              const sort = columns.map(col => (col.direction === 1 ? '+' : '-') + columnIds[col.index]);
+              return updateUrl(prev, {sort});
+            },
+          },
+        },
+        pagination: {
+          enabled: true,
+          server: {
+            url: (prev, page, limit) => {
+              return updateUrl(prev, {start: page * limit, length: limit});
+            },
+          },
+        },
+      }).render(document.getElementById('table'));
+    </script>
+  </body>
+</html>

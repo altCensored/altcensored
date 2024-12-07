@@ -11,12 +11,13 @@ from sqlalchemy import (
     ARRAY,
     BigInteger,
     JSON,
+    func,
 )
 
-from sqlalchemy.orm import relationship
-from sqlalchemy.ext.mutable import MutableDict
-from sqlalchemy.ext.hybrid import hybrid_property
 from alt2.database import Base
+from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.ext.mutable import MutableDict
+from sqlalchemy.orm import relationship, column_property
 
 
 class Entity(Base):
@@ -57,6 +58,8 @@ class Entity(Base):
     exists_ac = Column(Boolean, nullable=True)
     dark_ia = Column(Boolean, nullable=True)
     exists_ac_mkv = Column(Boolean, nullable=True)
+    found = Column(Boolean, nullable=True)
+    yt_limited = Column(Boolean, nullable=True)
 
     def __init__(self, type=None, prev=None):
         self.id = id
@@ -112,6 +115,7 @@ class Source(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     next = Column(String, nullable=True)
     delta = Column(Interval, nullable=False)
+    delta_short = column_property(func.to_char(delta, 'dd'))
     url = Column(String, nullable=False)
     extractor_match = Column(String, nullable=False)
     source_name = Column(String, nullable=True)
@@ -132,6 +136,11 @@ class Source(Base):
     ytc_partarchive = Column(Boolean, nullable=False, default=False)
     ytc_latestarchive = Column(Boolean, nullable=False, default=False)
     next_resync = Column(DateTime, nullable=True)
+    s3_ia = Column(Boolean, nullable=False, default=False)
+    s3_ac = Column(Boolean, nullable=False, default=False)
+    s3_mirror = Column(Boolean, nullable=False, default=False)
+    was_full = Column(Boolean, nullable=False, default=False)
+    was_part = Column(Boolean, nullable=False, default=False)
     ytc_thumbnail = Column(String, nullable=True)
 
     def __init__(self, next=None, delta=None):

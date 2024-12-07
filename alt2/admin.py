@@ -8,9 +8,10 @@ from datetime import timezone, timedelta
 from flask_babelplus import lazy_gettext
 from flask import (
     Blueprint, flash, redirect, render_template, request, url_for, current_app, jsonify, abort)
-from sqlalchemy import func
+from sqlalchemy import func, or_
+
 from .database import db_session
-from .models import Mv_Channel, User, Entity, Source, Sources_to_Videos, Email_list
+from .models import Mv_Channel, User, Entity, Source, Sources_to_Videos, Email_list, Category
 from datatables import ColumnDT, DataTables
 from threading import Thread
 
@@ -153,6 +154,49 @@ def video_data():
     params = request.args.to_dict()
     rowTable = DataTables(params, query, columns)
     return jsonify(rowTable.output_result())
+
+
+@bp.route('/channel_table_new')
+@util.admin_login_required
+def channel_table_new():
+    return render_template('admin/admin_channel_table_new.html')
+
+
+@bp.route('/channel_table_new_data')
+@util.admin_login_required
+def channel_table_new_data():
+    query = db_session.query(Source)
+
+    # search filter
+    search = request.args.get('search')
+    if search:
+        query = query.filter(or_(
+            Source.ytc_id.like(f'%{search}%'),
+            Source.ytc_title.like(f'%{search}%')
+        ))
+    total = query.count()
+
+    # sorting
+    sort = request.args.get('sort')
+    if sort:
+        order = []
+        for s in sort.split(','):
+            direction = s[0]
+            name = s[1:]
+            if name not in ['id', 'ytc_id', 'ytc_name']:
+                name = 'name'
+            col = getattr(Source, name)
+            if direction == '-':
+                col = col.desc()
+            order.append(col)
+        if order:
+            query = query.order_by(*order)
+
+    # response
+    return {
+        'data': [source.to_dict() for source in query],
+        'total': total,
+    }
 
 
 @bp.route('/add_channel', methods=['GET', 'POST'])

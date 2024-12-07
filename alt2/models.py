@@ -1,3 +1,4 @@
+from datetime import datetime
 from sqlalchemy import (
     Boolean,
     Column,
@@ -15,13 +16,12 @@ from sqlalchemy import (
 )
 
 from alt2.database import Base
-from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm import relationship, column_property
 
-
 class Entity(Base):
-    __tablename__ = 'entity'
+    __tablename__ = "entity"
     id = Column(Integer, primary_key=True, nullable=False)
     type = Column(String, nullable=False)
     prev = Column(DateTime, nullable=True)
@@ -43,79 +43,81 @@ class Entity(Base):
     rating = Column(Integer, nullable=True)
     thumbnail = Column(String, nullable=True)
     thumbnail_ac = Column(String, nullable=True)
-    alt_url2 = Column(String, nullable=True)
-    duration = Column(String, nullable=True)
+    yt_error_message = Column(String, nullable=True)
+    duration = Column(Integer, nullable=True)
     sync_ia = Column(Boolean, nullable=True)
     exists_ia = Column(Boolean, nullable=True)
     yt_deleted = Column(Boolean, nullable=True)
     sync_iadate = Column(DateTime, nullable=True)
-    addeddate = Column(DateTime, nullable=False)
+    addeddate = Column(DateTime, nullable=True)
     filesize_approx = Column(Integer, nullable=True)
     live_status = Column(String, nullable=True)
     restricted_ia = Column(Boolean, nullable=True)
     loggedin_ia = Column(Boolean, nullable=True)
-    uploadother_ia = Column(Boolean, nullable=True)
+    uploaderother_ia = Column(Boolean, nullable=True)
     exists_ac = Column(Boolean, nullable=True)
     dark_ia = Column(Boolean, nullable=True)
     exists_ac_mkv = Column(Boolean, nullable=True)
     found = Column(Boolean, nullable=True)
     yt_limited = Column(Boolean, nullable=True)
 
-    def __init__(self, type=None, prev=None):
-        self.id = id
-        self.type = type
-        self.prev = prev
-        self.extractor_key = extractor_key
-        self.extractor_data = extractor_data
-        self.allow = allow
-        self.title = title
-        self.views = views
-        self.likes = likes
-        self.dislikes = dislikes
-        self.yt_comments = yt_comments
-        self.yt_views = yt_views
-        self.yt_dislikes = yt_dislikes
-        self.yt_likes = yt_likes
-        self.published = published
-        self.description = description
-        self.tags = tags
-        self.category = category
-        self.rating = rating
-        self.thumbnail = thumbnail
-        self.thumbnail_ac = thumbnail_ac
-        self.alt_url2 = alt_url2
-        self.duration = duration
-        self.sync_ia = sync_ia
-        self.exists_ia = exists_ia
-        self.yt_deleted = yt_deleted
-        self.sync_iadate = sync_iadate
-        self.addeddate = addeddate
-        self.filesize_approx = filesize_approx
-        self.live_status = live_status
-        self.restricted_ia = restricted_ia
-        self.loggedin_ia = loggedin_ia
-        self.uploadother_ia = uploadother_ia
-        self.exists_ac = exists_ac
-        self.dark_ia = dark_ia
-        self.exists_ac_mkv = exists_ac_mkv
-
-    def __repr__(self):
-        return '<Entity %r>' % (self.id)
+    __mapper_args__ = {
+        "polymorphic_on": type,
+        "polymorphic_identity": __tablename__,
+        "with_polymorphic": "*",
+    }
+    __table_args__ = (
+        UniqueConstraint(
+            "extractor_key", "extractor_data", "type", name="_entity_extractor_type"
+        ),
+    )
 
 
 Sources_to_Videos = Table(
-    'content', Base.metadata,
-    Column('source_id', Integer, ForeignKey('source.id')),
-    Column('video_id', Integer, ForeignKey('entity.id')),
+    "content",
+    Base.metadata,
+    Column(
+        "source_id",
+        Integer,
+        ForeignKey("source.id", onupdate="CASCADE", ondelete="CASCADE"),
+    ),
+    Column(
+        "video_id",
+        Integer,
+        ForeignKey("video.id", onupdate="CASCADE", ondelete="CASCADE"),
+    ),
 )
 
 
-class Source(Base):
-    __tablename__ = 'source'
-    id = Column(Integer, primary_key=True, nullable=False)
-    next = Column(String, nullable=True)
+class Video(Entity):
+    __tablename__ = "video"
+    id = Column(
+        Integer,
+        ForeignKey(
+            f"{Entity.__tablename__}.id",
+            onupdate="CASCADE",
+            ondelete="CASCADE",
+        ),
+        primary_key=True,
+    )
+    sources = relationship(
+        "Source", secondary=Sources_to_Videos, back_populates="videos"
+    )
+    __mapper_args__ = {"polymorphic_identity": __tablename__}
+
+
+class Source(Entity):
+    __tablename__ = "source"
+    id = Column(
+        Integer,
+        ForeignKey(
+            Entity.__tablename__ + ".id", onupdate="CASCADE", ondelete="CASCADE"
+        ),
+        primary_key=True,
+    )
+    next = Column(DateTime, nullable=False, default=datetime.min)
     delta = Column(Interval, nullable=False)
-    delta_short = column_property(func.to_char(delta, 'dd'))
+    delta_short = column_property(func.to_char(delta, 'ddd'))
     url = Column(String, nullable=False)
     extractor_match = Column(String, nullable=False)
     source_name = Column(String, nullable=True)
@@ -130,7 +132,7 @@ class Source(Base):
     ytc_subscribercount = Column(Integer, nullable=True)
     ytc_videocount = Column(Integer, nullable=True)
     ytc_archive = Column(Boolean, nullable=False, default=False)
-    ytc_deleted = Column(String, nullable=True)
+    ytc_deleted = Column(Boolean, nullable=False, default=False)
     ytc_deleteddate = Column(DateTime, nullable=True)
     ytc_addeddate = Column(DateTime, nullable=True)
     ytc_partarchive = Column(Boolean, nullable=False, default=False)
@@ -143,42 +145,68 @@ class Source(Base):
     was_part = Column(Boolean, nullable=False, default=False)
     ytc_thumbnail = Column(String, nullable=True)
 
-    def __init__(self, next=None, delta=None):
-        self.id = id
-        self.next = next
-        self.delta = delta
-        self.url = url
-        self.extractor_match = extractor_match
-        self.source_name = source_name
-        self.ytc_etag   = ytc_etag
-        self.ytc_id = ytc_id
-        self.ytc_title = ytc_title
-        self.ytc_description = ytc_description
-        self.ytc_customurl = ytc_customurl
-        self.ytc_publishedat = ytc_publishedat
-        self.ytc_thumbnailurl = ytc_thumbnailurl
-        self.ytc_viewcount = ytc_viewcount
-        self.ytc_subscribercount = ytc_subscribercount
-        self.ytc_videocount = ytc_videocount
-        self.ytc_archive = ytc_archive
-        self.ytc_deleted = ytc_deleted
-        self.ytc_deleteddate = ytc_deleteddate
-        self.ytc_addeddate = ytc_addeddate
-        self.ytc_partarchive = ytc_partarchive
-        self.ytc_latestarchive = ytc_latestarchive
-        self.next_resync = next_resync
-        self.ytc_thumbnail = ytc_thumbnail
-    def __repr__(self):
-        return '<Source %r>' % (self.id)
+    videos = relationship(
+        "Video", secondary=Sources_to_Videos, back_populates="sources"
+    )
+    __mapper_args__ = {"polymorphic_identity": __tablename__}
+
+    @hybrid_method
+    def videos_total(self):
+        return len(self.videos)
+
+    @hybrid_method
+    def videos_missing(self):
+        return len([video for video in self.videos if video.prev is None])
+
+    @hybrid_method
+    def videos_saved(self):
+        return len([video for video in self.videos if video.prev is not None])
+
+    @hybrid_method
+    def videos_archived(self):
+        return len(
+            [video for video in self.videos if (video.exists_ia or video.exists_ac)]
+        )
+
+    @hybrid_method
+    def videos_deleted(self):
+        return len([video for video in self.videos if video.yt_deleted])
+
+    @hybrid_method
+    def videos_deleted_archived(self):
+        return len(
+            [
+                video
+                for video in self.videos
+                if video.yt_deleted and (video.exists_ia or video.exists_ac)
+            ]
+        )
+
+    @hybrid_method
+    def video_newest(self):
+        return max(
+            [video.published for video in self.videos if video.published is not None]
+        )
+
+    @hybrid_method
+    def videos_live(self):
+        return len([video for video in self.videos if video.live_status is not None])
 
     def to_dict(self):
-        print(self.delta_short)
+#        print(self.video())
+#        print(func.to_char(self.delta, 'dd'))
+#        print(self.delta)
+#        print(self.video_newest())
+#        print(self.video_newest().strftime("%m-%d-%Y"))
+#        print(self.allow)
         return {
             'id': self.id,
             'ytc_id': self.ytc_id,
             'ytc_title': self.ytc_title,
-#            'ytc_enable': self.ytc_enable,
-            'delta_short': self.delta_short,
+            'allow': format(self.allow),
+            'delta': self.delta_short,
+            'videos_total': self.videos_total(),
+            'video_newest': self.video_newest().strftime("%Y-%m-%d"),
         }
 
 

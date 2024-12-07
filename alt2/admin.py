@@ -1,8 +1,9 @@
-import os
 import datetime
+import os
+import pprint
 import requests
-import json
 import time
+import json
 
 from datetime import timezone, timedelta
 from flask_babelplus import lazy_gettext
@@ -183,7 +184,7 @@ def channel_table_new_data():
         for s in sort.split(','):
             direction = s[0]
             name = s[1:]
-            if name not in ['id', 'ytc_id', 'ytc_name']:
+            if name not in ['id', 'ytc_id', 'ytc_name', 'allow', 'delta', 'videos_total', 'video_newest']:
                 name = 'name'
             col = getattr(Source, name)
             if direction == '-':
@@ -197,6 +198,36 @@ def channel_table_new_data():
         'data': [source.to_dict() for source in query],
         'total': total,
     }
+
+
+@bp.route('/channel_table_new_data', methods=['POST'])
+def update():
+    data = request.get_json()
+#    pprint.pp(data)
+    if 'id' not in data:
+        abort(400)
+    source = db_session.get(Source, (data['id']))
+    for field in ['ytc_title']:
+        if field in data:
+            setattr(source, field, data[field])
+    #
+    # boolean fields must be converted from text to string
+    #
+    for field in ['allow']:
+        if field in data:
+            bool_field = util.string_boolean(data[field])
+            setattr(source, field, bool_field)
+    #
+    # delta is a timestamp and must be tweaked
+    #
+    for field in ['delta']:
+        if field in data:
+            intdays = int(data[field])
+            delta = timedelta(days=intdays)
+            setattr(source, field, delta)
+
+    db_session.commit()
+    return '', 204
 
 
 @bp.route('/add_channel', methods=['GET', 'POST'])

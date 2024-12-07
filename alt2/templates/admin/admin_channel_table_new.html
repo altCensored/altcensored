@@ -16,17 +16,31 @@
     </div>
   <script src="{{ url_for('static', filename='js/gridjs.umd.js') }}"></script>
     <script>
+      const tableDiv = document.getElementById('table');
+
       const updateUrl = (prev, query) => {
         return prev + (prev.indexOf('?') >= 0 ? '&' : '?') + new URLSearchParams(query).toString();
       };
 
+      const editableCellAttributes = (data, row, col) => {
+          if (row) {
+            return {contentEditable: 'true', 'data-element-id': row.cells[0].data};
+          }
+          else {
+            return {};
+          }
+      };
+
       new gridjs.Grid({
         columns: [
-          { id: 'id', name: 'ID' },
+          { id: 'id', 'hidden': true },
           { id: 'ytc_id', name: 'ytc_id' },
-          { id: 'ytc_title', name: 'ytc_title', sort: false },
-          { id: 'delta_short', name: 'delta_short', sort: false },
-        ],
+          { id: 'ytc_title', name: 'ytc_title', sort: false, 'attributes': editableCellAttributes },
+          { id: 'allow', name: 'allow', 'attributes': editableCellAttributes },
+          { id: 'delta', name: 'delta', sort: false, 'attributes': editableCellAttributes },
+          { id: 'videos_total', name: '# of vids', sort: false },
+          { id: 'video_newest', name: 'newest', sort: false },
+       ],
         server: {
           url: '{{ url_for('admin.channel_table_new_data') }}',
           then: results => results.data,
@@ -59,7 +73,44 @@
             },
           },
         },
-      }).render(document.getElementById('table'));
+      }).render(tableDiv);
+
+      let savedValue;
+
+      tableDiv.addEventListener('focusin', ev => {
+        if (ev.target.tagName === 'TD') {
+          savedValue = ev.target.textContent;
+        }
+      });
+
+      tableDiv.addEventListener('focusout', ev => {
+        if (ev.target.tagName === 'TD') {
+          if (savedValue !== ev.target.textContent) {
+            fetch('{{ url_for('admin.channel_table_new_data') }}', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({
+                id: ev.target.dataset.elementId,
+                [ev.target.dataset.columnId]: ev.target.textContent
+              }),
+            });
+          }
+          savedValue = undefined;
+        }
+      });
+
+      tableDiv.addEventListener('keydown', ev => {
+        if (ev.target.tagName === 'TD') {
+          if (ev.key === 'Escape') {
+            ev.target.textContent = savedValue;
+            ev.target.blur();
+          }
+          else if (ev.key === 'Enter') {
+            ev.preventDefault();
+            ev.target.blur();
+          }
+        }
+      });
     </script>
   </body>
 </html>

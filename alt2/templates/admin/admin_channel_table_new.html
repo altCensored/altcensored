@@ -67,6 +67,7 @@
         },
         pagination: {
           enabled: true,
+          limit: 25,
           server: {
             url: (prev, page, limit) => {
               return updateUrl(prev, {start: page * limit, length: limit});

@@ -166,7 +166,7 @@ def channel_table_new():
 @bp.route('/channel_table_new_data')
 @util.admin_login_required
 def channel_table_new_data():
-    query = db_session.query(Source)
+    query = db_session.query(Source).limit(25)
 
     # search filter
     search = request.args.get('search')

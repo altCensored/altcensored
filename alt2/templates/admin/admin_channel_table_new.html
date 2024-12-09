@@ -1,17 +1,36 @@
-<html>
-  <head>
-    <title>Server-Driven Table</title>
+{% extends 'base.html' %}
+{% block head %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/mermaid.min.css') }}">
-    <style>
-      body {
-        font-family: Sans-Serif;
-      }
-    </style>
-  </head>
-  <body>
+{% endblock %}
+
+{% block content %}
+
+    {% with active_nav='channel' %}
+        {% include "widgets/navtabs.html" %}
+    {% endwith %}
+<div class="pure-g">
+  <div class="pure-u-1 pure-u-md-2-24"></div>
+  <div class="pure-u-1 pure-u-md-20-24">
+
+                  <div class="pure-g">
+                    <div class="pure-u-1-3">
+                    </div>
+                    <div class="pure-u-1-3" style="text-align:center;">
+                        <a class="pure-menu-heading selected">
+                        {% if data == 'data_deleted' %}
+                        <span style="color: red; ">
+                            <b>{{ gettext('Table Deleted') }}</b></a>
+                        {% else %}
+                        <b>{{ gettext('Table All') }}</b></a>
+                        {% endif %}
+                    </div>
+                    <div class="pure-u-1-3">
+                    </div>
+                  </div>
+
+<p></p>
+
     <div>
-      <h1>Server-Driven Table</h1>
-      <hr>
       <div id="table"></div>
     </div>
   <script src="{{ url_for('static', filename='js/gridjs.umd.js') }}"></script>
@@ -34,18 +53,21 @@
       new gridjs.Grid({
         columns: [
           { id: 'id', 'hidden': true },
-          { id: 'ytc_id', name: 'ytc_id' },
-          { id: 'ytc_title', name: 'ytc_title', sort: false, 'attributes': editableCellAttributes },
-          { id: 'allow', name: 'allow', 'attributes': editableCellAttributes },
-          { id: 'delta', name: 'delta', sort: false, 'attributes': editableCellAttributes },
-          { id: 'videos_total', name: '# of vids', sort: false },
-          { id: 'video_newest', name: 'newest', sort: false },
-       ],
-        server: {
-          url: '{{ url_for('admin.channel_table_new_data') }}',
-          then: results => results.data,
-          total: results => results.total,
-        },
+          { id: 'ytc_id', 'hidden': true },
+          { id: 'ytc_title', name: 'Channel', sort: false, formatter: (cell, row) => {
+            return gridjs.html('<a href="{{ url_for('channel.index') }}' + row.cells[1].data + '" target="_blank">' + cell + '</a>');
+          }},
+          { id: 'total', name: 'T' },
+          { id: 'archived', name: 'A' },
+          { id: 'limited', name: 'C' },
+          { id: 'newest', name: 'Newest' },
+          { id: 'delta', name:  '\u0394', 'attributes': editableCellAttributes },
+          { id: 'allow', name: 'E', 'attributes': editableCellAttributes },
+          { id: 'ytc_archive', name: 'AF', 'attributes': editableCellAttributes },
+          { id: 'ytc_partarchive', name: 'AP', 'attributes': editableCellAttributes },
+          { id: 'was_full', name: 'WF', sort: false },
+          { id: 'was_part', name: 'WP', sort: false },
+        ],
         search: {
           enabled: true,
           server: {
@@ -54,12 +76,18 @@
             },
           },
         },
+        server: {
+          url: '{{ url_for('admin.channel_table_new_data') }}',
+          then: results => results.data,
+          total: results => results.total,
+        },
         sort: {
           enabled: true,
           multiColumn: true,
           server: {
             url: (prev, columns) => {
-              const columnIds = ['id', 'ytc_id', 'ytc_title', 'delta_short'];
+              const columnIds = ['id', 'ytc_id', 'ytc_title', 'total', 'archived', 'limited', 'newest',
+                 'delta', 'allow', 'ytc_archive', 'ytc_partarchive', 'was_full', 'was_part'];
               const sort = columns.map(col => (col.direction === 1 ? '+' : '-') + columnIds[col.index]);
               return updateUrl(prev, {sort});
             },
@@ -67,7 +95,7 @@
         },
         pagination: {
           enabled: true,
-          limit: 25,
+          limit: 30,
           server: {
             url: (prev, page, limit) => {
               return updateUrl(prev, {start: page * limit, length: limit});
@@ -113,5 +141,5 @@
         }
       });
     </script>
-  </body>
-</html>
+
+{% endblock %}

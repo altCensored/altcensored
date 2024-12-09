@@ -185,7 +185,8 @@ class Source(Entity):
     @hybrid_method
     def video_newest(self):
         return max(
-            [video.published for video in self.videos if video.published is not None]
+            [video.published for video in self.videos if video.published is not None],
+            default=datetime(1997, 1, 1)
         )
 
     @hybrid_method
@@ -193,20 +194,14 @@ class Source(Entity):
         return len([video for video in self.videos if video.live_status is not None])
 
     def to_dict(self):
-#        print(self.video())
-#        print(func.to_char(self.delta, 'dd'))
-#        print(self.delta)
-#        print(self.video_newest())
-#        print(self.video_newest().strftime("%m-%d-%Y"))
-#        print(self.allow)
         return {
             'id': self.id,
             'ytc_id': self.ytc_id,
             'ytc_title': self.ytc_title,
             'allow': format(self.allow),
             'delta': self.delta_short,
-            'videos_total': self.videos_total(),
-            'video_newest': self.video_newest().strftime("%Y-%m-%d"),
+            'videos_total': self.videos_total(), # 3x load time
+#            'video_newest': self.video_newest().strftime("%Y-%m-%d"),
         }
 
 
@@ -443,8 +438,11 @@ class Mv_Channel(Base):
     ytc_archive = Column(Boolean, nullable=False, default=False)
     allow = Column(Boolean, nullable=False, default=False)
     was_full = Column(Boolean, nullable=False, default=False)
+    was_part = Column(Boolean, nullable=False, default=False)
     delta = Column(DateTime, nullable=True)
+    delta_short = column_property(func.to_char(delta, 'dd'))
     newest_video = Column(DateTime, nullable=True)
+    newest = column_property(func.to_char(newest_video, 'yyyy-mm-dd'))
     ytc_deleteddate = Column(DateTime, nullable=True)
     ytc_addeddate = Column(DateTime, nullable=True)
     ytc_partarchive = Column(Boolean, nullable=False, default=False)
@@ -480,6 +478,22 @@ class Mv_Channel(Base):
     def archive(self):
         return self.ytc_archive | self.ytc_partarchive | self.ytc_latestarchive
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'ytc_id': self.ytc_id,
+            'ytc_title': self.ytc_title,
+            'allow': str(self.allow)[0],
+            'total': self.total,
+            'archived': self.archived,
+            'limited': self.limited,
+            'newest': self.newest,
+            'delta': self.delta_short,
+            'ytc_archive': str(self.ytc_archive)[0],
+            'ytc_partarchive': str(self.ytc_partarchive)[0],
+            'was_full': str(self.was_full)[0],
+            'was_part': str(self.was_part)[0],
+        }
 
 class Mv_Category(Base):
     __tablename__ = 'mv_category'

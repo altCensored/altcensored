@@ -166,15 +166,18 @@ def channel_table_new():
 @bp.route('/channel_table_new_data')
 @util.admin_login_required
 def channel_table_new_data():
-    query = db_session.query(Source).limit(25)
+#    query = db_session.query(Mv_Channel)
+#    query = db_session.query(Mv_Channel).filter(Mv_Channel.ytc_deleted)
+    query = db_session.query(Mv_Channel).filter(Mv_Channel.ytc_deleted == False)
 
     # search filter
     search = request.args.get('search')
     if search:
         query = query.filter(or_(
-            Source.ytc_id.like(f'%{search}%'),
-            Source.ytc_title.like(f'%{search}%')
+            Mv_Channel.ytc_id.like(f'%{search}%'),
+            Mv_Channel.ytc_title.like(f'%{search}%')
         ))
+
     total = query.count()
 
     # sorting
@@ -184,14 +187,20 @@ def channel_table_new_data():
         for s in sort.split(','):
             direction = s[0]
             name = s[1:]
-            if name not in ['id', 'ytc_id', 'ytc_name', 'allow', 'delta', 'videos_total', 'video_newest']:
+            if name not in ['total', 'archived', 'limited', 'newest', 'delta', 'allow', 'ytc_archive', 'ytc_partarchive']:
                 name = 'name'
-            col = getattr(Source, name)
+            col = getattr(Mv_Channel, name)
             if direction == '-':
                 col = col.desc()
             order.append(col)
         if order:
             query = query.order_by(*order)
+
+    # pagination
+    start = request.args.get('start', type=int, default=-1)
+    length = request.args.get('length', type=int, default=-1)
+    if start != -1 and length != -1:
+        query = query.offset(start).limit(length)
 
     # response
     return {
@@ -203,17 +212,18 @@ def channel_table_new_data():
 @bp.route('/channel_table_new_data', methods=['POST'])
 def update():
     data = request.get_json()
-#    pprint.pp(data)
+    pprint.pp(data)
     if 'id' not in data:
         abort(400)
     source = db_session.get(Source, (data['id']))
+    pprint.pp(source)
     for field in ['ytc_title']:
         if field in data:
             setattr(source, field, data[field])
     #
     # boolean fields must be converted from text to string
     #
-    for field in ['allow']:
+    for field in ['allow', 'ytc_archive', 'ytc_partarchive']:
         if field in data:
             bool_field = util.string_boolean(data[field])
             setattr(source, field, bool_field)

@@ -187,7 +187,7 @@ def channel_table_new_data():
         for s in sort.split(','):
             direction = s[0]
             name = s[1:]
-            if name not in ['total', 'archived', 'limited', 'newest', 'delta', 'allow', 'ytc_archive', 'ytc_partarchive']:
+            if name not in ['total', 'archived', 'limited', 'newest', 'delta', 'allow', 'ytc_archive', 'ytc_partarchive', 'was_full', 'was_part']:
                 name = 'name'
             col = getattr(Mv_Channel, name)
             if direction == '-':

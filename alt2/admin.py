@@ -174,8 +174,8 @@ def channel_table_new_data():
     search = request.args.get('search')
     if search:
         query = query.filter(or_(
-            Mv_Channel.ytc_id.like(f'%{search}%'),
-            Mv_Channel.ytc_title.like(f'%{search}%')
+            Mv_Channel.ytc_id.ilike(f'%{search}%'),
+            Mv_Channel.ytc_title.ilike(f'%{search}%')
         ))
 
     total = query.count()

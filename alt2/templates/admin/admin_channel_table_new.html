@@ -57,16 +57,18 @@
           { id: 'ytc_title', name: 'Channel', sort: false, formatter: (cell, row) => {
             return gridjs.html('<a href="{{ url_for('channel.index') }}' + row.cells[1].data + '" target="_blank">' + cell + '</a>');
           }},
-          { id: 'total', name: 'T' },
-          { id: 'archived', name: 'A' },
-          { id: 'limited', name: 'C' },
-          { id: 'newest', name: 'Newest' },
-          { id: 'delta', name:  '\u0394', 'attributes': editableCellAttributes },
-          { id: 'allow', name: 'E', 'attributes': editableCellAttributes },
-          { id: 'ytc_archive', name: 'AF', 'attributes': editableCellAttributes },
-          { id: 'ytc_partarchive', name: 'AP', 'attributes': editableCellAttributes },
-          { id: 'was_full', name: 'WF' },
-          { id: 'was_part', name: 'WP' },
+          { id: 'ytc_videocount', name: 'YT', width: '6%' },
+          { id: 'total', name: 'T', width: '6%' },
+          { id: 'archived', name: 'A', width: '6%' },
+          { id: 'limited', name: 'C', width: '6%' },
+          { id: 'newest', name: 'Newest', width: '9%' },
+          { id: 'updated', name: 'Updated', width: '9%' },
+          { id: 'delta', name:  '\u0394', 'attributes': editableCellAttributes, width: '6%' },
+          { id: 'allow', name: 'E', 'attributes': editableCellAttributes, width: '5%' },
+          { id: 'ytc_archive', name: 'AF', 'attributes': editableCellAttributes, width: '6%' },
+          { id: 'ytc_partarchive', name: 'AP', 'attributes': editableCellAttributes, width: '6%' },
+          { id: 'was_full', name: 'WF', width: '6%' },
+          { id: 'was_part', name: 'WP', width: '6%' },
         ],
         search: {
           enabled: true,
@@ -86,8 +88,8 @@
           multiColumn: true,
           server: {
             url: (prev, columns) => {
-              const columnIds = ['id', 'ytc_id', 'ytc_title', 'total', 'archived', 'limited', 'newest',
-                 'delta', 'allow', 'ytc_archive', 'ytc_partarchive', 'was_full', 'was_part'];
+              const columnIds = ['id', 'ytc_id', 'ytc_title', 'ytc_videocount', 'total', 'archived', 'limited', 'newest',
+                 'updated', 'delta', 'allow', 'ytc_archive', 'ytc_partarchive', 'was_full', 'was_part'];
               const sort = columns.map(col => (col.direction === 1 ? '+' : '-') + columnIds[col.index]);
               return updateUrl(prev, {sort});
             },

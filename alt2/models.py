@@ -144,6 +144,7 @@ class Source(Entity):
     was_full = Column(Boolean, nullable=False, default=False)
     was_part = Column(Boolean, nullable=False, default=False)
     ytc_thumbnail = Column(String, nullable=True)
+    ytc_moddate = Column(DateTime, nullable=True)
 
     videos = relationship(
         "Video", secondary=Sources_to_Videos, back_populates="sources"
@@ -447,6 +448,10 @@ class Mv_Channel(Base):
     ytc_addeddate = Column(DateTime, nullable=True)
     ytc_partarchive = Column(Boolean, nullable=False, default=False)
     ytc_latestarchive = Column(Boolean, nullable=False, default=False)
+    ytc_moddate = Column(DateTime, nullable=True)
+    updated = column_property(func.to_char(ytc_moddate, 'yyyy-mm-dd'))
+    ytc_videocount = Column(Integer, nullable=True)
+
 
     def __init__(self, ytc_id=None, ytc_title=None):
         self.id = id
@@ -493,6 +498,8 @@ class Mv_Channel(Base):
             'ytc_partarchive': str(self.ytc_partarchive)[0],
             'was_full': str(self.was_full)[0],
             'was_part': str(self.was_part)[0],
+            'updated': self.updated,
+            'ytc_videocount': self.ytc_videocount,
         }
 
 class Mv_Category(Base):

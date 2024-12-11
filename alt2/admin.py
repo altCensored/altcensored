@@ -427,7 +427,7 @@ def mirror_channel():
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
         action = ' mirror '
         cookie = ' -cf $COOKIE_FILE '
-        resync = ' -ur '
+        resync = ' -ur -i '
 
         params1 = ' nohup yt-syncac '
         params2 = ' -f > /root/nohup_ssh.out 2>&1 &'

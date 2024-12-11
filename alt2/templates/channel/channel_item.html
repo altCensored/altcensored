@@ -83,8 +83,8 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
                 <h3>{{ channel['ytc_title'] }}</h3></a>
             {% if channel['ytc_deleted'] %}
             <div class="shareon" data-url="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}"
-                 data-title="YouTube Channel {{channel['ytc_title']|truncate(60,False,'')|pprint}} TERMINATED {{channel['ytc_deleteddate'].strftime('%m/%d/%y')}}; {{channel['limited']}} #Censored Videos
-(Watch/Share #Censored videos: together we show what they hide) #RemovedFromYouTube #FreeSpeech">
+                 data-title="YouTube Channel {{channel['ytc_title']|truncate(60,False,'')|pprint}} TERMINATED {{channel['ytc_deleteddate'].strftime('%m/%d/%y')}}; {{channel['limited']}} Censored Videos #RemovedFromYouTube #FreeSpeech
+(Watch/Share #Censored videos: together we show what they hide)">
             {% elif channel['limited'] %}
             <div class="shareon" data-url="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}"
                  data-title="YouTube Channel {{channel['ytc_title']|truncate(60,False,'')|pprint}} being Archived in case of Removal; {{channel['limited']}} #Censored Videos

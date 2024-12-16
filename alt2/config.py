@@ -7,7 +7,7 @@ SECURITY_PASSWORD_SALT=os.getenv('SECURITY_PASSWORD_SALT')
 MYSERVER_NAME_SHORT="altCensored"
 MYSERVER_NAME="altCensored.com"
 MYSERVER_URL="https://altCensored.com"
-MYSERVER_TEST_URL="https://altCensored.com"
+MYSERVER_TEST_URL="http://127.0.0.1:5000"
 VIDEO_THUMB_ERROR_IMAGE="https://altCensored.com/image_error.webp"
 CHANNEL_THUMB_ERROR_IMAGE="https://altCensored.com/channel_unnamed.jpg"
 
@@ -77,4 +77,6 @@ AC_S3_SECRET_KEY=os.getenv('AC_S3_SECRET_KEY')
 
 #FLASH_MSG = 'Download preferred videos, Internet Archive is <a href=https://archive.org/details/youtube-Gv4jjFgIP_g class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">limiting access on some items</a>'
 #FLASH_MSG  = "Download preferred videos, Internet Archive is limiting access"
-FLASH_MSG = None
+#FLASH_MSG = None
+FLASH_MSG = 'We need your <a href=donate class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">help</a> as our expenses have <a href=donate class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">increased</a>'
+

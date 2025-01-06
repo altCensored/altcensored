@@ -563,3 +563,8 @@ class Mv_Altcen_user(Base):
     def __repr__(self):
         return '<Mv_Altcen_user %r>' % (self.id)
 
+
+class IA_User(Base):
+    __tablename__ = 'ia_user'
+#    id = Column(Integer, primary_key=True, nullable=False)
+    name = Column(String, primary_key=True, nullable=False)

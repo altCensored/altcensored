@@ -427,7 +427,7 @@ def mirror_channel():
         channel_id = (request.form['channel_id'])
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
         action = ' mirror '
-        cookie = ' -cf $COOKIE_FILE '
+        cookie = ' -cf $IA_COOKIES '
         resync = ' -ur -i '
 
         params1 = ' nohup yt-syncac '

@@ -77,7 +77,6 @@ AC_S3_SECRET_KEY=os.getenv('AC_S3_SECRET_KEY')
 
 #FLASH_MSG = 'Download preferred videos, Internet Archive is <a href=https://archive.org/details/youtube-Gv4jjFgIP_g class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">limiting access on some items</a>'
 #FLASH_MSG  = "Download preferred videos, Internet Archive is limiting access"
-#FLASH_MSG = None
-FLASH_MSG = 'We need your <a href=https://altcensored.com/donate class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">help</a>; expenses have <a href=https://altcensored.com/donate class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">increased</a>'
-FLASH_MSG = '<a href=https://altcensored.com/donate class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">We Need Your Help</a>'
+FLASH_MSG = None
+#FLASH_MSG = '<a href=https://altcensored.com/donate class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">We Need Your Help</a>'
 

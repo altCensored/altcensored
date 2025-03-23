@@ -619,7 +619,7 @@ def add_key_to_conn(data_raw, newkey, node, privkey, node_fqdn):
     encoded_ascii = encoded.decode('ascii')
 
     now = datetime.datetime.now(timezone.utc)
-    vpn_conn = Vpn_conn(\
+    vpn_conn = Vpn_conn(
         publickey=data_raw['publicKey'], vpn_node_name=node, altcen_user_id=session['user']['id'], privatekey=privkey, \
         sharedkey=data_raw['presharedKey'], key_id=newkey['keyID'], bw_limit=data_raw['bwLimit'], bw_used=0, \
         sub_expiry=data_raw['subExpiry'], expired=False, enabled=True, allowedips=newkey['allowedIPs'], dns=newkey['dns'], \

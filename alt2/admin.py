@@ -449,8 +449,7 @@ def status_channel():
         channel_id = (request.form['channel_id'])
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
         action = ' status '
-
-        params1 = ' yt-syncac '
+        params1 = ' yt-syncac -q '
 
         command = params1 + action + channel_url
         commands = [command]

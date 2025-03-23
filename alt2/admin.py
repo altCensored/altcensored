@@ -271,7 +271,8 @@ def add_channel():
 @util.admin_login_required
 def update_channel():
     title = request.args.get('title', 'Update')
-    atype = request.args.get('atype', 'null')
+#    atype = request.args.get('atype', 'null')
+    atype = request.args.get('atype', 'partial')
     ddays = request.args.get('ddays', '')
 
     if request.method == 'POST':

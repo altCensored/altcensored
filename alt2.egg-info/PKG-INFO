@@ -1,4 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.2
 Name: alt2
 Version: 0.0.0
 License-File: LICENSE
+Requires-Dist: flask
+Dynamic: requires-dist

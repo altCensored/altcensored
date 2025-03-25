@@ -63,8 +63,8 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
                     {% else %}
 
                     {% endif %}
-                    &nbsp;<b><a style="width:100%;" href="https://www.youtube.com/channel/{{ channel['ytc_id'] }}" target="_blank">YouTube {{ gettext('Channel') }}</a></b><br>
-                    &nbsp;<b><a style="width:100%;" href="https://www.socialblade.com/youtube/channel/{{ channel['ytc_id'] }}" target="_blank">SocialBlade {{ gettext('Stats') }}</a></b>
+                    &nbsp;<b><a style="width:100%;" href="https://youtube.com/channel/{{ channel['ytc_id'] }}" target="_blank">YouTube {{ gettext('Channel') }}</a></b><br>
+                    &nbsp;<b><a style="width:100%;" href="https://socialblade.com/youtube/channel/{{ channel['ytc_id'] }}" target="_blank">SocialBlade {{ gettext('Stats') }}</a></b>
                   <p></p>
                       <b>&nbsp;{{ gettext('Created:') }} {{ channel['ytc_publishedat'].strftime('%b %e, %G') }}</b><br>
                       &nbsp;({{ gettext('Added') }} {{ channel['ytc_addeddate'].strftime('%b %e, %G') }})<br>

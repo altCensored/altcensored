@@ -269,9 +269,6 @@ def embed(video_id):
                    secret_key=current_app.config['AC_S3_SECRET_KEY']
                    )
 
-    if ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id):
-        video_url = VIDEOSERVER_URL + video_id + "/" + video_id
-
     entity_video = Entity.query.filter(Entity.extractor_data == video_id).scalar()
 
     ip = request.headers.get('X-Forwarded-For', request.remote_addr)
@@ -289,6 +286,10 @@ def embed(video_id):
         entity_video.ac_views = entity_video.ac_views + 1
         flag_modified(entity_video, "ac_views")
         db_session.commit()
+
+
+    if ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id):
+        video_url = VIDEOSERVER_URL + video_id + "/" + video_id
 
     else:
         ia = get_session()

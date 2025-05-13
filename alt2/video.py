@@ -12,7 +12,7 @@ from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_us
 from .pagination import Pagination
 import json, datetime
 from .util import (videos_latest, videos_newest, videos_popular, get_videocount, get_playnext,
-                   get_video_files, check_video_files, ac_object_exist, site_is_online)
+                   get_video_files, check_video_files, ac_object_exist, site_is_online, videos_trending)
 from minio import Minio
 from . import config
 
@@ -27,8 +27,8 @@ CHANN_MAX_RESULT = 28
 @bp.route('/page/<int:page>')
 def index(page):
     offset = ((int(page) - 1) * PER_PAGE)
-    order = 'latest'
-    videos = videos_latest(PER_PAGE, offset)
+    order = 'trending'
+    videos = videos_trending(PER_PAGE, offset)
     if not videos and page != 1:
         abort(404)
     session['videocount'] = get_videocount()

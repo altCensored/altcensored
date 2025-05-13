@@ -2,11 +2,10 @@ import os
 from flask import (
     Blueprint, render_template, request, make_response, session, current_app, abort, flash)
 from flask_babelplus import lazy_gettext
-from internetarchive import get_item, download, get_session
+from internetarchive import get_session
 from markupsafe import Markup
 from sqlalchemy import func, text, case, select
 from sqlalchemy.orm.attributes import flag_modified
-from urllib import parse
 
 from .database import db_session
 from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_user, User, Playlist, Counter, Entity
@@ -303,9 +302,9 @@ def embed(video_id):
                     filename = os.path.splitext(full_filename)[0]
                     video_url = IARCHIVEURL + video_id + "/" + filename
 
-        else:
-            NEW_FLASH_MSG = 'Internet Archive has limited access on <a href=' + video_url_download + ' class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">this item</a>'
-            video_url = VIDEOSERVER_URL + 'unavailable/unavailable'
+#        else:
+#            NEW_FLASH_MSG = 'Internet Archive has limited access on <a href=' + video_url_download + ' class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">this item</a>'
+#            video_url = VIDEOSERVER_URL + 'unavailable/unavailable'
 
     next_video = None
 

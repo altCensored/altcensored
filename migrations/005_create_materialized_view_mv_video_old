@@ -19,6 +19,7 @@ AS SELECT entity.id,
     entity.exists_ia,
     entity.restricted_ia,
     entity.exists_ac,
+    entity.ia_views,
     source.ytc_title,
     source.ytc_id,
     setweight(to_tsvector(COALESCE(entity.extractor_data, ''::character varying)::text), 'C'::"char") || (setweight(to_tsvector(COALESCE(entity.title, ''::character varying)::text), 'C'::"char") || (setweight(to_tsvector(COALESCE(entity.description, ''::character varying)::text), 'C'::"char") || (setweight(to_tsvector(COALESCE(entity.category, ''::character varying)::text), 'D'::"char") || (setweight(to_tsvector(COALESCE(source.ytc_title, ''::character varying)::text), 'C'::"char") || (setweight(to_tsvector(COALESCE(source.ytc_id, ''::character varying)::text), 'D'::"char") || setweight(to_tsvector(COALESCE(entity.tags, ''::character varying)::text), 'D'::"char")))))) AS document

@@ -9,9 +9,9 @@ from sqlalchemy.orm.attributes import flag_modified
 from urllib import parse
 
 from .database import db_session
-from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_user, User, Playlist
+from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_user, User, Playlist, Counter, Entity
 from .pagination import Pagination
-import json
+import json, datetime
 from .util import (videos_latest, videos_newest, videos_popular, get_videocount, get_playnext,
                    get_video_files, check_video_files, ac_object_exist, site_is_online)
 from minio import Minio
@@ -271,6 +271,24 @@ def embed(video_id):
 
     if ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id):
         video_url = VIDEOSERVER_URL + video_id + "/" + video_id
+
+    entity_video = Entity.query.filter(Entity.extractor_data == video_id).scalar()
+
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    header = request.headers.get('User-Agent')
+    today = str(datetime.date.today())
+    myhash = hash(ip+header+today+str(entity_video.extractor_data))
+
+    if Counter.query.filter(Counter.hash == myhash).scalar() is None:
+        counter = Counter (hash=myhash)
+        db_session.add(counter)
+
+        if entity_video.ac_views is None:
+            entity_video.ac_views = 0
+
+        entity_video.ac_views = entity_video.ac_views + 1
+        flag_modified(entity_video, "ac_views")
+        db_session.commit()
 
     else:
         ia = get_session()

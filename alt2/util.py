@@ -15,7 +15,7 @@ from itsdangerous import URLSafeTimedSerializer
 from mailjet_rest import Client
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-from sqlalchemy import func
+from sqlalchemy import func, nullslast
 from urllib.parse import urlparse
 
 from .database import db_session
@@ -706,7 +706,7 @@ def reset_conns():
 
 @cache.cached(key_prefix="data"+"%s")
 def videos_trending(PER_PAGE, offset):
-    video_values = db_session.execute(db_session.query(Mv_Video).order_by(Mv_Video.ac_views.desc()).limit(PER_PAGE).offset(offset))
+    video_values = db_session.execute(db_session.query(Mv_Video).order_by(nullslast(Mv_Video.ac_views.desc())).limit(PER_PAGE).offset(offset))
     videos = [r[0] for r in video_values]
     return videos
 

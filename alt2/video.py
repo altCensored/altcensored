@@ -189,7 +189,6 @@ def watch():
 
     else:
         ia_meta = IARCHIVEMETAURL+video_id
-        print(ia_meta)
 
 #        if site_is_online(ia_meta):
         ia = get_session()

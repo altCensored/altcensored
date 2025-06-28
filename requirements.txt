@@ -43,6 +43,7 @@ pycparser
 pyparsing
 python-dateutil
 python-http-client
+pysocks
 pytz
 qrcode
 redis

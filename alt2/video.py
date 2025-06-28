@@ -201,6 +201,8 @@ def watch():
                 if full_filename:
                     filename = os.path.splitext(full_filename)[0]
                     video_url = IARCHIVEURL + video_id + "/" + filename
+                else:
+                    video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
 
         else:
             NEW_FLASH_MSG = f'Internet Archive has limited access on <a href={video_url_download} class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">this item</a>'

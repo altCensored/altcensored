@@ -174,8 +174,9 @@ def watch():
 
     IARCHIVEURL = current_app.config['IARCHIVEURL']
     IARCHIVEITEMURL = current_app.config['IARCHIVEITEMURL']
-    IARCHIVEMETAURL = current_app.config['IARCHIVEMETAURL']
+#    IARCHIVEMETAURL = current_app.config['IARCHIVEMETAURL']
     VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
+    video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
     video_url_short = IARCHIVEURL + video_id + "/"
     video_url_download = IARCHIVEITEMURL + video_id
 
@@ -188,9 +189,9 @@ def watch():
         video_url = VIDEOSERVER_URL + video_id + "/" + video_id
 
     else:
-        ia_meta = IARCHIVEMETAURL+video_id
-
+#        ia_meta = IARCHIVEMETAURL+video_id
 #        if site_is_online(ia_meta):
+
         ia = get_session()
         ia_item = ia.get_item('youtube-' + video_id)
 
@@ -201,14 +202,10 @@ def watch():
                 if full_filename:
                     filename = os.path.splitext(full_filename)[0]
                     video_url = IARCHIVEURL + video_id + "/" + filename
-                else:
-                    video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
 
         else:
             NEW_FLASH_MSG = f'Internet Archive has limited access on <a href={video_url_download} class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">this item</a>'
-            video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
-#        else:
-#            abort(503)
+
 
     playlist_titles = []
     not_in_watchlater = None

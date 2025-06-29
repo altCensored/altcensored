@@ -1,18 +1,16 @@
 import os
 from flask import (
     Blueprint, render_template, request, make_response, session, current_app, abort, flash)
-from flask_babelplus import lazy_gettext
-from internetarchive import get_session
 from markupsafe import Markup
 from sqlalchemy import func, text, case, select
 from sqlalchemy.orm.attributes import flag_modified
-
+from threading import Thread
 from .database import db_session
 from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_user, User, Playlist, Counter, Entity
 from .pagination import Pagination
 import json, datetime
-from .util import (videos_latest, videos_newest, videos_popular, get_videocount, get_playnext,
-                   get_video_files, check_video_files, ac_object_exist, site_is_online, videos_trending, MyClass2)
+from .util import (videos_newest, videos_popular, get_videocount, get_playnext,
+                   get_video_files, check_video_files, ac_object_exist, videos_trending, MyClass2, increment_video_counter)
 from minio import Minio
 from . import config
 
@@ -175,7 +173,6 @@ def watch():
 
     IARCHIVEURL = current_app.config['IARCHIVEURL']
     IARCHIVEITEMURL = current_app.config['IARCHIVEITEMURL']
-#    IARCHIVEMETAURL = current_app.config['IARCHIVEMETAURL']
     VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
     video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
     video_url_short = IARCHIVEURL + video_id + "/"
@@ -269,24 +266,9 @@ def embed(video_id):
                    secret_key=current_app.config['AC_S3_SECRET_KEY']
                    )
 
-    entity_video = Entity.query.filter(Entity.extractor_data == video_id).scalar()
-
     ip = request.headers.get('X-Forwarded-For', request.remote_addr)
     header = request.headers.get('User-Agent')
-    today = str(datetime.date.today())
-    myhash = hash(ip+header+today+str(entity_video.extractor_data))
-
-    if Counter.query.filter(Counter.hash == myhash).scalar() is None:
-        counter = Counter (hash=myhash)
-        db_session.add(counter)
-
-        if entity_video.ac_views is None:
-            entity_video.ac_views = 0
-
-        entity_video.ac_views = entity_video.ac_views + 1
-        flag_modified(entity_video, "ac_views")
-        db_session.commit()
-
+    Thread(target=increment_video_counter, args=(video_id, ip, header)).start()
 
     if ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id):
         video_url = VIDEOSERVER_URL + video_id + "/" + video_id

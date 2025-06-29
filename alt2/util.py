@@ -19,9 +19,11 @@ from sendgrid.helpers.mail import Mail
 from sqlalchemy import func, nullslast
 from urllib.parse import urlparse
 
+from sqlalchemy.orm.attributes import flag_modified
+
 from .database import db_session
 from .models import Translation, Playlist, Mv_Channel, Mv_Video, User, \
-    Email_list, Channels, Channels_part, Vpn_node, Vpn_conn, Entity, Source
+    Email_list, Channels, Channels_part, Vpn_node, Vpn_conn, Entity, Source, Counter
 from . import config
 from .cache import cache
 
@@ -1011,6 +1013,20 @@ def site_is_online(url, timeout=1):
 #    raise error
     return False
 
+def increment_video_counter(video_id, ip, header):
+    entity_video = Entity.query.filter(Entity.extractor_data == video_id).scalar()
+    today = str(datetime.date.today())
+    myhash = hash(ip+header+today+str(entity_video.extractor_data))
+    if Counter.query.filter(Counter.hash == myhash).scalar() is None:
+        counter = Counter (hash=myhash)
+        db_session.add(counter)
+
+        if entity_video.ac_views is None:
+            entity_video.ac_views = 0
+
+        entity_video.ac_views = entity_video.ac_views + 1
+        flag_modified(entity_video, "ac_views")
+        db_session.commit()
 
 class MyClass2:
     def __init__(self, value):

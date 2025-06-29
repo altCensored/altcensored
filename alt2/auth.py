@@ -1,7 +1,6 @@
 import datetime
 import json
 from datetime import timezone
-from threading import Thread
 from flask import (
     Blueprint, redirect, request, session, render_template, flash, url_for
 )

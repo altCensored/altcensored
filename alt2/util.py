@@ -11,6 +11,7 @@ from flask import (
 from flask_babelplus import lazy_gettext
 from http.client import HTTPSConnection
 from io import BytesIO
+from internetarchive import ArchiveSession, get_files
 from itsdangerous import URLSafeTimedSerializer
 from mailjet_rest import Client
 from sendgrid import SendGridAPIClient
@@ -1009,3 +1010,31 @@ def site_is_online(url, timeout=1):
             connection.close()
 #    raise error
     return False
+
+
+class MyClass2:
+    def __init__(self, value):
+        """
+        The constructor method, called when a new instance of the class is created.
+        It initializes the 'data' attribute of the instance.
+        """
+        s = ArchiveSession()
+        self.data = s.get_item(identifier=value)
+        self.exists = self.data.exists
+        self.is_dark = self.data.is_dark
+        self.metadata = self.data.metadata
+        self.get_files = self.data.get_files
+        self.item_metadata = self.data.item_metadata
+
+    def display_data(self):
+        """
+        A method to display the 'data' attribute of the instance.
+        """
+        print(f"The data is: {self.data}")
+
+    def modify_data(self, new_value):
+        """
+        A method to modify the 'data' attribute of the instance.
+        """
+        self.data = new_value
+        print(f"Data modified to: {self.data}")

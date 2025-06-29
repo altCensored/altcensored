@@ -12,7 +12,7 @@ from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_us
 from .pagination import Pagination
 import json, datetime
 from .util import (videos_latest, videos_newest, videos_popular, get_videocount, get_playnext,
-                   get_video_files, check_video_files, ac_object_exist, site_is_online, videos_trending)
+                   get_video_files, check_video_files, ac_object_exist, site_is_online, videos_trending, MyClass2)
 from minio import Minio
 from . import config
 
@@ -22,6 +22,7 @@ FLASH_MSG = config.FLASH_MSG
 PER_PAGE = 24
 CHANN_MAX_RESULT = 28
 
+ia_item = None
 
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
@@ -189,11 +190,9 @@ def watch():
         video_url = VIDEOSERVER_URL + video_id + "/" + video_id
 
     else:
-#        ia_meta = IARCHIVEMETAURL+video_id
-#        if site_is_online(ia_meta):
-
-        ia = get_session()
-        ia_item = ia.get_item('youtube-' + video_id)
+        global ia_item
+        ia_value = 'youtube-' + video_id#
+        ia_item = MyClass2(ia_value)
 
         if ia_item.exists and not ia_item.is_dark and "access-restricted-item" not in ia_item.metadata  and "altcen_hosted" not in ia_item.metadata:
             video_files = [f.name for f in get_video_files(ia_item)]
@@ -293,8 +292,10 @@ def embed(video_id):
         video_url = VIDEOSERVER_URL + video_id + "/" + video_id
 
     else:
-        ia = get_session()
-        ia_item = ia.get_item('youtube-' + video_id)
+        ia_value = 'youtube-' + video_id#
+        global ia_item
+        if not ia_item:
+            ia_item = MyClass2(ia_value)
 
         if ia_item.exists and not ia_item.is_dark and "access-restricted-item" not in ia_item.metadata and "altcen_hosted" not in ia_item.metadata:
             video_files = [f.name for f in get_video_files(ia_item)]

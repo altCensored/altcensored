@@ -436,7 +436,8 @@ def mirror_channel():
 
         command = params1 + action + channel_url + cookie + resync + params2
         commands = [command]
-        ssh_command(sys_name, commands)
+#        ssh_command(sys_name, commands)
+        local_command(commands)
 
     return render_template('admin/admin_channels.html', title=title)
 

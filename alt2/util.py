@@ -984,7 +984,16 @@ def check_video_files(ia_item):
     for x in files_list:
         if x['source']=='original' and any (ext in x['name'] for ext in extensionsToCheck):
             filename = (x.get("name"))
-    return (filename)
+    return filename
+
+def get_video_files_2(ia_item):
+    files_list = (ia_item.item_metadata['files'])
+    extensionsToCheck = ['.webm', '.mp4', '.ogv', '.mkv']
+    filename = None
+    for x in files_list:
+        if x['source']=='original' and any (ext in x['name'] for ext in extensionsToCheck):
+            filename = (x.get("name"))
+    return filename
 
 
 def ac_object_exist(client, s3_bucket, itemname: str) -> bool:

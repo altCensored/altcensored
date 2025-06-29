@@ -1,16 +1,17 @@
 import os
 from flask import (
     Blueprint, render_template, request, make_response, session, current_app, abort, flash)
+from internetarchive import get_session
 from markupsafe import Markup
 from sqlalchemy import func, text, case, select
 from sqlalchemy.orm.attributes import flag_modified
 from threading import Thread
 from .database import db_session
-from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_user, User, Playlist, Counter, Entity
+from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_user, User, Playlist
 from .pagination import Pagination
-import json, datetime
+import json
 from .util import (videos_newest, videos_popular, get_videocount, get_playnext,
-                   get_video_files, check_video_files, ac_object_exist, videos_trending, MyClass2, increment_video_counter)
+                   ac_object_exist, videos_trending, get_video_files_2, increment_video_counter)
 from minio import Minio
 from . import config
 
@@ -189,15 +190,22 @@ def watch():
     else:
         global ia_item
         ia_value = 'youtube-' + video_id#
-        ia_item = MyClass2(ia_value)
+        ia = get_session()
+        ia_item = ia.get_item(ia_value)
+#        ia_item = MyClass2(ia_value)
+
 
         if ia_item.exists and not ia_item.is_dark and "access-restricted-item" not in ia_item.metadata  and "altcen_hosted" not in ia_item.metadata:
-            video_files = [f.name for f in get_video_files(ia_item)]
-            if video_files:
-                full_filename = check_video_files(ia_item)
-                if full_filename:
-                    filename = os.path.splitext(full_filename)[0]
-                    video_url = IARCHIVEURL + video_id + "/" + filename
+            full_filename = get_video_files_2(ia_item)
+            filename = os.path.splitext(full_filename)[0]
+            video_url = IARCHIVEURL + video_id + "/" + filename
+
+#            video_files = [f.name for f in get_video_files(ia_item)]
+#            if video_files:
+#                full_filename = check_video_files(ia_item)
+#                if full_filename:
+#                    filename = os.path.splitext(full_filename)[0]
+#                    video_url = IARCHIVEURL + video_id + "/" + filename
 
         else:
             NEW_FLASH_MSG = f'Internet Archive has limited access on <a href={video_url_download} class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">this item</a>'
@@ -277,15 +285,21 @@ def embed(video_id):
         ia_value = 'youtube-' + video_id#
         global ia_item
         if not ia_item:
-            ia_item = MyClass2(ia_value)
+            ia = get_session()
+            ia_item = ia.get_item(ia_value)
+#            ia_item = MyClass2(ia_value)
 
         if ia_item.exists and not ia_item.is_dark and "access-restricted-item" not in ia_item.metadata and "altcen_hosted" not in ia_item.metadata:
-            video_files = [f.name for f in get_video_files(ia_item)]
-            if video_files:
-                full_filename = check_video_files(ia_item)
-                if full_filename:
-                    filename = os.path.splitext(full_filename)[0]
-                    video_url = IARCHIVEURL + video_id + "/" + filename
+            full_filename = get_video_files_2(ia_item)
+            filename = os.path.splitext(full_filename)[0]
+            video_url = IARCHIVEURL + video_id + "/" + filename
+
+#            video_files = [f.name for f in get_video_files(ia_item)]
+#            if video_files:
+#                full_filename = check_video_files(ia_item)
+#                if full_filename:
+#                    filename = os.path.splitext(full_filename)[0]
+#                    video_url = IARCHIVEURL + video_id + "/" + filename
 
 #        else:
 #            NEW_FLASH_MSG = 'Internet Archive has limited access on <a href=' + video_url_download + ' class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">this item</a>'

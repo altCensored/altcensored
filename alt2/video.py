@@ -187,28 +187,10 @@ def watch():
     if ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id):
         video_url = VIDEOSERVER_URL + video_id + "/" + video_id
 
-#    else:
-#        global ia_item
-#        ia_value = 'youtube-' + video_id#
-#        ia = get_session()
-##        ia_item = MyClass2(ia_value)
-
-
-        if ia_item.exists and not ia_item.is_dark and "access-restricted-item" not in ia_item.metadata  and "altcen_hosted" not in ia_item.metadata:
-            full_filename = get_video_files_2(ia_item)
-            filename = os.path.splitext(full_filename)[0]
-            video_url = IARCHIVEURL + video_id + "/" + filename
-
-#            video_files = [f.name for f in get_video_files(ia_item)]
-#            if video_files:
-#                full_filename = check_video_files(ia_item)
-#                if full_filename:
-#                    filename = os.path.splitext(full_filename)[0]
-#                    video_url = IARCHIVEURL + video_id + "/" + filename
-
-        else:
-            NEW_FLASH_MSG = f'Internet Archive has limited access on <a href={video_url_download} class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">this item</a>'
-
+    else:
+        full_filename = video.thumbnail
+        filename = os.path.splitext(full_filename)[0]
+        video_url = IARCHIVEURL + video_id + "/" + filename
 
     playlist_titles = []
     not_in_watchlater = None
@@ -281,28 +263,10 @@ def embed(video_id):
         video_url = VIDEOSERVER_URL + video_id + "/" + video_id
 
     else:
-        ia_value = 'youtube-' + video_id#
-        global ia_item
-        if not ia_item:
-            ia = get_session()
-            ia_item = ia.get_item(ia_value)
-#            ia_item = MyClass2(ia_value)
-
-        if ia_item.exists and not ia_item.is_dark and "access-restricted-item" not in ia_item.metadata and "altcen_hosted" not in ia_item.metadata:
-            full_filename = get_video_files_2(ia_item)
-            filename = os.path.splitext(full_filename)[0]
-            video_url = IARCHIVEURL + video_id + "/" + filename
-
-#            video_files = [f.name for f in get_video_files(ia_item)]
-#            if video_files:
-#                full_filename = check_video_files(ia_item)
-#                if full_filename:
-#                    filename = os.path.splitext(full_filename)[0]
-#                    video_url = IARCHIVEURL + video_id + "/" + filename
-
-#        else:
-#            NEW_FLASH_MSG = 'Internet Archive has limited access on <a href=' + video_url_download + ' class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">this item</a>'
-#            video_url = VIDEOSERVER_URL + 'unavailable/unavailable'
+        full_filename = video.thumbnail
+        print(full_filename)
+        filename = os.path.splitext(full_filename)[0]
+        video_url = IARCHIVEURL + video_id + "/" + filename
 
     next_video = None
 

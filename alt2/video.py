@@ -187,9 +187,9 @@ def watch():
     else:
         full_filename = video.thumbnail
         if 'maxresdefault' in full_filename:
+            print(full_filename)
             video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
         else:
-            print(full_filename)
             filename = os.path.splitext(full_filename)[0]
             video_url = IARCHIVEURL + video_id + "/" + filename
 

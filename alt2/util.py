@@ -997,6 +997,24 @@ def get_video_files_2(ia_item):
             filename = (x.get("name"))
     return filename
 
+def get_image_file(ia_item):
+    files_list = (ia_item.item_metadata['files'])
+    image_extensionsToCheck = [".jpg", ".webp"]
+    image_filename = None
+    for x in files_list:
+        if (
+            x["source"] == "original"
+            and (x["format"] != "Item Tile")
+            and "Thumb" not in (x["format"])
+            and any(ext in x["name"] for ext in image_extensionsToCheck)
+        ):
+            image_filename = x.get("name")
+    if image_filename is None:
+        for x in files_list:
+            if x["name"] == "__ia_thumb.jpg":
+                image_filename = x.get("name")
+    return image_filename
+
 
 def ac_object_exist(client, s3_bucket, itemname: str) -> bool:
     objects = client.list_objects(s3_bucket, prefix=itemname)
@@ -1046,7 +1064,12 @@ def get_ia_item(extractor_data):
     if not video_url:
         ia_value = 'youtube-' + extractor_data
         ia_item = get_item(ia_value)
-        full_filename = get_video_files_2(ia_item)
+#        full_filename = get_video_files_2(ia_item)
+        full_filename = get_image_file(ia_item)
         filename = os.path.splitext(full_filename)[0]
         video_url = IARCHIVEURL + extractor_data + "/" + filename
+        entity_video = Entity.query.filter(Entity.extractor_data == extractor_data).scalar()
+        entity_video.thumbnail = full_filename
+        flag_modified(entity_video, "ac_views")
+        db_session.commit()
     return video_url

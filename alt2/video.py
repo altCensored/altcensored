@@ -1,7 +1,6 @@
 import os
 from flask import (
     Blueprint, render_template, request, make_response, session, current_app, abort, flash)
-from internetarchive import get_session
 from markupsafe import Markup
 from sqlalchemy import func, text, case, select
 from sqlalchemy.orm.attributes import flag_modified
@@ -11,7 +10,7 @@ from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_us
 from .pagination import Pagination
 import json
 from .util import (videos_newest, videos_popular, get_videocount, get_playnext,
-                   ac_object_exist, videos_trending, get_video_files_2, increment_video_counter)
+                   ac_object_exist, videos_trending, get_ia_item, increment_video_counter)
 from minio import Minio
 from . import config
 
@@ -185,16 +184,14 @@ def watch():
         video_url = VIDEOSERVER_URL + video_id + "/" + video_id
 
     else:
-#        full_filename = video.thumbnail
-#        if 'maxresdefault' in full_filename:
-#            print(full_filename)
-#            video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
-#        else:
-#            filename = os.path.splitext(full_filename)[0]
-#            video_url = IARCHIVEURL + video_id + "/" + filename
+        if not getattr(video, 'thumbnail') or 'maxresdefault' in video.thumbnail:
+            video_url = get_ia_item(video.extractor_data)
+        else:
+            full_filename = video.thumbnail
+            filename = os.path.splitext(full_filename)[0]
+            video_url = IARCHIVEURL + video_id + "/" + filename
 
-    if video.thumbnail and 'maxresdefault' in full_filename:
-        print(thumbnail)
+
 
     playlist_titles = []
     not_in_watchlater = None
@@ -267,10 +264,10 @@ def embed(video_id):
         video_url = VIDEOSERVER_URL + video_id + "/" + video_id
 
     else:
-        full_filename = video.thumbnail
-        if 'maxresdefault' in full_filename:
-            video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
+        if not getattr(video, 'thumbnail') or 'maxresdefault' in video.thumbnail:
+            video_url = get_ia_item(video.extractor_data)
         else:
+            full_filename = video.thumbnail
             filename = os.path.splitext(full_filename)[0]
             video_url = IARCHIVEURL + video_id + "/" + filename
 

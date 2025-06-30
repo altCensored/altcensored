@@ -11,7 +11,7 @@ from flask import (
 from flask_babelplus import lazy_gettext
 from http.client import HTTPSConnection
 from io import BytesIO
-from internetarchive import ArchiveSession, get_files
+from internetarchive import get_item
 from itsdangerous import URLSafeTimedSerializer
 from mailjet_rest import Client
 from sendgrid import SendGridAPIClient
@@ -26,6 +26,8 @@ from .models import Translation, Playlist, Mv_Channel, Mv_Video, User, \
     Email_list, Channels, Channels_part, Vpn_node, Vpn_conn, Entity, Source, Counter
 from . import config
 from .cache import cache
+
+video_url = None
 
 def get_locale():
     if 'locale' in session:
@@ -1037,29 +1039,15 @@ def increment_video_counter(video_id, ip, header):
         flag_modified(entity_video, "ac_views")
         db_session.commit()
 
-class MyClass2:
-    def __init__(self, value):
-        """
-        The constructor method, called when a new instance of the class is created.
-        It initializes the 'data' attribute of the instance.
-        """
-        s = ArchiveSession()
-        self.data = s.get_item(identifier=value)
-        self.exists = self.data.exists
-        self.is_dark = self.data.is_dark
-        self.metadata = self.data.metadata
-        self.get_files = self.data.get_files
-        self.item_metadata = self.data.item_metadata
 
-    def display_data(self):
-        """
-        A method to display the 'data' attribute of the instance.
-        """
-        print(f"The data is: {self.data}")
-
-    def modify_data(self, new_value):
-        """
-        A method to modify the 'data' attribute of the instance.
-        """
-        self.data = new_value
-        print(f"Data modified to: {self.data}")
+def get_ia_item(extractor_data):
+    IARCHIVEURL = current_app.config['IARCHIVEURL']
+    global video_url
+    if not video_url:
+        ia_value = 'youtube-' + extractor_data
+        ia_item = get_item(ia_value)
+        full_filename = get_video_files_2(ia_item)
+        filename = os.path.splitext(full_filename)[0]
+        video_url = IARCHIVEURL + extractor_data + "/" + filename
+        return video_url
+    return video_url

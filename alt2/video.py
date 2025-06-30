@@ -182,9 +182,12 @@ def watch():
 
     if ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id):
         video_url = VIDEOSERVER_URL + video_id + "/" + video_id
-
     else:
-        if not getattr(video, 'thumbnail') or 'maxresdefault' in video.thumbnail:
+        if getattr(video, 'videofile'):
+            full_filename = video.videofile
+            filename = os.path.splitext(full_filename)[0]
+            video_url = IARCHIVEURL + video_id + "/" + filename
+        elif not getattr(video, 'thumbnail') or 'maxresdefault' in video.thumbnail:
             video_url = get_ia_item(video.extractor_data)
         else:
             full_filename = video.thumbnail

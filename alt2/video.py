@@ -185,13 +185,16 @@ def watch():
         video_url = VIDEOSERVER_URL + video_id + "/" + video_id
 
     else:
-        full_filename = video.thumbnail
-        if 'maxresdefault' in full_filename:
-            print(full_filename)
-            video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
-        else:
-            filename = os.path.splitext(full_filename)[0]
-            video_url = IARCHIVEURL + video_id + "/" + filename
+#        full_filename = video.thumbnail
+#        if 'maxresdefault' in full_filename:
+#            print(full_filename)
+#            video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
+#        else:
+#            filename = os.path.splitext(full_filename)[0]
+#            video_url = IARCHIVEURL + video_id + "/" + filename
+
+    if video.thumbnail and 'maxresdefault' in full_filename:
+        print(thumbnail)
 
     playlist_titles = []
     not_in_watchlater = None

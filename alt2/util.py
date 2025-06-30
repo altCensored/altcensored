@@ -1049,5 +1049,4 @@ def get_ia_item(extractor_data):
         full_filename = get_video_files_2(ia_item)
         filename = os.path.splitext(full_filename)[0]
         video_url = IARCHIVEURL + extractor_data + "/" + filename
-        return video_url
     return video_url

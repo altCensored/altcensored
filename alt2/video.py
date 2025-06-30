@@ -184,15 +184,15 @@ def watch():
         video_url = VIDEOSERVER_URL + video_id + "/" + video_id
     else:
         if getattr(video, 'videofile'):
-            full_filename = video.videofile
-            filename = os.path.splitext(full_filename)[0]
-            video_url = IARCHIVEURL + video_id + "/" + filename
-        elif not getattr(video, 'thumbnail') or 'maxresdefault' in video.thumbnail:
-            video_url = get_ia_item(video.extractor_data)
+            videofile_full = video.videofile
+            videofile = os.path.splitext(videofile_full)[0]
+            video_url = IARCHIVEURL + video_id + "/" + videofile
+        elif getattr(video, 'thumbnail') and 'maxresdefault' not in video.thumbnail:
+            thumbnail_full = video.thumbnail
+            thumbnail = os.path.splitext(thumbnail_full)[0]
+            video_url = IARCHIVEURL + video_id + "/" + thumbnail
         else:
-            full_filename = video.thumbnail
-            filename = os.path.splitext(full_filename)[0]
-            video_url = IARCHIVEURL + video_id + "/" + filename
+            video_url = get_ia_item(video.extractor_data)
 
 
 

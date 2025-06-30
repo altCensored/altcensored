@@ -988,6 +988,7 @@ def check_video_files(ia_item):
             filename = (x.get("name"))
     return filename
 
+
 def get_video_files_2(ia_item):
     files_list = (ia_item.item_metadata['files'])
     extensionsToCheck = ['.webm', '.mp4', '.ogv', '.mkv']
@@ -1068,11 +1069,14 @@ def get_ia_item(extractor_data):
             VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
             video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
             return video_url
-        full_filename = get_image_file(ia_item)
-        filename = os.path.splitext(full_filename)[0]
-        video_url = IARCHIVEURL + extractor_data + "/" + filename
+        thumbnail_full = get_image_file(ia_item)
+        videofile_full = get_video_files_2(ia_item)
+        videofile = os.path.splitext(videofile_full)[0]
+        video_url = IARCHIVEURL + extractor_data + "/" + videofile
         entity_video = Entity.query.filter(Entity.extractor_data == extractor_data).scalar()
-        entity_video.thumbnail = full_filename
-        flag_modified(entity_video, "ac_views")
+        entity_video.thumbnail = thumbnail_full
+        entity_video.videofile = videofile
+        flag_modified(entity_video, "thumbnail")
+        flag_modified(entity_video, "videofile")
         db_session.commit()
     return video_url

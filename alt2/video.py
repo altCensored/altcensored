@@ -187,14 +187,13 @@ def watch():
             videofile_full = video.videofile
             videofile = os.path.splitext(videofile_full)[0]
             video_url = IARCHIVEURL + video_id + "/" + videofile
+            print('videofile found')
         elif getattr(video, 'thumbnail') and 'maxresdefault' not in video.thumbnail:
             thumbnail_full = video.thumbnail
             thumbnail = os.path.splitext(thumbnail_full)[0]
             video_url = IARCHIVEURL + video_id + "/" + thumbnail
         else:
             video_url = get_ia_item(video.extractor_data)
-
-
 
     playlist_titles = []
     not_in_watchlater = None
@@ -265,14 +264,18 @@ def embed(video_id):
 
     if ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id):
         video_url = VIDEOSERVER_URL + video_id + "/" + video_id
-
     else:
-        if not getattr(video, 'thumbnail') or 'maxresdefault' in video.thumbnail:
-            video_url = get_ia_item(video.extractor_data)
+        if getattr(video, 'videofile'):
+            videofile_full = video.videofile
+            videofile = os.path.splitext(videofile_full)[0]
+            video_url = IARCHIVEURL + video_id + "/" + videofile
+            print('embed videofile found')
+        elif getattr(video, 'thumbnail') and 'maxresdefault' not in video.thumbnail:
+            thumbnail_full = video.thumbnail
+            thumbnail = os.path.splitext(thumbnail_full)[0]
+            video_url = IARCHIVEURL + video_id + "/" + thumbnail
         else:
-            full_filename = video.thumbnail
-            filename = os.path.splitext(full_filename)[0]
-            video_url = IARCHIVEURL + video_id + "/" + filename
+            video_url = get_ia_item(video.extractor_data)
 
     next_video = None
 

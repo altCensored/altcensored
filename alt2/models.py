@@ -61,6 +61,7 @@ class Entity(Base):
     found = Column(Boolean, nullable=True)
     yt_limited = Column(Boolean, nullable=True)
     ac_views = Column(Integer, nullable=True)
+    videofile = Column(String, nullable=True)
 
     __mapper_args__ = {
         "polymorphic_on": type,
@@ -402,6 +403,7 @@ class Mv_Video(Base):
     restricted_ia = Column(Boolean, nullable=True)
     exists_ac = Column(Boolean, nullable=True)
     ac_views = Column(Integer, nullable=True)
+    videofile = Column(String, nullable=True)
 
     def __init__(self, extractor_data=None, allow=None):
         self.id = id

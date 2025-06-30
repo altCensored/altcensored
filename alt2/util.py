@@ -1064,7 +1064,10 @@ def get_ia_item(extractor_data):
     if not video_url:
         ia_value = 'youtube-' + extractor_data
         ia_item = get_item(ia_value)
-#        full_filename = get_video_files_2(ia_item)
+        if len(ia_item.item_metadata) == 0:
+            VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
+            video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
+            return video_url
         full_filename = get_image_file(ia_item)
         filename = os.path.splitext(full_filename)[0]
         video_url = IARCHIVEURL + extractor_data + "/" + filename

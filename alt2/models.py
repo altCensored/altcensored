@@ -404,6 +404,9 @@ class Mv_Video(Base):
     exists_ac = Column(Boolean, nullable=True)
     ac_views = Column(Integer, nullable=True)
     videofile = Column(String, nullable=True)
+    dark_ia = Column(Boolean, nullable=True)
+    loggedin_ia = Column(Boolean, nullable=True)
+
 
     def __init__(self, extractor_data=None, allow=None):
         self.id = id

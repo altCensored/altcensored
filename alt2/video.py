@@ -183,17 +183,21 @@ def watch():
     if ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id):
         video_url = VIDEOSERVER_URL + video_id + "/" + video_id
     else:
-        if getattr(video, 'videofile'):
-            videofile_full = video.videofile
-            videofile = os.path.splitext(videofile_full)[0]
-            video_url = IARCHIVEURL + video_id + "/" + videofile
-            print('videofile found')
-        elif getattr(video, 'thumbnail') and 'maxresdefault' not in video.thumbnail:
-            thumbnail_full = video.thumbnail
-            thumbnail = os.path.splitext(thumbnail_full)[0]
-            video_url = IARCHIVEURL + video_id + "/" + thumbnail
+        if video.dark_ia or video.restricted_ia or video.loggedin_ia:
+            NEW_FLASH_MSG = f'Internet Archive has limited access on <a href={video_url_download} class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">this item</a>'
+            video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
         else:
-            video_url = get_ia_item(video.extractor_data)
+            if getattr(video, 'videofile'):
+                vfile = video.videofile
+                vfile_short = os.path.splitext(vfile)[0]
+                video_url = IARCHIVEURL + video_id + "/" + vfile_short
+            elif getattr(video, 'thumbnail') and 'maxresdefault' not in video.thumbnail:
+                thumbnail_full = video.thumbnail
+                vfile = os.path.splitext(thumbnail_full)[0]
+                vfile_short = os.path.splitext(vfile)[0]
+                video_url = IARCHIVEURL + video_id + "/" + vfile_short
+            else:
+                video_url = get_ia_item(video.extractor_data)
 
     playlist_titles = []
     not_in_watchlater = None
@@ -265,17 +269,21 @@ def embed(video_id):
     if ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id):
         video_url = VIDEOSERVER_URL + video_id + "/" + video_id
     else:
-        if getattr(video, 'videofile'):
-            videofile_full = video.videofile
-            videofile = os.path.splitext(videofile_full)[0]
-            video_url = IARCHIVEURL + video_id + "/" + videofile
-            print('embed videofile found')
-        elif getattr(video, 'thumbnail') and 'maxresdefault' not in video.thumbnail:
-            thumbnail_full = video.thumbnail
-            thumbnail = os.path.splitext(thumbnail_full)[0]
-            video_url = IARCHIVEURL + video_id + "/" + thumbnail
+        if video.dark_ia or video.restricted_ia or video.loggedin_ia:
+            print('embed restricted')
+            video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
         else:
-            video_url = get_ia_item(video.extractor_data)
+            if getattr(video, 'videofile'):
+                vfile = video.videofile
+                vfile_short = os.path.splitext(vfile)[0]
+                video_url = IARCHIVEURL + video_id + "/" + vfile_short
+            elif getattr(video, 'thumbnail') and 'maxresdefault' not in video.thumbnail:
+                thumbnail_full = video.thumbnail
+                vfile = os.path.splitext(thumbnail_full)[0]
+                vfile_short = os.path.splitext(vfile)[0]
+                video_url = IARCHIVEURL + video_id + "/" + vfile_short
+            else:
+                video_url = get_ia_item(video.extractor_data)
 
     next_video = None
 

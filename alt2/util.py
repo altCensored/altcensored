@@ -992,11 +992,11 @@ def check_video_files(ia_item):
 def get_video_files_2(ia_item):
     files_list = (ia_item.item_metadata['files'])
     extensionsToCheck = ['.webm', '.mp4', '.ogv', '.mkv']
-    filename = None
+    videofile_full = None
     for x in files_list:
         if x['source']=='original' and any (ext in x['name'] for ext in extensionsToCheck):
-            filename = (x.get("name"))
-    return filename
+            videofile_full = (x.get("name"))
+    return videofile_full
 
 def get_image_file(ia_item):
     files_list = (ia_item.item_metadata['files'])
@@ -1063,20 +1063,24 @@ def get_ia_item(extractor_data):
     IARCHIVEURL = current_app.config['IARCHIVEURL']
     global video_url
     if not video_url:
+        print('get_ia_item')
         ia_value = 'youtube-' + extractor_data
         ia_item = get_item(ia_value)
-        if len(ia_item.item_metadata) == 0:
+        entity_video = Entity.query.filter(Entity.extractor_data == extractor_data).scalar()
+        if len(ia_item.item_metadata) != 0:
+            videofile_full=get_video_files_2(ia_item)
+            thumbnail_full = get_image_file(ia_item)
+            if videofile_full:
+                videofile = os.path.splitext(videofile_full)[0]
+                video_url = IARCHIVEURL + extractor_data + "/" + videofile
+                entity_video.videofile = videofile
+            if thumbnail_full:
+                entity_video.thumbnail = thumbnail_full
+            flag_modified(entity_video, "thumbnail")
+            flag_modified(entity_video, "videofile")
+            db_session.commit()
+        else:
             VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
             video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
             return video_url
-        thumbnail_full = get_image_file(ia_item)
-        videofile_full = get_video_files_2(ia_item)
-        videofile = os.path.splitext(videofile_full)[0]
-        video_url = IARCHIVEURL + extractor_data + "/" + videofile
-        entity_video = Entity.query.filter(Entity.extractor_data == extractor_data).scalar()
-        entity_video.thumbnail = thumbnail_full
-        entity_video.videofile = videofile
-        flag_modified(entity_video, "thumbnail")
-        flag_modified(entity_video, "videofile")
-        db_session.commit()
     return video_url

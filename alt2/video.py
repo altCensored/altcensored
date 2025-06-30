@@ -21,8 +21,6 @@ FLASH_MSG = config.FLASH_MSG
 PER_PAGE = 24
 CHANN_MAX_RESULT = 28
 
-ia_item = None
-
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
 def index(page):
@@ -175,7 +173,6 @@ def watch():
     IARCHIVEURL = current_app.config['IARCHIVEURL']
     IARCHIVEITEMURL = current_app.config['IARCHIVEITEMURL']
     VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
-    video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
     video_url_short = IARCHIVEURL + video_id + "/"
     video_url_download = IARCHIVEITEMURL + video_id
 
@@ -189,8 +186,12 @@ def watch():
 
     else:
         full_filename = video.thumbnail
-        filename = os.path.splitext(full_filename)[0]
-        video_url = IARCHIVEURL + video_id + "/" + filename
+        if 'maxresdefault' in full_filename:
+            video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
+        else:
+            print(full_filename)
+            filename = os.path.splitext(full_filename)[0]
+            video_url = IARCHIVEURL + video_id + "/" + filename
 
     playlist_titles = []
     not_in_watchlater = None
@@ -264,9 +265,11 @@ def embed(video_id):
 
     else:
         full_filename = video.thumbnail
-        print(full_filename)
-        filename = os.path.splitext(full_filename)[0]
-        video_url = IARCHIVEURL + video_id + "/" + filename
+        if 'maxresdefault' in full_filename:
+            video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
+        else:
+            filename = os.path.splitext(full_filename)[0]
+            video_url = IARCHIVEURL + video_id + "/" + filename
 
     next_video = None
 

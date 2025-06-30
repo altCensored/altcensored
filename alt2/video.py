@@ -187,12 +187,11 @@ def watch():
     if ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id):
         video_url = VIDEOSERVER_URL + video_id + "/" + video_id
 
-    else:
-        global ia_item
-        ia_value = 'youtube-' + video_id#
-        ia = get_session()
-        ia_item = ia.get_item(ia_value)
-#        ia_item = MyClass2(ia_value)
+#    else:
+#        global ia_item
+#        ia_value = 'youtube-' + video_id#
+#        ia = get_session()
+##        ia_item = MyClass2(ia_value)
 
 
         if ia_item.exists and not ia_item.is_dark and "access-restricted-item" not in ia_item.metadata  and "altcen_hosted" not in ia_item.metadata:

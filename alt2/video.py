@@ -183,8 +183,8 @@ def watch():
     if ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id):
         video_url = VIDEOSERVER_URL + video_id + "/" + video_id
     else:
-        if video.dark_ia or video.restricted_ia or video.loggedin_ia:
-            NEW_FLASH_MSG = f'Internet Archive has limited access on <a href={video_url_download} class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">this item</a>'
+        if video.dark_ia or video.restricted_ia or video.loggedin_ia or video.novideo_ia:
+#            NEW_FLASH_MSG = f'Internet Archive has limited access on <a href={video_url_download} class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">this item</a>'
             video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
         else:
             if getattr(video, 'videofile'):
@@ -269,8 +269,7 @@ def embed(video_id):
     if ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id):
         video_url = VIDEOSERVER_URL + video_id + "/" + video_id
     else:
-        if video.dark_ia or video.restricted_ia or video.loggedin_ia:
-            print('embed restricted')
+        if video.dark_ia or video.restricted_ia or video.loggedin_ia or video.novideo_ia:
             video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
         else:
             if getattr(video, 'videofile'):

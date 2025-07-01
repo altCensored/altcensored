@@ -1068,14 +1068,24 @@ def get_ia_item(extractor_data):
         ia_item = get_item(ia_value)
         entity_video = Entity.query.filter(Entity.extractor_data == extractor_data).scalar()
         if len(ia_item.item_metadata) != 0:
+            print('item_metadata none')
             videofile_full=get_video_files_2(ia_item)
             thumbnail_full = get_image_file(ia_item)
+            if thumbnail_full:
+                entity_video.thumbnail = thumbnail_full
+            else:
+                pass
             if videofile_full:
                 videofile = os.path.splitext(videofile_full)[0]
                 video_url = IARCHIVEURL + extractor_data + "/" + videofile
                 entity_video.videofile = videofile
-            if thumbnail_full:
-                entity_video.thumbnail = thumbnail_full
+            else:
+                entity_video.novideo_ia = True
+                flag_modified(entity_video, "novideo_ia")
+                db_session.commit()
+                VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
+                video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
+                return video_url
             flag_modified(entity_video, "thumbnail")
             flag_modified(entity_video, "videofile")
             db_session.commit()

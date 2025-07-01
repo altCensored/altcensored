@@ -62,6 +62,7 @@ class Entity(Base):
     yt_limited = Column(Boolean, nullable=True)
     ac_views = Column(Integer, nullable=True)
     videofile = Column(String, nullable=True)
+    novideo_ia = Column(Boolean, nullable=True)
 
     __mapper_args__ = {
         "polymorphic_on": type,
@@ -406,7 +407,7 @@ class Mv_Video(Base):
     videofile = Column(String, nullable=True)
     dark_ia = Column(Boolean, nullable=True)
     loggedin_ia = Column(Boolean, nullable=True)
-
+    novideo_ia = Column(Boolean, nullable=True)
 
     def __init__(self, extractor_data=None, allow=None):
         self.id = id

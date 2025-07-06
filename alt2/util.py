@@ -1076,9 +1076,9 @@ def get_ia_item(extractor_data):
             else:
                 pass
             if videofile_full:
-                videofile = os.path.splitext(videofile_full)[0]
-                video_url = IARCHIVEURL + extractor_data + "/" + videofile
-                entity_video.videofile = videofile
+                root, ext = os.path.splitext(videofile_full)
+                video_url = IARCHIVEURL + extractor_data + "/" + root
+                entity_video.videofile = root
             else:
                 entity_video.novideo_ia = True
                 flag_modified(entity_video, "novideo_ia")

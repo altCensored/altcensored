@@ -188,14 +188,11 @@ def watch():
             video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
         else:
             if getattr(video, 'videofile'):
-                vfile = video.videofile
-                vfile_short = os.path.splitext(vfile)[0]
-                video_url = IARCHIVEURL + video_id + "/" + vfile_short
+                root, ext = os.path.splitext(video.videofile)
+                video_url = IARCHIVEURL + video_id + "/" + root
             elif getattr(video, 'thumbnail') and 'maxresdefault' not in video.thumbnail:
-                thumbnail_full = video.thumbnail
-                vfile = os.path.splitext(thumbnail_full)[0]
-                vfile_short = os.path.splitext(vfile)[0]
-                video_url = IARCHIVEURL + video_id + "/" + vfile_short
+                root, ext = os.path.splitext(video.thumbnail)
+                video_url = IARCHIVEURL + video_id + "/" + root
             else:
                 video_url = get_ia_item(video.extractor_data)
 
@@ -273,14 +270,11 @@ def embed(video_id):
             video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
         else:
             if getattr(video, 'videofile'):
-                vfile = video.videofile
-                vfile_short = os.path.splitext(vfile)[0]
-                video_url = IARCHIVEURL + video_id + "/" + vfile_short
+                root, ext = os.path.splitext(video.videofile)
+                video_url = IARCHIVEURL + video_id + "/" + root
             elif getattr(video, 'thumbnail') and 'maxresdefault' not in video.thumbnail:
-                thumbnail_full = video.thumbnail
-                vfile = os.path.splitext(thumbnail_full)[0]
-                vfile_short = os.path.splitext(vfile)[0]
-                video_url = IARCHIVEURL + video_id + "/" + vfile_short
+                root, ext = os.path.splitext(video.thumbnail)
+                video_url = IARCHIVEURL + video_id + "/" + root
             else:
                 video_url = get_ia_item(video.extractor_data)
 

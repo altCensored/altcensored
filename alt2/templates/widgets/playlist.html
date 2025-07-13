@@ -20,9 +20,9 @@
             <div class="pure-u-8-24">
                 <div class="pure-u-1 pure-md-1-1" style="text-align:right">
                     {% if session.user and session.user.id == playlist.user_id %}
-                        <a href="{{ url_for('playlist.edit', playlist=playlist.id, {{ config['SECURITY_PASSWORD_SALT'] }}=current_url ) }}">
+                        <a href="{{ url_for('playlist.edit', playlist=playlist.id, {{ config.SECURITY_PASSWORD_SALT }}=current_url ) }}">
                             <i class='ion-md-create' style="font-size: 24px"></i></a>&nbsp;&nbsp;
-                        <a href="{{ url_for('playlist.delete', playlist=playlist.id, {{ config['SECURITY_PASSWORD_SALT'] }}=current_url ) }}">
+                        <a href="{{ url_for('playlist.delete', playlist=playlist.id, {{ config.SECURITY_PASSWORD_SALT }}=current_url ) }}">
                             <i class='ion-md-trash' style="font-size: 24px"></i></a>
                     {% endif %}
                 </div>
@@ -36,10 +36,10 @@
             <div class="pure-u-8-24">
                 <div class="pure-u-1 pure-md-1-1" style="text-align:right">
                     {% if session.user and button and (session.user.id == playlist.user_id) %}
-                        <a href="{{ url_for('playlist.item', playlist=playlist.hashid, {{ config['SECURITY_PASSWORD_SALT'] }}=current_url ) }}">
+                        <a href="{{ url_for('playlist.item', playlist=playlist.hashid, {{ config.SECURITY_PASSWORD_SALT }}=current_url ) }}">
                             <i class='ion-md-remove' style="font-size: 24px"></i></a>
                     {% elif session.user and (session.user.id == playlist.user_id) %}
-                        <a href="{{ url_for('playlist.item', playlist=playlist.hashid, {{ config['SECURITY_PASSWORD_SALT'] }}=current_url, button='add_video' ) }}">
+                        <a href="{{ url_for('playlist.item', playlist=playlist.hashid, {{ config.SECURITY_PASSWORD_SALT }}=current_url, button='add_video' ) }}">
                             <i class='ion-md-add-circle-outline' style="font-size: 24px"></i>
                             <i class='ion-logo-youtube'  style="font-size: 20px"></i></a>
                     {% endif %}
@@ -86,13 +86,13 @@
                 <style>
                     form { display: inline-block; //Or display: inline;}
                 </style>
-                <p><form action="{{ url_for('user.history', playlist=playlist.hashid, {{ config['SECURITY_PASSWORD_SALT'] }}=current_url ) }}" >
+                <p><form action="{{ url_for('user.history', playlist=playlist.hashid, {{ config.SECURITY_PASSWORD_SALT }}=current_url ) }}" >
                     <button class="pure-button" type="submit" name="playlist" value= {{ playlist.hashid }}>
                         <i class='ion-md-done-all'  style="font-size: 24px"></i>
                         {{ gettext('History') }}
                     </button>
                 </form>
-                <form action="{{ url_for('user.watchlater', playlist=playlist.hashid, {{ config['SECURITY_PASSWORD_SALT'] }}=current_url ) }}">
+                <form action="{{ url_for('user.watchlater', playlist=playlist.hashid, {{ config.SECURITY_PASSWORD_SALT }}=current_url ) }}">
                     <button class="pure-button" type="submit" name="playlist" value= {{ playlist.hashid }}>
                         <i class='ion-md-time'  style="font-size: 24px"></i>
                         {{ gettext('WatchLater') }}

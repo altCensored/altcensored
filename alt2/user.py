@@ -47,7 +47,7 @@ def item(username):
 #    user = useri(username)
     if user is None:
         flash(lazy_gettext('User unknown'), 'error')
-        return redirect(request.args.get('original_url', '/'))
+        return redirect(request.args.get('url_original', '/'))
 
     if session.get('user') is not None and username == session['user']['username']:
         playlists = Playlist.query.filter((Playlist.public),(Playlist.user_id == user.id)) \
@@ -116,7 +116,7 @@ def history(page):
     except:
         hist_empty = lazy_gettext('History Empty')
         flash(hist_empty, 'success')
-        return redirect(request.args.get('original_url', '/'))
+        return redirect(request.args.get('url_original', '/'))
 
 
 @bp.route('/remove_video_history')
@@ -129,7 +129,7 @@ def remove_video_history():
         user.watched = list(dict.fromkeys(user.watched))
         user.watched.remove(video.extractor_data)
         db_session.commit()
-    return redirect(request.args.get('original_url', '/'))
+    return redirect(request.args.get('url_original', '/'))
 
 
 @bp.route('/clear_history', methods=['GET', 'POST'])
@@ -139,7 +139,7 @@ def clear_history():
     if not user.watched:
         hist_empty = lazy_gettext('History Empty')
         flash(hist_empty, 'success')
-        return redirect(request.args.get('original_url', '/'))
+        return redirect(request.args.get('url_original', '/'))
     l_msg = lazy_gettext('Clear History')
     message = l_msg + ' ?'
     if request.method == 'POST':
@@ -181,7 +181,7 @@ def watchlater(page):
     except:
         no_watch = lazy_gettext('WatchLater Empty')
         flash(no_watch, 'success')
-        return redirect(request.args.get('original_url', '/'))
+        return redirect(request.args.get('url_original', '/'))
 
 
 @bp.route('/add_video_watchlater')
@@ -197,7 +197,7 @@ def add_video_watchlater():
 
     flag_modified(user, "watchlater")
     db_session.commit()
-    return redirect(request.args.get('original_url', '/'))
+    return redirect(request.args.get('url_original', '/'))
 
 
 @bp.route('/add_video_watchlater_post', methods=['GET', 'POST'])
@@ -234,7 +234,7 @@ def remove_video_watchlater():
         user.watchlater = list(dict.fromkeys(user.watchlater))
         user.watchlater.remove(video.extractor_data)
         db_session.commit()
-    return redirect(request.args.get('original_url', '/'))
+    return redirect(request.args.get('url_original', '/'))
 
 
 @bp.route('/clear_watchlater', methods=['GET', 'POST'])
@@ -244,7 +244,7 @@ def clear_watchlater():
     if not user.watchlater:
         watch_empty = lazy_gettext('WatchLater Empty')
         flash(watch_empty, 'success')
-        return redirect(request.args.get('original_url', '/'))
+        return redirect(request.args.get('url_original', '/'))
     l_msg = lazy_gettext('Clear WatchLater')
     message = l_msg + ' ?'
     if request.method == 'POST':

@@ -1,8 +1,7 @@
 from flask import (
     Blueprint, redirect, session, request, abort
 )
-
-from . import config
+from .util import get_videocount
 
 bp = Blueprint('theme', __name__, url_prefix='/theme' )
 
@@ -16,8 +15,10 @@ def toggle():
     else:
         session['theme'] = 'dark'
 
-    if (request.args.get(config.SECURITY_PASSWORD_SALT)):
-        if "//" in (request.args.get(config.SECURITY_PASSWORD_SALT)):
+    get_videocount()
+
+    if (request.args.get(session['videocount'])):
+        if "//" in (request.args.get(session['videocount'])):
             abort(404)
 
-    return redirect(request.args.get(config.SECURITY_PASSWORD_SALT, '/'))
+    return redirect(request.args.get(session['videocount'], '/'))

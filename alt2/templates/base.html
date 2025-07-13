@@ -64,8 +64,8 @@
       </div>
       <div class="pure-u-1 pure-u-md-8-24 user-field">
         <div class="pure-u-1-2">
-          <a href="{{url_for('theme.toggle')}}?{{ config['SECURITY_PASSWORD_SALT'] }}={{ current_path }}"}}">
-           {%if theme == 'light' %}
+          <a href="{{url_for('theme.toggle')}}?{{ videocount }}={{ current_path }}"}}">
+            {%if theme == 'light' %}
             <i id="dark-reader-icon" class="icon ion-ios-moon"></i>
             {% else %}
             <i id="dark-reader-icon" class="icon ion-ios-sunny"></i>

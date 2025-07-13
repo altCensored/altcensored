@@ -15,14 +15,8 @@ def toggle():
     else:
         session['theme'] = 'dark'
 
-#    try:
-#        if "//" in (request.args.get('original_url')):
-#            abort(404)
-#    except:
-#        pass
-
-    if (request.args.get('original_url')):
-        if "//" in (request.args.get('original_url')):
+    if (request.args.get('url_original')):
+        if "//" in (request.args.get('url_original')):
             abort(404)
 
-    return redirect(request.args.get('original_url', '/'))
+    return redirect(request.args.get('url_original', '/'))

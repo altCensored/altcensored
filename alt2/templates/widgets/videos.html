@@ -49,7 +49,7 @@
                         </a>
                       {% endif %}
                     {% else %}
-                      <a class="action" href="{{ url_for('playlist.remove_video_playlist')}}?v={{video.extractor_data}}&playlist={{playlist.hashid}}&config.SECURITY_PASSWORD_SALT={{ current_url }}">
+                      <a class="action" href="{{ url_for('playlist.remove_video_playlist')}}?v={{video.extractor_data}}&playlist={{playlist.hashid}}&original_url2={{ current_url }}">
                         <p class="watched"> <i class='ion-md-trash' style="font-size: 30px"></p></i>
                       </a>
                     {% endif %}
@@ -70,11 +70,11 @@
                         <p id="ttip{{ video.extractor_data }}" class="tooltip">{{ gettext('Add to WatchLater') }}</p>
                     </a>
                   {% endif %}
-                  <a class="action" href="{{ url_for('user.remove_video_history')}}?v={{video.extractor_data}}&config.SECURITY_PASSWORD_SALT={{ current_url }}">
+                  <a class="action" href="{{ url_for('user.remove_video_history')}}?v={{video.extractor_data}}&original_url2={{ current_url }}">
                     <p class="watched"> <i class='ion-md-trash' style="font-size: 30px"></p></i>
                   </a>
                 {% elif userlist == 'watchlater' %}
-                  <a class="action" href="{{ url_for('user.remove_video_watchlater')}}?v={{video.extractor_data}}&config.SECURITY_PASSWORD_SALT={{ current_url }}">
+                  <a class="action" href="{{ url_for('user.remove_video_watchlater')}}?v={{video.extractor_data}}&original_url2={{ current_url }}">
                     <p class="watched"> <i class='ion-md-trash' style="font-size: 30px"></p></i>
                   </a>
                 {% else%}

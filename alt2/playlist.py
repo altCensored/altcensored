@@ -11,7 +11,7 @@ from datetime import timezone
 from .database import db_session
 from .models import User, Playlist, Mv_Video, Counter
 from .pagination import Pagination
-from . import util, config
+from . import (util,config)
 from .util import (
     login_required, str_to_bool, title_exists, get_playlistcount
     )
@@ -244,7 +244,7 @@ def add_video_playlist():
     if request.method == 'POST':
         return redirect(url_for('video.watch', v=video_id ))
 
-    return redirect(request.args.get(config.SECURITY_PASSWORD_SALT, '/'))
+    return redirect(request.args.get('original_url2', '/'))
 
 
 @bp.route('/add_video_playlist_post', methods=['GET', 'POST'])
@@ -308,7 +308,7 @@ def remove_video_playlist():
         flag_modified(playlist, "videos")
         db_session.commit()
 
-    return redirect(request.args.get(config.SECURITY_PASSWORD_SALT, '/'))
+    return redirect(request.args.get('original_url2', '/'))
 
 
 @bp.route('/delete/<playlist>', methods=['GET', 'POST'])

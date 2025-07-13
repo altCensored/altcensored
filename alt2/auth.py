@@ -1,4 +1,5 @@
 import datetime
+import json
 from datetime import timezone
 from flask import (
     Blueprint, redirect, request, session, render_template, flash, url_for
@@ -8,7 +9,7 @@ from sqlalchemy import func
 from sqlalchemy.orm.exc import NoResultFound
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from . import util, config
+from . import util
 from .database import db_session
 from .models import User
 from .util import (
@@ -275,5 +276,5 @@ def delete():
             return redirect(url_for('video.index'))
         else:
             flash(item_quoted + ' NOT deleted', 'error')
-            return redirect(request.args.get(config.SECURITY_PASSWORD_SALT, '/'))
+            return redirect(request.args.get('original_url2', '/'))
     return render_template('widgets/widgets_confirm.html', message=message)

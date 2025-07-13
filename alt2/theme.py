@@ -16,7 +16,7 @@ def toggle():
     else:
         session['theme'] = 'dark'
 
-    if (request.args.get(config.SECURITY_PASSWORD_SALT)):
+    if request.args.get(config.SECURITY_PASSWORD_SALT):
         if "//" in (request.args.get(config.SECURITY_PASSWORD_SALT)):
             abort(404)
 

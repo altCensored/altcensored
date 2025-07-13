@@ -715,7 +715,7 @@ def unsubscribe_email(token):
         else:
             conf = item_quoted + ' ' + lazy_gettext('was NOT unsubscribed')
             flash(conf, 'error')
-            return redirect(request.args.get('original_url2', '/'))
+            return redirect(request.args.get(config.SECURITY_PASSWORD_SALT, '/'))
     return render_template('widgets/widgets_confirm.html', message=message)
 
 

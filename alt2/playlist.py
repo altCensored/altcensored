@@ -244,7 +244,7 @@ def add_video_playlist():
     if request.method == 'POST':
         return redirect(url_for('video.watch', v=video_id ))
 
-    return redirect(request.args.get('original_url2', '/'))
+    return redirect(request.args.get('original_url', '/'))
 
 
 @bp.route('/add_video_playlist_post', methods=['GET', 'POST'])
@@ -308,7 +308,7 @@ def remove_video_playlist():
         flag_modified(playlist, "videos")
         db_session.commit()
 
-    return redirect(request.args.get('original_url2', '/'))
+    return redirect(request.args.get('original_url', '/'))
 
 
 @bp.route('/delete/<playlist>', methods=['GET', 'POST'])

@@ -16,13 +16,13 @@ def toggle():
         session['theme'] = 'dark'
 
 #    try:
-#        if "//" in (request.args.get('original_url2')):
+#        if "//" in (request.args.get('original_url')):
 #            abort(404)
 #    except:
 #        pass
 
-    if (request.args.get('original_url2')):
-        if "//" in (request.args.get('original_url2')):
+    if (request.args.get('original_url')):
+        if "//" in (request.args.get('original_url')):
             abort(404)
 
-    return redirect(request.args.get('original_url2', '/'))
+    return redirect(request.args.get('original_url', '/'))

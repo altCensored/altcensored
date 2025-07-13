@@ -276,5 +276,5 @@ def delete():
             return redirect(url_for('video.index'))
         else:
             flash(item_quoted + ' NOT deleted', 'error')
-            return redirect(request.args.get('original_url2', '/'))
+            return redirect(request.args.get('original_url', '/'))
     return render_template('widgets/widgets_confirm.html', message=message)

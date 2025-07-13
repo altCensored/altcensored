@@ -20,9 +20,9 @@
             <div class="pure-u-8-24">
                 <div class="pure-u-1 pure-md-1-1" style="text-align:right">
                     {% if session.user and session.user.id == playlist.user_id %}
-                        <a href="{{ url_for('playlist.edit',playlist=playlist.id,config['SECURITY_PASSWORD_SALT']=current_url)}}">
+                        <a href="{{url_for('playlist.edit')}},{{playlist=playlist.id}},{{config['SECURITY_PASSWORD_SALT']}}={{current_url}}">
                             <i class='ion-md-create' style="font-size: 24px"></i></a>&nbsp;&nbsp;
-                        <a href="{{ url_for('playlist.delete',playlist=playlist.id,config['SECURITY_PASSWORD_SALT']=current_url)}}">
+                        <a href="{{url_for('playlist.delete')}},{{playlist=playlist.id}},{{config['SECURITY_PASSWORD_SALT']}}={{current_url}}">
                             <i class='ion-md-trash' style="font-size: 24px"></i></a>
                     {% endif %}
                 </div>

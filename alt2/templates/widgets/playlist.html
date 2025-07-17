@@ -86,13 +86,13 @@
                 <style>
                     form { display: inline-block; //Or display: inline;}
                 </style>
-                <p><form action="{{ url_for('user.history', playlist=playlist.hashid, {{url_orig}}=current_url ) }}" >
+                <p><form action="{{ url_for('user.history', playlist=playlist.hashid ) }}" >
                     <button class="pure-button" type="submit" name="playlist" value= {{ playlist.hashid }}>
                         <i class='ion-md-done-all'  style="font-size: 24px"></i>
                         {{ gettext('History') }}
                     </button>
                 </form>
-                <form action="{{ url_for('user.watchlater', playlist=playlist.hashid, {{url_orig}}=current_url ) }}">
+                <form action="{{ url_for('user.watchlater', playlist=playlist.hashid ) }}">
                     <button class="pure-button" type="submit" name="playlist" value= {{ playlist.hashid }}>
                         <i class='ion-md-time'  style="font-size: 24px"></i>
                         {{ gettext('WatchLater') }}

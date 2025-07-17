@@ -249,7 +249,7 @@ def create_app(test_config=None):
 
     @app.template_filter('time_diff')
     def time_diff(s):
-        now = datetime.datetime.now() + datetime.timedelta(seconds=60 * 3.4)
+        now = datetime.datetime.now(timezone.utc) + datetime.timedelta(seconds=60 * 3.4)
         return timeago.format(s, now)
 
     app.register_error_handler(400, bad_request)

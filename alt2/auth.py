@@ -9,16 +9,18 @@ from sqlalchemy import func
 from sqlalchemy.orm.exc import NoResultFound
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from . import util
+from . import util, config
 from .database import db_session
 from .models import User
 from .util import (
-    get_locale, get_theme, get_navtabs, get_navtabs_index,
     send_forgot_password_email, generate_confirmation_token, confirm_token, email_exists, validate_user_email,
     login_required, generate_random, create_captcha, set_session, send_confirm_email, update_conns
 )
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
+
+url_orig = config.SECURITY_PASSWORD_SALT
+
 
 def find_user_by_email(email):
     try:
@@ -276,5 +278,5 @@ def delete():
             return redirect(url_for('video.index'))
         else:
             flash(item_quoted + ' NOT deleted', 'error')
-            return redirect(request.args.get('url_original', '/'))
+            return redirect(request.args.get(url_orig, '/'))
     return render_template('widgets/widgets_confirm.html', message=message)

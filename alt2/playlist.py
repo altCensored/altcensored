@@ -22,6 +22,8 @@ title_exist = lazy_gettext('Title exists')
 
 PER_PAGE = 24
 FLASH_MSG = config.FLASH_MSG
+url_orig = config.SECURITY_PASSWORD_SALT
+
 
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
@@ -63,7 +65,6 @@ def popular(page):
 def item(playlist,page):
     offset = ((int(page)-1) * PER_PAGE)
     playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
-#    playlist = playlisti(playlist)
 
     if playlist is None:
         abort(404)
@@ -100,9 +101,6 @@ def item(playlist,page):
         )
         videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(playlist.videos)).order_by(ordering).limit(PER_PAGE).offset(offset)
         videocount = db_session.query(func.count(Mv_Video.id)).filter(Mv_Video.extractor_data.in_(playlist.videos)).scalar()
-#        videocount = playlisti_videocount(playlist)
-#        videos = playlisti_videos(playlist, ordering, PER_PAGE, offset)
-
         pagination = Pagination(page, PER_PAGE, videocount)
     else:
         videos = []
@@ -244,7 +242,7 @@ def add_video_playlist():
     if request.method == 'POST':
         return redirect(url_for('video.watch', v=video_id ))
 
-    return redirect(request.args.get('url_original', '/'))
+    return redirect(request.args.get(url_orig, '/'))
 
 
 @bp.route('/add_video_playlist_post', methods=['GET', 'POST'])
@@ -308,7 +306,7 @@ def remove_video_playlist():
         flag_modified(playlist, "videos")
         db_session.commit()
 
-    return redirect(request.args.get('url_original', '/'))
+    return redirect(request.args.get(url_orig, '/'))
 
 
 @bp.route('/delete/<playlist>', methods=['GET', 'POST'])

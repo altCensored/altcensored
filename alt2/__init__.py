@@ -109,7 +109,8 @@ def create_app(test_config=None):
     def get_timezone():
         user = getattr(g, 'user', None)
         if user is not None:
-            return user.timezone 
+            return user.timezone
+        return None
 
     @app.template_filter('viewdisplay')
     def viewdisplay(views):
@@ -134,6 +135,7 @@ def create_app(test_config=None):
 
         elif (views >= 10000000000) and (views < 1000000000000):
             return str(views // 1000000000) + 'B'
+        return None
 
     @app.template_filter('commafy')
     def commafy(value):
@@ -185,15 +187,10 @@ def create_app(test_config=None):
             result = Markup(result)
         return result
 
-    @app.template_filter('bwremaining')
-    def bwremaining(bwlimit, bwused):
-        if bwlimit == 0:
-           return lazy_gettext('Bandwidth Unlimited')
-        else:
-            bwremaining = bwlimit - bwused
-            gb = 1.0 / 1024
-            convert_gb = round(gb * bwremaining,2)
-            return str(convert_gb) + ' GB Remaining'
+    @app.template_filter('time_diff')
+    def time_diff(s):
+        now = datetime.datetime.now(timezone.utc) + datetime.timedelta(seconds=60 * 3.4)
+        return timeago.format(s, now)
 
     @app.context_processor
     def inject_context():
@@ -210,7 +207,8 @@ def create_app(test_config=None):
             usercount=util.get_usercount(),
             videocount=util.get_videocount(),
             channelcount=util.get_channelcount(),
-            delchannelcount=util.get_delchannelcount()
+            delchannelcount=util.get_delchannelcount(),
+            url_orig=app.config['SECURITY_PASSWORD_SALT']
         )
 
 #    @app.before_request
@@ -246,11 +244,6 @@ def create_app(test_config=None):
         else:
             app.logger.error(e)
         return render_template('video/503.html'), 503
-
-    @app.template_filter('time_diff')
-    def time_diff(s):
-        now = datetime.datetime.now(timezone.utc) + datetime.timedelta(seconds=60 * 3.4)
-        return timeago.format(s, now)
 
     app.register_error_handler(400, bad_request)
     app.register_error_handler(404, page_not_found)

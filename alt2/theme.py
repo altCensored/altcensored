@@ -1,8 +1,10 @@
 from flask import (
     Blueprint, redirect, session, request, abort
 )
+from . import config
 
 bp = Blueprint('theme', __name__, url_prefix='/theme' )
+url_orig = config.SECURITY_PASSWORD_SALT
 
 
 @bp.route('/toggle', methods=['GET'])
@@ -15,8 +17,8 @@ def toggle():
     else:
         session['theme'] = 'dark'
 
-    if (request.args.get('url_original')):
-        if "//" in (request.args.get('url_original')):
+    if (request.args.get(url_orig)):
+        if "//" in (request.args.get(url_orig)):
             abort(404)
 
-    return redirect(request.args.get('url_original', '/'))
+    return redirect(request.args.get(url_orig, '/'))

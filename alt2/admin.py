@@ -29,6 +29,7 @@ from werkzeug.utils import secure_filename
 bp = Blueprint('admin', __name__, url_prefix='/admin')
 
 ALLOWED_EXTENSIONS = {'htm', 'html', 'txt'}
+url_orig = config.SECURITY_PASSWORD_SALT
 
 
 def allowed_file(filename):
@@ -715,7 +716,7 @@ def unsubscribe_email(token):
         else:
             conf = item_quoted + ' ' + lazy_gettext('was NOT unsubscribed')
             flash(conf, 'error')
-            return redirect(request.args.get('url_original', '/'))
+            return redirect(request.args.get(url_orig, '/'))
     return render_template('widgets/widgets_confirm.html', message=message)
 
 

@@ -7,7 +7,6 @@ from sqlalchemy.orm.attributes import flag_modified
 from hashids import Hashids
 from flask_babelplus import lazy_gettext
 import random, timeago, datetime, json
-from datetime import timezone
 from .database import db_session
 from .models import User, Playlist, Mv_Video, Counter
 from .pagination import Pagination
@@ -90,7 +89,7 @@ def item(playlist,page):
         db_session.commit()
 
     updated = playlist.updated
-    now = datetime.datetime.now(timezone.utc) + datetime.timedelta(seconds = 60 * 3.4)
+    now = datetime.datetime.now() + datetime.timedelta(seconds = 60 * 3.4)
     timediff = timeago.format(updated, now)
 
     if playlist.videos:
@@ -142,7 +141,7 @@ def create():
         hashids = Hashids(min_length=22)
         hashid = 'AC' + hashids.encode(random.getrandbits(104))
 
-        now = datetime.datetime.now(timezone.utc)
+        now = datetime.datetime.now()
         empty_list = []
         playlist = Playlist (title=ftitle, description=fdescription, hashid=hashid, \
                              user_id=user_id, created=now, updated=now, public=fpublic, view_counter=0, \
@@ -178,7 +177,7 @@ def edit(playlist):
             flash(title_exist, 'error')
             return redirect(url_for('playlist.edit', playlist=playlist.id))
 
-        now = datetime.datetime.now(timezone.utc)
+        now = datetime.datetime.now()
         playlist.updated = now
         playlist.title = ftitle
         playlist.description = fdescription
@@ -236,7 +235,7 @@ def add_video_playlist():
             "title": video.title
         }
 
-    now = datetime.datetime.now(timezone.utc)
+    now = datetime.datetime.now()
     playlist.updated = now
     flag_modified(playlist, "videos")
     db_session.commit()
@@ -269,7 +268,7 @@ def add_video_playlist_post():
                 "title": video.title
             }
 
-        now = datetime.datetime.now(timezone.utc)
+        now = datetime.datetime.now()
         playlist.updated = now
         flag_modified(playlist, "videos")
         db_session.commit()
@@ -303,7 +302,7 @@ def remove_video_playlist():
                     "title": video.title
                 }
 
-        now = datetime.datetime.now(timezone.utc)
+        now = datetime.datetime.now()
         playlist.updated = now
         flag_modified(playlist, "videos")
         db_session.commit()

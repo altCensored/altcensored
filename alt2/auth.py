@@ -2,7 +2,7 @@ import datetime
 import json
 from datetime import timezone
 from flask import (
-    Blueprint, redirect, request, session, render_template, flash, url_for
+    Blueprint, redirect, request, session, render_template, flash, url_for, make_response
 )
 from flask_babelplus import lazy_gettext
 from sqlalchemy import func
@@ -149,8 +149,6 @@ def login():
                                    email_subscribed=user.email_subscribed, email_verified=user.email_verified, contributor=user.contributor)
             conf_email_sent = lazy_gettext('Confirmation email sent')
             flash(conf_email_sent, 'success')
-#            Thread(target=update_conns()).start()
-
             return redirect(url_for('settings.index'))
 
         if user_and_password_is_valid(email, password):
@@ -180,9 +178,11 @@ def login():
                 conf_email_resent = lazy_gettext('Email not verified, confirmation email resent')
                 flash(conf_email_resent, 'error')
 
- #           Thread(target=update_conns()).start()
+            response = make_response(redirect(url_for('video.index')))
+            response.set_cookie(url_orig, '', max_age=3600)  # Cookie expires in 1 hour
+            return response
 
-            return redirect(url_for('video.index'))
+#            return redirect(url_for('video.index'))
 
         else:
             email_pw_bad = lazy_gettext('Email and password combination is invalid')

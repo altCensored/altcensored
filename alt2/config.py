@@ -75,6 +75,8 @@ AC_S3_BUCKET=os.getenv('AC_S3_BUCKET')
 AC_S3_ACCESS_KEY=os.getenv('AC_S3_ACCESS_KEY')
 AC_S3_SECRET_KEY=os.getenv('AC_S3_SECRET_KEY')
 
+RANDOM_VALUE=os.getenv('RANDOM_VALUE')
+
 #FLASH_MSG = 'Download preferred videos, Internet Archive is <a href=https://archive.org/details/youtube-Gv4jjFgIP_g class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">limiting access on some items</a>'
 #FLASH_MSG  = "Download preferred videos, Internet Archive is limiting access"
 FLASH_MSG = None

@@ -29,7 +29,7 @@ from werkzeug.utils import secure_filename
 bp = Blueprint('admin', __name__, url_prefix='/admin')
 
 ALLOWED_EXTENSIONS = {'htm', 'html', 'txt'}
-url_orig = config.SECURITY_PASSWORD_SALT
+url_orig = config.RANDOM_VALUE
 
 
 def allowed_file(filename):

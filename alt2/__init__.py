@@ -208,7 +208,7 @@ def create_app(test_config=None):
             videocount=util.get_videocount(),
             channelcount=util.get_channelcount(),
             delchannelcount=util.get_delchannelcount(),
-            url_orig=app.config['SECURITY_PASSWORD_SALT']
+            url_orig=app.config['RANDOM_VALUE']
         )
 
 #    @app.before_request

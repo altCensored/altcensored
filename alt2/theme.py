@@ -4,7 +4,7 @@ from flask import (
 from . import config
 
 bp = Blueprint('theme', __name__, url_prefix='/theme' )
-url_orig = config.SECURITY_PASSWORD_SALT
+url_orig = config.RANDOM_VALUE
 
 
 @bp.route('/toggle', methods=['GET'])

@@ -179,7 +179,7 @@ def login():
                 flash(conf_email_resent, 'error')
 
             response = make_response(redirect(url_for('video.index')))
-            response.set_cookie(url_orig, '1', max_age=7200, httponly=True, samesite='Lax')  # Cookie expires in 1 hour
+            response.set_cookie(url_orig, '1', httponly=True, samesite='Lax')  # Cookie expires in 1 hour
             return response
 
 #            return redirect(url_for('video.index'))

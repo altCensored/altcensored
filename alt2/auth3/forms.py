@@ -1,10 +1,10 @@
 from flask_wtf import FlaskForm
-from flask_babel import _, lazy_gettext as _l
+from flask_babelplus import _, lazy_gettext as _l
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
-import sqlalchemy as sa
 from app import db
 from app.models import User
+import sqlalchemy as sa
 
 
 class LoginForm(FlaskForm):

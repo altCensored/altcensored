@@ -14,11 +14,12 @@ from sqlalchemy import (
     JSON,
     func,
 )
-
-from alt2.database import Base
 from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm import relationship, column_property
+from flask_login import UserMixin
+from alt2.database import Base
+
 
 class Entity(Base):
     __tablename__ = "entity"

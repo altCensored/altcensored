@@ -2,4 +2,4 @@ from flask import Blueprint
 
 bp = Blueprint('auth', __name__)
 
-from app.auth import routes
+from alt2.auth3 import routes

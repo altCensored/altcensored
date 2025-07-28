@@ -15,10 +15,12 @@ dnspython
 docopt
 email-validator
 Flask==2.3.3
-flask-caching
 Flask-BabelPlus
+Flask-Login
 Flask-QRcode
 Flask-SeaSurf
+Flask-WTF
+flask-caching
 flask-talisman
 gevent
 greenlet
@@ -62,3 +64,4 @@ tqdm
 urllib3<=1.26.15
 webencodings
 Werkzeug
+WTForms

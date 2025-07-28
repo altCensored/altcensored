@@ -15,7 +15,7 @@ from alt2.auth3.email import send_password_reset_email
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('videos.index'))
+        return redirect(url_for('video.index'))
     form = LoginForm()
     if form.validate_on_submit():
         user = db_session.scalar(
@@ -27,7 +27,7 @@ def login():
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
         if not next_page or urlsplit(next_page).netloc != '':
-            next_page = url_for('videos.index')
+            next_page = url_for('video.index')
         return redirect(next_page)
     return render_template('auth3/login.html', title=_('Sign In'), form=form)
 
@@ -35,7 +35,7 @@ def login():
 @bp.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('main.index'))
+    return redirect(url_for('video.index'))
 
 
 @bp.route('/register', methods=['GET', 'POST'])
@@ -57,7 +57,7 @@ def register():
 @bp.route('/reset_password_request', methods=['GET', 'POST'])
 def reset_password_request():
     if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
+        return redirect(url_for('video.index'))
     form = ResetPasswordRequestForm()
     if form.validate_on_submit():
         user = db_session.scalar(
@@ -66,8 +66,8 @@ def reset_password_request():
             send_password_reset_email(user)
         flash(
             _('Check your email for the instructions to reset your password'))
-        return redirect(url_for('auth.login'))
-    return render_template('auth/reset_password_request.html',
+        return redirect(url_for('auth3.login'))
+    return render_template('auth3/reset_password_request.html',
                            title=_('Reset Password'), form=form)
 
 
@@ -83,5 +83,5 @@ def reset_password(token):
         user.set_password(form.password.data)
         db_session.commit()
         flash(_('Your password has been reset.'))
-        return redirect(url_for('auth.login'))
-    return render_template('auth/reset_password.html', form=form)
+        return redirect(url_for('auth3.login'))
+    return render_template('auth3/reset_password.html', form=form)

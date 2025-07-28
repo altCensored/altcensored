@@ -3,32 +3,33 @@ from flask_login import login_user, logout_user, current_user
 from flask_babelplus import gettext as _, lazy_gettext as _l
 from urllib.parse import urlsplit
 import sqlalchemy as sa
+from sqlalchemy import or_
 from alt2.database import db_session
-from alt2.models import User
 from alt2.auth3 import bp
 from alt2.auth3.forms import LoginForm, RegistrationForm, \
     ResetPasswordRequestForm, ResetPasswordForm
 from alt2.models import User
 from alt2.auth3.email import send_password_reset_email
 
-
+@bp.route('/', methods=['GET', 'POST'])
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
+        return redirect(url_for('videos.index'))
     form = LoginForm()
     if form.validate_on_submit():
         user = db_session.scalar(
-            sa.select(User).where(User.username == form.username.data))
+            sa.select(User)
+            .where(or_(User.username == form.username.data,User.email == form.username.data )))
         if user is None or not user.check_password(form.password.data):
             flash(_('Invalid username or password'))
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('auth3.login'))
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
         if not next_page or urlsplit(next_page).netloc != '':
-            next_page = url_for('main.index')
+            next_page = url_for('videos.index')
         return redirect(next_page)
-    return render_template('auth/login.html', title=_('Sign In'), form=form)
+    return render_template('auth3/login.html', title=_('Sign In'), form=form)
 
 
 @bp.route('/logout')

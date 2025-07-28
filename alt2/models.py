@@ -261,7 +261,7 @@ class Counter(Base):
     hash = Column(BigInteger, primary_key=True, nullable=False)
 
 
-class User(Base):
+class User(UserMixin, Base):
     __tablename__ = 'altcen_user'
     id = Column(Integer, primary_key=True, nullable=False)
     email = Column(String, nullable=False)
@@ -287,7 +287,14 @@ class User(Base):
     playlists = relationship("Playlist", cascade="all", back_populates="user")
     vpn_conns = relationship("Vpn_conn", cascade="all, delete-orphan", back_populates="user")
 
+    def __repr__(self):
+        return '<User {}>'.format(self.username)
 
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 class Playlist(Base):
     __tablename__ = 'playlist'

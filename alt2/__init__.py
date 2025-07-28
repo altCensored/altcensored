@@ -13,6 +13,7 @@ import unicodedata
 import math
 from . import util
 from .cache import cache
+from .models import User
 from psycogreen.gevent import patch_psycopg
 from flask_talisman import Talisman
 
@@ -66,10 +67,6 @@ csp = {
     ]
 }
 
-login = LoginManager()
-login.login_view = 'auth.login'
-login.login_message = _l('Please log in to access this page.')
-
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
     app = Flask(__name__, static_folder='static', static_url_path='', instance_relative_config=True)
@@ -105,6 +102,13 @@ def create_app(test_config=None):
     cache.init_app(app)
     Talisman(app, content_security_policy=csp)
 
+    login = LoginManager()
+#    login.login_view = 'auth3.login'
+#    login.login_message = _l('Please log in to access this page.')
+
+    @login.user_loader
+    def load_user(id):
+        return db_session.get(User, int(id))
 
     @babel.localeselector
     def get_locale():

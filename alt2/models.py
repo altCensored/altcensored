@@ -18,6 +18,7 @@ from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm import relationship, column_property
 from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 from alt2.database import Base
 
 

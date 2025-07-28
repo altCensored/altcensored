@@ -41,7 +41,7 @@ def logout():
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
+        return redirect(url_for('videos.index'))
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User(username=form.username.data, email=form.email.data)
@@ -49,8 +49,8 @@ def register():
         db_session.add(user)
         db_session.commit()
         flash(_('Congratulations, you are now a registered user!'))
-        return redirect(url_for('auth.login'))
-    return render_template('auth/register.html', title=_('Register'),
+        return redirect(url_for('auth3.login'))
+    return render_template('auth3/register.html', title=_('Register'),
                            form=form)
 
 

@@ -102,10 +102,8 @@ def create_app(test_config=None):
     cache.init_app(app)
     Talisman(app, content_security_policy=csp)
 
-    login_manager = LoginManager()
-    login_manager.init_app(app)
-
-    #    login.login_view = 'auth3.login'
+    login = LoginManager(app)
+#    login.login_view = 'auth3.login'
 #    login.login_message = _l('Please log in to access this page.')
 
     @login.user_loader

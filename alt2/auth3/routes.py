@@ -9,7 +9,9 @@ from alt2.auth3 import bp
 from alt2.auth3.forms import LoginForm, RegistrationForm, \
     ResetPasswordRequestForm, ResetPasswordForm
 from alt2.models import User
+#from alt2.auth3.email import send_password_reset_email
 from alt2.auth3.email import send_password_reset_email
+
 
 @bp.route('/', methods=['GET', 'POST'])
 @bp.route('/login', methods=['GET', 'POST'])

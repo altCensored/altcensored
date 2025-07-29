@@ -21,6 +21,7 @@ Flask-QRcode
 Flask-SeaSurf
 Flask-WTF
 flask-caching
+flask-mail
 flask-talisman
 gevent
 greenlet
@@ -39,6 +40,7 @@ minio
 monotonic
 packaging
 Pillow
+PyJWT
 psycogreen
 psycopg2
 pycparser

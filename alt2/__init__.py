@@ -2,6 +2,7 @@ import os, re, logging
 from flask import Flask, request, url_for, render_template, g, has_request_context
 from jinja2 import pass_eval_context
 from flask_babelplus import Babel, lazy_gettext as _l
+from flask_mail import Mail
 from urllib.parse import quote_plus
 from flask_login import LoginManager
 from flask_qrcode import QRcode
@@ -13,6 +14,7 @@ import unicodedata
 import math
 from . import util
 from .cache import cache
+from .database import db_session
 from .models import User
 from psycogreen.gevent import patch_psycopg
 from flask_talisman import Talisman
@@ -67,6 +69,11 @@ csp = {
     ]
 }
 
+mail = Mail()
+login = LoginManager()
+login.login_view = 'auth3.login'
+login.login_message = _l('Please log in to access this page.')
+
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
     app = Flask(__name__, static_folder='static', static_url_path='', instance_relative_config=True)
@@ -101,10 +108,8 @@ def create_app(test_config=None):
     QRcode(app)
     cache.init_app(app)
     Talisman(app, content_security_policy=csp)
-
-    login = LoginManager(app)
-#    login.login_view = 'auth3.login'
-#    login.login_message = _l('Please log in to access this page.')
+    mail.init_app(app)
+    login.init_app(app)
 
     @login.user_loader
     def load_user(id):
@@ -259,7 +264,6 @@ def create_app(test_config=None):
     app.register_error_handler(500, internal_server_error)
     app.register_error_handler(503, service_unavailable)
 
-    from .database import db_session
 
     @app.teardown_appcontext
     def shutdown_session(exception=None):

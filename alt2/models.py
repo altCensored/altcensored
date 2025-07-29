@@ -17,9 +17,13 @@ from sqlalchemy import (
 from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm import relationship, column_property
+from flask import current_app
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from alt2.database import Base
+import jwt
+from .database import db_session
+from time import time
 
 
 class Entity(Base):
@@ -297,6 +301,19 @@ class User(UserMixin, Base):
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
+    def get_reset_password_token(self, expires_in=600):
+        return jwt.encode(
+            {'reset_password': self.id, 'exp': time() + expires_in},
+            current_app.config['SECRET_KEY'], algorithm='HS256')
+
+    @staticmethod
+    def verify_reset_password_token(token):
+        try:
+            id = jwt.decode(token, current_app.config['SECRET_KEY'],
+                            algorithms=['HS256'])['reset_password']
+        except Exception:
+            return
+        return db_session.get(User, id)
 
 
 class Playlist(Base):

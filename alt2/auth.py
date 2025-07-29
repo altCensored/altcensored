@@ -14,13 +14,12 @@ from .database import db_session
 from .models import User
 from .util import (
     send_forgot_password_email, generate_confirmation_token, confirm_token, email_exists, validate_user_email,
-    login_required, generate_random, create_captcha, set_session, send_confirm_email, update_conns
+    login_required, generate_random, create_captcha, set_session, send_confirm_email, send_all_mass_email
 )
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 url_orig = config.RANDOM_VALUE
-
 
 def find_user_by_email(email):
     try:
@@ -76,8 +75,10 @@ def register_user(email, password, username):
 def send_reset_password_email(email):
     token = generate_confirmation_token(email)
     confirm_url = url_for('auth.reset_password', token=token, _external=True)
+    sender = config.SES_EMAIL_SOURCE_WELCOME
+    subject = 'altCensored.com: Reset your password'
     html = render_template('auth/auth_forgot_password_email.html', confirm_url=confirm_url)
-    send_forgot_password_email(email, html)
+    send_all_mass_email(email, sender, subject, html, service='aws')
 
 
 @bp.route('/login', methods=['GET', 'POST'])

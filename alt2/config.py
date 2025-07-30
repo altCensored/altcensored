@@ -88,4 +88,4 @@ MAIL_PORT = int(os.environ.get('MAIL_PORT') or 2525)
 MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS') or True
 MAIL_USERNAME = os.environ.get('MAIL_USERNAME') or 'MS_vuS5KE@test-zxk54v8r12pljy6v.mlsender.net'
 MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD') or 'mssp.jwuooZ9.3yxj6ljyr65ldo2r.8y0qBiF'
-ADMINS = ['admin@altcensored.com']
+ADMINS = ['registration@altcensored.com','admin@altcensored.com']

@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from flask import render_template, redirect, url_for, flash, request, session
+from flask import render_template, redirect, url_for, flash, request, session, make_response
 from flask_login import login_user, logout_user, current_user
 from flask_babelplus import gettext as _, lazy_gettext as _l
 from urllib.parse import urlsplit
@@ -7,12 +7,14 @@ import sqlalchemy as sa
 from sqlalchemy import or_, func
 from alt2.database import db_session
 from alt2.auth import bp
+from alt2 import config
 from alt2.auth.forms import LoginForm, RegistrationForm, \
     ResetPasswordRequestForm, ResetPasswordForm
 from alt2.models import User
 from alt2.auth.email import send_password_reset_email, send_welcome_email
 from alt2.util import create_user_altcen, login_user_altcen, logout_user_altcen, login_required
 
+url_orig = config.RANDOM_VALUE
 
 @bp.route('/', methods=['GET', 'POST'])
 @bp.route('/login', methods=['GET', 'POST'])
@@ -36,7 +38,12 @@ def login():
         next_page = request.args.get('next')
         if not next_page or urlsplit(next_page).netloc != '':
             next_page = url_for('video.index')
-        return redirect(next_page)
+
+        response = make_response(redirect(url_for('video.index')))
+        response.set_cookie(url_orig, '1', httponly=True, samesite='Lax')  # Cookie expires in 1 hour
+        return response
+
+#        return redirect(next_page)
     return render_template('auth/login.html', title=_('Sign In'), form=form)
 
 

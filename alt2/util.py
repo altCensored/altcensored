@@ -1135,10 +1135,6 @@ def login_user_altcen(user):
     session['navtabs_index']['navtab2'] = user.navtabs_index[1]
     session['navtabs_index']['navtab3'] = user.navtabs_index[2]
 
-    response = make_response(redirect(url_for('video.index')))
-    response.set_cookie(url_orig, '1', httponly=True, samesite='Lax')
-    return response
-
 
 def logout_user_altcen():
     now = datetime.now(timezone.utc)

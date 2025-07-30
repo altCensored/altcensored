@@ -8,19 +8,21 @@ import sqlalchemy as sa
 
 
 class LoginForm(FlaskForm):
-    username = StringField(_l('Username'), validators=[DataRequired()])
-    password = PasswordField(_l('Password'), validators=[DataRequired()])
+#    username = StringField(_l('Username'), validators=[DataRequired()], render_kw={'placeholder': 'Username / Email'})
+    username = StringField(_l('Username'), validators=[DataRequired()], render_kw={'placeholder': _l('Username')})
+#    password = PasswordField(_l('Password'), validators=[DataRequired()], render_kw={'placeholder': 'Password'})
+    password = PasswordField(_l('Password'), validators=[DataRequired()], render_kw={'placeholder': _l('Password')})
     remember_me = BooleanField(_l('Remember Me'))
     submit = SubmitField(_l('Sign In'))
 
 
 class RegistrationForm(FlaskForm):
-    username = StringField(_l('Username'), validators=[DataRequired()])
-    email = StringField(_l('Email'), validators=[DataRequired(), Email()])
-    password = PasswordField(_l('Password'), validators=[DataRequired()])
+    username = StringField(_l('Username'), validators=[DataRequired()], render_kw={'placeholder': 'Username'})
+    email = StringField(_l('Email'), validators=[DataRequired(), Email()], render_kw={'placeholder': 'Email'})
+    password = PasswordField(_l('Password'), validators=[DataRequired()], render_kw={'placeholder': _l('Password')})
     password2 = PasswordField(
-        _l('Repeat Password'), validators=[DataRequired(),
-                                           EqualTo('password')])
+        _l('Password'), validators=[DataRequired(),
+                                           EqualTo('password')], render_kw={'placeholder': _l('Password')})
     submit = SubmitField(_l('Register'))
 
     def validate_username(self, username):

@@ -30,6 +30,7 @@ bp = Blueprint('admin', __name__, url_prefix='/admin')
 
 ALLOWED_EXTENSIONS = {'htm', 'html', 'txt'}
 url_orig = config.RANDOM_VALUE
+sender = config.SES_EMAIL_SOURCE
 
 
 def allowed_file(filename):
@@ -37,11 +38,11 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def send_mass_email(email, subject, filename, service):
+def send_mass_email(email, sender, subject, filename, service):
     token = generate_confirmation_token(email)
     confirm_url = url_for('admin.unsubscribe_email', token=token, _external=True)
     html = render_template('newsletter/' + filename, confirm_url=confirm_url)
-    Thread(target=send_all_mass_email, args=(email, subject, html, service)).start()
+    Thread(target=send_all_mass_email, args=(email, sender, subject, html, service)).start()
     if email_exists(email):
         user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
     else:
@@ -624,7 +625,7 @@ def mass_email():
         if recipients == 'admin':
             usercount = '1'
             email = 'admin@altcensored.com'
-            send_mass_email(email, subject, filename, service)
+            send_mass_email(email, sender, subject, filename, service)
             flash(email)
             return redirect(url_for('admin.index'))
 
@@ -632,7 +633,7 @@ def mass_email():
         flash('test only : ' + testonly)
         for user in users:
             if testonly == 'false':
-                send_mass_email(user.email, subject, filename, service)
+                send_mass_email(user.email, sender, subject, filename, service)
                 flash(user.email)
 
         db_session.commit()

@@ -43,8 +43,9 @@ BABEL_DEFAULT_LOCALE = 'en'
 BABEL_DEFAULT_TIMEZONE = 'UTC'
 
 UPLOAD_FOLDER = '/templates/newsletter'
-SES_REGION_NAME=os.getenv('SES_REGION_NAME')
-SES_EMAIL_SOURCE=os.getenv('SES_EMAIL_SOURCE')
+SES_REGION_NAME=os.getenv('SES_REGION_NAME') or 'us-east-1'
+SES_EMAIL_SOURCE=os.getenv('SES_EMAIL_SOURCE') or 'newsletter@altcensored.com'
+SES_EMAIL_SOURCE_WELCOME=os.getenv('SES_EMAIL_SOURCE_WELCOME') or 'registration@altcensored.com'
 AWS_ACCESS_KEY_ID=os.getenv('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY=os.getenv('AWS_SECRET_ACCESS_KEY')
 

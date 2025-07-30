@@ -235,8 +235,11 @@ def set_session() -> object:
 def send_confirm_email(email):
     token = generate_confirmation_token(email)
     confirm_url = url_for('auth.confirm_email', token=token, _external=True)
+    sender = config.SES_EMAIL_SOURCE_WELCOME
+    subject = 'Welcome to altCensored.com! Confirm your Email for Full Access'
     html = render_template('auth/auth_activate.html', confirm_url=confirm_url)
-    send_welcome_email(email, html)
+#    send_welcome_email(email, html)
+    send_all_mass_email(email, sender, subject, html, service='aws')
 
 
 def send_welcome_email(email, content):
@@ -522,10 +525,10 @@ def send_sgrid_email(email, subject, content):
     sg.send(message)
 
 
-def send_all_mass_email(email, subject, html, service):
+def send_all_mass_email(email, sender, subject, html, service):
     if service == 'sgrid':
         message = Mail(
-            from_email='admin@altCensored.com',
+            from_email=sender,
             to_emails=email,
             subject=subject,
             html_content=html)
@@ -541,7 +544,7 @@ def send_all_mass_email(email, subject, html, service):
             aws_access_key_id=config.AWS_ACCESS_KEY_ID,
             aws_secret_access_key=config.AWS_SECRET_ACCESS_KEY
         )
-        sender = config.SES_EMAIL_SOURCE
+        sender = sender
         ses.send_email(
             Source=sender,
             Destination={'ToAddresses': email},
@@ -555,7 +558,7 @@ def send_all_mass_email(email, subject, html, service):
 
     if service == 'mjet':
         mailjet = Client(auth=(config.MJ_API_KEY, config.MJ_API_SECRET), version='v3.1')
-        sender = "newsletter@altcensored.com"
+        sender = sender
         data = {
             'Messages': [
                 {

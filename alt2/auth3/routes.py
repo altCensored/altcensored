@@ -56,9 +56,9 @@ def register():
         user = User(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
         create_user_altcen(user)
-#        send_welcome_email(user)
-#        conf_email_sent = _l('Confirmation email sent')
-#        flash(conf_email_sent, 'success')
+        send_welcome_email(user)
+        conf_email_sent = _l('Confirmation email sent')
+        flash(conf_email_sent, 'success')
         return redirect(url_for('auth3.login'))
     return render_template('auth3/register.html', title=_('Register'),
                            form=form)

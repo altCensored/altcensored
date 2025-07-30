@@ -6,11 +6,11 @@ from urllib.parse import urlsplit
 import sqlalchemy as sa
 from sqlalchemy import or_, func
 from alt2.database import db_session
-from alt2.auth3 import bp
-from alt2.auth3.forms import LoginForm, RegistrationForm, \
+from alt2.auth import bp
+from alt2.auth.forms import LoginForm, RegistrationForm, \
     ResetPasswordRequestForm, ResetPasswordForm
 from alt2.models import User
-from alt2.auth3.email import send_password_reset_email, send_welcome_email
+from alt2.auth.email import send_password_reset_email, send_welcome_email
 from alt2.util import create_user_altcen, login_user_altcen, logout_user_altcen, login_required
 
 
@@ -26,7 +26,7 @@ def login():
             .where(or_(User.username == form.username.data,User.email == form.username.data )))
         if user is None or not user.check_password(form.password.data):
             flash(_('Invalid username or password'))
-            return redirect(url_for('auth3.login'))
+            return redirect(url_for('auth.login'))
         login_user(user, remember=form.remember_me.data)
         login_user_altcen(user)
         if not user.email_verified:
@@ -37,7 +37,7 @@ def login():
         if not next_page or urlsplit(next_page).netloc != '':
             next_page = url_for('video.index')
         return redirect(next_page)
-    return render_template('auth3/login.html', title=_('Sign In'), form=form)
+    return render_template('auth/login.html', title=_('Sign In'), form=form)
 
 
 @bp.route('/logout')
@@ -59,8 +59,8 @@ def register():
         send_welcome_email(user)
         conf_email_sent = _l('Confirmation email sent')
         flash(conf_email_sent, 'success')
-        return redirect(url_for('auth3.login'))
-    return render_template('auth3/register.html', title=_('Register'),
+        return redirect(url_for('auth.login'))
+    return render_template('auth/register.html', title=_('Register'),
                            form=form)
 
 
@@ -76,8 +76,8 @@ def reset_password_request():
             send_password_reset_email(user)
         flash(
             _('Check your email for the instructions to reset your password'))
-        return redirect(url_for('auth3.login'))
-    return render_template('auth3/reset_password_request.html',
+        return redirect(url_for('auth.login'))
+    return render_template('auth/reset_password_request.html',
                            title=_('Reset Password'), form=form)
 
 
@@ -93,8 +93,8 @@ def reset_password(token):
         user.set_password(form.password.data)
         db_session.commit()
         flash(_('Your password has been reset.'))
-        return redirect(url_for('auth3.login'))
-    return render_template('auth3/reset_password.html', form=form)
+        return redirect(url_for('auth.login'))
+    return render_template('auth/reset_password.html', form=form)
 
 
 @bp.route('/confirm_email/<token>', methods=['GET', 'POST'])

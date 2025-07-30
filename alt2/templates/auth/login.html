@@ -40,10 +40,10 @@
                     </div>
                 </fieldset>
             </form>
-            <p>New {{ gettext('User') }}? <a href="{{ url_for('auth3.register') }}"><b>{{ gettext('Register') }}</b></a></p>
+            <p>New {{ gettext('User') }}? <a href="{{ url_for('auth.register') }}"><b>{{ gettext('Register') }}</b></a></p>
             <p>
                 Forgotten  {{ gettext('Password') }}?
-                <a href="{{ url_for('auth3.reset_password_request') }}"><b>Reset {{ gettext('Password') }}</b></a>
+                <a href="{{ url_for('auth.reset_password_request') }}"><b>Reset {{ gettext('Password') }}</b></a>
             </p>
         </div>
       </div>

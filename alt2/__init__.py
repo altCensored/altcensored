@@ -71,7 +71,7 @@ csp = {
 
 mail = Mail()
 login = LoginManager()
-login.login_view = 'auth3.login'
+login.login_view = 'auth.login'
 login.login_message = _l('Please log in to access this page.')
 
 def create_app(test_config=None):
@@ -269,10 +269,10 @@ def create_app(test_config=None):
     def shutdown_session(exception=None):
         db_session.remove()    
 
-    from . import video, channel, about, category, language, settings, auth, admin, playlist, theme, user, newsletter, donate
+    from . import video, channel, about, category, language, settings, admin, playlist, theme, user, newsletter, donate
 
-    from alt2.auth3 import bp as auth_bp
-    app.register_blueprint(auth_bp, url_prefix='/auth3')
+    from alt2.auth import bp as auth_bp
+    app.register_blueprint(auth_bp, url_prefix='/auth')
 
     app.register_blueprint(video.bp)
     app.register_blueprint(channel.bp)
@@ -280,7 +280,6 @@ def create_app(test_config=None):
     app.register_blueprint(category.bp)
     app.register_blueprint(language.bp)
     app.register_blueprint(settings.bp)
-    app.register_blueprint(auth.bp)
     app.register_blueprint(admin.bp)
     app.register_blueprint(playlist.bp)
     app.register_blueprint(theme.bp)

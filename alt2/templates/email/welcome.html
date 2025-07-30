@@ -4,12 +4,12 @@
         <p>Dear {{ user.username }},</p>
         <p>
             Together we are stronger! Please confirm your email for full access:
-            <a href="{{ url_for('auth3.confirm_email', token=token, _external=True) }}">
+            <a href="{{ url_for('auth.confirm_email', token=token, _external=True) }}">
                 click here
             </a>.
         </p>
         <p>Alternatively, you can paste the following link in your browser's address bar:</p>
-        <p>{{ url_for('auth3.confirm_email', token=token, _external=True) }}</p>
+        <p>{{ url_for('auth.confirm_email', token=token, _external=True) }}</p>
         <ul>
             <li>create & share playlist links (example: https://altcensored.com/playlist/ACe1qZRVGYn1qN7yXNnRXQPe)</li>
             <li>modify & share user account links: (example: https://altcensored.com/user/admin)</li>

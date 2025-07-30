@@ -6,7 +6,7 @@ from captcha.image import ImageCaptcha
 from datetime import datetime, timezone, timedelta
 from email_validator import validate_email, EmailNotValidError
 from flask import (
-    session, request, redirect, render_template, url_for, current_app, flash
+    session, request, redirect, render_template, url_for, current_app, flash, make_response
 )
 from flask_babelplus import lazy_gettext
 from http.client import HTTPSConnection
@@ -20,7 +20,6 @@ from sqlalchemy import func, nullslast
 from urllib.parse import urlparse
 
 from sqlalchemy.orm.attributes import flag_modified
-
 from .database import db_session
 from .models import Translation, Playlist, Mv_Channel, Mv_Video, User, \
     Email_list, Channels, Channels_part, Vpn_node, Vpn_conn, Entity, Source, Counter
@@ -28,6 +27,7 @@ from . import config
 from .cache import cache
 
 video_url = None
+url_orig = config.RANDOM_VALUE
 
 def get_locale():
     if 'locale' in session:
@@ -1134,6 +1134,10 @@ def login_user_altcen(user):
     session['navtabs_index']['navtab1'] = user.navtabs_index[0]
     session['navtabs_index']['navtab2'] = user.navtabs_index[1]
     session['navtabs_index']['navtab3'] = user.navtabs_index[2]
+
+    response = make_response(redirect(url_for('video.index')))
+    response.set_cookie(url_orig, '1', httponly=True, samesite='Lax')
+    return response
 
 
 def logout_user_altcen():

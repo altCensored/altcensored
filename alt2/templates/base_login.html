@@ -85,6 +85,21 @@
     {% block header %}{% endblock %}
   </header>
 
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-container">
+        {% for category, message in messages %}
+          <div class="flash-inner-container">
+            <input type="checkbox" class="flash-dismiss-button">
+            <div class="flash flash-{{category}}">
+              <div class="flash-message">{{message}}</div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+  {% endif %}
+  {% endwith %}
+
   <content>
     {% block content %}{% endblock %}
   </content>

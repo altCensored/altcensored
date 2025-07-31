@@ -8,13 +8,10 @@ import sqlalchemy as sa
 
 
 class LoginForm(FlaskForm):
-#    username = StringField(_l('Username or Email'), validators=[DataRequired()], render_kw={'placeholder': 'Username or Email'})
     username = StringField(_l('Username'), validators=[DataRequired()], render_kw={'placeholder': _l('Username')})
-#    password = PasswordField(_l('Password'), validators=[DataRequired()], render_kw={'placeholder': 'Password'})
     password = PasswordField(_l('Password'), validators=[DataRequired()], render_kw={'placeholder': _l('Password')})
     remember_me = BooleanField(_l('Remember Me'))
     submit = SubmitField(_l('Log In'))
-
 
 
 class RegistrationForm(FlaskForm):

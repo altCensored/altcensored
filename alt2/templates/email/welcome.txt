@@ -1,0 +1,18 @@
+Dear {{ user.username }},
+
+Together we are stronger! Please confirm your email for full access:
+
+{{ url_for('auth.confirm_email', token=token, _external=True) }}
+
+- create & share playlist links (example: https://altcensored.com/playlist/ACe1qZRVGYn1qN7yXNnRXQPe)
+- modify & share user account links: (example: https://altcensored.com/user/admin)
+- personal 'history' (automatic) and 'watchlater' lists
+
+You have been subscribed to our monthly newsletter. To unsubscribe:
+
+- 'Settings' (cog icon top right all screens)
+- 'User', 'Edit' (pencil icon), 'Email Subscribed' (choose 'False'), button 'Update User'
+
+Sincerely,
+
+altCensored.com

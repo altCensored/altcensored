@@ -83,3 +83,9 @@ RANDOM_VALUE=os.getenv('RANDOM_VALUE') or 'PLACE_HOLDER'
 FLASH_MSG = None
 #FLASH_MSG = '<a href=https://altcensored.com/donate class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">We Need Your Help</a>'
 
+MAIL_SERVER = os.environ.get('MAIL_SERVER') or 'smtp.mailersend.net'
+MAIL_PORT = int(os.environ.get('MAIL_PORT') or 2525)
+MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS') or True
+MAIL_USERNAME = os.environ.get('MAIL_USERNAME') or 'MS_vuS5KE@test-zxk54v8r12pljy6v.mlsender.net'
+MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD') or 'mssp.jwuooZ9.3yxj6ljyr65ldo2r.8y0qBiF'
+ADMINS = ['registration@altcensored.com','admin@altcensored.com']

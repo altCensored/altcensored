@@ -3,10 +3,10 @@ import boto3
 
 from better_profanity import profanity
 from captcha.image import ImageCaptcha
-from datetime import timezone
+from datetime import datetime, timezone, timedelta, date
 from email_validator import validate_email, EmailNotValidError
 from flask import (
-    session, request, redirect, render_template, url_for, current_app, flash
+    session, request, redirect, render_template, url_for, current_app, flash, make_response
 )
 from flask_babelplus import lazy_gettext
 from http.client import HTTPSConnection
@@ -20,7 +20,6 @@ from sqlalchemy import func, nullslast
 from urllib.parse import urlparse
 
 from sqlalchemy.orm.attributes import flag_modified
-
 from .database import db_session
 from .models import Translation, Playlist, Mv_Channel, Mv_Video, User, \
     Email_list, Channels, Channels_part, Vpn_node, Vpn_conn, Entity, Source, Counter
@@ -28,6 +27,7 @@ from . import config
 from .cache import cache
 
 video_url = None
+url_orig = config.RANDOM_VALUE
 
 def get_locale():
     if 'locale' in session:
@@ -238,19 +238,7 @@ def send_confirm_email(email):
     sender = config.SES_EMAIL_SOURCE_WELCOME
     subject = 'Welcome to altCensored.com! Confirm your Email for Full Access'
     html = render_template('auth/auth_activate.html', confirm_url=confirm_url)
-#    send_welcome_email(email, html)
     send_all_mass_email(email, sender, subject, html, service='aws')
-
-
-def send_welcome_email(email, content):
-    message = Mail(
-        from_email='registration@altCensored.com',
-        to_emails=email,
-        subject='Welcome to altCensored.com! Confirm your Email for Full Access',
-        html_content=content)
-
-    sg = SendGridAPIClient(config.SENDGRID_API_KEY)
-    sg.send(message)
 
 
 def send_forgot_password_email(email, content):
@@ -1048,7 +1036,7 @@ def site_is_online(url, timeout=1):
 
 def increment_video_counter(video_id, ip, header):
     entity_video = Entity.query.filter(Entity.extractor_data == video_id).scalar()
-    today = str(datetime.date.today())
+    today = str(date.today())
     myhash = hash(ip+header+today+str(entity_video.extractor_data))
     if Counter.query.filter(Counter.hash == myhash).scalar() is None:
         counter = Counter (hash=myhash)
@@ -1097,3 +1085,70 @@ def get_ia_item(extractor_data):
             video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
             return video_url
     return video_url
+
+
+def create_user_altcen(user):
+    now = datetime.now(timezone.utc)
+    navtabs_value = [session['navtabs']['navtab1'], session['navtabs']['navtab2'], session['navtabs']['navtab3']]
+    user.description = ""
+    user.created_date = now
+    user.updated = now
+    user.email_lastsent_date = datetime.now(timezone.utc) - timedelta(30)
+    user.email_verified = False
+    user.view_counter = 0
+    user.settings = {
+        "theme": session['theme'],
+        "locale": session['locale'],
+        "autoplay": session['autoplay'],
+        "playnext": session['playnext'],
+        "looplist": session['looplist']
+    }
+    user.navtabs=navtabs_value
+    user.navtabs_index=navtabs_value
+    db_session.add(user)
+    db_session.commit()
+    return user
+
+def login_user_altcen(user):
+    session['user'] = dict(id=user.id,
+                           email=user.email,
+                           username=user.username,
+                           description=user.description,
+                           public=user.public,
+                           email_subscribed=user.email_subscribed,
+                           email_verified=user.email_verified,
+                           contributor=user.contributor
+                           )
+    newSettings = dict(user.settings)
+    autoplayg = user.settings.get("autoplay")
+
+    session['locale'] = newSettings['locale']
+    session['theme'] = newSettings['theme']
+    session['autoplay'] = autoplayg
+    session['playnext'] = newSettings['playnext']
+
+    session['navtabs']['navtab1'] = user.navtabs[0]
+    session['navtabs']['navtab2'] = user.navtabs[1]
+    session['navtabs']['navtab3'] = user.navtabs[2]
+
+    session['navtabs_index']['navtab1'] = user.navtabs_index[0]
+    session['navtabs_index']['navtab2'] = user.navtabs_index[1]
+    session['navtabs_index']['navtab3'] = user.navtabs_index[2]
+
+
+def logout_user_altcen():
+    now = datetime.now(timezone.utc)
+    user = db_session.query(User).filter(User.email == session['user']['email']).one()
+    user.updated = now
+    user.settings = {
+        "theme": session['theme'],
+        "locale": session['locale'],
+        "autoplay": session['autoplay'],
+        "playnext": session['playnext']
+    }
+
+    user.navtabs =  [ session['navtabs']['navtab1'], session['navtabs']['navtab2'], session['navtabs']['navtab3'] ]
+    user.navtabs_index =  [ session['navtabs_index']['navtab1'], session['navtabs_index']['navtab2'], session['navtabs_index']['navtab3'] ]
+    db_session.commit()
+
+    session['user'] = None

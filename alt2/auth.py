@@ -195,7 +195,7 @@ def login():
 @bp.route('/confirm/<token>', methods=['GET', 'POST'])
 def confirm_email(token):
     email = confirm_token(token, 3600)
-    if email == False:
+    if not email:
         conf_bad = lazy_gettext('The confirmation link is invalid or has expired')
         flash(conf_bad, 'error')
         return redirect(url_for('video.index'))

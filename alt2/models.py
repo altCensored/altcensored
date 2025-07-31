@@ -14,11 +14,17 @@ from sqlalchemy import (
     JSON,
     func,
 )
-
-from alt2.database import Base
 from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm import relationship, column_property
+from flask import current_app
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
+from alt2.database import Base
+import jwt
+from .database import db_session
+from time import time
+
 
 class Entity(Base):
     __tablename__ = "entity"
@@ -260,7 +266,7 @@ class Counter(Base):
     hash = Column(BigInteger, primary_key=True, nullable=False)
 
 
-class User(Base):
+class User(UserMixin, Base):
     __tablename__ = 'altcen_user'
     id = Column(Integer, primary_key=True, nullable=False)
     email = Column(String, nullable=False)
@@ -286,6 +292,28 @@ class User(Base):
     playlists = relationship("Playlist", cascade="all", back_populates="user")
     vpn_conns = relationship("Vpn_conn", cascade="all, delete-orphan", back_populates="user")
 
+    def __repr__(self):
+        return '<User {}>'.format(self.username)
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
+
+    def get_reset_password_token(self, expires_in=600):
+        return jwt.encode(
+            {'reset_password': self.id, 'exp': time() + expires_in},
+            current_app.config['SECRET_KEY'], algorithm='HS256')
+
+    @staticmethod
+    def verify_reset_password_token(token):
+        try:
+            id = jwt.decode(token, current_app.config['SECRET_KEY'],
+                            algorithms=['HS256'])['reset_password']
+        except Exception:
+            return
+        return db_session.get(User, id)
 
 
 class Playlist(Base):

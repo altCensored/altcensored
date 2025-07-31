@@ -1,8 +1,10 @@
 import os, re, logging
 from flask import Flask, request, url_for, render_template, g, has_request_context
 from jinja2 import pass_eval_context
-from flask_babelplus import Babel, lazy_gettext
+from flask_babelplus import Babel, lazy_gettext as _l
+from flask_mail import Mail
 from urllib.parse import quote_plus
+from flask_login import LoginManager
 from flask_qrcode import QRcode
 from markupsafe import escape, Markup
 import timeago, datetime
@@ -12,6 +14,8 @@ import unicodedata
 import math
 from . import util
 from .cache import cache
+from .database import db_session
+from .models import User
 from psycogreen.gevent import patch_psycopg
 from flask_talisman import Talisman
 
@@ -65,6 +69,11 @@ csp = {
     ]
 }
 
+mail = Mail()
+login = LoginManager()
+login.login_view = 'auth.login'
+login.login_message = _l('Please log in to access this page.')
+
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
     app = Flask(__name__, static_folder='static', static_url_path='', instance_relative_config=True)
@@ -99,7 +108,12 @@ def create_app(test_config=None):
     QRcode(app)
     cache.init_app(app)
     Talisman(app, content_security_policy=csp)
+    mail.init_app(app)
+    login.init_app(app)
 
+    @login.user_loader
+    def load_user(id):
+        return db_session.get(User, int(id))
 
     @babel.localeselector
     def get_locale():
@@ -250,13 +264,15 @@ def create_app(test_config=None):
     app.register_error_handler(500, internal_server_error)
     app.register_error_handler(503, service_unavailable)
 
-    from .database import db_session
 
     @app.teardown_appcontext
     def shutdown_session(exception=None):
         db_session.remove()    
 
-    from . import video, channel, about, category, language, settings, auth, admin, playlist, theme, user, newsletter, donate
+    from . import video, channel, about, category, language, settings, admin, playlist, theme, user, newsletter, donate
+
+    from alt2.auth import bp as auth_bp
+    app.register_blueprint(auth_bp, url_prefix='/auth')
 
     app.register_blueprint(video.bp)
     app.register_blueprint(channel.bp)
@@ -264,13 +280,11 @@ def create_app(test_config=None):
     app.register_blueprint(category.bp)
     app.register_blueprint(language.bp)
     app.register_blueprint(settings.bp)
-    app.register_blueprint(auth.bp)
     app.register_blueprint(admin.bp)
     app.register_blueprint(playlist.bp)
     app.register_blueprint(theme.bp)
     app.register_blueprint(user.bp)
     app.register_blueprint(newsletter.bp)
-#    app.register_blueprint(vpn.bp)
     app.register_blueprint(donate.bp)
 
     app.add_url_rule('/', endpoint='video.index', defaults={'page': 1})

@@ -18,14 +18,14 @@
                 <fieldset>
                     <div class="pure-control-group">
                         {{ form.username.label }}
-                        {{ form.username(size=24) }}
+                        {{ form.username(size=28) }}
                         {% for error in form.username.errors %}
                         <span style="color: red;">[{{ error }}]</span>
                         {% endfor %}
                     </div>
                     <div class="pure-control-group">
                         {{ form.password.label }}
-                        {{ form.password(size=24, class_="form-control", id="password") }}
+                        {{ form.password(size=28, class_="form-control", id="password") }}
                         <span class="password-toggle" id="togglePassword">
                             <i class='ion-ios-eye-off'  style="font-size: 24px"></i>
                         </span>

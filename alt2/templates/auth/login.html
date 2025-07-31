@@ -36,14 +36,14 @@
                         {{ form.remember_me() }}
                     </div>
                     <div class="pure-controls">
-                            {{ form.submit() }}
+                        {{ form.submit(class_="a.pure-button-primary") }}
                     </div>
                 </fieldset>
             </form>
-            <p>New {{ gettext('User') }}? <a href="{{ url_for('auth.register') }}"><b>{{ gettext('Register') }}</b></a></p>
-            <p>
-                Forgotten  {{ gettext('Password') }}?
-                <a href="{{ url_for('auth.reset_password_request') }}"><b>Reset {{ gettext('Password') }}</b></a>
+            <br/>
+                <a href="{{ url_for('auth.register') }}" class="pure-button">{{ gettext('Register') }}</a>
+                &nbsp;
+                <a href="{{ url_for('auth.reset_password_request') }}" class="pure-button">Reset {{ gettext('Password') }}</a>
             </p>
         </div>
       </div>

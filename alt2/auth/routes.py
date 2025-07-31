@@ -27,7 +27,8 @@ def login():
             sa.select(User)
             .where(or_(User.username == form.username.data,User.email == form.username.data )))
         if user is None or not user.check_password(form.password.data):
-            flash(_('Invalid username or password'))
+            invalid_username_password = _('Invalid username or password')
+            flash(invalid_username_password, 'error')
             return redirect(url_for('auth.login'))
         login_user(user, remember=form.remember_me.data)
         login_user_altcen(user)
@@ -42,8 +43,6 @@ def login():
         response = make_response(redirect(url_for('video.index')))
         response.set_cookie(url_orig, '1', httponly=True, samesite='Lax')  # Cookie expires in 1 hour
         return response
-
-#        return redirect(next_page)
     return render_template('auth/login.html', title=_('Sign In'), form=form)
 
 
@@ -81,9 +80,10 @@ def reset_password_request():
             sa.select(User).where(User.email == form.email.data))
         if user:
             send_password_reset_email(user)
-        flash(
-            _('Check your email for the instructions to reset your password'))
-        return redirect(url_for('auth.login'))
+        password_reset_emailed = _('Check your email for password reset instructions')
+        flash(password_reset_emailed, 'success')
+
+        return redirect(url_for('video.index'))
     return render_template('auth/reset_password_request.html',
                            title=_('Reset Password'), form=form)
 
@@ -91,15 +91,16 @@ def reset_password_request():
 @bp.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
     if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
+        return redirect(url_for('video.index'))
     user = User.verify_reset_password_token(token)
     if not user:
-        return redirect(url_for('main.index'))
+        return redirect(url_for('video.index'))
     form = ResetPasswordForm()
     if form.validate_on_submit():
         user.set_password(form.password.data)
         db_session.commit()
-        flash(_('Your password has been reset.'))
+        password_reset = _('Your password has been reset.')
+        flash(password_reset, 'success')
         return redirect(url_for('auth.login'))
     return render_template('auth/reset_password.html', form=form)
 
@@ -117,7 +118,7 @@ def confirm_email(token):
                                public=user.public, email_verified=user.email_verified, email_subscribed=user.email_subscribed)
         acct_conf = _l('Account already confirmed. Please login')
         flash(acct_conf, 'success')
-        return redirect(url_for('video.index'))
+        return redirect(url_for('auth.login'))
     else:
         now = datetime.now(timezone.utc)
         user.email_verified = True
@@ -129,7 +130,7 @@ def confirm_email(token):
             session['user']['email_verified'] = True
         txs_conf = _l('Thank-you for confirming your account')
         flash(txs_conf, 'success')
-    return redirect(url_for('video.index'))
+    return redirect(url_for('auth.login'))
 
 
 @bp.route('/delete', methods=['GET', 'POST'])

@@ -3,7 +3,7 @@ import boto3
 
 from better_profanity import profanity
 from captcha.image import ImageCaptcha
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone, timedelta, date
 from email_validator import validate_email, EmailNotValidError
 from flask import (
     session, request, redirect, render_template, url_for, current_app, flash, make_response
@@ -1036,7 +1036,7 @@ def site_is_online(url, timeout=1):
 
 def increment_video_counter(video_id, ip, header):
     entity_video = Entity.query.filter(Entity.extractor_data == video_id).scalar()
-    today = str(datetime.date.today())
+    today = str(date.today())
     myhash = hash(ip+header+today+str(entity_video.extractor_data))
     if Counter.query.filter(Counter.hash == myhash).scalar() is None:
         counter = Counter (hash=myhash)

@@ -15,8 +15,8 @@ class LoginForm(FlaskForm):
 
 
 class RegistrationForm(FlaskForm):
-    username = StringField(_l('Username'), validators=[DataRequired()], render_kw={'placeholder': 'Username'})
-    email = StringField(_l('Email'), validators=[DataRequired(), Email()], render_kw={'placeholder': 'Email'})
+    username = StringField(_l('Username'), validators=[DataRequired()], render_kw={'placeholder': _l('Username')})
+    email = StringField(_l('Email'), validators=[DataRequired(), Email()], render_kw={'placeholder': _l('Email')})
     password = PasswordField(_l('Password'), validators=[DataRequired()], render_kw={'placeholder': _l('Password')})
     password2 = PasswordField(
         _l('Password'), validators=[DataRequired(),
@@ -37,7 +37,7 @@ class RegistrationForm(FlaskForm):
 
 
 class ResetPasswordRequestForm(FlaskForm):
-    email = StringField(_l('Email'), validators=[DataRequired(), Email()], render_kw={'placeholder': 'Email'})
+    email = StringField(_l('Email'), validators=[DataRequired(), Email()], render_kw={'placeholder': _l('Email')})
     submit = SubmitField(_l('Request Password Reset'), render_kw={'placeholder': _l('Password')})
 
 

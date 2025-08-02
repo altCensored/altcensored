@@ -38,25 +38,18 @@ def login():
             invalid_username_password = _('Invalid username or password')
             flash(invalid_username_password, 'error')
             return redirect(url_for('auth.login'))
-        turnstile_token = request.form.get('cf-turnstile-response')
-        verification_result = verify_turnstile_token(turnstile_token, cloudflare_secret_key)
-        if verification_result.get('success'):
-            login_user(user, remember=form.remember_me.data)
-            login_user_altcen(user)
-            if not user.email_verified:
-                send_welcome_email(user)
-                conf_email_sent = _l('Confirmation email sent')
-                flash(conf_email_sent, 'success')
-            next_page = request.args.get('next')
-            if not next_page or urlsplit(next_page).netloc != '':
-                next_page = url_for('video.index')
-            response = make_response(redirect(url_for('video.index')))
-            response.set_cookie(url_orig, '1', httponly=True, samesite='Lax')  # Cookie expires in 1 hour
-            return response
-        else:
-            cloudflare_failed = _('Cloudflare Turnstile Captcha Failed')
-            flash(cloudflare_failed, 'error')
-            return redirect(url_for('video.index'))
+        login_user(user, remember=form.remember_me.data)
+        login_user_altcen(user)
+        if not user.email_verified:
+            send_welcome_email(user)
+            conf_email_sent = _l('Confirmation email sent')
+            flash(conf_email_sent, 'success')
+        next_page = request.args.get('next')
+        if not next_page or urlsplit(next_page).netloc != '':
+            next_page = url_for('video.index')
+        response = make_response(redirect(url_for('video.index')))
+        response.set_cookie(url_orig, '1', httponly=True, samesite='Lax')  # Cookie expires in 1 hour
+        return response
     return render_template('auth/login.html', title=_('Log In'), form=form, cloudflare_site_key=cloudflare_site_key)
 
 
@@ -98,19 +91,12 @@ def reset_password_request():
         return redirect(url_for('video.index'))
     form = ResetPasswordRequestForm()
     if form.validate_on_submit():
-        turnstile_token = request.form.get('cf-turnstile-response')
-        verification_result = verify_turnstile_token(turnstile_token, cloudflare_secret_key)
-        if verification_result.get('success'):
-            user = db_session.scalar(
-                sa.select(User).where(User.email == form.email.data))
-            if user:
-                send_password_reset_email(user)
-            password_reset_emailed = _('Check your email for password reset instructions')
-            flash(password_reset_emailed, 'success')
-        else:
-            cloudflare_failed = _('Cloudflare Turnstile Captcha Failed')
-            flash(cloudflare_failed, 'error')
-            return redirect(url_for('video.index'))
+        user = db_session.scalar(
+            sa.select(User).where(User.email == form.email.data))
+        if user:
+            send_password_reset_email(user)
+        password_reset_emailed = _('Check your email for password reset instructions')
+        flash(password_reset_emailed, 'success')
         return redirect(url_for('video.index'))
     return render_template('auth/reset_password_request.html',
                            title=_('Reset Password'), form=form, cloudflare_site_key=cloudflare_site_key)

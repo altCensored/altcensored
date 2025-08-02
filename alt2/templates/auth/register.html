@@ -9,7 +9,7 @@
     <div class="pure-g">
       <div class="pure-u-1 pure-u-md-1-1">
         <div class="h-box">
-            <h2>{{ gettext('Register') }}</h2>
+            <h2>{{ title }}</h2>
             <form action="" method="post" class="pure-form pure-form-aligned">
                 {{ form.hidden_tag() }}
                 <fieldset>
@@ -36,6 +36,8 @@
                         {% for error in form.email.errors %}
                         <span style="color: red;">[{{ error }}]</span>
                         {% endfor %}
+                    </div>
+                    <div class="cf-turnstile" data-sitekey="{{ cloudflare_site_key }}" data-callback="javascriptCallback" data-theme="light">
                     </div>
                     <div class="pure-control-group">
                         {{ form.submit(class_="pure-button pure-button-primary") }}

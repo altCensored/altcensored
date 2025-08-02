@@ -15,8 +15,14 @@ from alt2.auth.email import send_password_reset_email, send_welcome_email
 from alt2.util import create_user_altcen, login_user_altcen, logout_user_altcen, login_required, verify_turnstile_token
 
 url_orig = config.RANDOM_VALUE
+
+#  cflare testing, always fails
+#
+#cloudflare_site_key = "2x00000000000000000000AB"
+#cloudflare_secret_key = "2x0000000000000000000000000000000AA"
 cloudflare_site_key = config.CLOUDFLARE_SITE_KEY
 cloudflare_secret_key = config.CLOUDFLARE_SECRET_KEY
+
 
 @bp.route('/', methods=['GET', 'POST'])
 @bp.route('/login', methods=['GET', 'POST'])
@@ -51,7 +57,6 @@ def login():
             cloudflare_failed = _('Cloudflare Turnstile Captcha Failed')
             flash(cloudflare_failed, 'error')
             return redirect(url_for('video.index'))
-
     return render_template('auth/login.html', title=_('Log In'), form=form, cloudflare_site_key=cloudflare_site_key)
 
 
@@ -70,13 +75,21 @@ def register():
     if form.validate_on_submit():
         user = User(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
-        create_user_altcen(user)
-        send_welcome_email(user)
-        conf_email_sent = _l('Confirmation email sent')
-        flash(conf_email_sent, 'success')
-        return redirect(url_for('auth.login'))
+        turnstile_token = request.form.get('cf-turnstile-response')
+        verification_result = verify_turnstile_token(turnstile_token, cloudflare_secret_key)
+        if verification_result.get('success'):
+            create_user_altcen(user)
+            send_welcome_email(user)
+            conf_email_sent = _l('Confirmation email sent')
+            flash(conf_email_sent, 'success')
+            return redirect(url_for('auth.login'))
+        else:
+            cloudflare_failed = _('Cloudflare Turnstile Captcha Failed')
+            flash(cloudflare_failed, 'error')
+            return redirect(url_for('video.index'))
+
     return render_template('auth/register.html', title=_('Register'),
-                           form=form)
+                           form=form,  cloudflare_site_key=cloudflare_site_key)
 
 
 @bp.route('/reset_password_request', methods=['GET', 'POST'])
@@ -85,16 +98,22 @@ def reset_password_request():
         return redirect(url_for('video.index'))
     form = ResetPasswordRequestForm()
     if form.validate_on_submit():
-        user = db_session.scalar(
-            sa.select(User).where(User.email == form.email.data))
-        if user:
-            send_password_reset_email(user)
-        password_reset_emailed = _('Check your email for password reset instructions')
-        flash(password_reset_emailed, 'success')
-
+        turnstile_token = request.form.get('cf-turnstile-response')
+        verification_result = verify_turnstile_token(turnstile_token, cloudflare_secret_key)
+        if verification_result.get('success'):
+            user = db_session.scalar(
+                sa.select(User).where(User.email == form.email.data))
+            if user:
+                send_password_reset_email(user)
+            password_reset_emailed = _('Check your email for password reset instructions')
+            flash(password_reset_emailed, 'success')
+        else:
+            cloudflare_failed = _('Cloudflare Turnstile Captcha Failed')
+            flash(cloudflare_failed, 'error')
+            return redirect(url_for('video.index'))
         return redirect(url_for('video.index'))
     return render_template('auth/reset_password_request.html',
-                           title=_('Reset Password'), form=form)
+                           title=_('Reset Password'), form=form, cloudflare_site_key=cloudflare_site_key)
 
 
 @bp.route('/reset_password/<token>', methods=['GET', 'POST'])

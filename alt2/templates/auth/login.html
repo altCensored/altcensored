@@ -33,8 +33,11 @@
                         &nbsp;
                         {{ form.remember_me.label(style="text-align: left") }}
                     </div>
-                    <div class="cf-turnstile" data-sitekey="{{ cloudflare_site_key }}" data-callback="javascriptCallback"></div>
+                    <div class="cf-turnstile" data-sitekey="{{ cloudflare_site_key }}" data-callback="javascriptCallback" data-theme="light">
+                    </div>
+                    <div class="pure-control-group">
                         {{ form.submit(class_="pure-button pure-button-primary") }}
+                    </div>
                 </fieldset>
             </form>
             <br/>

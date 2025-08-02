@@ -43,7 +43,7 @@ def login():
         response = make_response(redirect(url_for('video.index')))
         response.set_cookie(url_orig, '1', httponly=True, samesite='Lax')  # Cookie expires in 1 hour
         return response
-    return render_template('auth/login.html', title=_('Sign In'), form=form)
+    return render_template('auth/login.html', title=_('Log In'), form=form)
 
 
 @bp.route('/logout')

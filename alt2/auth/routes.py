@@ -12,9 +12,11 @@ from alt2.auth.forms import LoginForm, RegistrationForm, \
     ResetPasswordRequestForm, ResetPasswordForm
 from alt2.models import User
 from alt2.auth.email import send_password_reset_email, send_welcome_email
-from alt2.util import create_user_altcen, login_user_altcen, logout_user_altcen, login_required
+from alt2.util import create_user_altcen, login_user_altcen, logout_user_altcen, login_required, verify_turnstile_token
 
 url_orig = config.RANDOM_VALUE
+cloudflare_site_key = config.CLOUDFLARE_SITE_KEY
+cloudflare_secret_key = config.CLOUDFLARE_SECRET_KEY
 
 @bp.route('/', methods=['GET', 'POST'])
 @bp.route('/login', methods=['GET', 'POST'])
@@ -30,20 +32,28 @@ def login():
             invalid_username_password = _('Invalid username or password')
             flash(invalid_username_password, 'error')
             return redirect(url_for('auth.login'))
-        login_user(user, remember=form.remember_me.data)
-        login_user_altcen(user)
-        if not user.email_verified:
-            send_welcome_email(user)
-            conf_email_sent = _l('Confirmation email sent')
-            flash(conf_email_sent, 'success')
-        next_page = request.args.get('next')
-        if not next_page or urlsplit(next_page).netloc != '':
-            next_page = url_for('video.index')
 
-        response = make_response(redirect(url_for('video.index')))
-        response.set_cookie(url_orig, '1', httponly=True, samesite='Lax')  # Cookie expires in 1 hour
-        return response
-    return render_template('auth/login.html', title=_('Log In'), form=form)
+        turnstile_token = request.form.get('cf-turnstile-response')
+        verification_result = verify_turnstile_token(turnstile_token, cloudflare_secret_key)
+        if verification_result.get('success'):
+            login_user(user, remember=form.remember_me.data)
+            login_user_altcen(user)
+            if not user.email_verified:
+                send_welcome_email(user)
+                conf_email_sent = _l('Confirmation email sent')
+                flash(conf_email_sent, 'success')
+            next_page = request.args.get('next')
+            if not next_page or urlsplit(next_page).netloc != '':
+                next_page = url_for('video.index')
+            response = make_response(redirect(url_for('video.index')))
+            response.set_cookie(url_orig, '1', httponly=True, samesite='Lax')  # Cookie expires in 1 hour
+            return response
+        else:
+            cloudflare_failed = _('Invalid username or password')
+            flash(cloudflare_failed, 'error')
+            return redirect(url_for('video.index'))
+
+    return render_template('auth/login.html', title=_('Log In'), form=form, cloudflare_site_key=cloudflare_site_key)
 
 
 @bp.route('/logout')

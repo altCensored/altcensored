@@ -44,6 +44,7 @@ csp = {
     'script-src': [
         '\'self\'',
         '\'unsafe-inline\'',
+        '*.cloudflare.com',
         '*.altcensored.com'
     ],
     'media-src': [

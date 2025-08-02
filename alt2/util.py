@@ -6,7 +6,7 @@ from captcha.image import ImageCaptcha
 from datetime import datetime, timezone, timedelta, date
 from email_validator import validate_email, EmailNotValidError
 from flask import (
-    session, request, redirect, render_template, url_for, current_app, flash, make_response
+    session, request, redirect, render_template, url_for, current_app, flash
 )
 from flask_babelplus import lazy_gettext
 from http.client import HTTPSConnection
@@ -1152,3 +1152,14 @@ def logout_user_altcen():
     db_session.commit()
 
     session['user'] = None
+
+
+def verify_turnstile_token(token, secret_key):
+    response = requests.post(
+        'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+        data={
+            'secret': secret_key,
+            'response': token
+        }
+    )
+    return response.json()

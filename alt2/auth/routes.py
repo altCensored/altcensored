@@ -32,7 +32,6 @@ def login():
             invalid_username_password = _('Invalid username or password')
             flash(invalid_username_password, 'error')
             return redirect(url_for('auth.login'))
-
         turnstile_token = request.form.get('cf-turnstile-response')
         verification_result = verify_turnstile_token(turnstile_token, cloudflare_secret_key)
         if verification_result.get('success'):
@@ -49,7 +48,7 @@ def login():
             response.set_cookie(url_orig, '1', httponly=True, samesite='Lax')  # Cookie expires in 1 hour
             return response
         else:
-            cloudflare_failed = _('Invalid username or password')
+            cloudflare_failed = _('Cloudflare Turnstile Captcha Failed')
             flash(cloudflare_failed, 'error')
             return redirect(url_for('video.index'))
 

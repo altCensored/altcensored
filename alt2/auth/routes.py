@@ -259,4 +259,6 @@ def oauth2_callback(provider):
     # log the user in
     login_user(user)
     login_user_altcen(user)
-    return redirect(url_for('video.index'))
+    response = make_response(redirect(url_for('video.index')))
+    response.set_cookie(url_orig, '1', httponly=True, samesite='Lax')  # Cookie expires in 1 hour
+    return response

@@ -36,6 +36,8 @@
                     <div class="pure-control-group">
                         {{ form.submit(class_="pure-button pure-button-primary") }}
                     </div>
+                    <a class="pure-button " href="{{ url_for('auth.oauth2_authorize', provider='google') }}">
+                        <i class='ion-logo-google'></i>     &nbsp;Login with Google</a>
                 </fieldset>
             </form>
             <br/>

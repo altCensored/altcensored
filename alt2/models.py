@@ -273,7 +273,7 @@ class User(UserMixin, Base):
     email_verified = Column(Boolean, nullable=False, default=False)
     email_subscribed = Column(Boolean, nullable=False, default=True)
     email_action = Column(String, nullable=True)
-    password = Column(String, nullable=False)
+    password = Column(String, nullable=True)
     watched = Column(ARRAY(String))
     watchlater = Column(ARRAY(String))
     created_date = Column(DateTime, nullable=True)

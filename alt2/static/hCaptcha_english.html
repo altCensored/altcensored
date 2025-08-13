@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Please complete the captcha</title>
+  <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+  <style type="text/css">
+    div {
+      text-align: center;
+    }
+  </style>
+  <script>
+    function onSubmit(token) {
+      let reqBody = "h-captcha-response=" + token;
+      let httpRequest = new XMLHttpRequest();
+      httpRequest.open("POST", "/captcha");
+      httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      httpRequest.send(reqBody);
+      httpRequest.onreadystatechange = () => {
+        if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+          let text = httpRequest.responseText;
+          switch (text) {
+            case "good":
+              window.location.reload();
+              break;
+            case "bad":
+              alert("Bad CAPTCHA, please refresh the page and try again.\n");
+              break;
+            default:
+              alert("Unexpected error occurred, please refresh the page and try again.\n");
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <h1>&nbsp;</h1>
+  <div class="h-captcha" data-sitekey="5f4c116c-69e8-4fac-b266-fe5a17641b7c" data-callback="onSubmit"></div>
+</body>
+
+</html>

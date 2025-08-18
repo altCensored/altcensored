@@ -112,10 +112,6 @@ def create_app(test_config=None):
     mail.init_app(app)
     login.init_app(app)
 
-    @login.user_loader
-    def load_user(id):
-        return db_session.get(User, int(id))
-
     @babel.localeselector
     def get_locale():
         return util.get_locale()
@@ -126,6 +122,29 @@ def create_app(test_config=None):
         if user is not None:
             return user.timezone
         return None
+
+    @app.context_processor
+    def inject_context():
+        return dict(
+            locale=util.get_locale(),
+            theme=util.get_theme(),
+            playnext=util.get_playnext(),
+            autoplay=util.get_autoplay(),
+            looplist=util.get_looplist(),
+            current_url=quote_plus(request.url),
+            current_path=quote_plus(request.full_path),
+            navtabs=util.get_navtabs(),
+            navtabs_index=util.get_navtabs_index(),
+            usercount=util.get_usercount(),
+            videocount=util.get_videocount(),
+            channelcount=util.get_channelcount(),
+            delchannelcount=util.get_delchannelcount(),
+            url_orig=app.config['RANDOM_VALUE']
+        )
+
+    @login.user_loader
+    def load_user(id):
+        return db_session.get(User, int(id))
 
     @app.template_filter('viewdisplay')
     def viewdisplay(views):
@@ -206,25 +225,6 @@ def create_app(test_config=None):
     def time_diff(s):
         now = datetime.datetime.now(timezone.utc) + datetime.timedelta(seconds=60 * 3.4)
         return timeago.format(s, now)
-
-    @app.context_processor
-    def inject_context():
-        return dict(
-            locale=util.get_locale(),
-            theme=util.get_theme(),
-            playnext=util.get_playnext(),
-            autoplay=util.get_autoplay(),
-            looplist=util.get_looplist(),
-            current_url=quote_plus(request.url),
-            current_path=quote_plus(request.full_path),
-            navtabs=util.get_navtabs(),
-            navtabs_index=util.get_navtabs_index(),
-            usercount=util.get_usercount(),
-            videocount=util.get_videocount(),
-            channelcount=util.get_channelcount(),
-            delchannelcount=util.get_delchannelcount(),
-            url_orig=app.config['RANDOM_VALUE']
-        )
 
 #    @app.before_request
 #    def before_req():

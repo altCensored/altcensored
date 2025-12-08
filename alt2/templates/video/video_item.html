@@ -79,7 +79,7 @@
      data-title="{{ video['title'] | truncate(60, False, '') | pprint + '; Channel: ' + video['ytc_title'] | truncate(50, False, '') | pprint +
      '\n' }}">
   <a class="facebook" data-fb-app-id="225377455209362" data-hashtags="RemovedFromYouTube"></a>
-  <a class="twitter" data-hashtags="RemovedFromYouTube"></a>
+  <a class="twitter" data-hashtags="RemovedFromYouTube" data-via="{{ config['MYSERVER_URL'] }}/watch?v={{ video_id }}"></a>
   <a class="telegram"</a>
   <a class="copy-url"></a>
   <a class="whatsapp"></a>

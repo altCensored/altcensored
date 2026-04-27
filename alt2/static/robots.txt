@@ -79,4 +79,4 @@ Disallow: /vpn
 Disallow: /auth
 Disallow: /newsletter
 Disallow: /theme
-Crawl-delay: 20
+Crawl-delay: 5

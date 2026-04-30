@@ -11,8 +11,8 @@ MYSERVER_TEST_URL="http://127.0.0.1:5000"
 VIDEO_THUMB_ERROR_IMAGE="https://altCensored.com/image_error.webp"
 CHANNEL_THUMB_ERROR_IMAGE="https://altCensored.com/channel_unnamed.jpg"
 
-#IARCHIVEURL="https://archive.org/download/youtube-"
-IARCHIVEURL="https%3A%2F%2Farchive.org/download/youtube-"
+IARCHIVEURL="https://archive.org/download/youtube-"
+#IARCHIVEURL="https%3A%2F%2Farchive.org/download/youtube-"
 IARCHIVEITEMURL="https://archive.org/details/youtube-"
 IARCHIVEMETAURL="archive.org/metadata/youtube-"
 

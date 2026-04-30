@@ -10,12 +10,21 @@
 <meta name="keywords" content="{{ video['tags'] }}">
 <meta name="twitter:card" content="player">
 
+<!--
 {% if  video['exists_ac'] %}
   <meta name="twitter:image" content="{{ config.ACIPROXYHUGE~ config.VIDEOSERVER_URL ~ video['extractor_data'] ~ '/' ~ video['thumbnail_ac'] }}"
 {% else %}
   <meta name="twitter:image" content="{{ config.IPROXY ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}">
 {% endif %}
+-->
 
+{% if  video['exists_ac'] %}
+  <meta name="twitter:image" content="{{ config.ACIPROXYHUGE~ config.VIDEOSERVER_URL ~ video['extractor_data'] ~ '/' ~ video['thumbnail_ac'] }}"
+                   onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}"
+{% else %}
+  <meta name="twitter:image" content="{{ config.IPROXYHUGE~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['thumbnail'] }}"
+                   onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}">
+{% endif %}
 
 <meta name="twitter:url" content="{{ config['MYSERVER_URL'] }}/watch?v={{ video_id }}">
 <meta name="twitter:player" content="{{ config['MYSERVER_URL'] }}/embed/{{ video_id }}">

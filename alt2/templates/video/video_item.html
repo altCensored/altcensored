@@ -21,8 +21,16 @@
 {% if  video['exists_ac'] %}
   <meta name="twitter:image" content="{{ config.ACIPROXYHUGE~ config.VIDEOSERVER_URL ~ video['extractor_data'] ~ '/' ~ video['thumbnail_ac'] }}"
                    onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}"
+  <meta name="og:image" content="{{ config.ACIPROXYHUGE~ config.VIDEOSERVER_URL ~ video['extractor_data'] ~ '/' ~ video['thumbnail_ac'] }}"
+                   onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}"
+    <meta name="og:image:secure_url" content="{{ config.ACIPROXYHUGE~ config.VIDEOSERVER_URL ~ video['extractor_data'] ~ '/' ~ video['thumbnail_ac'] }}"
+                   onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}"
 {% else %}
   <meta name="twitter:image" content="{{ config.IPROXYHUGE~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['thumbnail'] }}"
+                   onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}">
+  <meta name="og:image" content="{{ config.IPROXYHUGE~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['thumbnail'] }}"
+                   onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}">
+  <meta name="og:image:secure_url" content="{{ config.IPROXYHUGE~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['thumbnail'] }}"
                    onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}">
 {% endif %}
 
@@ -40,8 +48,10 @@
 <meta property="og:title" content="{{ video['title'] }}">
 <meta property="og:description" content="{{ video['description'] }} (Published on {{ video['published'].strftime('%b %e, %G') }})">
 <meta property="og:type" content="article">
+<!--
 <meta property="og:image" content="{{ video_url_short }}__ia_thumb.jpg">
 <meta property="og:image:secure_url" content="{{ video_url_short }}__ia_thumb.jpg">
+-->
 <meta name="og:video" content="{{ config['MYSERVER_URL'] }}/embed/{{ video_id }}">
 
 <meta name="altcen_title" content=

@@ -51,7 +51,7 @@ def login():
         if not next_page or urlsplit(next_page).netloc != '':
             next_page = url_for('video.index')
         response = make_response(redirect(url_for('video.index')))
-        response.set_cookie(url_orig, '1', httponly=True, samesite='Lax')  # Cookie expires in 1 hour
+        response.set_cookie(url_orig, '1', httponly=True, samesite='Lax', max_age=86400)  # Cookie expires in 1 hour
         return response
     return render_template('auth/login.html', title=_('Log In'), form=form, cloudflare_site_key=cloudflare_site_key)
 
@@ -260,5 +260,5 @@ def oauth2_callback(provider):
     login_user(user)
     login_user_altcen(user)
     response = make_response(redirect(url_for('video.index')))
-    response.set_cookie(url_orig, '1', httponly=True, samesite='Lax')  # Cookie expires in 1 hour
+    response.set_cookie(url_orig, '1', httponly=True, samesite='Lax', max_age=86400)  # Cookie expires in 1 hour
     return response

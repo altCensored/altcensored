@@ -49,6 +49,7 @@
             </div>
             <div class="h-box">
                 <form class="pure-form pure-form-aligned" name=site method="post">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <fieldset>
                         <div class="pure-control-group">
                             <label for="Language"> {{ gettext('Language') }}:</label>

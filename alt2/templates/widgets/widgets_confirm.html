@@ -16,6 +16,7 @@
       <div class="pure-u-1 pure-u-md-1-1">
         <div class="h-box">
           <form class="pure-form pure-form-aligned" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <fieldset>
               <div class="pure-controls">
                 <label for="message">{{ message }}:&nbsp;</label>

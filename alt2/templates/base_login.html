@@ -68,15 +68,21 @@
         <div class="pure-u-1-2">
           <a href="{{ url_for('auth.reset_password_request') }}">Reset {{ gettext('Password') }}</a>
         </div>
-        <div class="pure-u-1-2">
-           <a href="{{url_for('theme.toggle')}}?{{url_orig}}={{ current_path }}"}}">
-            {%if theme == 'light' %}
-            <i id="dark-reader-icon" class="icon ion-ios-moon"></i>
-            {% else %}
-            <i id="dark-reader-icon" class="icon ion-ios-sunny"></i>
-            {% endif %}
-          </a>
-        </div>
+
+<div class="pure-u-1-2">
+  <form method="POST" action="{{ url_for('theme.toggle') }}" style="display:inline;">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="redir" value="{{ current_path }}">
+    <button type="submit" style="background:none;border:none;cursor:pointer;padding:0;">
+      {% if theme == 'light' %}
+      <i id="dark-reader-icon" class="icon ion-ios-moon"></i>
+      {% else %}
+      <i id="dark-reader-icon" class="icon ion-ios-sunny"></i>
+      {% endif %}
+    </button>
+  </form>
+</div>
+
       </div>
     </div>
   </div>

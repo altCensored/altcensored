@@ -6,6 +6,7 @@ from flask_mail import Mail
 from urllib.parse import quote_plus
 from flask_login import LoginManager
 from flask_qrcode import QRcode
+from flask_wtf.csrf import CSRFProtect
 from markupsafe import escape, Markup
 import timeago, datetime
 from datetime import timezone
@@ -18,6 +19,8 @@ from .database import db_session
 from .models import User
 from psycogreen.gevent import patch_psycopg
 from flask_talisman import Talisman
+
+csrf = CSRFProtect()
 
 #import sentry_sdk
 #from sentry_sdk.integrations.flask import FlaskIntegration
@@ -111,6 +114,7 @@ def create_app(test_config=None):
     Talisman(app, content_security_policy=csp)
     mail.init_app(app)
     login.init_app(app)
+    csrf.init_app(app)  # ← add this line
 
     @babel.localeselector
     def get_locale():

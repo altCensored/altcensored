@@ -18,6 +18,7 @@
         <div class="h-box">
         <h2>{{title}}</h2>
         <form method=post enctype=multipart/form-data>
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <label for="video_id">Video ID:</label>
           <input type="text" size="11" minlength="11" maxlength="11" required name="video_id">
           &nbsp;&nbsp;&nbsp;&nbsp;

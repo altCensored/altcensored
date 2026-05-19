@@ -123,6 +123,10 @@
   function add_video_WatchLater(vid){
     fetch('{{ url_for('user.add_video_watchlater_post') }}', {
       method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token() }}'
+      },
       body: JSON.stringify({
         'v': vid
       })
@@ -138,6 +142,10 @@
   function add_video_PlayList(vid, plist){
     fetch('{{ url_for('playlist.add_video_playlist_post') }}', {
       method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token() }}'
+      },
       body: JSON.stringify({
         'v': vid,
         'p': plist

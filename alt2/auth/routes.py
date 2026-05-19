@@ -51,7 +51,7 @@ def login():
         if not next_page or urlsplit(next_page).netloc != '':
             next_page = url_for('video.index')
         response = make_response(redirect(url_for('video.index')))
-        response.set_cookie(url_orig, '1', httponly=True, samesite='Lax', max_age=86400)  # Cookie expires in 1 hour
+        response.set_cookie('loggedin', '1', httponly=True, samesite='Lax', secure=True, max_age=86400)  # Cookie expires in 24 hour
         return response
     return render_template('auth/login.html', title=_('Log In'), form=form, cloudflare_site_key=cloudflare_site_key)
 

@@ -109,3 +109,4 @@ OAUTH2_PROVIDERS = {
         'scopes': ['https://www.googleapis.com/auth/userinfo.email'],
     }
 }
+WTF_CSRF_SSL_STRICT = False

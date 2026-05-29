@@ -29,6 +29,11 @@ from .cache import cache
 video_url = None
 url_orig = config.RANDOM_VALUE
 
+BLUEPRINT_FIXES = {
+    'kanal': 'channel', 'canale': 'channel', 'kanaal': 'channel',
+    'videos': 'video',
+}
+
 def get_locale():
     if 'locale' in session:
         return session['locale']
@@ -1090,6 +1095,8 @@ def get_ia_item(extractor_data):
 def create_user_altcen(user):
     now = datetime.now(timezone.utc)
     navtabs_value = [session['navtabs']['navtab1'], session['navtabs']['navtab2'], session['navtabs']['navtab3']]
+    navtabs_index_value = [session['navtabs_index']['navtab1'], session['navtabs_index']['navtab2'],
+                           session['navtabs_index']['navtab3']]
     user.description = ""
     user.created_date = now
     user.updated = now
@@ -1104,7 +1111,7 @@ def create_user_altcen(user):
         "looplist": session['looplist']
     }
     user.navtabs=navtabs_value
-    user.navtabs_index=navtabs_value
+    user.navtabs_index=navtabs_index_value
     db_session.add(user)
     db_session.commit()
     return user
@@ -1131,10 +1138,9 @@ def login_user_altcen(user):
     session['navtabs']['navtab2'] = user.navtabs[1]
     session['navtabs']['navtab3'] = user.navtabs[2]
 
-    session['navtabs_index']['navtab1'] = user.navtabs_index[0]
-    session['navtabs_index']['navtab2'] = user.navtabs_index[1]
-    session['navtabs_index']['navtab3'] = user.navtabs_index[2]
-
+    session['navtabs_index']['navtab1'] = BLUEPRINT_FIXES.get(user.navtabs_index[0], user.navtabs_index[0])
+    session['navtabs_index']['navtab2'] = BLUEPRINT_FIXES.get(user.navtabs_index[1], user.navtabs_index[1])
+    session['navtabs_index']['navtab3'] = BLUEPRINT_FIXES.get(user.navtabs_index[2], user.navtabs_index[2])
 
 def logout_user_altcen():
     now = datetime.now(timezone.utc)

@@ -230,9 +230,20 @@ def create_app(test_config=None):
         now = datetime.datetime.now(timezone.utc) + datetime.timedelta(seconds=60 * 3.4)
         return timeago.format(s, now)
 
-#    @app.before_request
-#    def before_req():
-#        util.set_session()
+    @app.template_filter('iso8601duration')
+    def iso8601duration(seconds):
+        try:
+            seconds = int(seconds)
+            hours = seconds // 3600
+            minutes = (seconds % 3600) // 60
+            secs = seconds % 60
+            duration = 'PT'
+            if hours: duration += f'{hours}H'
+            if minutes: duration += f'{minutes}M'
+            if secs: duration += f'{secs}S'
+            return duration or 'PT0S'
+        except (ValueError, TypeError):
+            return ''
 
     def has_no_empty_params(rule):
         defaults = rule.defaults if rule.defaults is not None else ()

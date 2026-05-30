@@ -59,6 +59,34 @@
 <meta name="altcen_meta_description" content="{% block description %}Limited Censored YouTube Video: {{ video['description'] }} (Published on {{ video['published'].strftime('%b %e, %G') }}){% endblock %}>
 <link rel="image_src" href="{% block imagesrc %}{{ config.IPROXY ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}{% endblock %}">
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  "name": "{{ video['title'] | e }}",
+  "description": "{{ video['description'] | truncate(500) | e if video['description'] else video['title'] | e }}",
+  "thumbnailUrl": "{% if video['exists_ac'] %}{{ config.ACIPROXYHUGE ~ config.VIDEOSERVER_URL ~ video['extractor_data'] ~ '/' ~ video['thumbnail_ac'] }}{% else %}{{ config.IPROXYHUGE ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['thumbnail'] }}{% endif %}",
+  "uploadDate": "{{ video['published'].strftime('%Y-%m-%dT%H:%M:%SZ') if video['published'] else '' }}",
+  "duration": "{{ video['duration'] | iso8601duration if video['duration'] else '' }}",
+  "contentUrl": "{{ config['MYSERVER_URL'] }}/watch?v={{ video['extractor_data'] }}",
+  "embedUrl": "{{ config['MYSERVER_URL'] }}/embed/{{ video['extractor_data'] }}",
+  "interactionStatistic": {
+    "@type": "InteractionCounter",
+    "interactionType": "https://schema.org/WatchAction",
+    "userInteractionCount": {{ video['yt_views'] if video['yt_views'] else 0 }}
+  },
+  "author": {
+    "@type": "Person",
+    "name": "{{ video['ytc_title'] | e if video['ytc_title'] else '' }}"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "altCensored",
+    "url": "{{ config['MYSERVER_URL'] }}"
+  }
+}
+</script>
+
 {% endblock %}
 {% block content %}
 

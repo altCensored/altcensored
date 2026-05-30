@@ -29,7 +29,8 @@ def index(page):
 @bp.route('/<cat_id>', defaults={'page': 1})
 @bp.route('/<cat_id>/page/<int:page>')
 def item(cat_id,page):
-#    set_session()
+    if not cat_id.isdigit():
+        abort(404)
     offset = ((int(page)-1) * PER_PAGE)
     order = 'latest'
     category = Mv_Category.query.get(cat_id)
@@ -54,7 +55,8 @@ def item(cat_id,page):
 @bp.route('/<cat_id>/new', defaults={'page': 1})
 @bp.route('/<cat_id>/new/page/<int:page>')
 def item_new(cat_id,page):
-#    set_session()
+    if not cat_id.isdigit():
+        abort(404)
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
     category = Mv_Category.query.get(cat_id)
@@ -79,7 +81,8 @@ def item_new(cat_id,page):
 @bp.route('/<cat_id>/popular', defaults={'page': 1})
 @bp.route('/<cat_id>/popular/page/<int:page>')
 def item_popular(cat_id,page):
-#    set_session()
+    if not cat_id.isdigit():
+        abort(404)
     offset = ((int(page)-1) * PER_PAGE)
     order = 'popular'
     category = Mv_Category.query.get(cat_id)
@@ -99,38 +102,3 @@ def item_popular(cat_id,page):
 
     return render_template('category/category_item.html',
         pagination=pagination, category=category, videos=videos, videocount=videocount, order=order)
-
-
-@bp.route('/<lang_code>', defaults={'page': 1})
-@bp.route('/<lang_code>/page/<int:page>')
-def lang_item(lang_code,page):
-#    set_session()
-    offset = ((int(page)-1) * PER_PAGE)
-    order = 'latest'
-    language = Language.query.get(lang_code)
-    if language is None:
-        abort(404)
-    lang_tagstring = language.lang_tagstring
-
-    search = lang_tagstring
-
-    my_to_tsquery_video = text("mv_video.document @@ websearch_to_tsquery(:search)")
-    my_ts_rank_video = text("ts_rank(mv_video.document, websearch_to_tsquery(:search)) DESC")
-    videos = db_session.query(Mv_Video).\
-        filter(my_to_tsquery_video).\
-        order_by(my_ts_rank_video).\
-        limit(PER_PAGE).offset(offset).\
-        params(search=search).all()
-
-
-    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
-    pagination = Pagination(page, PER_PAGE, videocount)  
-
-    # This line is wrong — cat_name doesn't exist in lang_item
-    #videos = Mv_Video.query.filter_by(category=cat_name).limit(PER_PAGE).offset(offset)
-
-    if not videos and page != 1:
-        abort(404)
-    pagination = Pagination(page, PER_PAGE, videocount)    
-    return render_template('category/category_item.html', 
-        pagination=pagination, language=language, videos=videos, videocount=videocount, order=order)

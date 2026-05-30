@@ -1,5 +1,5 @@
 from flask import Blueprint, Response, render_template
-from .cache import cache
+from .cache import cache
 from .database import db_session
 from .models import Mv_Video, Mv_Channel, Mv_Category
 import math

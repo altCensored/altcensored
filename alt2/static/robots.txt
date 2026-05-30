@@ -70,15 +70,28 @@ Disallow:/
 User-agent: Go-http-client
 Disallow:/
 
+User-agent: bingbot
+Disallow: /embed
+Disallow: /category
+Disallow: /language
+Disallow: /settings
+Disallow: /auth
+Disallow: /newsletter
+Disallow: /translations
+Disallow: /donate
+Disallow: /user
+Crawl-delay: 1
+
 User-agent: *
 Disallow: /embed
 Disallow: /category
 Disallow: /language
 Disallow: /settings
-Disallow: /vpn
 Disallow: /auth
 Disallow: /newsletter
-Disallow: /theme
+Disallow: /translations
+Disallow: /donate
+Disallow: /user
 Crawl-delay: 6
 
 Sitemap: https://altcensored.com/sitemap.xml

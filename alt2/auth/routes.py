@@ -36,7 +36,10 @@ def login():
     if form.validate_on_submit():
         user = db_session.scalar(
             sa.select(User)
-            .where(or_(User.username == form.username.data,User.email == form.username.data )))
+            .where(or_(
+                func.lower(User.username) == func.lower(form.username.data),
+                func.lower(User.email) == func.lower(form.username.data)
+            )))
         if user is None or not user.check_password(form.password.data):
             invalid_username_password = _('Invalid username or password')
             flash(invalid_username_password, 'error')

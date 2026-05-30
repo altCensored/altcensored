@@ -779,7 +779,14 @@ def channels_archived(PER_PAGE, offset):
 
 @cache.memoize()
 def channeli(ytc_id):
+    # Try exact match first (fast primary key lookup)
     channel = Mv_Channel.query.get(ytc_id)
+    if channel is None:
+        # Fall back to case-insensitive lookup for URLs from external sources
+        channel = Mv_Channel.query.filter(
+            func.lower(Mv_Channel.ytc_id) == func.lower(ytc_id)
+        ).first()
+
     return channel
 
 

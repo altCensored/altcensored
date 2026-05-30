@@ -82,6 +82,30 @@ Disallow: /donate
 Disallow: /user
 Crawl-delay: 1
 
+User-agent: Applebot
+Disallow: /embed
+Disallow: /category
+Disallow: /language
+Disallow: /settings
+Disallow: /auth
+Disallow: /newsletter
+Disallow: /translations
+Disallow: /donate
+Disallow: /user
+Crawl-delay: 2
+
+User-agent: DuckDuckBot
+Disallow: /embed
+Disallow: /category
+Disallow: /language
+Disallow: /settings
+Disallow: /auth
+Disallow: /newsletter
+Disallow: /translations
+Disallow: /donate
+Disallow: /user
+Crawl-delay: 1
+
 User-agent: *
 Disallow: /embed
 Disallow: /category

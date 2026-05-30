@@ -285,7 +285,7 @@ def create_app(test_config=None):
     def shutdown_session(exception=None):
         db_session.remove()    
 
-    from . import video, channel, about, category, language, settings, admin, playlist, theme, user, newsletter, donate
+    from . import video, channel, about, category, language, settings, admin, playlist, theme, user, newsletter, donate, sitemap
 
     from alt2.auth import bp as auth_bp
     app.register_blueprint(auth_bp, url_prefix='/auth')
@@ -302,6 +302,7 @@ def create_app(test_config=None):
     app.register_blueprint(user.bp)
     app.register_blueprint(newsletter.bp)
     app.register_blueprint(donate.bp)
+    app.register_blueprint(sitemap.bp)
 
     app.add_url_rule('/', endpoint='video.index', defaults={'page': 1})
 

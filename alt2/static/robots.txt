@@ -80,3 +80,5 @@ Disallow: /auth
 Disallow: /newsletter
 Disallow: /theme
 Crawl-delay: 6
+
+Sitemap: https://altcensored.com/sitemap.xml

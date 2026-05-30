@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  {% for video in videos %}
+  <url>
+    <loc>https://altcensored.com/watch?v={{ video.extractor_data }}</loc>
+    {% if video.published %}
+    <lastmod>{{ video.published.strftime('%Y-%m-%d') }}</lastmod>
+    {% endif %}
+    <changefreq>never</changefreq>
+    <priority>0.8</priority>
+  </url>
+  {% endfor %}
+</urlset>

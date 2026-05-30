@@ -33,6 +33,8 @@ def item(cat_id,page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'latest'
     category = Mv_Category.query.get(cat_id)
+    if category is None:
+        abort(404)
     cat_name = category.cat_name
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter_by(category=cat_name).scalar()
     videos = Mv_Video.query.filter_by(category=cat_name).order_by(Mv_Video.id.desc()).limit(PER_PAGE).offset(offset)
@@ -56,6 +58,8 @@ def item_new(cat_id,page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
     category = Mv_Category.query.get(cat_id)
+    if category is None:
+        abort(404)
     cat_name = category.cat_name
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter_by(category=cat_name).scalar()
     videos = Mv_Video.query.filter_by(category=cat_name).order_by(Mv_Video.published.desc()).limit(PER_PAGE).offset(offset)
@@ -79,6 +83,8 @@ def item_popular(cat_id,page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'popular'
     category = Mv_Category.query.get(cat_id)
+    if category is None:
+        abort(404)
     cat_name = category.cat_name
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter_by(category=cat_name).scalar()
     videos = Mv_Video.query.filter_by(category=cat_name).order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset)
@@ -102,6 +108,8 @@ def lang_item(lang_code,page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'latest'
     language = Language.query.get(lang_code)
+    if language is None:
+        abort(404)
     lang_tagstring = language.lang_tagstring
 
     search = lang_tagstring
@@ -118,7 +126,8 @@ def lang_item(lang_code,page):
     videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
     pagination = Pagination(page, PER_PAGE, videocount)  
 
-    videos = Mv_Video.query.filter_by(category=cat_name).limit(PER_PAGE).offset(offset)
+    # This line is wrong — cat_name doesn't exist in lang_item
+    #videos = Mv_Video.query.filter_by(category=cat_name).limit(PER_PAGE).offset(offset)
 
     if not videos and page != 1:
         abort(404)

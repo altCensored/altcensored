@@ -69,6 +69,7 @@ class Entity(Base):
     ac_views = Column(Integer, nullable=True)
     videofile = Column(String, nullable=True)
     novideo_ia = Column(Boolean, nullable=True)
+    yt_deleted_date = Column(DateTime, nullable=True)
 
     __mapper_args__ = {
         "polymorphic_on": type,

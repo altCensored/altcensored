@@ -28,7 +28,7 @@
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pure-min.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/grids-responsive-min.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}?v=4">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}?v=14">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/lighttheme.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/shareon.css') }}">
 
@@ -55,34 +55,13 @@
           <span class="censored-span">ensored</span>
         </a>
       </div>
-      <span style="line-height: 1;">
-        <p></p>
-      </span>
       <div class="pure-u-1 pure-u-md-8-24 user-field">
-        <div class="pure-u-1-2">
-          <a href="{{ url_for('auth.login') }}">{{ gettext('Login') }}</a>
-        </div>
-        <div class="pure-u-1-2">
+        <div class="pure-u-1-2" style="margin-right: 0.4em;">
           <a href="{{ url_for('auth.register') }}">{{ gettext('Register') }}</a>
         </div>
         <div class="pure-u-1-2">
           <a href="{{ url_for('auth.reset_password_request') }}">Reset {{ gettext('Password') }}</a>
         </div>
-
-<div class="pure-u-1-2">
-  <form method="POST" action="{{ url_for('theme.toggle') }}" style="display:inline;">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-    <input type="hidden" name="redir" value="{{ current_path }}">
-    <button type="submit" style="background:none;border:none;cursor:pointer;padding:0;">
-      {% if theme == 'light' %}
-      <i id="dark-reader-icon" class="icon ion-ios-moon"></i>
-      {% else %}
-      <i id="dark-reader-icon" class="icon ion-ios-sunny"></i>
-      {% endif %}
-    </button>
-  </form>
-</div>
-
       </div>
     </div>
   </div>

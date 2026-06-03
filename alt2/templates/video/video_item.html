@@ -46,6 +46,14 @@
 -->
 <meta name="og:video" content="{{ config['MYSERVER_URL'] }}/embed/{{ video_id }}">
 
+<style>
+@media screen and (max-width: 47.999em) {
+  .watch-left   { order: 2; }
+  .watch-center { order: 1; }
+  .watch-right  { order: 3; }
+}
+</style>
+
 <meta name="altcen_title" content=
 "{% block title %}{{ video['title'] | striptags | truncate(length=56,killwords=False,end='',leeway=0) }}{% endblock %}">
 
@@ -110,7 +118,7 @@
           <h2>{{ video['title'] }}</h2>
         </div>
         <div class="pure-g">
-          <div class="pure-u-1 pure-u-md-1-5">
+          <div class="pure-u-1 pure-u-md-1-5 watch-left">
             <div class="h-box">
 
 
@@ -189,7 +197,7 @@
 -->
             </div>
           </div>
-          <div class="pure-u-1 pure-u-md-3-5">
+          <div class="pure-u-1 pure-u-md-3-5 watch-center">
             <div class="h-box">
               <a href="{{ url_for('channel.item', ytc_id=video['ytc_id']) }}">
                 <img src="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['ytc_thumbnail'] }}" height="35" width="35"
@@ -209,7 +217,7 @@
               <hr>
             </div>
           </div>
-          <div class="pure-u-1 pure-u-md-1-5">
+          <div class="pure-u-1 pure-u-md-1-5 watch-right">
               <div class="h-box">
                 <form method="post" action="">
                     {% if playnext %}

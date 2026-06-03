@@ -39,12 +39,12 @@
 
 <meta name="twitter:site" content="@altcensored">
 <meta name="twitter:title" content="{{ video['title'] }}">
-<meta name="twitter:description" content="{{ video['description'] }} (Published on {{ video['published'].strftime('%b %e, %G') }})">
+<meta name="twitter:description" content="{{ video['description'] }} (Published on {{ video['published'].strftime('%b %e, %G') if video['published'] else '' }})">
 
 <meta property="og:site_name" content="{{ config['MYSERVER_NAME'] }}">
 <meta property="og:url" content="https://{{ config['MYSERVER_NAME'] }}/watch?v={{ video['extractor_data'] }}">
 <meta property="og:title" content="{{ video['title'] }}">
-<meta property="og:description" content="{{ video['description'] }} (Published on {{ video['published'].strftime('%b %e, %G') }})">
+<meta property="og:description" content="{{ video['description'] }} (Published on {{ video['published'].strftime('%b %e, %G') if video['published'] else '' }})">
 <meta property="og:type" content="article">
 
 <!--
@@ -56,7 +56,7 @@
 <meta name="altcen_title" content=
 "{% block title %}{{ video['title'] | striptags | truncate(length=56,killwords=False,end='',leeway=0) }}{% endblock %}">
 
-<meta name="altcen_meta_description" content="{% block description %}Limited Censored YouTube Video: {{ video['description'] }} (Published on {{ video['published'].strftime('%b %e, %G') }}){% endblock %}>
+<meta name="altcen_meta_description" content="{% block description %}Limited Censored YouTube Video: {{ video['description'] }} (Published on {{ video['published'].strftime('%b %e, %G') if video['published'] else '' }}){% endblock %}>
 <link rel="image_src" href="{% block imagesrc %}{{ config.IPROXY ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}{% endblock %}">
 
 <script type="application/ld+json">
@@ -209,7 +209,7 @@
               </style>
               {% else %}
               {% endif %}
-              <h4>{{ gettext('Published on') }} {{ video['published'].strftime('%b %e, %G') }}</h4>
+              <h4>{{ gettext('Published on') }} {{ video['published'].strftime('%b %e, %G') if video['published'] else '' }}</h4>
                 {% if video['description']  is not none %}
                   {{ video['description'] | linkify | safe | nl2br }}
                 {% endif %}

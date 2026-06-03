@@ -80,7 +80,7 @@
                   <b>{{ channel['ytc_title'] }}</b>
                 </a>
                 <br>
-                  {{ gettext('Created') }} {{ channel['ytc_publishedat'].strftime('%b %e, %G') }}
+                  {{ gettext('Created') }} {{ channel['ytc_publishedat'].strftime('%b %e, %G') if channel['ytc_publishedat'] else '' }}
               </div>
               <br>
             </div>
@@ -196,7 +196,7 @@
            </p>
            <h5 class = "pure-g">
             <div class="pure-u-2-3">
-            {{ gettext('Published') }} {{ video['published'].strftime('%b %e, %G') }}
+            {{ gettext('Published') }} {{ video['published'].strftime('%b %e, %G') if video['published'] else '' }}
             </div>
             <div class="pure-u-1-3" style="text-align:right">
             {{ video['yt_views']|viewdisplay }} {{ gettext('views') }}

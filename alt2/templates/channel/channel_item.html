@@ -19,7 +19,7 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
 <meta property="og:image:secure_url" content="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['ytc_thumbnail']  }}">
 
 <meta name="altcen_title" content="{% block title %}{{ channel['ytc_title'] | striptags | truncate(length=56,killwords=False,end='',leeway=0) }}{% endblock %}">
-<meta name="altcen_meta_description" content="{% block description %}Limited Censored YouTube Video Channel: {{ channel['ytc_title'] }}: {{ channel['ytc_description'] }} (Created on {{ channel['ytc_publishedat'].strftime('%b %e, %G') }}){% endblock %}">
+<meta name="altcen_meta_description" content="{% block description %}Limited Censored YouTube Video Channel: {{ channel['ytc_title'] }}: {{ channel['ytc_description'] }} (Created on {{ channel['ytc_publishedat'].strftime('%b %e, %G') if channel['ytc_publishedat'] else '' }}){% endblock %}">
 
 <!--
 <link rel="stylesheet" href="{{ url_for('static', filename='css/shareon.css') }}">
@@ -66,11 +66,11 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
                     &nbsp;<b><a style="width:100%;" href="https://youtube.com/channel/{{ channel['ytc_id'] }}" target="_blank">YouTube {{ gettext('Channel') }}</a></b><br>
                     &nbsp;<b><a style="width:100%;" href="https://socialblade.com/youtube/channel/{{ channel['ytc_id'] }}" target="_blank">SocialBlade {{ gettext('Stats') }}</a></b>
                   <p></p>
-                      <b>&nbsp;{{ gettext('Created:') }} {{ channel['ytc_publishedat'].strftime('%b %e, %G') }}</b><br>
-                      &nbsp;({{ gettext('Added') }} {{ channel['ytc_addeddate'].strftime('%b %e, %G') }})<br>
+                      <b>&nbsp;{{ gettext('Created:') }} {{ channel['ytc_publishedat'].strftime('%b %e, %G') if channel['ytc_publishedat'] else '' }}</b><br>
+                      &nbsp;({{ gettext('Added') }} {{ channel['ytc_addeddate'].strftime('%b %e, %G') if channel['ytc_addeddate'] else '' }})<br>
                        {% if channel['ytc_deleted'] %}
                          <span style="color: red; ">
-                             <b>&nbsp;{{ gettext('Deleted:') }} {{ channel['ytc_deleteddate'].strftime('%b %e, %G') }}</span></b>
+                             <b>&nbsp;{{ gettext('Deleted:') }} {{ channel['ytc_deleteddate'].strftime('%b %e, %G') if channel['ytc_deleteddate'] else '' }}</span></b>
                        {% endif %}
                   </div>
                 </div>
@@ -83,7 +83,7 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
                 <h3>{{ channel['ytc_title'] }}</h3></a>
             {% if channel['ytc_deleted'] %}
             <div class="shareon" data-url="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}"
-                 data-title="YouTube Channel {{channel['ytc_title']|truncate(60,False,'')|pprint}} TERMINATED {{channel['ytc_deleteddate'].strftime('%m/%d/%y')}}; {{channel['limited']}} Censored Videos #RemovedFromYouTube #FreeSpeech
+                 data-title="YouTube Channel {{channel['ytc_title']|truncate(60,False,'')|pprint}} TERMINATED {{channel['ytc_deleteddate'].strftime('%m/%d/%y') if channel['ytc_deleteddate'] else ''}}; {{channel['limited']}} Censored Videos #RemovedFromYouTube #FreeSpeech
 (Watch/Share #Censored videos: together we show what they hide)">
             {% elif channel['limited'] %}
             <div class="shareon" data-url="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}"

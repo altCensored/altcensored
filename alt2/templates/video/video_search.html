@@ -85,10 +85,10 @@
                             </a>
 
                             <br>
-                            {{ gettext('Created') }} {{ channel['ytc_publishedat'].strftime('%b %e, %G') }}
+                            {{ gettext('Created') }} {{ channel['ytc_publishedat'].strftime('%b %e, %G') if channel['ytc_publishedat'] else '' }}
                             <br>
                             {% if channel['ytc_deleted'] %}
-                                <font color="red">{{ gettext('Deleted') }} {{ channel['ytc_deleteddate'].strftime('%b %e, %G') }}</font>
+                                <font color="red">{{ gettext('Deleted') }} {{ channel['ytc_deleteddate'].strftime('%b %e, %G') if channel['ytc_deleteddate'] else '' }}</font>
                             {% else %}
                             {% endif %}
 

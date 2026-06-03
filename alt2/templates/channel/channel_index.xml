@@ -43,9 +43,9 @@
                 <b>Limited/Removed Videos: {{ channel['limited'] }}</b><br>
                 <b>Views:</b> {{ channel['ytc_viewcount'] }}<br>
                 <b>Subscribers:</b> {{ channel['ytc_subscribercount'] }}<br>
-                <b>Created Date:</b> {{ channel['ytc_publishedat'].strftime('%Y-%m-%d') }}<br>
+                <b>Created Date:</b> {{ channel['ytc_publishedat'].strftime('%Y-%m-%d') if channel['ytc_publishedat'] else '' }}<br>
               {% if channel['ytc_deleted'] %}
-                <b>Deleted Date:</b>{{ channel['ytc_deleteddate'].strftime('%Y-%m-%d') }}<br>
+                <b>Deleted Date:</b>{{ channel['ytc_deleteddate'].strftime('%Y-%m-%d') if channel['ytc_deleteddate'] else '' }}<br>
               {% endif %}
               {% if channel['ytc_addeddate'] %}
                  <b>Added to altCensored Date:</b> {{ channel['ytc_addeddate'].strftime('%Y-%m-%d') }}<br>
@@ -74,9 +74,9 @@
                 <altcen:Short_Description> <![CDATA[ {{ channel['ytc_description'] }} ]]> </altcen:Short_Description>
               {% endif %}
               {% if channel['ytc_deleted'] %}
-              <pubDate>{{ channel['ytc_deleteddate'].strftime('%a, %d %b %Y %T') }} EST</pubDate>
+              <pubDate>{{ channel['ytc_deleteddate'].strftime('%a, %d %b %Y %T') if channel['ytc_deleteddate'] else '' }} EST</pubDate>
               {% else %}
-              <pubDate>{{ channel['ytc_addeddate'].strftime('%a, %d %b %Y %T') }} EST</pubDate>
+              <pubDate>{{ channel['ytc_addeddate'].strftime('%a, %d %b %Y %T') if channel['ytc_addeddate'] else '' }} EST</pubDate>
               {% endif %}
             </item>
           {% endfor %}

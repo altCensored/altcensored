@@ -164,9 +164,10 @@ def watch():
         videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(user.watchlater)).order_by(ordering)
 
     else:
-        videos = db_session.query(Mv_Video).filter(Mv_Video.ytc_id == video.ytc_id,
-                                                   Mv_Video.published <= video.published,
-                                                   Mv_Video.extractor_data != video_id) \
+        vid_filter = [Mv_Video.ytc_id == video.ytc_id, Mv_Video.extractor_data != video_id]
+        if video.published is not None:
+            vid_filter.append(Mv_Video.published <= video.published)
+        videos = db_session.query(Mv_Video).filter(*vid_filter) \
             .order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE)
 
     IARCHIVEURL = current_app.config['IARCHIVEURL']
@@ -180,7 +181,12 @@ def watch():
                    secret_key=current_app.config['AC_S3_SECRET_KEY']
                    )
 
-    if ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id):
+    try:
+        s3_exists = ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id)
+    except Exception:
+        s3_exists = False
+
+    if s3_exists:
         video_url = VIDEOSERVER_URL + video_id + "/" + video_id
     else:
         if video.dark_ia or video.restricted_ia or video.loggedin_ia or video.novideo_ia:
@@ -263,7 +269,12 @@ def embed(video_id):
     header = request.headers.get('User-Agent')
     Thread(target=increment_video_counter, args=(video_id, ip, header)).start()
 
-    if ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id):
+    try:
+        s3_exists = ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id)
+    except Exception:
+        s3_exists = False
+
+    if s3_exists:
         video_url = VIDEOSERVER_URL + video_id + "/" + video_id
     else:
         if video.dark_ia or video.restricted_ia or video.loggedin_ia or video.novideo_ia:

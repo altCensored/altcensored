@@ -261,6 +261,9 @@
                 <div class="pure-u-10-24" style="text-align:right">
                   <b>{{ video['yt_views']|viewdisplay }} {{ gettext('views') }}</b>
                 </div>
+                <div class="pure-u-1-1">
+                  {{ video['published'].strftime('%b %e, %G') if video['published'] else '' }}
+                </div>
               </h5>
             </div>
             {% endfor %}

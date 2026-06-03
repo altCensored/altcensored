@@ -230,6 +230,10 @@ input[type="search"]::-webkit-search-cancel-button {
   padding: 0;
 }
 
+.navbar > .searchbar .pure-form input[type="search"]::placeholder {
+  font-style: italic;
+}
+
 /* attract focus to the searchbar by adding a subtle transition */
 .navbar > .searchbar .pure-form input[type="search"]:focus {
   border-bottom: 2px solid #aaa;
@@ -252,27 +256,50 @@ input[type="search"]::-webkit-search-cancel-button {
 
 @media screen and (max-width: 767px) {
   .navbar {
-    flex-direction: column;
+    flex-wrap: wrap;
+    margin: 0.5em 0;
   }
 
   .navbar > div {
     display: flex;
-    justify-content: center;
+    width: auto;
+    margin-bottom: 0;
   }
 
   .navbar > div:not(:last-child) {
-    margin-bottom: 1em;
+    margin-bottom: 0;
   }
 
-  .navbar > .searchbar > form {
-    width: 60%;
+  /* logo: top left */
+  .navbar > div:first-child {
+    order: 1;
+    flex: 0 0 auto;
+    justify-content: flex-start;
+    font-size: 1.15em;
   }
-}
 
-@media screen and (max-width: 320px) {
+  .navbar .index-link > img {
+    height: 32px;
+  }
+
+  /* user icons: top right */
+  .navbar > .user-field {
+    order: 2;
+    flex: 1 1 auto;
+    justify-content: flex-end;
+    font-size: 1.15em;
+  }
+
+  /* search: full-width second row */
+  .navbar > .searchbar {
+    order: 3;
+    flex: 0 0 100%;
+    margin-top: 2em;
+    margin-bottom: 0.75em;
+  }
+
   .navbar > .searchbar > form {
     width: 100%;
-    margin: 0 1em;
   }
 }
 

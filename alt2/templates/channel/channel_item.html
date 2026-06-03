@@ -45,7 +45,7 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
                       <img class="thumbnail" src="{{ channel['ytc_thumbnailurl'] | reverse | replace('88','671', 1) | reverse  }}"
                       onerror="this.onerror=null;this.src='https://{{ config['MYSERVER_NAME'] }}/channel_unnamed.jpg';" >
 -->
-                      <img class="thumbnail" src="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['ytc_thumbnail'] }}"
+                      <img class="channel-thumb" src="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['ytc_thumbnail'] }}"
                            onerror="this.onerror=null;this.src='{{ config.CHANNEL_THUMB_ERROR_IMAGE }}';">
                   </div>
                 </div>
@@ -67,7 +67,7 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
                     &nbsp;<b><a style="width:100%;" href="https://socialblade.com/youtube/channel/{{ channel['ytc_id'] }}" target="_blank">SocialBlade {{ gettext('Stats') }}</a></b>
                   <p></p>
                       <b>&nbsp;{{ gettext('Created:') }} {{ channel['ytc_publishedat'].strftime('%b %e, %G') if channel['ytc_publishedat'] else '' }}</b><br>
-                      &nbsp;({{ gettext('Added') }} {{ channel['ytc_addeddate'].strftime('%b %e, %G') if channel['ytc_addeddate'] else '' }})<br>
+                      &nbsp;{{ gettext('Added') }}: {{ channel['ytc_addeddate'].strftime('%b %e, %G') if channel['ytc_addeddate'] else '' }}<br>
                        {% if channel['ytc_deleted'] %}
                          <span style="color: red; ">
                              <b>&nbsp;{{ gettext('Deleted:') }} {{ channel['ytc_deleteddate'].strftime('%b %e, %G') if channel['ytc_deleteddate'] else '' }}</span></b>

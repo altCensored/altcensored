@@ -106,7 +106,7 @@
                                             src="{{ channel['ytc_thumbnailurl'] | reverse | replace('88','671', 1) | reverse  }}"
                                             onerror="this.onerror=null;this.src='https://{{ config['MYSERVER_NAME'] }}/channel_unnamed.jpg';" >
 -->
-                                              <img style="width:95%"
+                                              <img class="channel-thumb"
                                                    src="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['ytc_thumbnail'] }}"
                                                    onerror="this.onerror=null;this.src='{{ config.CHANNEL_THUMB_ERROR_IMAGE }}';">
                                             </style>
@@ -151,8 +151,7 @@
                                 <b>{{ channel['ytc_title'] }}</b>
                             </a>
                             <br>
-                            <br>
-                            {{ gettext('Created') }} {{ channel['ytc_publishedat'].strftime('%b %e, %G') if channel['ytc_publishedat'] else '' }}
+                            {{ gettext('Created') }}: {{ channel['ytc_publishedat'].strftime('%b %e, %G') if channel['ytc_publishedat'] else '' }}
                             <br>
                             {% if channel['ytc_deleted'] %}
                                 <span style="color: red; ">{{ gettext('Deleted') }} {{ channel['ytc_deleteddate'].strftime('%b %e, %G') if channel['ytc_deleteddate'] else '' }}</span>

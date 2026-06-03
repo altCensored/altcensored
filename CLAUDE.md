@@ -25,6 +25,24 @@ Key env vars at minimum:
 
 Production runs as gunicorn behind nginx (no Docker). The `docker-compose.yml` is for local dev only.
 
+## Development workflow
+
+1. **Before making any changes**, create a new local branch: `git checkout -b <short-descriptive-name>`
+2. **Make all changes on that branch.** Never commit directly to `master` or `main`.
+3. **The user tests locally** against the running Flask dev server (see Running the development server below).
+4. **When the user says "commit & push"**, create a commit and push to all three remotes:
+   ```bash
+   git push github HEAD
+   git push bbucket_key HEAD
+   git push codeberg HEAD
+   ```
+5. Do not push until explicitly told to.
+
+The three remotes are:
+- `github` — git@github.com:altCensored/altcensored.git
+- `bbucket_key` — git@bitbucket.org:altcensored/altcensored.git
+- `codeberg` — git@codeberg.org:altcensored/altcensored.git
+
 ## No test suite
 
 There are no tests. Manual testing against the database is the only option.

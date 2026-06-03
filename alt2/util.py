@@ -1002,22 +1002,32 @@ def get_video_files_2(ia_item):
     return videofile_full
 
 def get_image_file(ia_item):
-    files_list = (ia_item.item_metadata['files'])
-    image_extensionsToCheck = [".jpg", ".webp"]
-    image_filename = None
+    files_list = ia_item.item_metadata['files']
+    image_extensions = ('.jpg', '.webp', '.png')
+    allowed_formats = {'JPEG', 'WebP', 'PNG'}
+
+    # Priority 1: file named {video_id}.ext — standard for modern yt-dlp archives
+    video_id = ia_item.identifier.replace('youtube-', '', 1)
+    for ext in image_extensions:
+        for x in files_list:
+            if x['name'] == video_id + ext:
+                return x['name']
+
+    # Priority 2: any original source file with a known image format
     for x in files_list:
         if (
-            x["source"] == "original"
-            and (x["format"] != "Item Tile")
-            and "Thumb" not in (x["format"])
-            and any(ext in x["name"] for ext in image_extensionsToCheck)
+            x['source'] == 'original'
+            and x.get('format') in allowed_formats
+            and x['name'].endswith(image_extensions)
         ):
-            image_filename = x.get("name")
-    if image_filename is None:
-        for x in files_list:
-            if x["name"] == "__ia_thumb.jpg":
-                image_filename = x.get("name")
-    return image_filename
+            return x['name']
+
+    # Priority 3: IA auto-generated thumbnail (always present for archived items)
+    for x in files_list:
+        if x['name'] == '__ia_thumb.jpg':
+            return x['name']
+
+    return None
 
 
 def ac_object_exist(client, s3_bucket, itemname: str) -> bool:

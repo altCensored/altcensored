@@ -254,14 +254,9 @@
               </div>{{ video['title'] }}</a>
               <h5 class="pure-g">
                 <div class="pure-u-14-24">
-                  <b>
-                    <a style="width:100%;" href="{{ url_for('channel.item', ytc_id=video['ytc_id']) }}">{{ video['ytc_title'] }}
-                    </a></b>
-                </div>
-                <div class="pure-u-10-24" style="text-align:right">
                   <b>{{ video['yt_views']|viewdisplay }} {{ gettext('views') }}</b>
                 </div>
-                <div class="pure-u-1-1">
+                <div class="pure-u-14-24">
                   {{ video['published'].strftime('%b %e, %G') if video['published'] else '' }}
                 </div>
               </h5>

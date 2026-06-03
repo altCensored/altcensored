@@ -93,26 +93,28 @@
               {% endif %}
             </div>
           </a>
-          <p>
+          <p style="min-height: 3em; margin: 0;">
             {% if playlist %}
-            <a style="width:100%;" href="{{ url_for('video.watch', v=video['extractor_data'], playlist=playlist.hashid) }}">
+            <a href="{{ url_for('video.watch', v=video['extractor_data'], playlist=playlist.hashid) }}">
             {% elif userlist %}
-            <a style="width:100%;" href="{{ url_for('video.watch', v=video['extractor_data'], userlist=userlist) }}">
+            <a href="{{ url_for('video.watch', v=video['extractor_data'], userlist=userlist) }}">
             {% else %}
-            <a style="width:100%;" href="{{ url_for('video.watch', v=video['extractor_data']) }}">
+            <a href="{{ url_for('video.watch', v=video['extractor_data']) }}">
             {% endif %}
-            {{ video['title'] }}</a>
+            {{ video['title'] | truncate(65, true, '…') }}</a>
           </p>
+          {% if not hide_channel %}
           <p>
             <b><a style="width:100%;" href="{{ url_for('channel.item', ytc_id=video['ytc_id']) }}">
             {{ video['ytc_title'] }}</a></b>
           </p>
-          <h5 class = "pure-g">
-            <div class="pure-u-2-3">
-              {{ gettext('Published') }} {{ video['published'].strftime('%b %e, %G') if video['published'] else '' }}
+          {% endif %}
+          <h5 class="pure-g" style="margin-top: 0.4em;">
+              <div class="pure-u-2-3">
+              {% if video['published'] %}{{ video['published'].strftime('%b %e, %G') }}{% endif %}
             </div>
             <div class="pure-u-1-3" style="text-align:right">
-              {{ video['yt_views']|viewdisplay }} {{ gettext('views') }}
+              {% if video['yt_views'] %}{{ video['yt_views']|viewdisplay }} {{ gettext('views') }}{% endif %}
             </div>
           </h5>
         </div>

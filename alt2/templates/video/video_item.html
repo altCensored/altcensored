@@ -1,12 +1,17 @@
 {% extends 'base.html' %}
 {% block head %}
 
-{% if  video['exists_ac'] %}
-  <meta class="thumbnail" content="{{ config.ACIPROXYHUGE~ config.VIDEOSERVER_URL ~ video['extractor_data'] ~ '/' ~ video['thumbnail_ac'] }}"
+{% if video['exists_ac'] %}
+  {% set thumb_url = config.ACIPROXYHUGE ~ config.VIDEOSERVER_URL ~ video['extractor_data'] ~ '/' ~ video['thumbnail_ac'] %}
+{% elif video['thumbnail'] %}
+  {% set thumb_url = config.IPROXYHUGE ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['thumbnail'] %}
+{% elif video['exists_ia'] %}
+  {% set thumb_url = config.IPROXY ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' %}
 {% else %}
-  <meta name="thumbnail" content="{{ config.IPROXY ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}">
+  {% set thumb_url = config.VIDEO_THUMB_ERROR_IMAGE %}
 {% endif %}
 
+<meta name="thumbnail" content="{{ thumb_url }}">
 <meta name="keywords" content="{{ video['tags'] }}">
 <meta name="twitter:card" content="player">
 
@@ -16,21 +21,9 @@
 <meta property="og:image:type" content="image/webp">
 -->
 
-{% if  video['exists_ac'] %}
-  <meta name="twitter:image" content="{{ config.ACIPROXYHUGE~ config.VIDEOSERVER_URL ~ video['extractor_data'] ~ '/' ~ video['thumbnail_ac'] }}"
-                   onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}">
-  <meta property="og:image" content="{{ config.ACIPROXYHUGE~ config.VIDEOSERVER_URL ~ video['extractor_data'] ~ '/' ~ video['thumbnail_ac'] }}"
-                   onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}">
-  <meta property="og:image:secure_url" content="{{ config.ACIPROXYHUGE~ config.VIDEOSERVER_URL ~ video['extractor_data'] ~ '/' ~ video['thumbnail_ac'] }}"
-                   onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}">
-{% else %}
-  <meta name="twitter:image" content="{{ config.IPROXYHUGE~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['thumbnail'] }}"
-                   onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}">
-  <meta property="og:image" content="{{ config.IPROXYHUGE~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['thumbnail'] }}"
-                   onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}">
-  <meta property="og:image:secure_url" content="{{ config.IPROXYHUGE~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['thumbnail'] }}"
-                   onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}">
-{% endif %}
+<meta name="twitter:image" content="{{ thumb_url }}">
+<meta property="og:image" content="{{ thumb_url }}">
+<meta property="og:image:secure_url" content="{{ thumb_url }}">
 
 <meta name="twitter:url" content="{{ config['MYSERVER_URL'] }}/watch?v={{ video_id }}">
 <meta name="twitter:player" content="{{ config['MYSERVER_URL'] }}/embed/{{ video_id }}">
@@ -57,7 +50,7 @@
 "{% block title %}{{ video['title'] | striptags | truncate(length=56,killwords=False,end='',leeway=0) }}{% endblock %}">
 
 <meta name="altcen_meta_description" content="{% block description %}Limited Censored YouTube Video: {{ video['description'] }} (Published on {{ video['published'].strftime('%b %e, %G') if video['published'] else '' }}){% endblock %}>
-<link rel="image_src" href="{% block imagesrc %}{{ config.IPROXY ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}{% endblock %}">
+<link rel="image_src" href="{% block imagesrc %}{{ thumb_url }}{% endblock %}">
 
 <script type="application/ld+json">
 {
@@ -65,7 +58,7 @@
   "@type": "VideoObject",
   "name": "{{ video['title'] | e }}",
   "description": "{{ video['description'] | truncate(500) | e if video['description'] else video['title'] | e }}",
-  "thumbnailUrl": "{% if video['exists_ac'] %}{{ config.ACIPROXYHUGE ~ config.VIDEOSERVER_URL ~ video['extractor_data'] ~ '/' ~ video['thumbnail_ac'] }}{% else %}{{ config.IPROXYHUGE ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['thumbnail'] }}{% endif %}",
+  "thumbnailUrl": "{{ thumb_url }}",
   "uploadDate": "{{ video['published'].strftime('%Y-%m-%dT%H:%M:%SZ') if video['published'] else '' }}",
   "duration": "{{ video['duration'] | iso8601duration if video['duration'] else '' }}",
   "contentUrl": "{{ config['MYSERVER_URL'] }}/watch?v={{ video['extractor_data'] }}",

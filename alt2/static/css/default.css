@@ -82,6 +82,8 @@ img.thumbnail {
   width: 100%;
   left: 0;
   top: 0;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
 }
 
 img.responsive_revive {

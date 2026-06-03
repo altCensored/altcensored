@@ -133,7 +133,7 @@
   <a class="email"></a>
 </div>
               <a href="https://www.youtube.com/watch?v={{ video['extractor_data'] }}" target="_blank">
-                {{ gettext('View on') }} YouTube
+                {{ gettext('Status on') }} YouTube
               </a>
               <br>
 
@@ -142,11 +142,10 @@
               </a>
 
                 <p></p>
-              YouTube {{ gettext('Views') }}:&nbsp;{{ video['yt_views']|commafy }}
-              <br>
-              {{ gettext('Category') }}:&nbsp;
+              {% if video['yt_views'] %}YouTube {{ gettext('Views') }}:&nbsp;{{ video['yt_views']|commafy }}<br>{% endif %}
+              {% if video['category'] %}{{ gettext('Category') }}:&nbsp;
               <a href="{{ url_for('category.item', cat_id = cat_id) }}">
-               {{ video['category'] }}</a>
+               {{ video['category'] }}</a>{% endif %}
               <p></p>
 
                 {% if session.user %}
@@ -210,7 +209,7 @@
               </style>
               {% else %}
               {% endif %}
-              <h4>{{ gettext('Published on') }} {{ video['published'].strftime('%b %e, %G') if video['published'] else '' }}</h4>
+              {% if video['published'] %}<h4>{{ gettext('Published on') }} {{ video['published'].strftime('%b %e, %G') }}</h4>{% endif %}
                 {% if video['description']  is not none %}
                   {{ video['description'] | linkify | safe | nl2br }}
                 {% endif %}

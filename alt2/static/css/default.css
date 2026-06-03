@@ -170,6 +170,12 @@ img.responsive_revive {
   flex: 1;
 }
 
+.navbar > div:first-child {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 .navbar > .searchbar {
   flex-grow: 2; /* take double the space of the other items */
 }
@@ -258,6 +264,7 @@ input[type="search"]::-webkit-search-cancel-button {
   .navbar {
     flex-wrap: wrap;
     margin: 0.5em 0;
+    padding-top: 0.6em;
   }
 
   .navbar > div {

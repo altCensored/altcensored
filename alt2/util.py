@@ -26,7 +26,6 @@ from .models import Translation, Playlist, Mv_Channel, Mv_Video, User, \
 from . import config
 from .cache import cache
 
-video_url = None
 url_orig = config.RANDOM_VALUE
 
 BLUEPRINT_FIXES = {
@@ -1074,39 +1073,29 @@ def increment_video_counter(video_id, ip, header):
 
 def get_ia_item(extractor_data):
     IARCHIVEURL = current_app.config['IARCHIVEURL']
-    global video_url
-    if not video_url:
-        print('get_ia_item')
-        ia_value = 'youtube-' + extractor_data
-        ia_item = get_item(ia_value)
-        entity_video = Entity.query.filter(Entity.extractor_data == extractor_data).scalar()
-        if len(ia_item.item_metadata) != 0:
-            print('item_metadata none')
-            videofile_full=get_video_files_2(ia_item)
-            thumbnail_full = get_image_file(ia_item)
-            if thumbnail_full:
-                entity_video.thumbnail = thumbnail_full
-            else:
-                pass
-            if videofile_full:
-                root, ext = os.path.splitext(videofile_full)
-                video_url = IARCHIVEURL + extractor_data + "/" + root
-                entity_video.videofile = root
-            else:
-                entity_video.novideo_ia = True
-                flag_modified(entity_video, "novideo_ia")
-                db_session.commit()
-                VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
-                video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
-                return video_url
+    VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
+    ia_value = 'youtube-' + extractor_data
+    ia_item = get_item(ia_value)
+    entity_video = Entity.query.filter(Entity.extractor_data == extractor_data).scalar()
+    if len(ia_item.item_metadata) != 0:
+        videofile_full = get_video_files_2(ia_item)
+        thumbnail_full = get_image_file(ia_item)
+        if thumbnail_full:
+            entity_video.thumbnail = thumbnail_full
+        if videofile_full:
+            root, ext = os.path.splitext(videofile_full)
+            entity_video.videofile = root
             flag_modified(entity_video, "thumbnail")
             flag_modified(entity_video, "videofile")
             db_session.commit()
+            return IARCHIVEURL + extractor_data + "/" + root
         else:
-            VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
-            video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
-            return video_url
-    return video_url
+            entity_video.novideo_ia = True
+            flag_modified(entity_video, "novideo_ia")
+            db_session.commit()
+            return f'{VIDEOSERVER_URL}unavailable/unavailable'
+    else:
+        return f'{VIDEOSERVER_URL}unavailable/unavailable'
 
 
 def create_user_altcen(user):

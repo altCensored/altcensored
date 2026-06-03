@@ -145,8 +145,12 @@ def update_user():
 
         user = User.query.get(session['user']['id'])
         playlist = Playlist.query.filter(Playlist.title == ffeatured_playlist).scalar()
-        if playlist is not None and playlist.featured_video is not None:
-            user.featured_playlist = playlist.featured_video
+        if playlist is not None and playlist.featured_video_id is not None:
+            user.featured_playlist = {
+                "pl_id": playlist.id,
+                "pl_title": playlist.title,
+                "extractor_data": playlist.featured_video_id
+            }
 
         if email_changed is True:
             user.email_verified = False

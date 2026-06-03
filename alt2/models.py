@@ -331,6 +331,7 @@ class Playlist(Base):
     view_counter = Column(Integer, nullable=True)
     user_id = Column(Integer, ForeignKey('altcen_user.id'), nullable=False)
     featured_video =  Column(MutableDict.as_mutable(JSON))
+    featured_video_id = Column(String, nullable=True)
     user = relationship("User", back_populates="playlists")
 
 
@@ -570,6 +571,7 @@ class Mv_Playlist(Base):
     view_counter = Column(Integer, nullable=True)
     user_id = Column(Integer, ForeignKey('altcen_user.id'), nullable=False)
     featured_video = Column(MutableDict.as_mutable(JSON))
+    featured_video_id = Column(String, nullable=True)
     user = relationship("User", backref="mv_playlist")
 
 

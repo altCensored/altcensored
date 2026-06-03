@@ -296,26 +296,38 @@ def embed(video_id):
         if playlist is None:
             abort(404)
         if len(playlist.videos) > 1:
-            idx = (playlist.videos).index(video.extractor_data)
-            next_video = (playlist.videos).pop(idx - 1)
-            if not session.get('looplist') and idx == 0:
-                next_video = None
+            existing = {r[0] for r in db_session.query(Mv_Video.extractor_data)
+                        .filter(Mv_Video.extractor_data.in_(playlist.videos))}
+            active = [v for v in playlist.videos if v in existing]
+            if len(active) > 1 and video.extractor_data in active:
+                idx = active.index(video.extractor_data)
+                next_video = active[idx - 1]
+                if not session.get('looplist') and idx == 0:
+                    next_video = None
 
     elif userlist == "history":
         user = User.query.filter(User.id == session['user']['id']).scalar()
         if len(user.watched) > 1:
-            idx = (user.watched).index(video.extractor_data)
-            next_video = (user.watched).pop(idx - 1)
-            if not session.get('looplist') and idx == 0:
-                next_video = None
+            existing = {r[0] for r in db_session.query(Mv_Video.extractor_data)
+                        .filter(Mv_Video.extractor_data.in_(user.watched))}
+            active = [v for v in user.watched if v in existing]
+            if len(active) > 1 and video.extractor_data in active:
+                idx = active.index(video.extractor_data)
+                next_video = active[idx - 1]
+                if not session.get('looplist') and idx == 0:
+                    next_video = None
 
     elif userlist == "watchlater":
         user = User.query.filter(User.id == session['user']['id']).scalar()
         if len(user.watchlater) > 1:
-            idx = (user.watchlater).index(video.extractor_data)
-            next_video = (user.watchlater).pop(idx - 1)
-            if not session.get('looplist') and idx == 0:
-                next_video = None
+            existing = {r[0] for r in db_session.query(Mv_Video.extractor_data)
+                        .filter(Mv_Video.extractor_data.in_(user.watchlater))}
+            active = [v for v in user.watchlater if v in existing]
+            if len(active) > 1 and video.extractor_data in active:
+                idx = active.index(video.extractor_data)
+                next_video = active[idx - 1]
+                if not session.get('looplist') and idx == 0:
+                    next_video = None
 
     else:
         try:

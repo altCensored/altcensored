@@ -125,6 +125,14 @@ def item(playlist,page):
     featured_video = None
     if playlist.featured_video_id:
         featured_video = Mv_Video.query.get(playlist.featured_video_id)
+        if featured_video is None and playlist.videos:
+            existing = {r[0] for r in db_session.query(Mv_Video.extractor_data)
+                        .filter(Mv_Video.extractor_data.in_(playlist.videos))}
+            new_fv_id = next((v for v in playlist.videos if v in existing), None)
+            playlist.featured_video_id = new_fv_id
+            db_session.commit()
+            if new_fv_id:
+                featured_video = Mv_Video.query.get(new_fv_id)
 
     return render_template('playlist/playlist_item.html', playlist=playlist, timediff=timediff, \
                            videos=videos, videocount=videocount, pagination=pagination, watchlater=watchlater,

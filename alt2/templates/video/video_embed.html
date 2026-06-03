@@ -87,10 +87,28 @@ style="outline:none;
     {% else %}
     var autoplayEnabled = false;
     {% endif %}
-    var player = videojs('video-player', {
-      userActions: {
-        click: function(event) {
-          if (this.paused()) { this.play(); } else { this.pause(); }
+    var player = videojs('video-player');
+
+    var _tapCount = 0;
+    var _tapTimer = null;
+    player.on('touchend', function(e) {
+      if (e.target.closest('.vjs-control-bar') || e.target.closest('.vjs-big-play-button')) return;
+      e.preventDefault();
+      _tapCount++;
+      if (_tapCount === 1) {
+        _tapTimer = setTimeout(function() {
+          _tapCount = 0;
+          if (player.paused()) { player.play(); } else { player.pause(); }
+        }, 250);
+      } else {
+        clearTimeout(_tapTimer);
+        _tapCount = 0;
+        var rect = player.el().getBoundingClientRect();
+        var tapX = e.changedTouches[0].clientX - rect.left;
+        if (tapX < rect.width / 2) {
+          player.currentTime(Math.max(0, player.currentTime() - 10));
+        } else {
+          player.currentTime(Math.min(player.duration(), player.currentTime() + 10));
         }
       }
     });

@@ -3,3 +3,4 @@
 altcen.db
 .env
 venv/
+.run/

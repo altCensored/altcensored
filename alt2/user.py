@@ -62,7 +62,7 @@ def item(username):
 
     else:
         playlists = Playlist.query.filter((Playlist.public),(Playlist.user_id == user.id), \
-                                          (Playlist.featured_video.isnot(None))) \
+                                          (Playlist.featured_video_id.isnot(None))) \
             .join(User, Playlist.user_id == User.id) \
             .filter(Playlist.user_id == user.id) \
             .order_by(Playlist.id.desc())
@@ -93,8 +93,15 @@ def item(username):
 
     if not username and page != 1:
         abort(404)
+    playlists = list(playlists)
+    fv_ids = [p.featured_video_id for p in playlists if p.featured_video_id]
+    featured_videos = {}
+    if fv_ids:
+        fvs = Mv_Video.query.filter(Mv_Video.extractor_data.in_(fv_ids)).all()
+        featured_videos = {fv.extractor_data: fv for fv in fvs}
     return render_template('user/user_item.html', user=user, playlistcount=playlistcount, \
-                           historycount=historycount, watchlatercount=watchlatercount, playlists=playlists)
+                           historycount=historycount, watchlatercount=watchlatercount, playlists=playlists,
+                           featured_videos=featured_videos)
 
 
 @bp.route('/history', defaults={'page': 1})
@@ -290,5 +297,12 @@ def playlist(page):
         abort(404)
     pagination = Pagination(page, PER_PAGE, playlistcount)
 
+    playlists = list(playlists)
+    fv_ids = [p.featured_video_id for p in playlists if p.featured_video_id]
+    featured_videos = {}
+    if fv_ids:
+        fvs = Mv_Video.query.filter(Mv_Video.extractor_data.in_(fv_ids)).all()
+        featured_videos = {fv.extractor_data: fv for fv in fvs}
     return render_template('user/user_playlist_index.html',
-                           pagination=pagination, playlistcount=playlistcount, playlists=playlists, order=order)
+                           pagination=pagination, playlistcount=playlistcount, playlists=playlists,
+                           order=order, featured_videos=featured_videos)

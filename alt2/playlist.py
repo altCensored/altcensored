@@ -30,35 +30,46 @@ url_orig = config.RANDOM_VALUE
 def index(page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
-    playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
-        .order_by(Playlist.updated.desc()).limit(PER_PAGE).offset(offset)
+    playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video_id.isnot(None)) \
+        .order_by(Playlist.updated.desc()).limit(PER_PAGE).offset(offset).all()
     if not playlists and page != 1:
         abort(404)
     playlistcount = get_playlistcount()
     pagination = Pagination(page, PER_PAGE, playlistcount)
     if FLASH_MSG is not None:
         flash(Markup(FLASH_MSG), 'error')
+    fv_ids = [p.featured_video_id for p in playlists if p.featured_video_id]
+    featured_videos = {}
+    if fv_ids:
+        fvs = Mv_Video.query.filter(Mv_Video.extractor_data.in_(fv_ids)).all()
+        featured_videos = {fv.extractor_data: fv for fv in fvs}
 
     return render_template('playlist/playlist_index.html',
-                           pagination=pagination, playlists=playlists, playlistcount=playlistcount, order=order)
+                           pagination=pagination, playlists=playlists, playlistcount=playlistcount,
+                           order=order, featured_videos=featured_videos)
 
 @bp.route('/popular', defaults={'page': 1})
 @bp.route('/popular/page/<int:page>')
 def popular(page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'popular'
-    playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
-        .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
-#    playlists = playlists_popular(PER_PAGE, offset)
+    playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video_id.isnot(None)) \
+        .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset).all()
     if not playlists and page != 1:
         abort(404)
     playlistcount = get_playlistcount()
     pagination = Pagination(page, PER_PAGE, playlistcount)
     if FLASH_MSG is not None:
         flash(Markup(FLASH_MSG), 'error')
+    fv_ids = [p.featured_video_id for p in playlists if p.featured_video_id]
+    featured_videos = {}
+    if fv_ids:
+        fvs = Mv_Video.query.filter(Mv_Video.extractor_data.in_(fv_ids)).all()
+        featured_videos = {fv.extractor_data: fv for fv in fvs}
 
     return render_template('playlist/playlist_index.html',
-                           pagination=pagination, playlists=playlists, playlistcount=playlistcount, order=order)
+                           pagination=pagination, playlists=playlists, playlistcount=playlistcount,
+                           order=order, featured_videos=featured_videos)
 
 @bp.route('/<playlist>', defaults={'page': 1})
 @bp.route('/<playlist>/page/<int:page>')
@@ -111,8 +122,13 @@ def item(playlist,page):
     flag_modified(playlist, "video_count")
     db_session.commit()
 
+    featured_video = None
+    if playlist.featured_video_id:
+        featured_video = Mv_Video.query.get(playlist.featured_video_id)
+
     return render_template('playlist/playlist_item.html', playlist=playlist, timediff=timediff, \
-                           videos=videos, videocount=videocount, pagination=pagination, watchlater=watchlater, button=button)
+                           videos=videos, videocount=videocount, pagination=pagination, watchlater=watchlater,
+                           button=button, featured_video=featured_video)
 
 
 @bp.route('/create', methods=['GET', 'POST'])
@@ -225,14 +241,8 @@ def add_video_playlist():
         playlist.videos = []
         playlist.videos.append(video_id)
 
-    if not playlist.featured_video:
-        video = Mv_Video.query.get(video_id)
-        playlist.featured_video = {
-            "pl_id": playlist.id,
-            "pl_title": playlist.title,
-            "extractor_data": video_id,
-            "title": video.title
-        }
+    if not playlist.featured_video_id:
+        playlist.featured_video_id = video_id
 
     now = datetime.datetime.now(timezone.utc)
     playlist.updated = now
@@ -258,14 +268,8 @@ def add_video_playlist_post():
             playlist.videos = list(dict.fromkeys(playlist.videos))
             playlist.videos.append(v)
 
-        if not playlist.featured_video:
-            video = Mv_Video.query.get(v)
-            playlist.featured_video = {
-                "pl_id": playlist.id,
-                "pl_title": playlist.title,
-                "extractor_data": video.extractor_data,
-                "title": video.title
-            }
+        if not playlist.featured_video_id:
+            playlist.featured_video_id = v
 
         now = datetime.datetime.now(timezone.utc)
         playlist.updated = now
@@ -288,18 +292,8 @@ def remove_video_playlist():
         playlist.videos = list(dict.fromkeys(playlist.videos))
         playlist.videos.remove(video_ext)
 
-        if video_ext == playlist.featured_video['extractor_data']:
-            playlist.featured_video = None
-
-            if playlist.videos:
-                replacement_video_id = playlist.videos[0]
-                video = Mv_Video.query.get(replacement_video_id)
-                playlist.featured_video = {
-                    "pl_id": playlist.id,
-                    "pl_title": playlist.title,
-                    "extractor_data": replacement_video_id,
-                    "title": video.title
-                }
+        if video_ext == playlist.featured_video_id:
+            playlist.featured_video_id = playlist.videos[0] if playlist.videos else None
 
         now = datetime.datetime.now(timezone.utc)
         playlist.updated = now

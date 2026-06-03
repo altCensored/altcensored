@@ -415,13 +415,19 @@ def search(page):
         channels = None
         playlist = Playlist.query.filter(Playlist.hashid == playlist_ident).scalar()
 
+    fv_ids = [p.featured_video_id for p in searchplaylists if p.featured_video_id]
+    featured_search_videos = {}
+    if fv_ids:
+        fvs = Mv_Video.query.filter(Mv_Video.extractor_data.in_(fv_ids)).all()
+        featured_search_videos = {fv.extractor_data: fv for fv in fvs}
+
     if not videos and page != 1:
         abort(404)
     return render_template('video/video_search.html', videos=videos, pagination=pagination, usercount=usercount, \
                            channcount=channcount, searchplaylistcount=searchplaylistcount, rawsearch=rawsearch, \
                            searchplaylists=searchplaylists, altcen_users=altcen_users, \
                            order=order, channels=channels, videocount=videocount, watchlater=watchlater,
-                           playlist=playlist)
+                           playlist=playlist, featured_search_videos=featured_search_videos)
 
 
 @bp.route("/search/latest", defaults={'page': 1})

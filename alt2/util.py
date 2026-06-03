@@ -222,7 +222,7 @@ def set_session() -> object:
         pass
     else:
         session['playlistcount'] = db_session.query(
-            func.count(Playlist.id).filter(Playlist.public).filter(Playlist.featured_video.isnot(None))).scalar()
+            func.count(Playlist.id).filter(Playlist.public).filter(Playlist.featured_video_id.isnot(None))).scalar()
 
     if 'channelcount' in session:
         pass
@@ -820,7 +820,7 @@ def ytc_popular(ytc_id, PER_PAGE, offset):
 @cache.cached(key_prefix="data"+"%s")
 #@cache.memoize()
 def playlists_newest(PER_PAGE, offset):
-    playlists_values = db_session.execute(db_session.query(Playlist).filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
+    playlists_values = db_session.execute(db_session.query(Playlist).filter(Playlist.public).filter(Playlist.featured_video_id.isnot(None)) \
                                           .order_by(Playlist.updated.desc()).limit(PER_PAGE).offset(offset))
 #    playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
 #            .order_by(Playlist.updated.desc()).limit(PER_PAGE).offset(offset)
@@ -839,7 +839,7 @@ def playlists_newest(PER_PAGE, offset):
 def playlists_popular(PER_PAGE, offset):
 #    playlists_values = db_session.execute(db_session.query(Playlist).filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
 #                                          .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset))
-    playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
+    playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video_id.isnot(None)) \
         .order_by(Playlist.updated.desc()).limit(PER_PAGE).offset(offset)
 #    playlists = [r[0] for r in playlists_values]
     return playlists
@@ -936,7 +936,7 @@ def archivechannelcount_cache():
 
 @cache.cached(key_prefix="data"+"%s"+"playlistcount")
 def playlistcount_cache():
-    playlistcount_cache = db_session.query(func.count(Playlist.id).filter(Playlist.public).filter(Playlist.featured_video.isnot(None))).scalar()
+    playlistcount_cache = db_session.query(func.count(Playlist.id).filter(Playlist.public).filter(Playlist.featured_video_id.isnot(None))).scalar()
     #        session['playlistcount'] = db_session.query(func.count(Playlist.id).filter(Playlist.public).filter(Playlist.featured_video.isnot(None))).scalar()
     return playlistcount_cache
 

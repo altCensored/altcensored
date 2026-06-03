@@ -10,6 +10,13 @@
       width: 2em;
       cursor: pointer;
     }
+    @media screen and (max-width: 767px) {
+      .vjs-picture-in-picture-control {
+        display: none !important;
+      }
+      .vjs-fullscreen-control { order: 98; }
+      .vjs-playback-rate       { order: 99; }
+    }
   </style>
 </head>
 

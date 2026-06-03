@@ -160,7 +160,7 @@ img.responsive_revive {
  */
 
 .navbar {
-  margin: 1em 0;
+  margin: 1em 0 1.75em 0;
   display: flex; /* this is also defined in framework, but in case of future changes */
   align-items: center;
   justify-content: space-between;
@@ -301,7 +301,7 @@ input[type="search"]::-webkit-search-cancel-button {
   .navbar > .searchbar {
     order: 3;
     flex: 0 0 100%;
-    margin-top: 2em;
+    margin-top: 1.2em;
     margin-bottom: 0.75em;
   }
 

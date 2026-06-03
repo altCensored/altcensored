@@ -101,7 +101,7 @@
             {% else %}
             <a style="width:100%;" href="{{ url_for('video.watch', v=video['extractor_data']) }}">
             {% endif %}
-            {{ video['title'] }}</a>
+            {{ video['title'] | truncate(65, true, '…') }}</a>
           </p>
           {% if not hide_channel %}
           <p>

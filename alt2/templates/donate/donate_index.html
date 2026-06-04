@@ -52,7 +52,7 @@
           <p>
           <div class="pure-u-md-1-3">
             <a href = "{{ crypto.tag }}:{{crypto.address}}" target="_blank">
-            <img class="thumbnail" src="{{ qrcode( crypto.tag+':'+crypto.address, error_correction='M', version=2, box_size=10, border=2 ) }}">
+            <img class="thumbnail qr-code" src="{{ qrcode( crypto.tag+':'+crypto.address, error_correction='M', version=2, box_size=10, border=2 ) }}">
             </a>
           </div>
           </p>

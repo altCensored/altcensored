@@ -201,7 +201,7 @@
                 <h3 style="display:inline"><a href="{{ url_for('channel.item', ytc_id=video['ytc_id']) }}">{{ video['ytc_title'] }}
               </a></h3>&nbsp;
               {% if channel['ytc_deleted'] %}
-              <img style="width:4%" class="thumbnail" src="https://{{ config['MYSERVER_NAME'] }}/x.gif">
+              <img class="thumbnail deleted-x" src="https://{{ config['MYSERVER_NAME'] }}/x.gif">
               </style>
               {% else %}
               {% endif %}
@@ -213,7 +213,7 @@
             </div>
           </div>
           <div class="pure-u-1 pure-u-md-1-5 watch-right">
-              <div class="h-box">
+              <div class="h-box autoplay-row">
                 <form method="post" action="">
                     {% if playnext %}
                           <input type="checkbox" id="playnext" name="playnext" value="True" form="addtoplaylist" \
@@ -265,7 +265,7 @@
               {% endif %}
               {{ video['title'] | truncate(65, true, '…') }}</a>
               </p>
-              <h5 class="pure-g">
+              <h5 class="pure-g video-meta">
                 <div class="pure-u-2-3">
                   {% if video['published'] %}{{ video['published'].strftime('%b %e, %G') }}{% endif %}
                 </div>

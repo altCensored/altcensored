@@ -294,6 +294,15 @@
       document.getElementById('video-iframe').contentWindow.postMessage(JSON.stringify({type: 'toggle-play-next', checked: checked}))
     });
   }
+
+  window.addEventListener('message', function(e) {
+    try {
+      var msg = JSON.parse(e.data);
+      if (msg.type === 'navigate_soft' && msg.url) {
+        history.pushState({}, '', msg.url);
+      }
+    } catch(err) {}
+  });
 </script>
 
 {% endblock %}

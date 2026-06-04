@@ -1,6 +1,6 @@
 import os
 from flask import (
-    Blueprint, render_template, request, make_response, session, current_app, abort, flash)
+    Blueprint, render_template, request, make_response, session, current_app, abort, flash, jsonify)
 from markupsafe import Markup
 from sqlalchemy import func, text, case, select
 from sqlalchemy.orm.attributes import flag_modified
@@ -356,6 +356,123 @@ def embed(video_id):
 
     return render_template('video/video_embed.html', video_url=video_url, next_video=next_video, playlist=playlist,
                            userlist=userlist)
+
+
+@bp.route('/api/video-sources/<video_id>')
+def video_sources_api(video_id):
+    video = db_session.execute(select(Mv_Video).filter(Mv_Video.extractor_data == video_id)).scalar()
+    if video is None:
+        abort(404)
+
+    playlist_hash = request.args.get('playlist', None)
+    userlist = request.args.get('userlist', None)
+
+    IARCHIVEURL = current_app.config['IARCHIVEURL']
+    VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
+
+    client = Minio(current_app.config['AC_S3_ENDPOINT'],
+                   access_key=current_app.config['AC_S3_ACCESS_KEY'],
+                   secret_key=current_app.config['AC_S3_SECRET_KEY'])
+    try:
+        s3_exists = ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id)
+    except Exception:
+        s3_exists = False
+
+    if s3_exists:
+        video_url = VIDEOSERVER_URL + video_id + "/" + video_id
+    else:
+        if video.dark_ia or video.restricted_ia or video.loggedin_ia or video.novideo_ia:
+            video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
+        else:
+            if getattr(video, 'videofile'):
+                root, ext = os.path.splitext(video.videofile)
+                video_url = IARCHIVEURL + video_id + "/" + root
+            elif getattr(video, 'thumbnail') and 'maxresdefault' not in video.thumbnail:
+                root, ext = os.path.splitext(video.thumbnail)
+                video_url = IARCHIVEURL + video_id + "/" + root
+            else:
+                video_url = get_ia_item(video.extractor_data)
+
+    session['first_vid_pub'] = video.published
+    session.modified = True
+
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    header = request.headers.get('User-Agent')
+    Thread(target=increment_video_counter, args=(video_id, ip, header)).start()
+
+    next_video = None
+
+    if playlist_hash:
+        playlist = Playlist.query.filter(Playlist.hashid == playlist_hash).scalar()
+        if playlist and len(playlist.videos) > 1:
+            existing = {r[0] for r in db_session.query(Mv_Video.extractor_data)
+                        .filter(Mv_Video.extractor_data.in_(playlist.videos))}
+            active = [v for v in playlist.videos if v in existing]
+            if len(active) > 1 and video.extractor_data in active:
+                idx = active.index(video.extractor_data)
+                next_video = active[idx - 1]
+                if not session.get('looplist') and idx == 0:
+                    next_video = None
+    elif userlist == "history":
+        if session.get('user'):
+            user = User.query.filter(User.id == session['user']['id']).scalar()
+            if user and len(user.watched) > 1:
+                existing = {r[0] for r in db_session.query(Mv_Video.extractor_data)
+                            .filter(Mv_Video.extractor_data.in_(user.watched))}
+                active = [v for v in user.watched if v in existing]
+                if len(active) > 1 and video.extractor_data in active:
+                    idx = active.index(video.extractor_data)
+                    next_video = active[idx - 1]
+                    if not session.get('looplist') and idx == 0:
+                        next_video = None
+    elif userlist == "watchlater":
+        if session.get('user'):
+            user = User.query.filter(User.id == session['user']['id']).scalar()
+            if user and len(user.watchlater) > 1:
+                existing = {r[0] for r in db_session.query(Mv_Video.extractor_data)
+                            .filter(Mv_Video.extractor_data.in_(user.watchlater))}
+                active = [v for v in user.watchlater if v in existing]
+                if len(active) > 1 and video.extractor_data in active:
+                    idx = active.index(video.extractor_data)
+                    next_video = active[idx - 1]
+                    if not session.get('looplist') and idx == 0:
+                        next_video = None
+    else:
+        try:
+            videos = db_session.query(Mv_Video.extractor_data).filter(
+                Mv_Video.ytc_id == video.ytc_id,
+                Mv_Video.published <= session['first_vid_pub']
+            ).order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE)
+        except Exception:
+            videos = db_session.query(Mv_Video.extractor_data).filter(
+                Mv_Video.ytc_id == video.ytc_id
+            ).order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE)
+
+        if videos.count() > 1:
+            videos_extractor_list = [r[0] for r in videos]
+            videos_extractor_list.reverse()
+            try:
+                idx = videos_extractor_list.index(video.extractor_data)
+            except Exception:
+                idx = len(videos_extractor_list)
+            next_video = videos_extractor_list.pop(idx - 1)
+            try:
+                videos_extractor_list.remove(video_id)
+            except Exception:
+                pass
+            if not session.get('looplist') and idx == 0:
+                next_video = None
+
+    next_watch_url = None
+    if next_video:
+        if playlist_hash:
+            next_watch_url = f"/watch?v={next_video}&playlist={playlist_hash}"
+        elif userlist:
+            next_watch_url = f"/watch?v={next_video}&userlist={userlist}"
+        else:
+            next_watch_url = f"/watch?v={next_video}"
+
+    return jsonify({'video_url': video_url, 'next_watch_url': next_watch_url})
 
 
 @bp.route("/search", defaults={'page': 1})

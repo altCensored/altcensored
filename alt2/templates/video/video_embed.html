@@ -259,8 +259,40 @@ style="outline:none;
 
     player.on('ended', function(){
       if(nextVideoURL && autoplayEnabled){
-        window.parent.location = nextVideoURL;
-      };
+        if (!player.isFullscreen()) {
+          window.parent.location = nextVideoURL;
+          return;
+        }
+        var nparams = new URLSearchParams(nextVideoURL.split('?')[1] || '');
+        var nextId = nparams.get('v');
+        if (!nextId) { window.parent.location = nextVideoURL; return; }
+        var apiUrl = '/api/video-sources/' + nextId;
+        var apiQs = new URLSearchParams();
+        if (nparams.get('playlist')) apiQs.set('playlist', nparams.get('playlist'));
+        if (nparams.get('userlist')) apiQs.set('userlist', nparams.get('userlist'));
+        var qs = apiQs.toString();
+        if (qs) apiUrl += '?' + qs;
+        var currentNextURL = nextVideoURL;
+        fetch(apiUrl)
+          .then(function(r){ return r.json(); })
+          .then(function(data){
+            player.src([
+              {src: data.video_url + '.webm', type: 'video/webm'},
+              {src: data.video_url + '.mp4',  type: 'video/mp4'},
+              {src: data.video_url + '.mkv',  type: ''},
+              {src: data.video_url + '.ogv',  type: 'video/ogg'}
+            ]);
+            player.play();
+            window.parent.postMessage(JSON.stringify({type: 'navigate_soft', url: currentNextURL}), '*');
+            nextVideoURL = data.next_watch_url || null;
+            if (!nextVideoURL) {
+              try { player.controlBar.removeChild(nextButton); } catch(err) {}
+            }
+          })
+          .catch(function(){
+            window.parent.location = nextVideoURL;
+          });
+      }
     });
 
     window.addEventListener('message', function(e) {

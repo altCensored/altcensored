@@ -96,20 +96,121 @@ style="outline:none;
     {% endif %}
     var player = videojs('video-player');
 
-    var _tapCount = 0;
-    var _tapTimer = null;
-    player.on('touchend', function(e) {
+    // --- swipe overlay (vertical bar indicator) ---
+    var overlay = document.createElement('div');
+    overlay.style.cssText = 'position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.65);color:#fff;width:52px;padding:14px 0;border-radius:26px;pointer-events:none;display:none;z-index:100;text-align:center;';
+    var overlayIcon = document.createElement('div');
+    overlayIcon.style.cssText = 'font-size:24px;margin-bottom:10px;';
+    var overlayTrack = document.createElement('div');
+    overlayTrack.style.cssText = 'width:8px;height:110px;background:rgba(255,255,255,0.25);border-radius:4px;margin:0 auto;position:relative;overflow:hidden;';
+    var overlayFill = document.createElement('div');
+    overlayFill.style.cssText = 'position:absolute;bottom:0;left:0;width:100%;background:#fff;border-radius:4px;';
+    overlayTrack.appendChild(overlayFill);
+    overlay.appendChild(overlayIcon);
+    overlay.appendChild(overlayTrack);
+    player.el().appendChild(overlay);
+
+    // --- tap feedback overlay ---
+    var tapOverlay = document.createElement('div');
+    tapOverlay.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;text-shadow:0 0 8px rgba(0,0,0,0.8);pointer-events:none;opacity:0;z-index:101;';
+    player.el().appendChild(tapOverlay);
+    var _tapFadeTimer = null;
+    function _showTapButton() {
+      var paused = player.paused();
+      tapOverlay.textContent = paused ? '▶' : '⏸';
+      tapOverlay.style.fontSize = paused ? '56px' : '47px';
+      tapOverlay.style.transition = 'none';
+      tapOverlay.style.opacity = '1';
+      tapOverlay.style.pointerEvents = 'auto';
+      clearTimeout(_tapFadeTimer);
+      _tapFadeTimer = setTimeout(function() {
+        tapOverlay.style.transition = 'opacity 0.4s';
+        tapOverlay.style.opacity = '0';
+        tapOverlay.style.pointerEvents = 'none';
+      }, 2000);
+    }
+    function _hideTapButton() {
+      clearTimeout(_tapFadeTimer);
+      tapOverlay.style.transition = 'opacity 0.2s';
+      tapOverlay.style.opacity = '0';
+      tapOverlay.style.pointerEvents = 'none';
+    }
+    var _overlayTimer = null;
+    function _showOverlay(half, icon, pct) {
+      overlay.style.left  = half === 'left'  ? '8%' : 'auto';
+      overlay.style.right = half === 'right' ? '8%' : 'auto';
+      overlayIcon.textContent = icon;
+      overlayFill.style.height = Math.round(Math.min(100, Math.max(0, pct))) + '%';
+      overlay.style.display = 'block';
+      clearTimeout(_overlayTimer);
+    }
+    function _hideOverlay() {
+      _overlayTimer = setTimeout(function() { overlay.style.display = 'none'; }, 800);
+    }
+
+    // --- touch state ---
+    var _brightness = 1.0;
+    var _touchStartX = 0, _touchStartY = 0, _touchStartVal = 0;
+    var _touchHalf = null, _swipeActive = false, _swipeIsSwipe = false;
+    var _tapCount = 0, _tapTimer = null;
+
+    player.el().addEventListener('touchstart', function(e) {
+      if (e.target.closest('.vjs-control-bar') || e.target.closest('.vjs-big-play-button')) return;
+      var rect = player.el().getBoundingClientRect();
+      _touchStartX   = e.touches[0].clientX - rect.left;
+      _touchStartY   = e.touches[0].clientY - rect.top;
+      _touchHalf     = _touchStartX < rect.width / 2 ? 'left' : 'right';
+      _touchStartVal = _touchHalf === 'left' ? _brightness : player.volume();
+      _swipeIsSwipe  = false;
+      _swipeActive   = true;
+    }, { passive: true });
+
+    player.el().addEventListener('touchmove', function(e) {
+      if (!_swipeActive || e.target.closest('.vjs-control-bar')) return;
+      var rect   = player.el().getBoundingClientRect();
+      var deltaY = _touchStartY - (e.touches[0].clientY - rect.top);
+      var deltaX = (e.touches[0].clientX - rect.left) - _touchStartX;
+      if (!_swipeIsSwipe && (Math.abs(deltaY) > 15 || Math.abs(deltaX) > 15))
+        _swipeIsSwipe = Math.abs(deltaY) > Math.abs(deltaX);
+      if (!_swipeIsSwipe) return;
+      e.preventDefault();
+      var delta = deltaY / (rect.height * 0.7);
+      if (_touchHalf === 'left') {
+        _brightness = Math.min(1.5, Math.max(0.1, _touchStartVal + delta));
+        var vid = player.el().querySelector('video');
+        if (vid) vid.style.filter = 'brightness(' + _brightness.toFixed(2) + ')';
+        _showOverlay('left', '☀', _brightness * 100);
+      } else {
+        var vol = Math.min(1, Math.max(0, _touchStartVal + delta));
+        player.volume(vol);
+        _showOverlay('right', '🔊', vol * 100);
+      }
+    }, { passive: false });
+
+    player.el().addEventListener('touchend', function(e) {
+      if (!_swipeActive) return;
+      _swipeActive = false;
+      if (_swipeIsSwipe) { _hideOverlay(); return; }
       if (e.target.closest('.vjs-control-bar') || e.target.closest('.vjs-big-play-button')) return;
       e.preventDefault();
+
+      // tap on the play/pause button itself
+      if (e.target === tapOverlay) {
+        if (player.paused()) { player.play(); } else { player.pause(); }
+        _hideTapButton();
+        return;
+      }
+
       _tapCount++;
       if (_tapCount === 1) {
         _tapTimer = setTimeout(function() {
           _tapCount = 0;
-          if (player.paused()) { player.play(); } else { player.pause(); }
+          _showTapButton();
         }, 250);
       } else {
         clearTimeout(_tapTimer);
         _tapCount = 0;
+        _hideTapButton();
         var rect = player.el().getBoundingClientRect();
         var tapX = e.changedTouches[0].clientX - rect.left;
         if (tapX < rect.width / 2) {
@@ -118,7 +219,7 @@ style="outline:none;
           player.currentTime(Math.min(player.duration(), player.currentTime() + 10));
         }
       }
-    });
+    }, { passive: false });
 
     // added to work with altCen, and changed 'url' below
     var replacedStr1 =  window.location.href.replace("?", "&amp");

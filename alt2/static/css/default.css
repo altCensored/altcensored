@@ -91,6 +91,10 @@ h5.video-meta {
   margin-bottom: 1.75em;
 }
 
+.autoplay-row {
+  margin-bottom: 1em;
+}
+
 img.deleted-x {
   width: 4%;
   aspect-ratio: auto;

@@ -130,9 +130,8 @@
                                              {{ gettext('Subs') }}: {{ channel['ytc_subscribercount'] | viewdisplay }}
                                             <br>
                                              {% if channel['ytc_deleted'] %}
-                                                 <img style="width:31%"
-                                                 class="thumbnail" src="https://{{ config['MYSERVER_NAME'] }}/x.gif">
-                                                 </style>
+                                                 <img class="deleted-x"
+                                                 src="https://{{ config['MYSERVER_NAME'] }}/x.gif">
                                              {% else %}
                                                  {{ gettext('Monitor') }}:
                                                  {% if channel.allow %}{{ gettext('True') }}<br>

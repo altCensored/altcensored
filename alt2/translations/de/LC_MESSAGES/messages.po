@@ -7,243 +7,160 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-10-15 20:36-0300\n"
+"POT-Creation-Date: 2026-06-09 17:07-0300\n"
 "PO-Revision-Date: 2020-06-16 19:19+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: de\n"
 "Language-Team: de <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.8.0\n"
+"Generated-By: Babel 2.17.0\n"
 
-#: __init__.py:133
-msgid "Bandwidth Unlimited"
-msgstr "Unbegrenzte Bandbreite"
+#: alt2/auth/email.py:8
+msgid "Welcome to altCensored.com! Confirm your Email for Full Access"
+msgstr ""
+"Willkommen bei altCensored.com! Bestätigen Sie Ihre E-Mail für vollen "
+"Zugang"
 
-#: admin.py:451
-msgid "Unsubscribe"
-msgstr "Unbegrenzte Bandbreite"
+#: alt2/auth/email.py:19
+msgid "altCensored.com Reset Your Password"
+msgstr "altCensored.com Passwort zurücksetzen"
 
-#: admin.py:456
-msgid "The unsubscribe link is invalid"
-msgstr "Der Abmeldelink ist ungültig"
+#: alt2/auth/forms.py:30
+msgid "Please use a different username."
+msgstr "Bitte verwenden Sie einen anderen Benutzernamen."
 
-#: admin.py:466
-msgid "has already been unsubscribed"
-msgstr "wurde bereits abbestellt"
+#: alt2/auth/forms.py:36
+msgid "Please use a different email address."
+msgstr "Bitte verwenden Sie eine andere E-Mail-Adresse."
 
-#: admin.py:481
-msgid "was unsubscribed"
-msgstr "wurde abbestellt"
+#: alt2/auth/routes.py:44
+msgid "Invalid username or password"
+msgstr "Ungültiger Benutzername oder Passwort"
 
-#: admin.py:485
-msgid "was NOT unsubscribed"
-msgstr "wurde NICHT abbestellt"
-
-#: auth.py:101
-msgid "User does not exist"
-msgstr "Benutzer existiert nicht"
-
-#: auth.py:105
-msgid "Reset password email sent"
-msgstr "Passwort zurücksetzen E-Mail gesendet"
-
-#: auth.py:111
-msgid "Try again"
-msgstr "Erneut versuchen"
-
-#: auth.py:122 settings.py:125
-msgid "Username exists"
-msgstr "Benutzername existiert"
-
-#: auth.py:130
-msgid "Captcha not correct"
-msgstr "Captcha nicht korrekt"
-
-#: auth.py:135 playlist.py:18 settings.py:129
-msgid "Profanity forbidden"
-msgstr "Schimpfworte verboten"
-
-#: auth.py:140
-msgid "Email taken"
-msgstr "E-Mail genommen"
-
-#: auth.py:149
-msgid "Confirmation email sent"
-msgstr "Bestätigungs-E-Mail verschickt"
-
-#: auth.py:176
-msgid "Email not verified, confirmation email resent"
-msgstr "E-Mail nicht verifiziert, Bestätigungs-E-Mail erneut gesendet"
-
-#: auth.py:184
-msgid "Email and password combination is invalid"
-msgstr "E-Mail und Passwort-Kombination ist ungültig"
-
-#: auth.py:194
-msgid "The confirmation link is invalid or has expired"
-msgstr "Der Bestätigungslink ist ungültig oder abgelaufen"
-
-#: auth.py:202
-msgid "Account already confirmed. Please login"
-msgstr "Konto bereits bestätigt. Bitte anmelden"
-
-#: auth.py:214
-msgid "Thank-you for confirming your account"
-msgstr "Vielen Dank für die Bestätigung Ihres Kontos"
-
-#: auth.py:223
-msgid "The reset password link is invalid or has expired"
-msgstr "Der Link zum Zurücksetzen des Passworts ist ungültig oder abgelaufen"
-
-#: auth.py:232
-msgid "Password has been updated"
-msgstr "Das Passwort wurde aktualisiert"
-
-#: auth.py:262
-msgid "Delete User"
-msgstr "Benutzer löschen"
-
-#: playlist.py:19
-msgid "Title exists"
-msgstr "Titel existiert"
-
-#: playlist.py:299
-msgid "Remove Playlist"
-msgstr "Playlist entfernen"
-
-#: settings.py:115
-msgid "Email exists"
-msgstr "E-Mail existiert"
-
-#: settings.py:152
-msgid "New Email not verified. Confirmation email sent"
-msgstr "Neue E-Mail nicht verifiziert. Bestätigungs-E-Mail gesendet"
-
-#: user.py:120 user.py:143
-msgid "History Empty"
-msgstr "Geschichte leer"
-
-#: user.py:146
-msgid "Clear History"
-msgstr "Geschichte löschen"
-
-#: user.py:155
-msgid "History Cleared"
-msgstr "Verlauf gelöscht"
-
-#: user.py:158
-msgid "History Not Cleared"
-msgstr "Verlauf nicht gelöscht"
-
-#: user.py:185
-msgid "No WatchLater Available"
-msgstr "Keine Uhr später verfügbar"
-
-#: user.py:243
-msgid "WatchLater Empty"
-msgstr "WatchLater leer"
-
-#: user.py:246
-msgid "Clear WatchLater"
-msgstr "SpäterAnsehen löschen"
-
-#: user.py:255
-msgid "WatchLater Cleared"
-msgstr "WatchLater gelöscht"
-
-#: user.py:260
-msgid "WatchLater Not Cleared"
-msgstr "WatchLater nicht gelöscht"
-
-#: util.py:273
-msgid "Email verification is required for VPN"
-msgstr "E-Mail-Verifizierung ist für VPN erforderlich"
-
-#: vpn.py:27
-msgid "Email verification required for free VPN"
-msgstr "E-Mail-Verifizierung ist für VPN erforderlich"
-
-#: vpn.py:123
-msgid "Monthly Connections Reset"
-msgstr "Monatliche Verbindungen zurücksetzen"
-
-#: vpn.py:129
-msgid "Connections Reset"
-msgstr "Verbindungen zurücksetzen"
-
-#: vpn.py:132
-msgid "Connections Not Reset"
-msgstr "Verbindungen nicht zurückgesetzt"
-
-#: templates/base.html:59 templates/base_nomessages.html:63
-#: templates/widgets/playlist.html:104
-msgid "search"
-msgstr "suche"
-
-#: templates/base.html:87 templates/base_nomessages.html:91
+#: alt2/auth/routes.py:59 alt2/templates/base.html:95
+#: alt2/templates/base_nomessages.html:97
 msgid "Log In"
 msgstr "Einloggen"
 
-#: templates/base.html:91 templates/base_nomessages.html:95
+#: alt2/auth/routes.py:86
+msgid "Cloudflare Turnstile Captcha Failed"
+msgstr "Cloudflare Turnstile Captcha fehlgeschlagen"
+
+#: alt2/auth/routes.py:90 alt2/templates/auth_old/auth_index.html:44
+#: alt2/templates/base_login.html:60
+msgid "Register"
+msgstr "Registrieren"
+
+#: alt2/auth/routes.py:104
+msgid "Check your email for password reset instructions"
+msgstr "Überprüfen Sie Ihre E-Mail für Anweisungen zum Zurücksetzen des Passworts"
+
+#: alt2/auth/routes.py:108 alt2/templates/auth_old/auth_index.html:58
+msgid "Reset Password"
+msgstr "Passwort zurücksetzen"
+
+#: alt2/auth/routes.py:122
+#, fuzzy
+msgid "Your password has been reset."
+msgstr "Das Passwort wurde aktualisiert"
+
+#: alt2/templates/base.html:61 alt2/templates/base_nomessages.html:63
+#: alt2/templates/widgets/playlist.html:104
+msgid "search"
+msgstr "suche"
+
+#: alt2/templates/base.html:99 alt2/templates/base_nomessages.html:101
 msgid "Log Out"
 msgstr "Ausloggen"
 
-#: templates/base.html:137 templates/donate/donate_index.html:30
+#: alt2/templates/base.html:144 alt2/templates/base_login.html:106
+#: alt2/templates/base_nomessages.html:132
 msgid "Donate"
 msgstr "Spende"
 
-#: templates/base.html:140 templates/base_nomessages.html:145
+#: alt2/templates/base.html:147 alt2/templates/base_login.html:109
+#: alt2/templates/base_nomessages.html:135
 msgid "Released under the"
 msgstr "Freigesetzt unter der"
 
-#: templates/base.html:146 templates/base_nomessages.html:151
+#: alt2/templates/base.html:150 alt2/templates/base_login.html:112
+msgid "Shop"
+msgstr "Shop"
+
+#: alt2/templates/base.html:156 alt2/templates/base_login.html:118
+#: alt2/templates/base_nomessages.html:141
 msgid "About"
 msgstr "Über"
 
-#: templates/base.html:149 templates/base_nomessages.html:154
+#: alt2/templates/base.html:159 alt2/templates/base_login.html:121
+#: alt2/templates/base_nomessages.html:144
 msgid "Privacy"
 msgstr "Privatsphäre"
 
-#: templates/base.html:152 templates/base_nomessages.html:157
+#: alt2/templates/base.html:162 alt2/templates/base_login.html:124
+#: alt2/templates/base_nomessages.html:147
 msgid "FAQ"
-msgstr ""
+msgstr "FAQ"
 
-#: templates/about/about_index.html:32
+#: alt2/templates/auth/reset_password_request.html:12
+#: alt2/templates/auth_old/auth_index.html:26
+#: alt2/templates/auth_old/auth_index.html:27
+#: alt2/templates/auth_old/auth_index.html:53
+#: alt2/templates/auth_old/auth_index.html:54 alt2/templates/base_login.html:63
+msgid "Password"
+msgstr "Passwort"
+
+#: alt2/templates/about/about_example.html:29
+#: alt2/templates/about/about_index.html:164
+msgid "How can I embed videos?"
+msgstr "Wie kann ich Videos einbetten?"
+
+#: alt2/templates/about/about_example.html:30
+#: alt2/templates/about/about_index.html:165
+msgid ""
+"Videos can be embedded (with or without iframes) using the same syntax as"
+" YouTube"
+msgstr ""
+"Videos können (mit oder ohne Iframes) mit derselben Syntax eingebettet "
+"werden wie YouTube"
+
+#: alt2/templates/about/about_index.html:32
 msgid "limits"
 msgstr "schränkt"
 
-#: templates/about/about_index.html:33
+#: alt2/templates/about/about_index.html:33
 msgid "access to videos that are neither"
 msgstr "den Zugriff auf Videos ein, die weder"
 
-#: templates/about/about_index.html:35
+#: alt2/templates/about/about_index.html:35
 msgid "illegal"
-msgstr ""
+msgstr "illegal"
 
-#: templates/about/about_index.html:36
+#: alt2/templates/about/about_index.html:36
 msgid "nor violate their own"
 msgstr "sind noch gegen die eigenen"
 
-#: templates/about/about_index.html:38
+#: alt2/templates/about/about_index.html:38
 msgid "Terms and Conditions"
 msgstr "Allgemeinen Geschäftsbedingungen"
 
-#: templates/about/about_index.html:38
+#: alt2/templates/about/about_index.html:38
 msgid "or"
 msgstr "oder"
 
-#: templates/about/about_index.html:40 templates/about/about_index.html:55
+#: alt2/templates/about/about_index.html:40
+#: alt2/templates/about/about_index.html:55
 msgid "Community Guidelines"
 msgstr "die Richtlinien der Gemeinschaft verstoßen"
 
-#: templates/about/about_index.html:43
+#: alt2/templates/about/about_index.html:43
 msgid "\"Limited state\" videos"
 msgstr "Videos mit \"eingeschränktem Status\""
 
-#: templates/about/about_index.html:44
+#: alt2/templates/about/about_index.html:44
 msgid ""
 "are placed behind a warning message, cannot be shared, monetized or "
 "easily found, and have likes, comments, view counts and suggested videos "
@@ -253,27 +170,27 @@ msgstr ""
 "monetarisiert oder leicht gefunden werden und haben Vorlieben, "
 "Kommentare, Betrachtungszahlen und vorgeschlagene Videos deaktiviert"
 
-#: templates/about/about_index.html:49
+#: alt2/templates/about/about_index.html:49
 msgid "removes"
 msgstr "entfernt"
 
-#: templates/about/about_index.html:50
+#: alt2/templates/about/about_index.html:50
 msgid "videos that violate their"
 msgstr "videos, die gegen ihre"
 
-#: templates/about/about_index.html:52
+#: alt2/templates/about/about_index.html:52
 msgid "ever-changing"
 msgstr "ständig wechselnd"
 
-#: templates/about/about_index.html:52
+#: alt2/templates/about/about_index.html:52
 msgid "and"
 msgstr "und"
 
-#: templates/about/about_index.html:54
+#: alt2/templates/about/about_index.html:54
 msgid "arbitrarily enforced"
 msgstr "willkürlich durchgesetzt"
 
-#: templates/about/about_index.html:56
+#: alt2/templates/about/about_index.html:56
 msgid ""
 "while Creators increasingly \"self-censor\" trying to avoid channel "
 "strikes and terminations"
@@ -281,60 +198,44 @@ msgstr ""
 "während die Schöpfer zunehmend \"selbst zensieren\" und versuchen, "
 "Kanalstreiks und Kündigungen zu vermeiden"
 
-#: templates/about/about_index.html:60
+#: alt2/templates/about/about_index.html:60
 msgid "is an unbiased community catalog of"
 msgstr "ist ein unvoreingenommener Gemeinschaftskatalog von"
 
-#: templates/about/about_index.html:63
+#: alt2/templates/about/about_index.html:63
 msgid "limited state, removed, and self-censored YouTube videos across"
 msgstr "eingeschränkte, entfernte und selbst zensierte YouTube-Videos über"
 
-#: templates/about/about_index.html:66
+#: alt2/templates/about/about_index.html:66
 msgid "monitored channels, of which"
 msgstr "überwachte Kanäle, von denen"
 
-#: templates/about/about_index.html:69
+#: alt2/templates/about/about_index.html:69
 msgid "have been deleted and"
 msgstr "gelöscht wurden und"
 
-#: templates/about/about_index.html:72
+#: alt2/templates/about/about_index.html:72
 msgid "are being archived in case of deletion"
 msgstr "werden im Falle einer Löschung archiviert"
 
-#: templates/about/about_index.html:75
-msgid "Find videos and channels using the search bar"
-msgstr "Suchen Sie Videos und Kanäle mithilfe der Suchleiste"
-
-#: templates/about/about_index.html:76
-msgid ""
-"Download videos with \"right mouse button click\" inside the video window"
-" or use the \"Download Torrent\" link. Channel and Video RSS Feeds"
-msgstr ""
-"Laden Sie Videos mit der \"rechten Maustaste\" innerhalb des "
-"Videofensters herunter oder benutzen Sie den Link \"Torrent "
-"Herunterladen\". Kanal- und Video-RSS-Feeds"
-
-#: templates/about/about_index.html:80
-msgid "contain torrent links to easily download multiple videos"
-msgstr "enthalten Torrent-Links zum einfachen Herunterladen mehrerer Videos"
-
-#: templates/about/about_index.html:81
-msgid "Embed videos in any website exactly like YouTube"
-msgstr "Videos in jede beliebige Website genau wie YouTube einbetten"
-
-#: templates/about/about_index.html:84
+#: alt2/templates/about/about_index.html:74
 msgid "Email new channel suggestions to"
 msgstr "Senden Sie Vorschläge für neue Kanäle per E-Mail an"
 
-#: templates/about/about_index.html:89
+#: alt2/templates/about/about_index.html:76
+#, fuzzy
+msgid " together we <b>show what they hide</b>."
+msgstr "(gemeinsam zeigen wir, was sie verbergen)"
+
+#: alt2/templates/about/about_index.html:80
 msgid "Privacy Policy"
 msgstr "Datenschutzerklärung"
 
-#: templates/about/about_index.html:93
+#: alt2/templates/about/about_index.html:84
 msgid "Data you directly provide"
 msgstr "Daten, die Sie direkt bereitstellen"
 
-#: templates/about/about_index.html:94
+#: alt2/templates/about/about_index.html:85
 msgid ""
 "Data that you provide to the website for the purpose of its operation "
 "(e.g., an account name or password, or playlist) will be stored in the "
@@ -347,13 +248,14 @@ msgstr ""
 "entfernen. Diese Daten werden nicht absichtlich mit irgendjemandem oder "
 "irgendetwas geteilt werden"
 
-#: templates/about/about_index.html:96
+#: alt2/templates/about/about_index.html:87
 msgid "Information stored about a registered user is limited to"
 msgstr ""
-"Die über einen registrierten Benutzer gespeicherte Information ist "
-"beschränkt auf"
+"Gespeicherte Informationen über einen registrierten Benutzer beschränken "
+"sich aufDie über einen registrierten Benutzer gespeicherte Information "
+"ist beschränkt auf"
 
-#: templates/about/about_index.html:98
+#: alt2/templates/about/about_index.html:89
 msgid ""
 "a user ID (for persistent storage of preferences and playlists) and "
 "hashed password"
@@ -361,27 +263,27 @@ msgstr ""
 "eine Benutzer-ID (zur dauerhaften Speicherung von Einstellungen und "
 "Wiedergabelisten) und gehashtes Passwort"
 
-#: templates/about/about_index.html:99
+#: alt2/templates/about/about_index.html:90
 msgid "a json object containing user preferences"
 msgstr "ein Json-Objekt mit Benutzereinstellungen"
 
-#: templates/about/about_index.html:100
+#: alt2/templates/about/about_index.html:91
 msgid "a list of video IDs identifying watched videos"
 msgstr "eine Liste von Video-IDs, die angesehene Videos identifizieren"
 
-#: templates/about/about_index.html:102
+#: alt2/templates/about/about_index.html:93
 msgid "Users can clear their watch history using the "
 msgstr "Benutzer können ihren Überwachungsverlauf löschen, indem sie die "
 
-#: templates/about/about_index.html:102
+#: alt2/templates/about/about_index.html:93
 msgid "clear watch history"
 msgstr "klare Uhrengeschichte"
 
-#: templates/about/about_index.html:104
+#: alt2/templates/about/about_index.html:95
 msgid "Data you passively provide"
 msgstr "Daten, die Sie passiv zur Verfügung stellen"
 
-#: templates/about/about_index.html:105
+#: alt2/templates/about/about_index.html:96
 msgid ""
 "When you request any resource from this website (e.g., a page, font, or "
 "image) information about the request may be logged"
@@ -390,31 +292,31 @@ msgstr ""
 "eine Schriftart oder Bild) Informationen über die Anfrage können "
 "protokolliert werden"
 
-#: templates/about/about_index.html:106
+#: alt2/templates/about/about_index.html:97
 msgid "Information about a request is limited to"
 msgstr "Informationen über eine Anfrage sind beschränkt auf"
 
-#: templates/about/about_index.html:108
+#: alt2/templates/about/about_index.html:99
 msgid "the time the request was made"
 msgstr "die Zeit, zu der der Antrag gestellt wurde"
 
-#: templates/about/about_index.html:109
+#: alt2/templates/about/about_index.html:100
 msgid "the status code of the response"
 msgstr "der Statuscode der Antwort"
 
-#: templates/about/about_index.html:110
+#: alt2/templates/about/about_index.html:101
 msgid "the method of the request"
 msgstr "die Methode des Antrags"
 
-#: templates/about/about_index.html:111
+#: alt2/templates/about/about_index.html:102
 msgid "the requested URL"
 msgstr "die angeforderte URL"
 
-#: templates/about/about_index.html:112
+#: alt2/templates/about/about_index.html:103
 msgid "how long it took to complete the request"
 msgstr "wie lange es dauerte, den Antrag zu vervollständigen"
 
-#: templates/about/about_index.html:115
+#: alt2/templates/about/about_index.html:106
 msgid ""
 "No identifying information is logged, such as the visitors cookie, user-"
 "agent, or full IP address (only the  first /24 bits are stored for "
@@ -425,7 +327,7 @@ msgstr ""
 " ersten /24 Bit werden für geographisches Feedback). Hier sind ein paar "
 "Zeilen als Beispiel"
 
-#: templates/about/about_index.html:121
+#: alt2/templates/about/about_index.html:112
 msgid ""
 "This website does not store the visitors user-agent or full IP address "
 "and does not use fingerprinting, advertisements, or tracking of any form"
@@ -434,11 +336,11 @@ msgstr ""
 "Adresse des Besuchersund verwendet keine Fingerabdrücke, Werbung oder "
 "Verfolgung irgendeiner Form"
 
-#: templates/about/about_index.html:124
+#: alt2/templates/about/about_index.html:115
 msgid "Data stored in your browser"
 msgstr "In Ihrem Browser gespeicherte Daten"
 
-#: templates/about/about_index.html:125
+#: alt2/templates/about/about_index.html:116
 msgid ""
 "This website uses browser cookies to authenticate registered users. This "
 "data consists of"
@@ -446,7 +348,7 @@ msgstr ""
 "Diese Website verwendet Browser-Cookies, um registrierte Benutzer zu "
 "authentifizieren. Diese Daten bestehen aus"
 
-#: templates/about/about_index.html:127
+#: alt2/templates/about/about_index.html:118
 msgid ""
 "An account token to keep you logged into the website between visits, "
 "which is sent when any page is loaded while you are logged in"
@@ -455,7 +357,7 @@ msgstr ""
 "eingeloggt bleibendie gesendet wird, wenn eine beliebige Seite geladen "
 "wird, während Sie angemeldet sind"
 
-#: templates/about/about_index.html:129
+#: alt2/templates/about/about_index.html:120
 msgid ""
 "This website also provides an option to store site preferences (e.g., "
 "theme or locale) without an account. Using this feature will store a "
@@ -468,7 +370,7 @@ msgstr ""
 "Präferenzen enthält. Dieses Cookiewird bei jeder Anfrage gesendet und "
 "enthält keine identifizierenden Informationen"
 
-#: templates/about/about_index.html:131
+#: alt2/templates/about/about_index.html:122
 msgid ""
 "You can remove this data from your browser by logging out of this "
 "website, or by using your browsers cookie-related controls to delete the "
@@ -478,11 +380,11 @@ msgstr ""
 "ausloggen Website, oder indem Sie die Cookie-bezogenen Steuerelemente "
 "Ihres Browsers verwenden, um die Daten"
 
-#: templates/about/about_index.html:133
+#: alt2/templates/about/about_index.html:124
 msgid "Removal of data"
 msgstr "Entfernen von Daten"
 
-#: templates/about/about_index.html:134
+#: alt2/templates/about/about_index.html:125
 msgid ""
 "To remove data stored in your browser, you can log out of the website, or"
 " you can use your browsers cookie-related controls to delete the data"
@@ -491,7 +393,7 @@ msgstr ""
 "der Website abmelden, oder Sie können die Cookie-bezogenen Steuerelemente"
 " Ihres Browsers verwenden, um die Daten zu löschen"
 
-#: templates/about/about_index.html:135
+#: alt2/templates/about/about_index.html:126
 msgid ""
 "To remove data that has been stored in the websites database, you can use"
 " the "
@@ -499,19 +401,19 @@ msgstr ""
 "Um Daten zu entfernen, die in der Datenbank der Websites gespeichert "
 "wurden, können Sie die "
 
-#: templates/about/about_index.html:136
+#: alt2/templates/about/about_index.html:127
 msgid "delete my account</u></a></b> page"
 msgstr "mein Konto löschen</u></a></b> Seite"
 
-#: templates/about/about_index.html:140
+#: alt2/templates/about/about_index.html:131
 msgid "Frequently Asked Questions"
 msgstr "Häufig gestellte Fragen"
 
-#: templates/about/about_index.html:143
+#: alt2/templates/about/about_index.html:134
 msgid "How can I find videos/channels?"
 msgstr "Wie kann ich Videos/Kanäle finden?"
 
-#: templates/about/about_index.html:144
+#: alt2/templates/about/about_index.html:135
 msgid ""
 "The search bar at the top of every page is the best way to locate "
 "channels and videos. Use the minimum number of exact words. YouTube "
@@ -521,11 +423,11 @@ msgstr ""
 "Kanäle und Videos. Verwenden Sie die Mindestanzahl der genauen Wörter. "
 "YouTube Es können auch Kanal- und Videokennungen verwendet werden"
 
-#: templates/about/about_index.html:151
+#: alt2/templates/about/about_index.html:142
 msgid "How can I upload my videos/channels?"
 msgstr "Wie kann ich meine Videos/Kanäle hochladen?"
 
-#: templates/about/about_index.html:152
+#: alt2/templates/about/about_index.html:143
 msgid ""
 "We receive channel suggestions (preferably through <b>altCensored AT "
 "protonmail.com</b>) and add channels that have experienced, or are at-"
@@ -535,39 +437,39 @@ msgstr ""
 "protonmail.com</b>) und fügen Sie Kanäle hinzu, die bereits Erfahrungen "
 "gemacht haben oder bei denenRisiko des Erlebens"
 
-#: templates/about/about_index.html:154
+#: alt2/templates/about/about_index.html:145
 msgid "videos placed in "
 msgstr "Videos platziert in "
 
-#: templates/about/about_index.html:156
+#: alt2/templates/about/about_index.html:147
 msgid "Limited State"
 msgstr "Beschränkter Staat"
 
-#: templates/about/about_index.html:156
+#: alt2/templates/about/about_index.html:147
 msgid " or arbitrarily"
 msgstr " oder willkürlich"
 
-#: templates/about/about_index.html:158
+#: alt2/templates/about/about_index.html:149
 msgid "age-restricted"
 msgstr "altersbeschränkt\""
 
-#: templates/about/about_index.html:158
+#: alt2/templates/about/about_index.html:149
 msgid "by"
 msgstr "von"
 
-#: templates/about/about_index.html:159
+#: alt2/templates/about/about_index.html:150
 msgid "videos removed or demonetized"
 msgstr "videos entfernt oder entmontiert"
 
-#: templates/about/about_index.html:160
+#: alt2/templates/about/about_index.html:151
 msgid "channel demonetization"
 msgstr "kanal-demonetisierung"
 
-#: templates/about/about_index.html:163
+#: alt2/templates/about/about_index.html:154
 msgid "How can I download videos/channels?"
 msgstr "Wie kann ich Videos/Kanäle herunterladen"
 
-#: templates/about/about_index.html:165
+#: alt2/templates/about/about_index.html:156
 msgid ""
 "Download videos with \"right mouse button click\" inside the video window"
 " or use the \"Download Torrent\" link"
@@ -575,7 +477,7 @@ msgstr ""
 "Videos mit \"rechter Maustaste\" innerhalb des Videofensters "
 "herunterladenoder benutzen Sie den Link \"Torrent herunterladen\""
 
-#: templates/about/about_index.html:166
+#: alt2/templates/about/about_index.html:157
 msgid ""
 "Channel and Video RSS Feeds contain torrent links to easily download "
 "multiple videos with an RSS feed capable torrent client such as"
@@ -584,269 +486,297 @@ msgstr ""
 "Herunterladen mehrere Videos mit einem RSS-Feed-fähigen Torrent-Client "
 "wie"
 
-#: templates/about/about_index.html:173
-msgid "How can I embed videos?"
-msgstr "Wie kann ich Videos einbetten?"
+#: alt2/templates/about/about_index.html:235
+#, fuzzy
+msgid "Creator Guide"
+msgstr "Erstellt"
 
-#: templates/about/about_index.html:174
-msgid ""
-"Videos can be embedded (with or without iframes) using the same syntax as"
-" YouTube"
-msgstr ""
-"Videos können (mit oder ohne Iframes) mit derselben Syntax eingebettet "
-"werden wie YouTube"
+#: alt2/templates/about/about_index.html:237
+msgid "Press Kit"
+msgstr "Pressemappe"
 
-#: templates/admin/admin_channel_table.html:23
-#: templates/admin/admin_video_table.html:25
-#: templates/channel/channel_index.html:62
-#: templates/channel/channel_table.html:45
+#: alt2/templates/admin/admin_channel_table.html:23
+#: alt2/templates/admin/admin_channel_table_new.html:22
+#: alt2/templates/admin/admin_video_table.html:25
+#: alt2/templates/channel/channel_index.html:62
+#: alt2/templates/channel/channel_table.html:45
 msgid "Table Deleted"
 msgstr "Tabelle Gelöscht"
 
-#: templates/admin/admin_channel_table.html:25
-#: templates/admin/admin_video_table.html:27
-#: templates/channel/channel_index.html:66
-#: templates/channel/channel_table.html:47
+#: alt2/templates/admin/admin_channel_table.html:25
+#: alt2/templates/admin/admin_channel_table_new.html:24
+#: alt2/templates/admin/admin_video_table.html:27
+#: alt2/templates/channel/channel_index.html:66
+#: alt2/templates/channel/channel_table.html:47
 msgid "Table All"
 msgstr "Tabelle Alle"
 
-#: templates/auth/auth_index.html:22 templates/auth/auth_index.html:49
-#: templates/settings/settings_user_update.html:39
+#: alt2/templates/auth/reset_password_request.html:12
+#, fuzzy
+msgid "Reset"
+msgstr "Registrieren"
+
+#: alt2/templates/auth_old/auth_index.html:22
+#: alt2/templates/auth_old/auth_index.html:49
+#: alt2/templates/settings/settings_user_update.html:40
 msgid "Email"
-msgstr ""
+msgstr "E-Mail"
 
-#: templates/auth/auth_index.html:26 templates/auth/auth_index.html:27
-#: templates/auth/auth_index.html:53 templates/auth/auth_index.html:54
-msgid "Password"
-msgstr "Passwort"
-
-#: templates/auth/auth_index.html:30 templates/auth/auth_index.html:31
-#: templates/settings/settings_user_update.html:48
+#: alt2/templates/auth_old/auth_index.html:30
+#: alt2/templates/auth_old/auth_index.html:31
+#: alt2/templates/settings/settings_user_update.html:49
 msgid "Username"
 msgstr "Nutzername"
 
-#: templates/auth/auth_index.html:39
+#: alt2/templates/auth_old/auth_index.html:39
 msgid "Captcha"
-msgstr ""
+msgstr "Captcha"
 
-#: templates/auth/auth_index.html:44
-msgid "Register"
-msgstr "Registrieren"
-
-#: templates/auth/auth_index.html:45
+#: alt2/templates/auth_old/auth_index.html:45
 msgid "Clear"
 msgstr "Klar"
 
-#: templates/auth/auth_index.html:57
+#: alt2/templates/auth_old/auth_index.html:57
 msgid "Sign In/Register"
 msgstr "Einloggen/Registrieren"
 
-#: templates/auth/auth_index.html:58
-msgid "Reset Password"
-msgstr "Passwort zurücksetzen"
-
-#: templates/auth/auth_reset_password.html:16
+#: alt2/templates/auth_old/auth_reset_password.html:16
 msgid "Video"
-msgstr ""
+msgstr "Video"
 
-#: templates/auth/auth_reset_password.html:21
-#: templates/channel/channel_item.html:67 templates/video/video_search.html:29
+#: alt2/templates/auth_old/auth_reset_password.html:21
+#: alt2/templates/channel/channel_item.html:66
+#: alt2/templates/video/video_search.html:29
 msgid "Channel"
 msgstr "Kanal"
 
-#: templates/auth/auth_reset_password.html:26
-#: templates/video/video_item.html:75 templates/widgets/navtabs.html:72
+#: alt2/templates/auth_old/auth_reset_password.html:26
+#: alt2/templates/video/video_item.html:142
+#: alt2/templates/widgets/navtabs.html:77
 msgid "Category"
 msgstr "Kategorie"
 
-#: templates/auth/auth_reset_password.html:50
+#: alt2/templates/auth_old/auth_reset_password.html:50
 msgid "New Password"
 msgstr "Neues Passwort"
 
-#: templates/auth/auth_reset_password.html:52
+#: alt2/templates/auth_old/auth_reset_password.html:52
 msgid "Update Pasword"
 msgstr "Passwort aktualisieren"
 
-#: templates/category/category_item.html:47
-#: templates/channel/channel_index.html:74
-#: templates/language/language_item.html:111
-#: templates/language/language_item.html:125
-#: templates/language/language_item.html:139
-#: templates/language/language_item.html:154
-#: templates/video/video_index.html:61 templates/video/video_search.html:223
-#: templates/video/video_search.html:238
+#: alt2/templates/category/category_item.html:47
+#: alt2/templates/channel/channel_index.html:74
+#: alt2/templates/language/language_item.html:111
+#: alt2/templates/language/language_item.html:125
+#: alt2/templates/language/language_item.html:139
+#: alt2/templates/language/language_item.html:154
+#: alt2/templates/video/video_search.html:241
+#: alt2/templates/video/video_search.html:256
 msgid "latest"
 msgstr "aktuell"
 
-#: templates/category/category_item.html:51
-#: templates/channel/channel_index.html:78
-#: templates/channel/channel_item.html:107
-#: templates/language/language_item.html:114
-#: templates/language/language_item.html:128
-#: templates/language/language_item.html:142
-#: templates/language/language_item.html:157
-#: templates/playlist/playlist_index.html:42 templates/user/user_index.html:30
-#: templates/user/user_playlist_index.html:37
-#: templates/video/video_index.html:65 templates/video/video_search.html:227
-#: templates/video/video_search.html:242
+#: alt2/templates/category/category_item.html:51
+#: alt2/templates/channel/channel_index.html:78
+#: alt2/templates/channel/channel_item.html:128
+#: alt2/templates/language/language_item.html:114
+#: alt2/templates/language/language_item.html:128
+#: alt2/templates/language/language_item.html:142
+#: alt2/templates/language/language_item.html:157
+#: alt2/templates/playlist/playlist_index.html:42
+#: alt2/templates/user/user_index.html:30
+#: alt2/templates/user/user_playlist_index.html:37
+#: alt2/templates/video/video_search.html:245
+#: alt2/templates/video/video_search.html:260
 msgid "newest"
 msgstr "neueste"
 
-#: templates/category/category_item.html:55
-#: templates/channel/channel_index.html:82
-#: templates/channel/channel_item.html:111
-#: templates/language/language_item.html:120
-#: templates/language/language_item.html:134
-#: templates/language/language_item.html:148
-#: templates/language/language_item.html:163
-#: templates/playlist/playlist_index.html:46 templates/user/user_index.html:34
-#: templates/user/user_playlist_index.html:41
-#: templates/video/video_index.html:69 templates/video/video_search.html:231
-#: templates/video/video_search.html:246
+#: alt2/templates/category/category_item.html:55
+#: alt2/templates/channel/channel_index.html:82
+#: alt2/templates/channel/channel_item.html:132
+#: alt2/templates/language/language_item.html:120
+#: alt2/templates/language/language_item.html:134
+#: alt2/templates/language/language_item.html:148
+#: alt2/templates/language/language_item.html:163
+#: alt2/templates/playlist/playlist_index.html:46
+#: alt2/templates/user/user_index.html:34
+#: alt2/templates/user/user_playlist_index.html:41
+#: alt2/templates/video/video_index.html:87
+#: alt2/templates/video/video_search.html:249
+#: alt2/templates/video/video_search.html:264
 msgid "popular"
 msgstr "beliebt"
 
-#: templates/channel/channel_index.html:40
+#: alt2/templates/channel/channel_index.html:40
 msgid "deleted"
 msgstr "gelöscht"
 
-#: templates/channel/channel_index.html:44
+#: alt2/templates/channel/channel_index.html:44
 msgid "most limited"
 msgstr "begrenztesten"
 
-#: templates/channel/channel_index.html:114
-#: templates/channel/channel_item.html:46
-#: templates/language/language_item.html:55
-#: templates/video/video_search.html:51
-msgid "Limited"
-msgstr "Begrenzt"
+#: alt2/templates/channel/channel_index.html:119
+#: alt2/templates/channel/channel_item.html:55
+#: alt2/templates/video/video_search.html:51
+msgid "Censored"
+msgstr "Zensiert"
 
-#: templates/channel/channel_index.html:117
-#: templates/language/language_item.html:57
-#: templates/video/video_search.html:54
+#: alt2/templates/channel/channel_index.html:123
+#: alt2/templates/channel/channel_item.html:57
+#: alt2/templates/video/video_search.html:55
+#, fuzzy
+msgid "Archived"
+msgstr "Archiviert"
+
+#: alt2/templates/channel/channel_index.html:126
+#: alt2/templates/channel/channel_item.html:59
+#: alt2/templates/language/language_item.html:57
+#: alt2/templates/video/video_search.html:58
 msgid "Total"
 msgstr "Gesamt"
 
-#: templates/channel/channel_index.html:119
-#: templates/channel/channel_item.html:48
-#: templates/language/language_item.html:58 templates/video/video_item.html:73
-#: templates/video/video_search.html:56
+#: alt2/templates/channel/channel_index.html:128
+#: alt2/templates/channel/channel_item.html:60
+#: alt2/templates/language/language_item.html:58
+#: alt2/templates/video/video_item.html:141
+#: alt2/templates/video/video_search.html:60
 msgid "Views"
 msgstr "Aufrufe"
 
-#: templates/channel/channel_index.html:121
-#: templates/language/language_item.html:59
-#: templates/video/video_search.html:58
+#: alt2/templates/channel/channel_index.html:130
+#: alt2/templates/language/language_item.html:59
+#: alt2/templates/video/video_search.html:62
 msgid "Subs"
-msgstr ""
+msgstr "Abonnenten"
 
-#: templates/channel/channel_index.html:128
-#: templates/channel/channel_item.html:52
-#: templates/language/language_item.html:67
-#: templates/video/video_search.html:65
+#: alt2/templates/channel/channel_index.html:136
+#: alt2/templates/language/language_item.html:67
+#: alt2/templates/video/video_search.html:69
 msgid "Monitor"
 msgstr "Überwachen"
 
-#: templates/channel/channel_index.html:129
-#: templates/channel/channel_item.html:54
-#: templates/language/language_item.html:68
-#: templates/language/language_item.html:72
-#: templates/playlist/playlist_item_create_edit.html:49
-#: templates/playlist/playlist_item_create_edit.html:51
-#: templates/settings/settings_site.html:85
-#: templates/settings/settings_site.html:96
-#: templates/settings/settings_user_update.html:70
-#: templates/settings/settings_user_update.html:81
-#: templates/video/video_search.html:66
+#: alt2/templates/channel/channel_index.html:137
+#: alt2/templates/language/language_item.html:68
+#: alt2/templates/language/language_item.html:72
+#: alt2/templates/playlist/playlist_item_create_edit.html:50
+#: alt2/templates/playlist/playlist_item_create_edit.html:52
+#: alt2/templates/settings/settings_site.html:79
+#: alt2/templates/settings/settings_site.html:89
+#: alt2/templates/settings/settings_site.html:100
+#: alt2/templates/settings/settings_user_update.html:71
+#: alt2/templates/settings/settings_user_update.html:82
+#: alt2/templates/video/video_search.html:70
 msgid "True"
 msgstr "Ja"
 
-#: templates/channel/channel_index.html:130
-#: templates/channel/channel_item.html:56
-#: templates/language/language_item.html:69
-#: templates/language/language_item.html:73
-#: templates/playlist/playlist_item_create_edit.html:48
-#: templates/playlist/playlist_item_create_edit.html:52
-#: templates/settings/settings_site.html:83
-#: templates/settings/settings_site.html:94
-#: templates/settings/settings_user_update.html:68
-#: templates/settings/settings_user_update.html:79
-#: templates/video/video_search.html:67
+#: alt2/templates/channel/channel_index.html:138
+#: alt2/templates/language/language_item.html:69
+#: alt2/templates/language/language_item.html:73
+#: alt2/templates/playlist/playlist_item_create_edit.html:49
+#: alt2/templates/playlist/playlist_item_create_edit.html:53
+#: alt2/templates/settings/settings_site.html:77
+#: alt2/templates/settings/settings_site.html:87
+#: alt2/templates/settings/settings_site.html:98
+#: alt2/templates/settings/settings_user_update.html:69
+#: alt2/templates/settings/settings_user_update.html:80
+#: alt2/templates/video/video_search.html:71
 msgid "False"
 msgstr "Nein"
 
-#: templates/channel/channel_index.html:132
-#: templates/channel/channel_item.html:58
-#: templates/language/language_item.html:71
-#: templates/video/video_search.html:69
+#: alt2/templates/channel/channel_index.html:140
+#: alt2/templates/language/language_item.html:71
+#: alt2/templates/video/video_search.html:73
 msgid "Archive"
 msgstr "Archiviert"
 
-#: templates/channel/channel_index.html:133
-#: templates/channel/channel_item.html:60 templates/video/video_search.html:70
+#: alt2/templates/channel/channel_index.html:141
+#: alt2/templates/video/video_search.html:74
 msgid "Full"
 msgstr "Voll"
 
-#: templates/channel/channel_index.html:134
-#: templates/video/video_search.html:71
+#: alt2/templates/channel/channel_index.html:142
+#: alt2/templates/video/video_search.html:75
 msgid "Part"
 msgstr "Teil"
 
-#: templates/channel/channel_index.html:135
-#: templates/channel/channel_item.html:64 templates/video/video_search.html:72
+#: alt2/templates/channel/channel_index.html:143
+#: alt2/templates/video/video_search.html:76
+#, fuzzy
+msgid "Latest"
+msgstr "aktuell"
+
+#: alt2/templates/channel/channel_index.html:144
+#: alt2/templates/video/video_search.html:77
 msgid "None"
 msgstr "Keiner"
 
-#: templates/channel/channel_index.html:145
-#: templates/channel/channel_item.html:70
-#: templates/language/language_item.html:83
-#: templates/video/video_search.html:83
+#: alt2/templates/channel/channel_index.html:153
+#: alt2/templates/language/language_item.html:83
+#: alt2/templates/video/video_search.html:88
 msgid "Created"
 msgstr "Erstellt"
 
-#: templates/channel/channel_index.html:148
-#: templates/channel/channel_item.html:73 templates/video/video_search.html:86
+#: alt2/templates/channel/channel_index.html:156
+#: alt2/templates/video/video_search.html:91
 msgid "Deleted"
 msgstr "Gelöscht"
 
-#: templates/channel/channel_item.html:47
-msgid "Videos"
-msgstr ""
-
-#: templates/channel/channel_item.html:49
+#: alt2/templates/channel/channel_item.html:61
 msgid "Subscribers"
 msgstr "Abonnenten"
 
-#: templates/channel/channel_item.html:62
-msgid "Partial"
-msgstr "Teilweise"
-
-#: templates/channel/channel_item.html:68
+#: alt2/templates/channel/channel_item.html:67
 msgid "Stats"
 msgstr "Statistik"
 
-#: templates/donate/donate_index.html:32
-#, python-format
-msgid ""
-"We receive no advertising or corporate revenue and are 100%% community "
-"funded:"
+#: alt2/templates/channel/channel_item.html:69
+#, fuzzy
+msgid "Created:"
+msgstr "Erstellt"
+
+#: alt2/templates/channel/channel_item.html:70
+msgid "Added"
+msgstr "Hinzugefügt"
+
+#: alt2/templates/channel/channel_item.html:73
+#, fuzzy
+msgid "Deleted:"
+msgstr "Gelöscht"
+
+#: alt2/templates/donate/donate_index.html:29
+msgid "Expenses Increase 2024"
+msgstr "Kostenerhöhung 2024"
+
+#: alt2/templates/donate/donate_index.html:32
+msgid "YouTube increased login requirements requiring more proxy services"
 msgstr ""
-"Wir erhalten keine Werbe- oder Unternehmenseinnahmen und werden zu 100%% "
-"von der Gemeinschaft finanziert:"
+"YouTube hat die Anmeldeanforderungen erhöht und benötigt mehr Proxy-"
+"Dienste"
 
-#: templates/donate/donate_index.html:34
-msgid "\"together we show what they hide\""
-msgstr "\"Gemeinsam zeigen wir, was sie verbergen\""
+#: alt2/templates/donate/donate_index.html:33
+msgid "we set up our own"
+msgstr "wir haben unseren eigenen eingerichtet"
 
-#: templates/donate/donate_index.html:37
+#: alt2/templates/donate/donate_index.html:33
+msgid "video storage service"
+msgstr "Videospeicherdienst"
+
+#: alt2/templates/donate/donate_index.html:34
+msgid "to be less dependent on the"
+msgstr "um weniger abhängig vom"
+
+#: alt2/templates/donate/donate_index.html:37
 msgid "Credit Cards"
 msgstr "Kreditkarten"
 
-#: templates/donate/donate_index.html:42
+#: alt2/templates/donate/donate_index.html:38
+msgid "it's us!"
+msgstr "das sind wir!"
+
+#: alt2/templates/donate/donate_index.html:44
 msgid "Cryptocurrency"
 msgstr "Kryptowährung"
 
-#: templates/donate/donate_index.html:60
+#: alt2/templates/donate/donate_index.html:62
 msgid ""
 "Thank-you Brave Browser/BAT users, your generous support makes a "
 "difference"
@@ -854,180 +784,190 @@ msgstr ""
 "Vielen Dank an die Nutzer von Brave Browser/BAT, Ihre großzügige "
 "Unterstützung macht einen Unterschied"
 
-#: templates/donate/donate_index.html:63
+#: alt2/templates/donate/donate_index.html:65
 msgid "Request additional cryptocurrency addresses via email to"
 msgstr "Fordern Sie zusätzliche Kryptowährungsadressen per E-Mail an"
 
-#: templates/language/language_item.html:117
-#: templates/language/language_item.html:131
-#: templates/language/language_item.html:145
-#: templates/language/language_item.html:160
+#: alt2/templates/language/language_item.html:55
+msgid "Limited"
+msgstr "Begrenzt"
+
+#: alt2/templates/language/language_item.html:117
+#: alt2/templates/language/language_item.html:131
+#: alt2/templates/language/language_item.html:145
+#: alt2/templates/language/language_item.html:160
 msgid "oldest"
 msgstr "älteste"
 
-#: templates/language/language_item.html:199 templates/widgets/videos.html:91
+#: alt2/templates/language/language_item.html:199
 msgid "Published"
 msgstr "Publiziert"
 
-#: templates/language/language_item.html:202
-#: templates/video/video_item.html:176 templates/widgets/videos.html:94
+#: alt2/templates/language/language_item.html:202
+#: alt2/templates/video/video_item.html:273
+#: alt2/templates/widgets/videos.html:117
 msgid "views"
 msgstr "Aufrufe"
 
-#: templates/playlist/playlist_item_create_edit.html:19
-#: templates/settings/settings_index.html:54
-#: templates/settings/settings_site.html:52
-#: templates/user/user_playlist_index.html:20
-#: templates/video/video_search.html:109 templates/vpn/vpn_index.html:46
+#: alt2/templates/playlist/playlist_item_create_edit.html:19
+#: alt2/templates/settings/settings_index.html:47
+#: alt2/templates/settings/settings_site.html:45
+#: alt2/templates/user/user_playlist_index.html:20
+#: alt2/templates/video/video_search.html:114
+#: alt2/templates/vpn/vpn_index.html:55
 msgid "Playlist"
-msgstr ""
+msgstr "Playlist"
 
-#: templates/playlist/playlist_item_create_edit.html:29
-#: templates/playlist/playlist_item_create_edit.html:33
+#: alt2/templates/playlist/playlist_item_create_edit.html:30
+#: alt2/templates/playlist/playlist_item_create_edit.html:34
 msgid "Title"
 msgstr "Titel"
 
-#: templates/playlist/playlist_item_create_edit.html:37
-#: templates/playlist/playlist_item_create_edit.html:41
-#: templates/settings/settings_user_update.html:56
+#: alt2/templates/playlist/playlist_item_create_edit.html:38
+#: alt2/templates/playlist/playlist_item_create_edit.html:42
+#: alt2/templates/settings/settings_user_update.html:57
 msgid "Description"
 msgstr "Beschreibung"
 
-#: templates/playlist/playlist_item_create_edit.html:45
-#: templates/user/user_item.html:99 templates/user/user_playlist_index.html:79
-#: templates/widgets/playlist.html:63
+#: alt2/templates/playlist/playlist_item_create_edit.html:46
+#: alt2/templates/user/user_item.html:99
+#: alt2/templates/user/user_playlist_index.html:89
+#: alt2/templates/widgets/playlist.html:63
 msgid "Public"
 msgstr "Öffentlich"
 
-#: templates/playlist/playlist_item_create_edit.html:58
+#: alt2/templates/playlist/playlist_item_create_edit.html:59
 msgid "Update Playlist"
 msgstr "Playlist aktualisieren"
 
-#: templates/playlist/playlist_item_create_edit.html:60
+#: alt2/templates/playlist/playlist_item_create_edit.html:61
 msgid "Create Playlist"
 msgstr "Playlist erstellen"
 
-#: templates/settings/settings_index.html:32
-#: templates/settings/settings_site.html:30 templates/vpn/vpn_index.html:24
+#: alt2/templates/settings/settings_index.html:32
+#: alt2/templates/settings/settings_site.html:30
+#: alt2/templates/vpn/vpn_error.html:33 alt2/templates/vpn/vpn_index.html:33
 msgid "Site"
 msgstr "Website"
 
-#: templates/settings/settings_index.html:39
-#: templates/settings/settings_site.html:37 templates/vpn/vpn_index.html:31
-msgid "VPN"
-msgstr ""
-
-#: templates/settings/settings_index.html:47
-#: templates/settings/settings_site.html:45
-#: templates/video/video_search.html:156 templates/vpn/vpn_index.html:39
-#: templates/widgets/navtabs.html:56
+#: alt2/templates/settings/settings_index.html:40
+#: alt2/templates/settings/settings_site.html:38
+#: alt2/templates/video/video_search.html:172
+#: alt2/templates/vpn/vpn_index.html:48 alt2/templates/widgets/navtabs.html:61
 msgid "User"
 msgstr "Nutzer"
 
-#: templates/settings/settings_site.html:61
+#: alt2/templates/settings/settings_site.html:55
 msgid "Language"
 msgstr "Sprache"
 
-#: templates/settings/settings_site.html:70
+#: alt2/templates/settings/settings_site.html:64
 msgid "Theme"
 msgstr "Thema"
 
-#: templates/settings/settings_site.html:79
-msgid "AutoPlay"
+#: alt2/templates/settings/settings_site.html:73
+#, fuzzy
+msgid "Auto Play"
 msgstr "Automatisches Abspielen"
 
-#: templates/settings/settings_site.html:90
+#: alt2/templates/settings/settings_site.html:83
+#, fuzzy
+msgid "Play Next"
+msgstr "Automatische Wiedergabe"
+
+#: alt2/templates/settings/settings_site.html:94
 msgid "Loop List"
 msgstr "Schleifenliste"
 
-#: templates/settings/settings_site.html:101
+#: alt2/templates/settings/settings_site.html:105
 msgid "Menu"
 msgstr "Menü"
 
-#: templates/settings/settings_site.html:122
+#: alt2/templates/settings/settings_site.html:126
 msgid "Save"
 msgstr "Speichern"
 
-#: templates/settings/settings_user_update.html:64
+#: alt2/templates/settings/settings_user_update.html:65
 msgid "User Public"
 msgstr "Benutzer Öffentlich"
 
-#: templates/settings/settings_user_update.html:75
+#: alt2/templates/settings/settings_user_update.html:76
 msgid "Email Subscribed"
 msgstr "E-Mail abonniert"
 
-#: templates/settings/settings_user_update.html:86
+#: alt2/templates/settings/settings_user_update.html:87
 msgid "Featured Playlist"
 msgstr "Ausgewählte Wiedergabeliste"
 
-#: templates/settings/settings_user_update.html:91
-#: templates/video/video_item.html:88
+#: alt2/templates/settings/settings_user_update.html:92
+#: alt2/templates/video/video_item.html:156
 msgid "Select Playlist"
 msgstr "Playlist auswählen"
 
-#: templates/settings/settings_user_update.html:99
+#: alt2/templates/settings/settings_user_update.html:100
 msgid "Update User"
 msgstr "Benutzer aktualisieren"
 
-#: templates/user/user_history_index.html:32
+#: alt2/templates/user/user_history_index.html:32
 msgid "history"
 msgstr "Geschichte"
 
-#: templates/user/user_item.html:73 templates/widgets/playlist.html:92
+#: alt2/templates/user/user_item.html:73
+#: alt2/templates/widgets/playlist.html:92
 msgid "History"
 msgstr "Geschichte"
 
-#: templates/user/user_item.html:84
-#: templates/user/user_watchlater_index.html:32
-#: templates/video/video_item.html:93 templates/widgets/playlist.html:98
+#: alt2/templates/user/user_item.html:84
+#: alt2/templates/user/user_watchlater_index.html:32
+#: alt2/templates/video/video_item.html:161
+#: alt2/templates/widgets/playlist.html:98
 msgid "WatchLater"
 msgstr "SpäterAnsehen"
 
-#: templates/user/user_item.html:102 templates/user/user_playlist_index.html:82
+#: alt2/templates/user/user_item.html:102
+#: alt2/templates/user/user_playlist_index.html:92
 msgid "Private"
 msgstr "Privat"
 
-#: templates/video/video_item.html:66
-msgid "View on"
-msgstr "Ansicht im"
+#: alt2/templates/video/video_index.html:60
+msgid "trending"
+msgstr "beliebt"
 
-#: templates/video/video_item.html:70
-msgid "Download Torrent"
-msgstr "Torrent Herunterladen"
+#: alt2/templates/video/video_index.html:79
+msgid "uploaded"
+msgstr "hochgeladen"
 
-#: templates/video/video_item.html:99 templates/widgets/videos.html:31
+#: alt2/templates/video/video_index.html:83
+msgid "censored"
+msgstr "zensiert"
+
+#: alt2/templates/video/video_item.html:136
+#, fuzzy
+msgid "Status on"
+msgstr "Statistik"
+
+#: alt2/templates/video/video_item.html:167
+#: alt2/templates/widgets/videos.html:52
 msgid "Add to Playlist"
 msgstr "Playlist hinzufügen"
 
-#: templates/video/video_item.html:135
+#: alt2/templates/video/video_item.html:208
 msgid "Published on"
 msgstr "Publiziert auf"
 
-#: templates/video/video_item.html:150
+#: alt2/templates/video/video_item.html:225
 msgid "AutoPlay Next Video"
 msgstr "Automatische Wiedergabe"
 
-#: templates/vpn/vpn_index.html:53
-msgid "Connections"
-msgstr "Verbindungen"
+#: alt2/templates/vpn/vpn_error.html:40 alt2/templates/vpn/vpn_index.html:40
+msgid "VPN"
+msgstr "VPN"
 
-#: templates/vpn/vpn_index.html:86
-msgid "Download"
-msgstr ""
-
-#: templates/vpn/vpn_index.html:102
-msgid "Nodes"
-msgstr ""
-
-#: templates/vpn/vpn_index.html:113
-msgid "Create New Connection"
-msgstr "Neue Verbindung erstellen"
-
-#: templates/vpn/vpn_index.html:121
+#: alt2/templates/vpn/vpn_error.html:48 alt2/templates/vpn/vpn_index.html:130
 msgid "Why use the altCensored VPN?"
 msgstr "Warum das altCensored VPN benutzen?"
 
-#: templates/vpn/vpn_index.html:123
+#: alt2/templates/vpn/vpn_error.html:50 alt2/templates/vpn/vpn_index.html:132
 msgid ""
 "A virtual private network (VPN) service provides a proxy server to help "
 "users bypass Internet censorship such as                     geoblocking "
@@ -1039,53 +979,230 @@ msgstr ""
 "Kommunikation vor Daten-Profiling oder MitM-Angriffe auf feindliche "
 "Netzwerke"
 
-#: templates/vpn/vpn_index.html:127
+#: alt2/templates/vpn/vpn_error.html:54 alt2/templates/vpn/vpn_index.html:136
 msgid "Our goal is to raise funds for fighting censorship"
 msgstr "Unser Ziel ist es, Mittel für den Kampf gegen die Zensur zu sammeln"
 
-#: templates/vpn/vpn_index.html:128
+#: alt2/templates/vpn/vpn_error.html:55 alt2/templates/vpn/vpn_index.html:137
 msgid "(together we show what they hide)"
 msgstr "(gemeinsam zeigen wir, was sie verbergen)"
 
-#: templates/vpn/vpn_index.html:129
+#: alt2/templates/vpn/vpn_error.html:56 alt2/templates/vpn/vpn_index.html:138
 msgid "and improve online privacy"
 msgstr "und den Online-Datenschutz verbessern"
 
-#: templates/vpn/vpn_index.html:130
+#: alt2/templates/vpn/vpn_error.html:57 alt2/templates/vpn/vpn_index.html:139
 msgid "(together we hide what they want)"
 msgstr "\"Gemeinsam verstecken wir, was sie wollen\""
 
-#: templates/vpn/vpn_index.html:137
+#: alt2/templates/vpn/vpn_error.html:64 alt2/templates/vpn/vpn_index.html:146
 msgid "Wireguard Client Setup"
 msgstr "Wireguard Client Einrichtung"
 
-#: templates/vpn/vpn_index.html:139
+#: alt2/templates/vpn/vpn_error.html:66 alt2/templates/vpn/vpn_index.html:148
 msgid "Official"
 msgstr "Offiziell"
 
-#: templates/vpn/vpn_index.html:140
+#: alt2/templates/vpn/vpn_error.html:67 alt2/templates/vpn/vpn_index.html:149
 msgid "Wireguard Clients"
 msgstr "Wireguard Klienten"
 
-#: templates/widgets/navtabs.html:40
+#: alt2/templates/vpn/vpn_index.html:62
+msgid "Connections"
+msgstr "Verbindungen"
+
+#: alt2/templates/vpn/vpn_index.html:95
+msgid "Download"
+msgstr "Herunterladen"
+
+#: alt2/templates/vpn/vpn_index.html:111
+msgid "Nodes"
+msgstr "Knoten"
+
+#: alt2/templates/vpn/vpn_index.html:122
+msgid "Create New Connection"
+msgstr "Neue Verbindung erstellen"
+
+#: alt2/templates/widgets/navtabs.html:45
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: templates/widgets/navtabs.html:88
+#: alt2/templates/widgets/navtabs.html:93
 msgid "Admin"
-msgstr ""
+msgstr "Admin"
 
-#: templates/widgets/videos.html:44 templates/widgets/videos.html:53
-#: templates/widgets/videos.html:68
+#: alt2/templates/widgets/videos.html:65 alt2/templates/widgets/videos.html:74
+#: alt2/templates/widgets/videos.html:89
 msgid "Add to WatchLater"
 msgstr "SpäterAnsehen hinzufügen"
 
-#: templates/widgets/widgets_confirm.html:22
+#: alt2/templates/widgets/widgets_confirm.html:23
 msgid "Yes"
 msgstr "Ja"
 
-#: templates/widgets/widgets_confirm.html:23
+#: alt2/templates/widgets/widgets_confirm.html:24
 msgid "No"
 msgstr "Nein"
 
+#~ msgid "Bandwidth Unlimited"
+#~ msgstr "Unbegrenzte Bandbreite"
+
+#~ msgid "Unsubscribe"
+#~ msgstr "Unbegrenzte Bandbreite"
+
+#~ msgid "The unsubscribe link is invalid"
+#~ msgstr "Der Abmeldelink ist ungültig"
+
+#~ msgid "has already been unsubscribed"
+#~ msgstr "wurde bereits abbestellt"
+
+#~ msgid "was unsubscribed"
+#~ msgstr "wurde abbestellt"
+
+#~ msgid "was NOT unsubscribed"
+#~ msgstr "wurde NICHT abbestellt"
+
+#~ msgid "User does not exist"
+#~ msgstr "Benutzer existiert nicht"
+
+#~ msgid "Reset password email sent"
+#~ msgstr "Passwort zurücksetzen E-Mail gesendet"
+
+#~ msgid "Try again"
+#~ msgstr "Erneut versuchen"
+
+#~ msgid "Username exists"
+#~ msgstr "Benutzername existiert"
+
+#~ msgid "Captcha not correct"
+#~ msgstr "Captcha nicht korrekt"
+
+#~ msgid "Profanity forbidden"
+#~ msgstr "Schimpfworte verboten"
+
+#~ msgid "Email taken"
+#~ msgstr "E-Mail genommen"
+
+#~ msgid "Confirmation email sent"
+#~ msgstr "Bestätigungs-E-Mail verschickt"
+
+#~ msgid "Email not verified, confirmation email resent"
+#~ msgstr "E-Mail nicht verifiziert, Bestätigungs-E-Mail erneut gesendet"
+
+#~ msgid "Email and password combination is invalid"
+#~ msgstr "E-Mail und Passwort-Kombination ist ungültig"
+
+#~ msgid "The confirmation link is invalid or has expired"
+#~ msgstr "Der Bestätigungslink ist ungültig oder abgelaufen"
+
+#~ msgid "Account already confirmed. Please login"
+#~ msgstr "Konto bereits bestätigt. Bitte anmelden"
+
+#~ msgid "Thank-you for confirming your account"
+#~ msgstr "Vielen Dank für die Bestätigung Ihres Kontos"
+
+#~ msgid "The reset password link is invalid or has expired"
+#~ msgstr "Der Link zum Zurücksetzen des Passworts ist ungültig oder abgelaufen"
+
+#~ msgid "Delete User"
+#~ msgstr "Benutzer löschen"
+
+#~ msgid "Title exists"
+#~ msgstr "Titel existiert"
+
+#~ msgid "Remove Playlist"
+#~ msgstr "Playlist entfernen"
+
+#~ msgid "Email exists"
+#~ msgstr "E-Mail existiert"
+
+#~ msgid "New Email not verified. Confirmation email sent"
+#~ msgstr "Neue E-Mail nicht verifiziert. Bestätigungs-E-Mail gesendet"
+
+#~ msgid "History Empty"
+#~ msgstr "Geschichte leer"
+
+#~ msgid "Clear History"
+#~ msgstr "Geschichte löschen"
+
+#~ msgid "History Cleared"
+#~ msgstr "Verlauf gelöscht"
+
+#~ msgid "History Not Cleared"
+#~ msgstr "Verlauf nicht gelöscht"
+
+#~ msgid "No WatchLater Available"
+#~ msgstr "Keine Uhr später verfügbar"
+
+#~ msgid "WatchLater Empty"
+#~ msgstr "WatchLater leer"
+
+#~ msgid "Clear WatchLater"
+#~ msgstr "SpäterAnsehen löschen"
+
+#~ msgid "WatchLater Cleared"
+#~ msgstr "WatchLater gelöscht"
+
+#~ msgid "WatchLater Not Cleared"
+#~ msgstr "WatchLater nicht gelöscht"
+
+#~ msgid "Email verification is required for VPN"
+#~ msgstr "E-Mail-Verifizierung ist für VPN erforderlich"
+
+#~ msgid "Email verification required for free VPN"
+#~ msgstr "E-Mail-Verifizierung ist für VPN erforderlich"
+
+#~ msgid "Monthly Connections Reset"
+#~ msgstr "Monatliche Verbindungen zurücksetzen"
+
+#~ msgid "Connections Reset"
+#~ msgstr "Verbindungen zurücksetzen"
+
+#~ msgid "Connections Not Reset"
+#~ msgstr "Verbindungen nicht zurückgesetzt"
+
+#~ msgid "Find videos and channels using the search bar"
+#~ msgstr "Suchen Sie Videos und Kanäle mithilfe der Suchleiste"
+
+#~ msgid ""
+#~ "Download videos with \"right mouse "
+#~ "button click\" inside the video window"
+#~ " or use the \"Download Torrent\" "
+#~ "link. Channel and Video RSS Feeds"
+#~ msgstr ""
+#~ "Laden Sie Videos mit der \"rechten "
+#~ "Maustaste\" innerhalb des Videofensters "
+#~ "herunter oder benutzen Sie den Link "
+#~ "\"Torrent Herunterladen\". Kanal- und "
+#~ "Video-RSS-Feeds"
+
+#~ msgid "contain torrent links to easily download multiple videos"
+#~ msgstr "enthalten Torrent-Links zum einfachen Herunterladen mehrerer Videos"
+
+#~ msgid "Embed videos in any website exactly like YouTube"
+#~ msgstr "Videos in jede beliebige Website genau wie YouTube einbetten"
+
+#~ msgid "Videos"
+#~ msgstr ""
+
+#~ msgid "Partial"
+#~ msgstr "Teilweise"
+
+#~ msgid ""
+#~ "We receive no advertising or corporate"
+#~ " revenue and are 100%% community "
+#~ "funded:"
+#~ msgstr ""
+#~ "Wir erhalten keine Werbe- oder "
+#~ "Unternehmenseinnahmen und werden zu 100%% "
+#~ "von der Gemeinschaft finanziert:"
+
+#~ msgid "\"together we show what they hide\""
+#~ msgstr "\"Gemeinsam zeigen wir, was sie verbergen\""
+
+#~ msgid "View on"
+#~ msgstr "Ansicht im"
+
+#~ msgid "Download Torrent"
+#~ msgstr "Torrent Herunterladen"
 

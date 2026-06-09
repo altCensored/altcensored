@@ -65,7 +65,7 @@
                                     <div class="thumbnail">
                                     {% if fv.exists_ac %}
                                         <img class="thumbnail" loading="lazy" src="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ fv.extractor_data ~ '/' ~ fv.thumbnail_ac }}" onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
-                                    {% elif fv.thumbnail %}
+                                    {% elif fv.thumbnail and not fv.thumbnail.startswith('http') %}
                                         <img class="thumbnail" loading="lazy" src="{{ config.IPROXYHUGE ~ config.IARCHIVEURL ~ fv.extractor_data ~ '/' ~ fv.thumbnail }}" onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
                                     {% else %}
                                         <img class="thumbnail" loading="lazy" src="{{ config.VIDEO_THUMB_ERROR_IMAGE }}">

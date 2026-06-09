@@ -240,7 +240,7 @@
           {% if  video['exists_ac'] %}
               <img class="thumbnail" loading="lazy" src="{{ config.ACIPROXYHUGE~ config.VIDEOSERVER_URL ~ video['extractor_data'] ~ '/' ~ video['thumbnail_ac'] }}"
                    onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
-          {% elif video['thumbnail'] %}
+          {% elif video['thumbnail'] and not video['thumbnail'].startswith('http') %}
               <img class="thumbnail" loading="lazy" src="{{ config.IPROXYHUGE~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['thumbnail'] }}"
                    onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
           {% else %}

@@ -97,10 +97,8 @@ h5.video-meta {
 
 img.deleted-x {
   width: 29px;
-  height: 35px;
   aspect-ratio: auto;
   object-fit: initial;
-  margin-top: 0.4em;
 }
 
 img.qr-code {
@@ -341,8 +339,7 @@ input[type="search"]::-webkit-search-cancel-button {
   }
 
   .deleted-x {
-    width: 29px;
-    height: 35px;
+    width: 10%;
   }
 }
 

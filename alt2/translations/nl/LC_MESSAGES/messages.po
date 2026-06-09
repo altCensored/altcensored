@@ -238,7 +238,7 @@ msgid ""
 "(e.g., an account name or password, or playlist) will be stored in the "
 "websites database until the user decides to remove it. This data will not"
 " be intentionally shared with anyone or anything"
-msgstr ""
+msgstr "Gegevens die u aan de website verstrekt voor de werking ervan (bijv. een accountnaam, wachtwoord of afspeellijst) worden opgeslagen in de database van de website totdat de gebruiker besluit deze te verwijderen. Deze gegevens worden niet opzettelijk met anderen gedeeld."
 
 #: alt2/templates/about/about_index.html:87
 msgid "Information stored about a registered user is limited to"
@@ -248,7 +248,7 @@ msgstr "Informatie opgeslagen over een geregistreerde gebruiker is beperkt tot"
 msgid ""
 "a user ID (for persistent storage of preferences and playlists) and "
 "hashed password"
-msgstr ""
+msgstr "een gebruikers-ID (voor permanente opslag van voorkeuren en afspeellijsten) en een gehasht wachtwoord"
 
 #: alt2/templates/about/about_index.html:90
 msgid "a json object containing user preferences"
@@ -274,7 +274,7 @@ msgstr "Gegevens die u passief verstrekt"
 msgid ""
 "When you request any resource from this website (e.g., a page, font, or "
 "image) information about the request may be logged"
-msgstr ""
+msgstr "Wanneer u een resource van deze website opvraagt (bijv. een pagina, lettertype of afbeelding) kunnen gegevens over het verzoek worden geregistreerd."
 
 #: alt2/templates/about/about_index.html:97
 msgid "Information about a request is limited to"
@@ -305,13 +305,13 @@ msgid ""
 "No identifying information is logged, such as the visitors cookie, user-"
 "agent, or full IP address (only the  first /24 bits are stored for "
 "geographical feedback). Here are a few lines as an example"
-msgstr ""
+msgstr "Er wordt geen identificerende informatie geregistreerd, zoals de cookie van de bezoeker, user-agent of volledig IP-adres (alleen de eerste /24 bits worden opgeslagen voor geografische feedback). Hier zijn enkele voorbeeldregels:"
 
 #: alt2/templates/about/about_index.html:112
 msgid ""
 "This website does not store the visitors user-agent or full IP address "
 "and does not use fingerprinting, advertisements, or tracking of any form"
-msgstr ""
+msgstr "Deze website slaat de user-agent of het volledige IP-adres van de bezoeker niet op en gebruikt geen fingerprinting, advertenties of tracking in welke vorm dan ook."
 
 #: alt2/templates/about/about_index.html:115
 msgid "Data stored in your browser"
@@ -321,13 +321,13 @@ msgstr "Gegevens opgeslagen in uw browser"
 msgid ""
 "This website uses browser cookies to authenticate registered users. This "
 "data consists of"
-msgstr ""
+msgstr "Deze website gebruikt browsercookies om geregistreerde gebruikers te authenticeren. Deze gegevens bestaan uit:"
 
 #: alt2/templates/about/about_index.html:118
 msgid ""
 "An account token to keep you logged into the website between visits, "
 "which is sent when any page is loaded while you are logged in"
-msgstr ""
+msgstr "Een accounttoken om u tussen bezoeken ingelogd te houden op de website, dat wordt verzonden wanneer een pagina wordt geladen terwijl u bent ingelogd."
 
 #: alt2/templates/about/about_index.html:120
 msgid ""
@@ -335,14 +335,14 @@ msgid ""
 "theme or locale) without an account. Using this feature will store a "
 "cookie in the visitors browser containing their preferences. This cookie "
 "is sent on every request and does not contain any identifying information"
-msgstr ""
+msgstr "Deze website biedt ook een optie om sitevoorkeuren op te slaan (bijv. thema of taal) zonder account. Het gebruik van deze functie slaat een cookie op in de browser van de bezoeker met hun voorkeuren. Dit cookie wordt bij elk verzoek verzonden en bevat geen identificerende informatie."
 
 #: alt2/templates/about/about_index.html:122
 msgid ""
 "You can remove this data from your browser by logging out of this "
 "website, or by using your browsers cookie-related controls to delete the "
 "data"
-msgstr ""
+msgstr "U kunt deze gegevens uit uw browser verwijderen door uit te loggen van deze website of door de cookie-instellingen van uw browser te gebruiken."
 
 #: alt2/templates/about/about_index.html:124
 msgid "Removal of data"
@@ -352,13 +352,13 @@ msgstr "Verwijdering van gegevens"
 msgid ""
 "To remove data stored in your browser, you can log out of the website, or"
 " you can use your browsers cookie-related controls to delete the data"
-msgstr ""
+msgstr "Om gegevens uit uw browser te verwijderen, kunt u uitloggen van de website of de cookie-instellingen van uw browser gebruiken."
 
 #: alt2/templates/about/about_index.html:126
 msgid ""
 "To remove data that has been stored in the websites database, you can use"
 " the "
-msgstr ""
+msgstr "Om gegevens verwijderen die zijn opgeslagen in de database van de website, kunt u de "
 
 #: alt2/templates/about/about_index.html:127
 msgid "delete my account</u></a></b> page"

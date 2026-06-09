@@ -243,9 +243,6 @@
           {% elif video['thumbnail'] %}
               <img class="thumbnail" loading="lazy" src="{{ config.IPROXYHUGE~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['thumbnail'] }}"
                    onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
-          {% elif video['exists_ia'] %}
-              <img class="thumbnail" loading="lazy" src="{{ config.IPROXY ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}"
-                   onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
           {% else %}
               <img class="thumbnail" loading="lazy" src="{{ config.VIDEO_THUMB_ERROR_IMAGE }}">
           {% endif %}

@@ -438,6 +438,7 @@ class Mv_Video(Base):
     dark_ia = Column(Boolean, nullable=True)
     loggedin_ia = Column(Boolean, nullable=True)
     novideo_ia = Column(Boolean, nullable=True)
+    yt_deleted_date = Column(DateTime, nullable=True)
 
     def __init__(self, extractor_data=None, allow=None):
         self.id = id

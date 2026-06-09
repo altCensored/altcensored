@@ -56,6 +56,8 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/UCMLbmp5tcLxzahMLTmeM4lg/fee
             <div class="pure-g h-box">
                 <div class="pure-u-10-24">
                     <div class="pure-u-1 pure-md-1-3">
+                        <a href="{{ url_for('video.new') }}" class="pure-menu-item {{'selected' if order == 'trending' }}">
+                            {{ gettext('trending') }}</a>
                     </div>
                     <div class="pure-u-1 pure-md-1-3">
                     </div>
@@ -77,8 +79,8 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/UCMLbmp5tcLxzahMLTmeM4lg/fee
                             {{ gettext('newest') }}</a>
                     </div>
                     <div class="pure-u-1 pure-md-1-3">
-                        <a href="{{ url_for('video.new')}}" class="pure-menu-item {{'selected' if order == 'trending' }}">
-                            {{ gettext('trending') }}</a>
+                        <a href="{{ url_for('video.latest') }}" class="pure-menu-item {{'selected' if order == 'latest' }}">
+                            {{ gettext('latest') }}</a>
                     </div>
                     <div class="pure-u-1 pure-md-1-3">
                         <a href="{{ url_for('video.popular') }}" class="pure-menu-item {{'selected' if order == 'popular' }}">

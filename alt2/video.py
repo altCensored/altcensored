@@ -9,7 +9,7 @@ from .database import db_session
 from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_user, User, Playlist
 from .pagination import Pagination
 import json
-from .util import (videos_newest, videos_popular, get_videocount, get_playnext,
+from .util import (videos_newest, videos_popular, videos_latest, get_videocount, get_playnext,
                    ac_object_exist, videos_trending, get_ia_item, increment_video_counter)
 from minio import Minio
 from . import config
@@ -74,6 +74,28 @@ def popular(page):
     offset = ((int(page) - 1) * PER_PAGE)
     order = 'popular'
     videos = videos_popular(PER_PAGE, offset)
+    if not videos and page != 1:
+        abort(404)
+    get_videocount()
+    pagination = Pagination(page, PER_PAGE, session['videocount'])
+    watchlater = None
+    if session.get('user') is not None:
+        user = User.query.filter(User.id == session['user']['id']).scalar()
+        if user.watchlater:
+            watchlater = user.watchlater
+    if FLASH_MSG is not None:
+        flash(Markup(FLASH_MSG), 'error')
+
+    return render_template('video/video_index.html', pagination=pagination, videos=videos, order=order,
+                           watchlater=watchlater)
+
+
+@bp.route('/latest', defaults={'page': 1})
+@bp.route('/latest/page/<int:page>')
+def latest(page):
+    offset = ((int(page) - 1) * PER_PAGE)
+    order = 'latest'
+    videos = videos_latest(PER_PAGE, offset)
     if not videos and page != 1:
         abort(404)
     get_videocount()

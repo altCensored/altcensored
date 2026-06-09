@@ -3,4 +3,5 @@
 altcen.db
 .env
 venv/
-.run/alt2/static/captcha_tmp.png
+alt2/static/captcha_tmp.png
+.run/

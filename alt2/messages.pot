@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-06-09 17:07-0300\n"
+"POT-Creation-Date: 2026-06-09 17:30-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -110,12 +110,12 @@ msgid "Password"
 msgstr ""
 
 #: alt2/templates/about/about_example.html:29
-#: alt2/templates/about/about_index.html:164
+#: alt2/templates/about/about_index.html:161
 msgid "How can I embed videos?"
 msgstr ""
 
 #: alt2/templates/about/about_example.html:30
-#: alt2/templates/about/about_index.html:165
+#: alt2/templates/about/about_index.html:162
 msgid ""
 "Videos can be embedded (with or without iframes) using the same syntax as"
 " YouTube"
@@ -414,22 +414,14 @@ msgid "How can I download videos/channels?"
 msgstr ""
 
 #: alt2/templates/about/about_index.html:156
-msgid ""
-"Download videos with \"right mouse button click\" inside the video window"
-" or use the \"Download Torrent\" link"
+msgid "Download videos with \"right mouse button click\" inside the video window"
 msgstr ""
 
-#: alt2/templates/about/about_index.html:157
-msgid ""
-"Channel and Video RSS Feeds contain torrent links to easily download "
-"multiple videos with an RSS feed capable torrent client such as"
-msgstr ""
-
-#: alt2/templates/about/about_index.html:235
+#: alt2/templates/about/about_index.html:232
 msgid "Creator Guide"
 msgstr ""
 
-#: alt2/templates/about/about_index.html:237
+#: alt2/templates/about/about_index.html:234
 msgid "Press Kit"
 msgstr ""
 

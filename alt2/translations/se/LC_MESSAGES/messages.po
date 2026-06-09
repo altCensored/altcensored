@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-06-09 17:07-0300\n"
+"POT-Creation-Date: 2026-06-09 17:30-0300\n"
 "PO-Revision-Date: 2020-07-28 20:05+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: se\n"
@@ -113,16 +113,16 @@ msgid "Password"
 msgstr "Lösenord"
 
 #: alt2/templates/about/about_example.html:29
-#: alt2/templates/about/about_index.html:164
+#: alt2/templates/about/about_index.html:161
 msgid "How can I embed videos?"
 msgstr "Hur kan jag bädda in videor?"
 
 #: alt2/templates/about/about_example.html:30
-#: alt2/templates/about/about_index.html:165
+#: alt2/templates/about/about_index.html:162
 msgid ""
 "Videos can be embedded (with or without iframes) using the same syntax as"
 " YouTube"
-msgstr ""
+msgstr "Videor kan bäddas in (med eller utan iframes) med samma syntax som YouTube"
 
 #: alt2/templates/about/about_index.html:32
 msgid "limits"
@@ -238,7 +238,11 @@ msgid ""
 "(e.g., an account name or password, or playlist) will be stored in the "
 "websites database until the user decides to remove it. This data will not"
 " be intentionally shared with anyone or anything"
-msgstr "Data som du tillhandahåller till webbplatsen för dess drift (t.ex. ett kontonamn, lösenord eller spellista) kommer att lagras i webbplatsens databas tills användaren väljer att ta bort det. Dessa data kommer inte avsiktligt att delas med någon."
+msgstr ""
+"Data som du tillhandahåller till webbplatsen för dess drift (t.ex. ett "
+"kontonamn, lösenord eller spellista) kommer att lagras i webbplatsens "
+"databas tills användaren väljer att ta bort det. Dessa data kommer inte "
+"avsiktligt att delas med någon."
 
 #: alt2/templates/about/about_index.html:87
 msgid "Information stored about a registered user is limited to"
@@ -248,7 +252,9 @@ msgstr "Information lagrad om en registrerad användare är begränsad till"
 msgid ""
 "a user ID (for persistent storage of preferences and playlists) and "
 "hashed password"
-msgstr "ett användar-ID (för beständig lagring av preferenser och spellistor) och ett hashat lösenord"
+msgstr ""
+"ett användar-ID (för beständig lagring av preferenser och spellistor) och"
+" ett hashat lösenord"
 
 #: alt2/templates/about/about_index.html:90
 msgid "a json object containing user preferences"
@@ -274,7 +280,9 @@ msgstr "Data du passivt tillhandahåller"
 msgid ""
 "When you request any resource from this website (e.g., a page, font, or "
 "image) information about the request may be logged"
-msgstr "När du begär en resurs från denna webbplats (t.ex. en sida, teckensnitt eller bild) kan information om begäran loggas."
+msgstr ""
+"När du begär en resurs från denna webbplats (t.ex. en sida, teckensnitt "
+"eller bild) kan information om begäran loggas."
 
 #: alt2/templates/about/about_index.html:97
 msgid "Information about a request is limited to"
@@ -305,13 +313,19 @@ msgid ""
 "No identifying information is logged, such as the visitors cookie, user-"
 "agent, or full IP address (only the  first /24 bits are stored for "
 "geographical feedback). Here are a few lines as an example"
-msgstr "Ingen identifierande information loggas, som besökarens cookie, user-agent eller fullständig IP-adress (endast de första /24 bitarna lagras för geografisk återkoppling). Här är några exempelrader:"
+msgstr ""
+"Ingen identifierande information loggas, som besökarens cookie, user-"
+"agent eller fullständig IP-adress (endast de första /24 bitarna lagras "
+"för geografisk återkoppling). Här är några exempelrader:"
 
 #: alt2/templates/about/about_index.html:112
 msgid ""
 "This website does not store the visitors user-agent or full IP address "
 "and does not use fingerprinting, advertisements, or tracking of any form"
-msgstr "Denna webbplats lagrar inte besökarens user-agent eller fullständiga IP-adress och använder inte fingeravtryckstagning, annonser eller spårning av något slag."
+msgstr ""
+"Denna webbplats lagrar inte besökarens user-agent eller fullständiga IP-"
+"adress och använder inte fingeravtryckstagning, annonser eller spårning "
+"av något slag."
 
 #: alt2/templates/about/about_index.html:115
 msgid "Data stored in your browser"
@@ -321,13 +335,17 @@ msgstr "Data lagrad i din webbläsare"
 msgid ""
 "This website uses browser cookies to authenticate registered users. This "
 "data consists of"
-msgstr "Denna webbplats använder webbläsarcookies för att autentisera registrerade användare. Dessa data består av:"
+msgstr ""
+"Denna webbplats använder webbläsarcookies för att autentisera "
+"registrerade användare. Dessa data består av:"
 
 #: alt2/templates/about/about_index.html:118
 msgid ""
 "An account token to keep you logged into the website between visits, "
 "which is sent when any page is loaded while you are logged in"
-msgstr "En kontotoken för att hålla dig inloggad på webbplatsen mellan besök, som skickas när en sida laddas medan du är inloggad."
+msgstr ""
+"En kontotoken för att hålla dig inloggad på webbplatsen mellan besök, som"
+" skickas när en sida laddas medan du är inloggad."
 
 #: alt2/templates/about/about_index.html:120
 msgid ""
@@ -335,14 +353,22 @@ msgid ""
 "theme or locale) without an account. Using this feature will store a "
 "cookie in the visitors browser containing their preferences. This cookie "
 "is sent on every request and does not contain any identifying information"
-msgstr "Denna webbplats erbjuder också ett alternativ för att lagra webbplatsinställningar (t.ex. tema eller språk) utan ett konto. Att använda denna funktion lagrar en cookie i besökarens webbläsare med deras inställningar. Denna cookie skickas vid varje begäran och innehåller ingen identifierande information."
+msgstr ""
+"Denna webbplats erbjuder också ett alternativ för att lagra "
+"webbplatsinställningar (t.ex. tema eller språk) utan ett konto. Att "
+"använda denna funktion lagrar en cookie i besökarens webbläsare med deras"
+" inställningar. Denna cookie skickas vid varje begäran och innehåller "
+"ingen identifierande information."
 
 #: alt2/templates/about/about_index.html:122
 msgid ""
 "You can remove this data from your browser by logging out of this "
 "website, or by using your browsers cookie-related controls to delete the "
 "data"
-msgstr "Du kan ta bort dessa data från din webbläsare genom att logga ut från denna webbplats eller genom att använda webbläsarens cookie-inställningar."
+msgstr ""
+"Du kan ta bort dessa data från din webbläsare genom att logga ut från "
+"denna webbplats eller genom att använda webbläsarens cookie-"
+"inställningar."
 
 #: alt2/templates/about/about_index.html:124
 msgid "Removal of data"
@@ -352,7 +378,9 @@ msgstr "Radering av data"
 msgid ""
 "To remove data stored in your browser, you can log out of the website, or"
 " you can use your browsers cookie-related controls to delete the data"
-msgstr "För att ta bort data lagrad i din webbläsare kan du logga ut från webbplatsen eller använda webbläsarens cookie-inställningar."
+msgstr ""
+"För att ta bort data lagrad i din webbläsare kan du logga ut från "
+"webbplatsen eller använda webbläsarens cookie-inställningar."
 
 #: alt2/templates/about/about_index.html:126
 msgid ""
@@ -378,6 +406,9 @@ msgid ""
 "channels and videos. Use the minimum number of exact words. YouTube "
 "channel and video identifiers can also be used"
 msgstr ""
+"Sökfältet längst upp på varje sida är det bästa sättet att hitta kanaler "
+"och videor. Använd det minsta antalet exakta ord. YouTube-kanal- och "
+"videoidentifierare kan också användas"
 
 #: alt2/templates/about/about_index.html:142
 msgid "How can I upload my videos/channels?"
@@ -425,23 +456,16 @@ msgid "How can I download videos/channels?"
 msgstr "Hur kan jag ladda ner videor/kanaler?"
 
 #: alt2/templates/about/about_index.html:156
-msgid ""
-"Download videos with \"right mouse button click\" inside the video window"
-" or use the \"Download Torrent\" link"
-msgstr ""
+msgid "Download videos with \"right mouse button click\" inside the video window"
+msgstr "Ladda ner videor med \"högerklick\" i videofönstret"
 
-#: alt2/templates/about/about_index.html:157
-msgid ""
-"Channel and Video RSS Feeds contain torrent links to easily download "
-"multiple videos with an RSS feed capable torrent client such as"
-msgstr ""
 
-#: alt2/templates/about/about_index.html:235
+#: alt2/templates/about/about_index.html:232
 #, fuzzy
 msgid "Creator Guide"
 msgstr "Skapad"
 
-#: alt2/templates/about/about_index.html:237
+#: alt2/templates/about/about_index.html:234
 msgid "Press Kit"
 msgstr "Presspaket"
 
@@ -1152,4 +1176,17 @@ msgstr "Nej"
 
 #~ msgid "Download Torrent"
 #~ msgstr "Hämta Torrent"
+
+#~ msgid ""
+#~ "Download videos with \"right mouse "
+#~ "button click\" inside the video window"
+#~ " or use the \"Download Torrent\" link"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Channel and Video RSS Feeds contain "
+#~ "torrent links to easily download "
+#~ "multiple videos with an RSS feed "
+#~ "capable torrent client such as"
+#~ msgstr ""
 

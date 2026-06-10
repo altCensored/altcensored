@@ -16,7 +16,7 @@ def toggle():
         session['theme'] = 'dark'
 
     redir = unquote_plus(request.form.get('redir', '/'))
-    if "//" in redir:
+    if not redir.startswith('/') or redir.startswith('//'):
         abort(404)
 
     return redirect(redir)

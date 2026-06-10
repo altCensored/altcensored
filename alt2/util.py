@@ -735,7 +735,7 @@ def videos_popular(PER_PAGE, offset):
 
 @cache.cached(key_prefix="data"+"%s")
 def channels_latest(PER_PAGE, offset):
-    channel_values = db_session.execute(db_session.query(Mv_Channel).limit(PER_PAGE).offset(offset))
+    channel_values = db_session.execute(db_session.query(Mv_Channel).order_by(Mv_Channel.id.desc()).limit(PER_PAGE).offset(offset))
 #    channels = Mv_Channel.query.limit(PER_PAGE).offset(offset)
     channels = [r[0] for r in channel_values]
     return channels

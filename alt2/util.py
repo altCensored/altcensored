@@ -1033,6 +1033,7 @@ def ac_object_exist(client, s3_bucket, itemname: str) -> bool:
     objects = client.list_objects(s3_bucket, prefix=itemname)
     if any(True for _ in objects):
         return True
+    return False
 
 
 def site_is_online(url, timeout=1):

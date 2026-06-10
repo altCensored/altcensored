@@ -20,6 +20,49 @@ FLASH_MSG = config.FLASH_MSG
 PER_PAGE = 24
 CHANN_MAX_RESULT = 28
 
+
+def _resolve_video_url(video: Mv_Video, video_id: str) -> str:
+    IARCHIVEURL = current_app.config['IARCHIVEURL']
+    VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
+    unavailable_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
+
+    # Only hit S3 when exists_ac is truthy — None and False both skip the round-trip.
+    # The scraper sets exists_ac=True on upload, so None reliably means "never in S3".
+    if video.exists_ac:
+        client = Minio(
+            current_app.config['AC_S3_ENDPOINT'],
+            access_key=current_app.config['AC_S3_ACCESS_KEY'],
+            secret_key=current_app.config['AC_S3_SECRET_KEY'],
+        )
+        try:
+            s3_exists = ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id)
+        except Exception:
+            s3_exists = False
+        if s3_exists:
+            return VIDEOSERVER_URL + video_id + "/" + video_id
+
+    if video.dark_ia or video.restricted_ia or video.loggedin_ia or video.novideo_ia:
+        return unavailable_url
+
+    if video.videofile:
+        root, _ext = os.path.splitext(video.videofile)
+        return IARCHIVEURL + video_id + "/" + root
+
+    if (
+        video.thumbnail
+        and 'maxresdefault' not in video.thumbnail
+        and not video.thumbnail.startswith('http')
+    ):
+        root, _ext = os.path.splitext(video.thumbnail)
+        return IARCHIVEURL + video_id + "/" + root
+
+    # is False (identity) — None means unknown, must still try get_ia_item().
+    if video.exists_ia is False:
+        return unavailable_url
+
+    return get_ia_item(video.extractor_data)
+
+
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
 def index(page):
@@ -194,35 +237,10 @@ def watch():
 
     IARCHIVEURL = current_app.config['IARCHIVEURL']
     IARCHIVEITEMURL = current_app.config['IARCHIVEITEMURL']
-    VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
     video_url_short = IARCHIVEURL + video_id + "/"
     video_url_download = IARCHIVEITEMURL + video_id
 
-    client = Minio(current_app.config['AC_S3_ENDPOINT'],
-                   access_key=current_app.config['AC_S3_ACCESS_KEY'],
-                   secret_key=current_app.config['AC_S3_SECRET_KEY']
-                   )
-
-    try:
-        s3_exists = ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id)
-    except Exception:
-        s3_exists = False
-
-    if s3_exists:
-        video_url = VIDEOSERVER_URL + video_id + "/" + video_id
-    else:
-        if video.dark_ia or video.restricted_ia or video.loggedin_ia or video.novideo_ia:
-#            NEW_FLASH_MSG = f'Internet Archive has limited access on <a href={video_url_download} class="alert-link" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">this item</a>'
-            video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
-        else:
-            if getattr(video, 'videofile'):
-                root, ext = os.path.splitext(video.videofile)
-                video_url = IARCHIVEURL + video_id + "/" + root
-            elif getattr(video, 'thumbnail') and 'maxresdefault' not in video.thumbnail:
-                root, ext = os.path.splitext(video.thumbnail)
-                video_url = IARCHIVEURL + video_id + "/" + root
-            else:
-                video_url = get_ia_item(video.extractor_data)
+    video_url = _resolve_video_url(video, video_id)
 
     playlist_titles = []
     not_in_watchlater = None
@@ -279,37 +297,11 @@ def embed(video_id):
     playlist = request.args.get('playlist', None)
     userlist = request.args.get('userlist', None)
 
-    IARCHIVEURL = current_app.config['IARCHIVEURL']
-    VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
-
-    client = Minio(current_app.config['AC_S3_ENDPOINT'],
-                   access_key=current_app.config['AC_S3_ACCESS_KEY'],
-                   secret_key=current_app.config['AC_S3_SECRET_KEY']
-                   )
-
     ip = request.headers.get('X-Forwarded-For', request.remote_addr)
     header = request.headers.get('User-Agent')
     Thread(target=increment_video_counter, args=(video_id, ip, header)).start()
 
-    try:
-        s3_exists = ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id)
-    except Exception:
-        s3_exists = False
-
-    if s3_exists:
-        video_url = VIDEOSERVER_URL + video_id + "/" + video_id
-    else:
-        if video.dark_ia or video.restricted_ia or video.loggedin_ia or video.novideo_ia:
-            video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
-        else:
-            if getattr(video, 'videofile'):
-                root, ext = os.path.splitext(video.videofile)
-                video_url = IARCHIVEURL + video_id + "/" + root
-            elif getattr(video, 'thumbnail') and 'maxresdefault' not in video.thumbnail:
-                root, ext = os.path.splitext(video.thumbnail)
-                video_url = IARCHIVEURL + video_id + "/" + root
-            else:
-                video_url = get_ia_item(video.extractor_data)
+    video_url = _resolve_video_url(video, video_id)
 
     next_video = None
 
@@ -389,31 +381,7 @@ def video_sources_api(video_id):
     playlist_hash = request.args.get('playlist', None)
     userlist = request.args.get('userlist', None)
 
-    IARCHIVEURL = current_app.config['IARCHIVEURL']
-    VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
-
-    client = Minio(current_app.config['AC_S3_ENDPOINT'],
-                   access_key=current_app.config['AC_S3_ACCESS_KEY'],
-                   secret_key=current_app.config['AC_S3_SECRET_KEY'])
-    try:
-        s3_exists = ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id)
-    except Exception:
-        s3_exists = False
-
-    if s3_exists:
-        video_url = VIDEOSERVER_URL + video_id + "/" + video_id
-    else:
-        if video.dark_ia or video.restricted_ia or video.loggedin_ia or video.novideo_ia:
-            video_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
-        else:
-            if getattr(video, 'videofile'):
-                root, ext = os.path.splitext(video.videofile)
-                video_url = IARCHIVEURL + video_id + "/" + root
-            elif getattr(video, 'thumbnail') and 'maxresdefault' not in video.thumbnail:
-                root, ext = os.path.splitext(video.thumbnail)
-                video_url = IARCHIVEURL + video_id + "/" + root
-            else:
-                video_url = get_ia_item(video.extractor_data)
+    video_url = _resolve_video_url(video, video_id)
 
     session['first_vid_pub'] = video.published
     session.modified = True

@@ -423,10 +423,10 @@ def remove_channel():
 @bp.route('/mirror_channel', methods=['GET', 'POST'])
 @util.admin_login_required
 def mirror_channel():
-    s3_server = current_app.config['AC_S3_ENDPOINT']
     title = "Mirror"
     if request.method == 'POST':
-        sys_name = s3_server
+        sys_name = current_app.config['AC_SSH_HOST']
+        s3_user = current_app.config['AC_S3_USER']
         channel_id = (request.form['channel_id'])
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
         action = ' mirror '
@@ -438,7 +438,7 @@ def mirror_channel():
 
         command = params1 + action + channel_url + cookie + resync + params2
         commands = [command]
-        ssh_command(sys_name, commands)
+        ssh_command(sys_name, commands, s3_user)
 
     return render_template('admin/admin_channels.html', title=title)
 
@@ -948,8 +948,10 @@ def test5():
 @bp.route('/test6')
 @util.admin_login_required
 def test6():
+    sys_name = current_app.config['AC_SSH_HOST']
+    sys_user = current_app.config['AC_S3_USER']
     commands = ["systemctl status allsync", "systemctl status find_archive", "ps -aef | grep -E 'channel|find|afs'", "df /dev/vda1"]
-    ssh_command(commands)
+    ssh_command(sys_name, commands, sys_user)
 
     return render_template('admin/admin_messages.html')
 

@@ -424,8 +424,8 @@ def channel_full_remove(channel_url):
         return True
 
 
-def ssh_command(sys_name, commands):
-    ssh_host = 'root@' + sys_name
+def ssh_command(sys_name, commands, sys_user='root'):
+    ssh_host = sys_user + '@' + sys_name
     for command in commands:
         ssh = subprocess.Popen(["ssh", "%s" % ssh_host, command],
                                shell=False,

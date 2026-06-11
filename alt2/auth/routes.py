@@ -7,7 +7,7 @@ import requests
 import secrets
 import sqlalchemy as sa
 from sqlalchemy import or_, func
-from urllib.parse import urlencode
+from urllib.parse import urlencode, unquote_plus
 from alt2.database import db_session
 from alt2.auth import bp
 from alt2 import config
@@ -161,6 +161,9 @@ def delete():
     l_msg = _l('Delete User')+' '
     item_quoted = f'"{user_email}"'
     message = l_msg + ' ' + item_quoted + '?'
+    redir = unquote_plus(request.args.get(url_orig, '/'))
+    if not redir.startswith('/') or redir.startswith('//'):
+        redir = '/'
     if request.method == 'POST':
         submitvalue = request.form['submitvalue']
         if submitvalue == 'yes':
@@ -171,9 +174,12 @@ def delete():
             session['user'] = None
             return redirect(url_for('video.index'))
         else:
+            redir = unquote_plus(request.form.get('redir', redir))
+            if not redir.startswith('/') or redir.startswith('//'):
+                redir = '/'
             flash(item_quoted + ' NOT deleted', 'error')
-            return redirect(request.args.get(url_orig, '/'))
-    return render_template('widgets/widgets_confirm.html', message=message)
+            return redirect(redir)
+    return render_template('widgets/widgets_confirm.html', message=message, redir=redir)
 
 
 @bp.route('/authorize/<provider>')

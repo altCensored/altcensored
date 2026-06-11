@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-06-11 08:30-0300\n"
+"POT-Creation-Date: 2026-06-11 12:01-0300\n"
 "PO-Revision-Date: 2020-06-16 19:19+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: de\n"
@@ -585,18 +585,18 @@ msgstr "Neues Passwort"
 msgid "Update Pasword"
 msgstr "Passwort aktualisieren"
 
-#: alt2/templates/category/category_item.html:47
+#: alt2/templates/category/category_item.html:45
 #: alt2/templates/channel/channel_index.html:74
 #: alt2/templates/language/language_item.html:111
 #: alt2/templates/language/language_item.html:125
 #: alt2/templates/language/language_item.html:139
 #: alt2/templates/language/language_item.html:154
-#: alt2/templates/video/video_search.html:241
-#: alt2/templates/video/video_search.html:256
+#: alt2/templates/video/video_search.html:228
+#: alt2/templates/video/video_search.html:243
 msgid "latest"
 msgstr "aktuell"
 
-#: alt2/templates/category/category_item.html:51
+#: alt2/templates/category/category_item.html:49
 #: alt2/templates/channel/channel_index.html:78
 #: alt2/templates/channel/channel_item.html:128
 #: alt2/templates/language/language_item.html:114
@@ -606,12 +606,12 @@ msgstr "aktuell"
 #: alt2/templates/playlist/playlist_index.html:42
 #: alt2/templates/user/user_index.html:30
 #: alt2/templates/user/user_playlist_index.html:40
-#: alt2/templates/video/video_search.html:245
-#: alt2/templates/video/video_search.html:260
+#: alt2/templates/video/video_search.html:232
+#: alt2/templates/video/video_search.html:247
 msgid "newest"
 msgstr "neueste"
 
-#: alt2/templates/category/category_item.html:55
+#: alt2/templates/category/category_item.html:53
 #: alt2/templates/channel/channel_index.html:82
 #: alt2/templates/channel/channel_item.html:132
 #: alt2/templates/language/language_item.html:120
@@ -621,9 +621,9 @@ msgstr "neueste"
 #: alt2/templates/playlist/playlist_index.html:46
 #: alt2/templates/user/user_index.html:34
 #: alt2/templates/user/user_playlist_index.html:44
-#: alt2/templates/video/video_index.html:87
-#: alt2/templates/video/video_search.html:249
-#: alt2/templates/video/video_search.html:264
+#: alt2/templates/video/video_index.html:84
+#: alt2/templates/video/video_search.html:236
+#: alt2/templates/video/video_search.html:251
 msgid "popular"
 msgstr "beliebt"
 
@@ -637,13 +637,13 @@ msgstr "begrenztesten"
 
 #: alt2/templates/channel/channel_index.html:119
 #: alt2/templates/channel/channel_item.html:55
-#: alt2/templates/video/video_search.html:51
+#: alt2/templates/video/video_search.html:48
 msgid "Censored"
 msgstr "Zensiert"
 
 #: alt2/templates/channel/channel_index.html:123
 #: alt2/templates/channel/channel_item.html:57
-#: alt2/templates/video/video_search.html:55
+#: alt2/templates/video/video_search.html:52
 #, fuzzy
 msgid "Archived"
 msgstr "Archiviert"
@@ -651,7 +651,7 @@ msgstr "Archiviert"
 #: alt2/templates/channel/channel_index.html:126
 #: alt2/templates/channel/channel_item.html:59
 #: alt2/templates/language/language_item.html:57
-#: alt2/templates/video/video_search.html:58
+#: alt2/templates/video/video_search.html:55
 msgid "Total"
 msgstr "Gesamt"
 
@@ -659,19 +659,19 @@ msgstr "Gesamt"
 #: alt2/templates/channel/channel_item.html:60
 #: alt2/templates/language/language_item.html:58
 #: alt2/templates/video/video_item.html:141
-#: alt2/templates/video/video_search.html:60
+#: alt2/templates/video/video_search.html:57
 msgid "Views"
 msgstr "Aufrufe"
 
 #: alt2/templates/channel/channel_index.html:130
 #: alt2/templates/language/language_item.html:59
-#: alt2/templates/video/video_search.html:62
+#: alt2/templates/video/video_search.html:59
 msgid "Subs"
 msgstr "Abonnenten"
 
 #: alt2/templates/channel/channel_index.html:136
 #: alt2/templates/language/language_item.html:67
-#: alt2/templates/video/video_search.html:69
+#: alt2/templates/video/video_search.html:66
 msgid "Monitor"
 msgstr "Überwachen"
 
@@ -685,7 +685,7 @@ msgstr "Überwachen"
 #: alt2/templates/settings/settings_site.html:109
 #: alt2/templates/settings/settings_user_update.html:74
 #: alt2/templates/settings/settings_user_update.html:85
-#: alt2/templates/video/video_search.html:70
+#: alt2/templates/video/video_search.html:67
 msgid "True"
 msgstr "Ja"
 
@@ -699,45 +699,45 @@ msgstr "Ja"
 #: alt2/templates/settings/settings_site.html:107
 #: alt2/templates/settings/settings_user_update.html:72
 #: alt2/templates/settings/settings_user_update.html:83
-#: alt2/templates/video/video_search.html:71
+#: alt2/templates/video/video_search.html:68
 msgid "False"
 msgstr "Nein"
 
 #: alt2/templates/channel/channel_index.html:140
 #: alt2/templates/language/language_item.html:71
-#: alt2/templates/video/video_search.html:73
+#: alt2/templates/video/video_search.html:70
 msgid "Archive"
 msgstr "Archiviert"
 
 #: alt2/templates/channel/channel_index.html:141
-#: alt2/templates/video/video_search.html:74
+#: alt2/templates/video/video_search.html:71
 msgid "Full"
 msgstr "Voll"
 
 #: alt2/templates/channel/channel_index.html:142
-#: alt2/templates/video/video_search.html:75
+#: alt2/templates/video/video_search.html:72
 msgid "Part"
 msgstr "Teil"
 
 #: alt2/templates/channel/channel_index.html:143
-#: alt2/templates/video/video_search.html:76
+#: alt2/templates/video/video_search.html:73
 #, fuzzy
 msgid "Latest"
 msgstr "aktuell"
 
 #: alt2/templates/channel/channel_index.html:144
-#: alt2/templates/video/video_search.html:77
+#: alt2/templates/video/video_search.html:74
 msgid "None"
 msgstr "Keiner"
 
 #: alt2/templates/channel/channel_index.html:153
 #: alt2/templates/language/language_item.html:83
-#: alt2/templates/video/video_search.html:88
+#: alt2/templates/video/video_search.html:85
 msgid "Created"
 msgstr "Erstellt"
 
 #: alt2/templates/channel/channel_index.html:156
-#: alt2/templates/video/video_search.html:91
+#: alt2/templates/video/video_search.html:88
 msgid "Deleted"
 msgstr "Gelöscht"
 
@@ -831,10 +831,10 @@ msgid "views"
 msgstr "Aufrufe"
 
 #: alt2/templates/playlist/playlist_item_create_edit.html:19
-#: alt2/templates/settings/settings_index.html:54
-#: alt2/templates/settings/settings_site.html:52
+#: alt2/templates/settings/settings_index.html:52
+#: alt2/templates/settings/settings_site.html:50
 #: alt2/templates/user/user_playlist_index.html:20
-#: alt2/templates/video/video_search.html:114
+#: alt2/templates/video/video_search.html:111
 #: alt2/templates/vpn/vpn_index.html:55
 msgid "Playlist"
 msgstr "Playlist"
@@ -846,7 +846,7 @@ msgstr "Titel"
 
 #: alt2/templates/playlist/playlist_item_create_edit.html:30
 msgid "The playlist name shown in listings. Max 18 characters."
-msgstr ""
+msgstr "Der Playlist-Name in den Übersichten. Max. 18 Zeichen."
 
 #: alt2/templates/playlist/playlist_item_create_edit.html:38
 #: alt2/templates/playlist/playlist_item_create_edit.html:42
@@ -856,7 +856,7 @@ msgstr "Beschreibung"
 
 #: alt2/templates/playlist/playlist_item_create_edit.html:38
 msgid "A short summary shown under the playlist title. Max 50 characters."
-msgstr ""
+msgstr "Eine kurze Zusammenfassung unter dem Playlist-Titel. Max. 50 Zeichen."
 
 #: alt2/templates/playlist/playlist_item_create_edit.html:46
 #: alt2/templates/user/user_item.html:111
@@ -867,7 +867,7 @@ msgstr "Öffentlich"
 
 #: alt2/templates/playlist/playlist_item_create_edit.html:46
 msgid "When True, the playlist is visible to all visitors."
-msgstr ""
+msgstr "Wenn True, ist die Playlist für alle Besucher sichtbar."
 
 #: alt2/templates/playlist/playlist_item_create_edit.html:59
 msgid "Update Playlist"
@@ -877,21 +877,21 @@ msgstr "Playlist aktualisieren"
 msgid "Create Playlist"
 msgstr "Playlist erstellen"
 
-#: alt2/templates/settings/settings_index.html:33
-#: alt2/templates/settings/settings_site.html:31
+#: alt2/templates/settings/settings_index.html:35
+#: alt2/templates/settings/settings_site.html:33
 #: alt2/templates/vpn/vpn_error.html:33 alt2/templates/vpn/vpn_index.html:33
 msgid "Site"
 msgstr "Website"
 
-#: alt2/templates/settings/settings_index.html:34
-#: alt2/templates/settings/settings_site.html:32
+#: alt2/templates/settings/settings_index.html:36
+#: alt2/templates/settings/settings_site.html:34
 msgid "Language, theme and playback preferences"
-msgstr ""
+msgstr "Sprach-, Design- und Wiedergabeeinstellungen"
 
 #: alt2/templates/settings/settings_index.html:44
 #: alt2/templates/settings/settings_site.html:42
 #: alt2/templates/settings/settings_user_update.html:31
-#: alt2/templates/video/video_search.html:172
+#: alt2/templates/video/video_search.html:169
 #: alt2/templates/vpn/vpn_index.html:48 alt2/templates/widgets/navtabs.html:61
 msgid "User"
 msgstr "Nutzer"
@@ -900,13 +900,13 @@ msgstr "Nutzer"
 #: alt2/templates/settings/settings_site.html:43
 #: alt2/templates/settings/settings_user_update.html:32
 msgid "Profile, email and account settings"
-msgstr ""
+msgstr "Profil-, E-Mail- und Kontoeinstellungen"
 
-#: alt2/templates/settings/settings_index.html:55
-#: alt2/templates/settings/settings_site.html:53
+#: alt2/templates/settings/settings_index.html:53
+#: alt2/templates/settings/settings_site.html:51
 #, fuzzy
 msgid "Create and manage your playlists"
-msgstr "Playlist erstellen"
+msgstr "Playlists erstellen und verwalten"
 
 #: alt2/templates/settings/settings_site.html:64
 msgid "Language"
@@ -914,7 +914,7 @@ msgstr "Sprache"
 
 #: alt2/templates/settings/settings_site.html:64
 msgid "Choose the display language for the site interface."
-msgstr ""
+msgstr "Wählen Sie die Anzeigesprache für die Benutzeroberfläche."
 
 #: alt2/templates/settings/settings_site.html:73
 msgid "Theme"
@@ -922,7 +922,7 @@ msgstr "Thema"
 
 #: alt2/templates/settings/settings_site.html:73
 msgid "Select the colour theme for the site."
-msgstr ""
+msgstr "Wählen Sie das Farbdesign für die Website."
 
 #: alt2/templates/settings/settings_site.html:82
 #, fuzzy
@@ -931,7 +931,7 @@ msgstr "Automatisches Abspielen"
 
 #: alt2/templates/settings/settings_site.html:82
 msgid "Automatically start playing a video when its page loads."
-msgstr ""
+msgstr "Ein Video automatisch abspielen, wenn die Seite geladen wird."
 
 #: alt2/templates/settings/settings_site.html:92
 #, fuzzy
@@ -940,7 +940,7 @@ msgstr "Automatische Wiedergabe"
 
 #: alt2/templates/settings/settings_site.html:92
 msgid "After a video ends, automatically navigate to the next one in the list."
-msgstr ""
+msgstr "Nach dem Ende eines Videos automatisch zum nächsten in der Liste wechseln."
 
 #: alt2/templates/settings/settings_site.html:103
 msgid "Loop List"
@@ -948,7 +948,7 @@ msgstr "Schleifenliste"
 
 #: alt2/templates/settings/settings_site.html:103
 msgid "When the last video in a list ends, start again from the first."
-msgstr ""
+msgstr "Wenn das letzte Video endet, von vorne beginnen."
 
 #: alt2/templates/settings/settings_site.html:114
 msgid "Menu"
@@ -956,7 +956,7 @@ msgstr "Menü"
 
 #: alt2/templates/settings/settings_site.html:114
 msgid "Choose which sections appear in the top navigation bar."
-msgstr ""
+msgstr "Wählen Sie, welche Abschnitte in der oberen Navigationsleiste erscheinen."
 
 #: alt2/templates/settings/settings_site.html:135
 msgid "Save"
@@ -964,15 +964,15 @@ msgstr "Speichern"
 
 #: alt2/templates/settings/settings_user_update.html:43
 msgid "Used for login and optional newsletter. Max 45 characters."
-msgstr ""
+msgstr "Wird für die Anmeldung und den optionalen Newsletter verwendet. Max. 45 Zeichen."
 
 #: alt2/templates/settings/settings_user_update.html:52
 msgid "Your public display name on the site. Max 18 characters."
-msgstr ""
+msgstr "Ihr öffentlicher Anzeigename auf der Website. Max. 18 Zeichen."
 
 #: alt2/templates/settings/settings_user_update.html:60
 msgid "A short bio shown on your public profile. Max 50 characters."
-msgstr ""
+msgstr "Eine kurze Biografie auf Ihrem öffentlichen Profil. Max. 50 Zeichen."
 
 #: alt2/templates/settings/settings_user_update.html:68
 msgid "User Public"
@@ -980,7 +980,7 @@ msgstr "Benutzer Öffentlich"
 
 #: alt2/templates/settings/settings_user_update.html:68
 msgid "When True, your profile page is visible to other visitors."
-msgstr ""
+msgstr "Wenn True, ist Ihre Profilseite für andere Besucher sichtbar."
 
 #: alt2/templates/settings/settings_user_update.html:79
 msgid "Email Subscribed"
@@ -988,7 +988,7 @@ msgstr "E-Mail abonniert"
 
 #: alt2/templates/settings/settings_user_update.html:79
 msgid "Opt in or out of the site newsletter."
-msgstr ""
+msgstr "Den Website-Newsletter abonnieren oder abbestellen."
 
 #: alt2/templates/settings/settings_user_update.html:90
 msgid "Featured Playlist"
@@ -996,7 +996,7 @@ msgstr "Ausgewählte Wiedergabeliste"
 
 #: alt2/templates/settings/settings_user_update.html:90
 msgid "The playlist shown at the top of your public profile page."
-msgstr ""
+msgstr "Die Playlist, die oben auf Ihrer Profilseite angezeigt wird."
 
 #: alt2/templates/settings/settings_user_update.html:95
 #: alt2/templates/video/video_item.html:156
@@ -1013,7 +1013,7 @@ msgstr "Geschichte"
 
 #: alt2/templates/user/user_item.html:57
 msgid "Edit profile settings"
-msgstr ""
+msgstr "Profileinstellungen bearbeiten"
 
 #: alt2/templates/user/user_item.html:63
 #, fuzzy
@@ -1055,11 +1055,11 @@ msgstr "Playlist erstellen"
 msgid "trending"
 msgstr "beliebt"
 
-#: alt2/templates/video/video_index.html:79
+#: alt2/templates/video/video_index.html:76
 msgid "uploaded"
 msgstr "hochgeladen"
 
-#: alt2/templates/video/video_index.html:83
+#: alt2/templates/video/video_index.html:80
 msgid "censored"
 msgstr "zensiert"
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-06-11 08:30-0300\n"
+"POT-Creation-Date: 2026-06-11 12:01-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -493,18 +493,18 @@ msgstr ""
 msgid "Update Pasword"
 msgstr ""
 
-#: alt2/templates/category/category_item.html:47
+#: alt2/templates/category/category_item.html:45
 #: alt2/templates/channel/channel_index.html:74
 #: alt2/templates/language/language_item.html:111
 #: alt2/templates/language/language_item.html:125
 #: alt2/templates/language/language_item.html:139
 #: alt2/templates/language/language_item.html:154
-#: alt2/templates/video/video_search.html:241
-#: alt2/templates/video/video_search.html:256
+#: alt2/templates/video/video_search.html:228
+#: alt2/templates/video/video_search.html:243
 msgid "latest"
 msgstr ""
 
-#: alt2/templates/category/category_item.html:51
+#: alt2/templates/category/category_item.html:49
 #: alt2/templates/channel/channel_index.html:78
 #: alt2/templates/channel/channel_item.html:128
 #: alt2/templates/language/language_item.html:114
@@ -514,12 +514,12 @@ msgstr ""
 #: alt2/templates/playlist/playlist_index.html:42
 #: alt2/templates/user/user_index.html:30
 #: alt2/templates/user/user_playlist_index.html:40
-#: alt2/templates/video/video_search.html:245
-#: alt2/templates/video/video_search.html:260
+#: alt2/templates/video/video_search.html:232
+#: alt2/templates/video/video_search.html:247
 msgid "newest"
 msgstr ""
 
-#: alt2/templates/category/category_item.html:55
+#: alt2/templates/category/category_item.html:53
 #: alt2/templates/channel/channel_index.html:82
 #: alt2/templates/channel/channel_item.html:132
 #: alt2/templates/language/language_item.html:120
@@ -529,9 +529,9 @@ msgstr ""
 #: alt2/templates/playlist/playlist_index.html:46
 #: alt2/templates/user/user_index.html:34
 #: alt2/templates/user/user_playlist_index.html:44
-#: alt2/templates/video/video_index.html:87
-#: alt2/templates/video/video_search.html:249
-#: alt2/templates/video/video_search.html:264
+#: alt2/templates/video/video_index.html:84
+#: alt2/templates/video/video_search.html:236
+#: alt2/templates/video/video_search.html:251
 msgid "popular"
 msgstr ""
 
@@ -545,20 +545,20 @@ msgstr ""
 
 #: alt2/templates/channel/channel_index.html:119
 #: alt2/templates/channel/channel_item.html:55
-#: alt2/templates/video/video_search.html:51
+#: alt2/templates/video/video_search.html:48
 msgid "Censored"
 msgstr ""
 
 #: alt2/templates/channel/channel_index.html:123
 #: alt2/templates/channel/channel_item.html:57
-#: alt2/templates/video/video_search.html:55
+#: alt2/templates/video/video_search.html:52
 msgid "Archived"
 msgstr ""
 
 #: alt2/templates/channel/channel_index.html:126
 #: alt2/templates/channel/channel_item.html:59
 #: alt2/templates/language/language_item.html:57
-#: alt2/templates/video/video_search.html:58
+#: alt2/templates/video/video_search.html:55
 msgid "Total"
 msgstr ""
 
@@ -566,19 +566,19 @@ msgstr ""
 #: alt2/templates/channel/channel_item.html:60
 #: alt2/templates/language/language_item.html:58
 #: alt2/templates/video/video_item.html:141
-#: alt2/templates/video/video_search.html:60
+#: alt2/templates/video/video_search.html:57
 msgid "Views"
 msgstr ""
 
 #: alt2/templates/channel/channel_index.html:130
 #: alt2/templates/language/language_item.html:59
-#: alt2/templates/video/video_search.html:62
+#: alt2/templates/video/video_search.html:59
 msgid "Subs"
 msgstr ""
 
 #: alt2/templates/channel/channel_index.html:136
 #: alt2/templates/language/language_item.html:67
-#: alt2/templates/video/video_search.html:69
+#: alt2/templates/video/video_search.html:66
 msgid "Monitor"
 msgstr ""
 
@@ -592,7 +592,7 @@ msgstr ""
 #: alt2/templates/settings/settings_site.html:109
 #: alt2/templates/settings/settings_user_update.html:74
 #: alt2/templates/settings/settings_user_update.html:85
-#: alt2/templates/video/video_search.html:70
+#: alt2/templates/video/video_search.html:67
 msgid "True"
 msgstr ""
 
@@ -606,44 +606,44 @@ msgstr ""
 #: alt2/templates/settings/settings_site.html:107
 #: alt2/templates/settings/settings_user_update.html:72
 #: alt2/templates/settings/settings_user_update.html:83
-#: alt2/templates/video/video_search.html:71
+#: alt2/templates/video/video_search.html:68
 msgid "False"
 msgstr ""
 
 #: alt2/templates/channel/channel_index.html:140
 #: alt2/templates/language/language_item.html:71
-#: alt2/templates/video/video_search.html:73
+#: alt2/templates/video/video_search.html:70
 msgid "Archive"
 msgstr ""
 
 #: alt2/templates/channel/channel_index.html:141
-#: alt2/templates/video/video_search.html:74
+#: alt2/templates/video/video_search.html:71
 msgid "Full"
 msgstr ""
 
 #: alt2/templates/channel/channel_index.html:142
-#: alt2/templates/video/video_search.html:75
+#: alt2/templates/video/video_search.html:72
 msgid "Part"
 msgstr ""
 
 #: alt2/templates/channel/channel_index.html:143
-#: alt2/templates/video/video_search.html:76
+#: alt2/templates/video/video_search.html:73
 msgid "Latest"
 msgstr ""
 
 #: alt2/templates/channel/channel_index.html:144
-#: alt2/templates/video/video_search.html:77
+#: alt2/templates/video/video_search.html:74
 msgid "None"
 msgstr ""
 
 #: alt2/templates/channel/channel_index.html:153
 #: alt2/templates/language/language_item.html:83
-#: alt2/templates/video/video_search.html:88
+#: alt2/templates/video/video_search.html:85
 msgid "Created"
 msgstr ""
 
 #: alt2/templates/channel/channel_index.html:156
-#: alt2/templates/video/video_search.html:91
+#: alt2/templates/video/video_search.html:88
 msgid "Deleted"
 msgstr ""
 
@@ -731,10 +731,10 @@ msgid "views"
 msgstr ""
 
 #: alt2/templates/playlist/playlist_item_create_edit.html:19
-#: alt2/templates/settings/settings_index.html:54
-#: alt2/templates/settings/settings_site.html:52
+#: alt2/templates/settings/settings_index.html:52
+#: alt2/templates/settings/settings_site.html:50
 #: alt2/templates/user/user_playlist_index.html:20
-#: alt2/templates/video/video_search.html:114
+#: alt2/templates/video/video_search.html:111
 #: alt2/templates/vpn/vpn_index.html:55
 msgid "Playlist"
 msgstr ""
@@ -777,21 +777,21 @@ msgstr ""
 msgid "Create Playlist"
 msgstr ""
 
-#: alt2/templates/settings/settings_index.html:33
-#: alt2/templates/settings/settings_site.html:31
+#: alt2/templates/settings/settings_index.html:35
+#: alt2/templates/settings/settings_site.html:33
 #: alt2/templates/vpn/vpn_error.html:33 alt2/templates/vpn/vpn_index.html:33
 msgid "Site"
 msgstr ""
 
-#: alt2/templates/settings/settings_index.html:34
-#: alt2/templates/settings/settings_site.html:32
+#: alt2/templates/settings/settings_index.html:36
+#: alt2/templates/settings/settings_site.html:34
 msgid "Language, theme and playback preferences"
 msgstr ""
 
 #: alt2/templates/settings/settings_index.html:44
 #: alt2/templates/settings/settings_site.html:42
 #: alt2/templates/settings/settings_user_update.html:31
-#: alt2/templates/video/video_search.html:172
+#: alt2/templates/video/video_search.html:169
 #: alt2/templates/vpn/vpn_index.html:48 alt2/templates/widgets/navtabs.html:61
 msgid "User"
 msgstr ""
@@ -802,8 +802,8 @@ msgstr ""
 msgid "Profile, email and account settings"
 msgstr ""
 
-#: alt2/templates/settings/settings_index.html:55
-#: alt2/templates/settings/settings_site.html:53
+#: alt2/templates/settings/settings_index.html:53
+#: alt2/templates/settings/settings_site.html:51
 msgid "Create and manage your playlists"
 msgstr ""
 
@@ -949,11 +949,11 @@ msgstr ""
 msgid "trending"
 msgstr ""
 
-#: alt2/templates/video/video_index.html:79
+#: alt2/templates/video/video_index.html:76
 msgid "uploaded"
 msgstr ""
 
-#: alt2/templates/video/video_index.html:83
+#: alt2/templates/video/video_index.html:80
 msgid "censored"
 msgstr ""
 

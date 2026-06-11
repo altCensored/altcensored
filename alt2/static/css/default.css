@@ -175,6 +175,112 @@ img.responsive_revive {
   font-size: 18px;
 }
 
+.help-tip {
+  display: inline-block;
+  position: relative;
+  margin-left: 4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #5a7fa0;
+  color: #fff;
+  font-size: 11px;
+  line-height: 16px;
+  text-align: center;
+  cursor: help;
+  vertical-align: middle;
+}
+
+.help-balloon {
+  display: none;
+  position: absolute;
+  left: 22px;
+  top: -4px;
+  width: 220px;
+  padding: 6px 10px;
+  background: rgba(35, 35, 35, 0.92);
+  color: #fff;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 1.4;
+  border-radius: 4px;
+  z-index: 200;
+  white-space: normal;
+  pointer-events: none;
+}
+
+.help-balloon::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 8px;
+  border: 6px solid transparent;
+  border-right-color: rgba(35, 35, 35, 0.92);
+  border-left: 0;
+}
+
+.help-tip:hover .help-balloon,
+.help-tip:focus .help-balloon {
+  display: block;
+}
+
+.nav-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.nav-tip-text {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  white-space: nowrap;
+  padding: 4px 10px;
+  background: rgba(35, 35, 35, 0.85);
+  color: #fff;
+  font-size: 12px;
+  border-radius: 3px;
+  z-index: 200;
+}
+
+.nav-tooltip:hover .nav-tip-text {
+  display: block;
+}
+
+.nav-tooltip.flip .nav-tip-text {
+  left: auto;
+  right: 0;
+}
+
+.nav-tooltip.center .nav-tip-text {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.settings-nav-row {
+  justify-content: center;
+  gap: 2rem;
+}
+
+.navtab-centered {
+  justify-content: center;
+}
+
+details.settings-about {
+  margin-bottom: 0.75em;
+  font-size: 0.9em;
+  opacity: 0.8;
+}
+
+details.settings-about summary {
+  cursor: pointer;
+}
+
+details.settings-about p {
+  margin: 0.4em 0 0 1em;
+}
+
 /*
  * Navbar
  */

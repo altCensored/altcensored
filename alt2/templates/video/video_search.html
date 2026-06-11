@@ -37,14 +37,11 @@
                             <div class="pure-u-1-2">
                                 <a href="{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}">
                                     <div class="thumbnail">
-                                        <left>
-                                              <img style="width:95%"
-                                                   src="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['ytc_thumbnail'] }}"
-                                                   onerror="this.onerror=null;this.src='{{ config.CHANNEL_THUMB_ERROR_IMAGE }}';">
-                                            </style>
-                                            </left>
-                                            </div>
-                                              </a>
+                                        <img style="width:95%"
+                                             src="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['ytc_thumbnail'] }}"
+                                             onerror="this.onerror=null;this.src='{{ config.CHANNEL_THUMB_ERROR_IMAGE }}';">
+                                    </div>
+                                </a>
                                                 </div>
                                                   <div class="pure-u-1-2" style="text-align:left">
                                                     <a href="{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}">
@@ -209,28 +206,18 @@
         <div class="pure-u-1 pure-u-md-20-24">
             <div class="pure-g h-box">
                 <div class="pure-u-10-24">
-                    <div class="pure-u-1 pure-md-1-3">
-                    </div>
-                    <div class="pure-u-1 pure-md-1-3">
-                    </div>
-                    <div class="pure-u-1 pure-md-1-3">
+                    <div class="pure-u-1 pure-md-1-1">
                         <i class='ion-logo-youtube'  style="font-size: 24px"></i>
                         <i class='ion-md-search' style="font-size: 21px"></i>
                         <b>({{ videocount | commafy }})</b>
                     </div>
                 </div>
-                <div class="pure-u-4-24" style="text-align:center";>
-                    <div class="pure-u-1 pure-md-1-3">
-                    </div>
-                    <div class="pure-u-1 pure-md-1-3">
-                    </div>
-                    <div class="pure-u-1 pure-md-1-3">
+                <div class="pure-u-4-24" style="text-align:center;">
                     {% if playlist %}
                         <a href="{{ url_for('playlist.item', playlist=playlist.hashid ) }}">
                         <i class='ion-md-list' style="font-size: 24px"></i>&nbsp;
                         <b>{{ playlist.title }}</b></a>
                     {% endif %}
-                    </div>
                 </div>
                 <div class="pure-u-10-24" style="text-align:right;">
 

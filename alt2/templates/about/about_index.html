@@ -64,8 +64,8 @@
                   <b><u><a href="{{ url_for('channel.index') }}">
                    {{ channelcount }}</a></b></u>
                    {{ gettext('monitored channels, of which') }}
-                  <b><u><a href="{{ url_for('channel.deleted') }}"><font color="red">
-                   {{ delchannelcount }}</a></b></u></font>
+                  <b><u><a href="{{ url_for('channel.deleted') }}" style="color:red;">
+                   {{ delchannelcount }}</a></b></u>
                    {{ gettext('have been deleted and') }}
                   <b><u><a href="{{ url_for('channel.archived') }}">
                    {{ archchancount }}</a></b></u>

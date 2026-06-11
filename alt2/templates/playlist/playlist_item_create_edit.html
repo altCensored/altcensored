@@ -27,7 +27,7 @@
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <fieldset>
                         <div class="pure-control-group">
-                            <label for="Title">{{ gettext('Title') }}:</label>
+                            <label for="Title"> {{ gettext('Title') }}: <span class="help-tip" tabindex="0">?<span class="help-balloon">{{ gettext('The playlist name shown in listings. Max 18 characters.') }}</span></span></label>
                             {% if playlist %}
                                 <input type=text id=title value="{{ playlist.title  }}" name=title required maxlength="18">
                             {% else %}
@@ -35,7 +35,7 @@
                             {% endif %}
                         </div>
                         <div class="pure-control-group">
-                            <label for="Description">{{ gettext('Description') }}:</label>
+                            <label for="Description"> {{ gettext('Description') }}: <span class="help-tip" tabindex="0">?<span class="help-balloon">{{ gettext('A short summary shown under the playlist title. Max 50 characters.') }}</span></span></label>
                             {% if playlist %}
                                 <input type=text id=description value="{{ playlist.description  }}" name=description size="30" required maxlength="50">
                             {% else %}
@@ -43,7 +43,7 @@
                             {% endif %}
                         </div>
                         <div class="pure-control-group">
-                            <label for="Public"> {{ gettext('Public') }}:</label>
+                            <label for="Public"> {{ gettext('Public') }}: <span class="help-tip" tabindex="0">?<span class="help-balloon">{{ gettext('When True, the playlist is visible to all visitors.') }}</span></span></label>
                             <select name=public>
                                 {% if playlist and not playlist.public %}
                                     <option value=False SELECTED>{{ gettext('False') }}</option>"
@@ -56,9 +56,9 @@
                         </div>
                         <div class="pure-controls">
                             {% if playlist %}
-                                <button class="pure-button" type="submit" name="submitvalue">{{ gettext('Update Playlist') }}</button>
+                                <button class="pure-button pure-button-primary" type="submit" name="submitvalue">{{ gettext('Update Playlist') }}</button>
                             {% else %}
-                                <button class="pure-button" type="submit" name="submitvalue">{{ gettext('Create Playlist') }}</button>
+                                <button class="pure-button pure-button-primary" type="submit" name="submitvalue">{{ gettext('Create Playlist') }}</button>
                             {% endif %}
                         </div>
             </div>

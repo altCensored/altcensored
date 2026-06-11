@@ -73,3 +73,24 @@ a.pure-button:hover,
 input[type="submit"].pure-button:hover {
     background-color: rgb(60, 75, 85) !important;
 }
+
+.nav-tip-text {
+    background-color: rgb(45, 57, 65) !important;
+    border: 1px solid rgb(117, 121, 113) !important;
+    color: rgb(205, 195, 177) !important;
+}
+
+.help-tip {
+    background-color: #5a7fa0 !important;
+    color: #fff !important;
+}
+
+.help-balloon {
+    background-color: rgb(45, 57, 65) !important;
+    border: 1px solid rgb(117, 121, 113) !important;
+    color: rgb(205, 195, 177) !important;
+}
+
+.help-balloon::before {
+    border-right-color: rgb(45, 57, 65) !important;
+}

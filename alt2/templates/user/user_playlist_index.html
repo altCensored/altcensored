@@ -26,8 +26,11 @@
                     </div>
                     <div class="pure-u-1 pure-md-1-2">
                         {% if session.user %}
-                            <a href="{{ url_for('playlist.create') }}">
-                                <i class='ion-md-add-circle-outline' style="font-size: 24px"></i></a>
+                            <span class="nav-tooltip center">
+                                <a href="{{ url_for('playlist.create') }}">
+                                    <i class='ion-md-add-circle-outline' style="font-size: 24px"></i></a>
+                                <span class="nav-tip-text">{{ gettext('Create a new playlist') }}</span>
+                            </span>
                         {% endif %}
                     </div>
                 </div>

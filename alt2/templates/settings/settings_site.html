@@ -22,37 +22,46 @@
     <div class="pure-g">
         <div class="pure-u-1 pure-u-md-2-24"></div>
         <div class="pure-u-1 pure-u-md-20-24">
-            <div class="pure-g h-box">
-                <div class="pure-u-1-4">
-                    <div class="pure-u-1 pure-md-1-1">
-                        <a href="{{ url_for('settings.index') }}">
-                            <img height="22px" src="{{ url_for('static', filename='flags/by_locale') }}/{{locale}}.svg">
-                            <b>{{ gettext('Site') }}</b></a>
+            <div class="pure-g">
+                <div class="pure-u-1-4"></div>
+                <div class="pure-u-1 pure-u-md-1-2">
+                    <div class="pure-g">
+                        <div class="pure-u-1-3" style="text-align:center">
+                            <span class="nav-tooltip">
+                                <a href="{{ url_for('settings.index') }}" style="text-align:center;" class="pure-menu-heading">
+                                    <img height="22px" src="{{ url_for('static', filename='flags/by_locale') }}/{{locale}}.svg">
+                                    <b>{{ gettext('Site') }}</b></a>
+                                <span class="nav-tip-text">{{ gettext('Language, theme and playback preferences') }}</span>
+                            </span>
+                        </div>
+                        {% if session.user %}
+                        <div class="pure-u-1-3" style="text-align:center">
+                            <span class="nav-tooltip center">
+                                <a href="{{ url_for('user.item', username=session.user.username) }}" style="text-align:center;" class="pure-menu-heading">
+                                    <i class='ion-ios-contact' style="font-size: 24px"></i>
+                                    <b>{{ gettext('User') }}</b></a>
+                                <span class="nav-tip-text">{{ gettext('Profile, email and account settings') }}</span>
+                            </span>
+                        </div>
+                        <div class="pure-u-1-3" style="text-align:center">
+                            <span class="nav-tooltip flip">
+                                <a href="{{ url_for('user.playlist') }}" style="text-align:left;" class="pure-menu-heading">
+                                    <i class='ion-md-list' style="font-size: 24px"></i>
+                                    <b>{{ gettext('Playlist') }}</b></a>
+                                <span class="nav-tip-text">{{ gettext('Create and manage your playlists') }}</span>
+                            </span>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
-                {% if session.user %}
-                    <div class="pure-u-1-4" style="text-align:center;">
-                        <div class="pure-u-1 pure-md-1-1">
-                            <a href="{{ url_for('user.item', username=session.user.username) }}">
-                                <i class='ion-ios-contact' style="font-size: 24px"></i>
-                                <b>{{ gettext('User') }}</b></a>
-                        </div>
-                    </div>
-                    <div class="pure-u-1-4" style="text-align:right;">
-                        <div class="pure-u-1 pure-md-1-1">
-                            <a href="{{ url_for('user.playlist') }}">
-                                <i class='ion-md-list' style="font-size: 24px"></i>
-                                <b>{{ gettext('Playlist') }}</b></a>
-                        </div>
-                    </div>
-                {% endif %}
+                <div class="pure-u-1-4"></div>
             </div>
             <div class="h-box">
                 <form class="pure-form pure-form-aligned" name=site method="post">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <fieldset>
                         <div class="pure-control-group">
-                            <label for="Language"> {{ gettext('Language') }}:</label>
+                            <label for="Language"> {{ gettext('Language') }}: <span class="help-tip" tabindex="0">?<span class="help-balloon">{{ gettext('Choose the display language for the site interface.') }}</span></span></label>
                             <select name=locale>
                                 <option value="{{locale}}" SELECTED>{{locale}}</option>"
                                 {% for locale in locales %}
@@ -61,7 +70,7 @@
                             </select>
                         </div>
                         <div class="pure-control-group">
-                            <label for="Theme"> {{ gettext('Theme') }}: </label>
+                            <label for="Theme"> {{ gettext('Theme') }}: <span class="help-tip" tabindex="0">?<span class="help-balloon">{{ gettext('Select the colour theme for the site.') }}</span></span></label>
                             <select name=theme>
                                 <option value="{{theme}}" SELECTED>{{theme}}</option>"
                                 {% for theme in themes %}
@@ -70,7 +79,7 @@
                             </select>
                         </div>
                         <div class="pure-control-group">
-                            <label for="AutoPlay"> {{ gettext('Auto Play') }}: </label>
+                            <label for="AutoPlay"> {{ gettext('Auto Play') }}: <span class="help-tip" tabindex="0">?<span class="help-balloon">{{ gettext('Automatically start playing a video when its page loads.') }}</span></span></label>
                             <select name=autoplay>
                                 <option value="{{session.autoplay}}" SELECTED>{{session.autoplay}}</option>"
                                 {% if session.autoplay %}
@@ -80,7 +89,7 @@
                                 {% endif %}
                             </select>
                         </div>                        <div class="pure-control-group">
-                            <label for="PlayNext"> {{ gettext('Play Next') }}: </label>
+                            <label for="PlayNext"> {{ gettext('Play Next') }}: <span class="help-tip" tabindex="0">?<span class="help-balloon">{{ gettext('After a video ends, automatically navigate to the next one in the list.') }}</span></span></label>
                             <select name=playnext>
                                 <option value="{{session.playnext}}" SELECTED>{{session.playnext}}</option>"
                                 {% if session.playnext %}
@@ -91,7 +100,7 @@
                             </select>
                         </div>
                         <div class="pure-control-group">
-                            <label for="LoopList"> {{ gettext('Loop List') }}: </label>
+                            <label for="LoopList"> {{ gettext('Loop List') }}: <span class="help-tip" tabindex="0">?<span class="help-balloon">{{ gettext('When the last video in a list ends, start again from the first.') }}</span></span></label>
                             <select name=looplist>
                                 <option value="{{session.looplist}}" SELECTED>{{session.looplist}}</option>"
                                 {% if session.looplist %}
@@ -102,7 +111,7 @@
                             </select>
                         </div>
                         <div class="pure-control-group">
-                            <label for="Menu"> {{ gettext('Menu') }}:</label>
+                            <label for="Menu"> {{ gettext('Menu') }}: <span class="help-tip" tabindex="0">?<span class="help-balloon">{{ gettext('Choose which sections appear in the top navigation bar.') }}</span></span></label>
                             <select name=navtab1_value>
                                 <option value="{{navtabs["navtab1"]}}" SELECTED>{{navtabs["navtab1"]}}</option>"
                                 {% for navtab1_value in navtab1_values %}
@@ -123,7 +132,7 @@
                             </select>
                         </div>
                         <div class="pure-controls">
-                            <button class="pure-button" type="submit" name="submit" value="login">{{ gettext('Save') }}</button>
+                            <button class="pure-button pure-button-primary" type="submit" name="submit" value="login">{{ gettext('Save') }}</button>
                         </div>
                     </fieldset>
                 </form>

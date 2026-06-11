@@ -1,7 +1,7 @@
 /* Common theme */
 html,
 body,
-:not([style*="background-color:"]):not(.shareon > *) {
+:not([style*="background-color:"]):not(.shareon > *):not(.help-tip):not(.help-balloon) {
     background-color: rgb(21, 21, 20) !important;
 }
 html,
@@ -104,5 +104,6 @@ a.pure-menu-item.selected * {
 }
 
 .help-balloon::before {
+    border-color: transparent !important;
     border-right-color: rgb(45, 57, 65) !important;
 }

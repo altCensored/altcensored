@@ -34,16 +34,16 @@
         <div class="pure-u-1 pure-u-md-20-24">
             <div class="pure-g h-box">
                 <div class="pure-u-6-24">
-                    <div class="pure-u-1 pure-md-1-3">
+                    <div class="pure-u-1 pure-md-1-3 sort-nav-item">
                         <a href="{{ url_for('channel.deleted') }}" class="pure-menu-item {{'selected' if order == 'deleted' }}">
                             <span style="color: #ff0000; ">
                             {{ gettext('deleted') }}</a></span>
                     </div>
-                    <div class="pure-u-1 pure-md-1-3">
+                    <div class="pure-u-1 pure-md-1-3 sort-nav-item">
                         <a href="{{ url_for('channel.limited') }}" class="pure-menu-item {{'selected' if order == 'limited' }}">
                             {{ gettext('most limited') }}</a>
                     </div>
-                    <div class="pure-u-1 pure-md-1-3">
+                    <div class="pure-u-1 pure-md-1-3 sort-nav-item">
                         <i class='ion-ios-albums'  style="font-size: 24px"></i>
                         {% if order == 'deleted' %}
                         <a href="{{ url_for('channel.deleted_feed') }}">
@@ -56,12 +56,12 @@
                     </div>
                 </div>
                 <div class="pure-u-12-24" style="text-align:center;">
-                    <div class="pure-u-1 pure-md-1-3">
+                    <div class="pure-u-1 pure-md-1-3 sort-nav-item">
                             <a href="{{ url_for('channel.table', data='data_deleted') }}" class="pure-menu-heading selected">
                                 <span style="color: red; ">
                                     <b>{{ gettext('Table Deleted') }}</b></a>
                     </div>
-                    <div class="pure-u-1 pure-md-1-3">
+                    <div class="pure-u-1 pure-md-1-3 sort-nav-item">
                             <a href="{{ url_for('channel.table', data='data_all') }}" class="pure-menu-heading selected">
                                 <b>{{ gettext('Table All') }}</b></a>
                     </div>
@@ -69,15 +69,15 @@
                     </div>
                 </div>
                 <div class="pure-u-6-24" style="text-align:right;">
-                    <div class="pure-u-1 pure-md-1-3">
+                    <div class="pure-u-1 pure-md-1-3 sort-nav-item">
                         <a href="{{ url_for('channel.index') }}" class="pure-menu-item {{'selected' if order == 'latest' }}">
                             {{ gettext('latest') }}</a>
                     </div>
-                    <div class="pure-u-1 pure-md-1-3">
+                    <div class="pure-u-1 pure-md-1-3 sort-nav-item">
                         <a href="{{ url_for('channel.new') }}"  class="pure-menu-item {{'selected' if order == 'newest' }}">
                             {{ gettext('newest') }}</a>
                     </div>
-                    <div class="pure-u-1 pure-md-1-3">
+                    <div class="pure-u-1 pure-md-1-3 sort-nav-item">
                         <a href="{{ url_for('channel.popular') }}"  class="pure-menu-item {{'selected' if order == 'popular' }}">
                             {{ gettext('popular') }}</a>
                     </div>

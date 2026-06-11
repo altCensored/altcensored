@@ -37,11 +37,11 @@
                     </div>
                 </div>
                 <div class="pure-u-10-24" style="text-align:right;">
-                    <div class="pure-u-1 pure-md-1-2">
+                    <div class="pure-u-1 pure-md-1-2 sort-nav-item">
                         <a href="{{ url_for('playlist.index') }}" class="pure-menu-item {{'selected' if order == 'newest' }}">
                             {{ gettext('newest') }}</a>
                     </div>
-                    <div class="pure-u-1 pure-md-1-2">
+                    <div class="pure-u-1 pure-md-1-2 sort-nav-item">
                         <a href="{{ url_for('playlist.popular') }}" class="pure-menu-item {{'selected' if order == 'popular' }}">
                             {{ gettext('popular') }}</a>
                     </div>

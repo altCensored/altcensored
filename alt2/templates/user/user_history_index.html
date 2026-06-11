@@ -45,8 +45,11 @@
         <div class="pure-g" style="text-align:right">
           <div class="pure-u-1 pure-md-1-1">
             {% if not playlist %}
-            <a href="{{ url_for('user.clear_history') }}">
-            <i class='ion-md-trash' style="font-size: 24px"></i></a>
+            <span class="nav-tooltip flip">
+                <a href="{{ url_for('user.clear_history') }}">
+                <i class='ion-md-trash' style="font-size: 24px"></i></a>
+                <span class="nav-tip-text">{{ gettext('Clear history') }}</span>
+            </span>
             {% endif %}
           </div>
         </div>

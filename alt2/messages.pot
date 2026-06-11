@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-06-11 12:01-0300\n"
+"POT-Creation-Date: 2026-06-11 20:24-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,7 +37,7 @@ msgstr ""
 msgid "Invalid username or password"
 msgstr ""
 
-#: alt2/auth/routes.py:59 alt2/templates/base.html:97
+#: alt2/auth/routes.py:59 alt2/templates/base.html:95
 #: alt2/templates/base_nomessages.html:97
 msgid "Log In"
 msgstr ""
@@ -63,40 +63,40 @@ msgstr ""
 msgid "Your password has been reset."
 msgstr ""
 
-#: alt2/templates/base.html:63 alt2/templates/base_nomessages.html:63
-#: alt2/templates/widgets/playlist.html:104
+#: alt2/templates/base.html:61 alt2/templates/base_nomessages.html:63
+#: alt2/templates/widgets/playlist.html:116
 msgid "search"
 msgstr ""
 
-#: alt2/templates/base.html:101 alt2/templates/base_nomessages.html:101
+#: alt2/templates/base.html:99 alt2/templates/base_nomessages.html:101
 msgid "Log Out"
 msgstr ""
 
-#: alt2/templates/base.html:146 alt2/templates/base_login.html:106
+#: alt2/templates/base.html:144 alt2/templates/base_login.html:106
 #: alt2/templates/base_nomessages.html:132
 msgid "Donate"
 msgstr ""
 
-#: alt2/templates/base.html:149 alt2/templates/base_login.html:109
+#: alt2/templates/base.html:147 alt2/templates/base_login.html:109
 #: alt2/templates/base_nomessages.html:135
 msgid "Released under the"
 msgstr ""
 
-#: alt2/templates/base.html:152 alt2/templates/base_login.html:112
+#: alt2/templates/base.html:150 alt2/templates/base_login.html:112
 msgid "Shop"
 msgstr ""
 
-#: alt2/templates/base.html:158 alt2/templates/base_login.html:118
+#: alt2/templates/base.html:156 alt2/templates/base_login.html:118
 #: alt2/templates/base_nomessages.html:141
 msgid "About"
 msgstr ""
 
-#: alt2/templates/base.html:161 alt2/templates/base_login.html:121
+#: alt2/templates/base.html:159 alt2/templates/base_login.html:121
 #: alt2/templates/base_nomessages.html:144
 msgid "Privacy"
 msgstr ""
 
-#: alt2/templates/base.html:164 alt2/templates/base_login.html:124
+#: alt2/templates/base.html:162 alt2/templates/base_login.html:124
 #: alt2/templates/base_nomessages.html:147
 msgid "FAQ"
 msgstr ""
@@ -428,7 +428,7 @@ msgstr ""
 #: alt2/templates/admin/admin_channel_table.html:23
 #: alt2/templates/admin/admin_channel_table_new.html:22
 #: alt2/templates/admin/admin_video_table.html:25
-#: alt2/templates/channel/channel_index.html:62
+#: alt2/templates/channel/channel_index.html:61
 #: alt2/templates/channel/channel_table.html:45
 msgid "Table Deleted"
 msgstr ""
@@ -436,7 +436,7 @@ msgstr ""
 #: alt2/templates/admin/admin_channel_table.html:25
 #: alt2/templates/admin/admin_channel_table_new.html:24
 #: alt2/templates/admin/admin_video_table.html:27
-#: alt2/templates/channel/channel_index.html:66
+#: alt2/templates/channel/channel_index.html:65
 #: alt2/templates/channel/channel_table.html:47
 msgid "Table All"
 msgstr ""
@@ -447,13 +447,13 @@ msgstr ""
 
 #: alt2/templates/auth_old/auth_index.html:22
 #: alt2/templates/auth_old/auth_index.html:49
-#: alt2/templates/settings/settings_user_update.html:43
+#: alt2/templates/settings/settings_user_update.html:51
 msgid "Email"
 msgstr ""
 
 #: alt2/templates/auth_old/auth_index.html:30
 #: alt2/templates/auth_old/auth_index.html:31
-#: alt2/templates/settings/settings_user_update.html:52
+#: alt2/templates/settings/settings_user_update.html:60
 msgid "Username"
 msgstr ""
 
@@ -513,7 +513,7 @@ msgstr ""
 #: alt2/templates/language/language_item.html:157
 #: alt2/templates/playlist/playlist_index.html:42
 #: alt2/templates/user/user_index.html:30
-#: alt2/templates/user/user_playlist_index.html:40
+#: alt2/templates/user/user_playlist_index.html:49
 #: alt2/templates/video/video_search.html:232
 #: alt2/templates/video/video_search.html:247
 msgid "newest"
@@ -528,7 +528,7 @@ msgstr ""
 #: alt2/templates/language/language_item.html:163
 #: alt2/templates/playlist/playlist_index.html:46
 #: alt2/templates/user/user_index.html:34
-#: alt2/templates/user/user_playlist_index.html:44
+#: alt2/templates/user/user_playlist_index.html:53
 #: alt2/templates/video/video_index.html:84
 #: alt2/templates/video/video_search.html:236
 #: alt2/templates/video/video_search.html:251
@@ -585,13 +585,13 @@ msgstr ""
 #: alt2/templates/channel/channel_index.html:137
 #: alt2/templates/language/language_item.html:68
 #: alt2/templates/language/language_item.html:72
-#: alt2/templates/playlist/playlist_item_create_edit.html:50
-#: alt2/templates/playlist/playlist_item_create_edit.html:52
-#: alt2/templates/settings/settings_site.html:88
-#: alt2/templates/settings/settings_site.html:98
-#: alt2/templates/settings/settings_site.html:109
-#: alt2/templates/settings/settings_user_update.html:74
-#: alt2/templates/settings/settings_user_update.html:85
+#: alt2/templates/playlist/playlist_item_create_edit.html:61
+#: alt2/templates/playlist/playlist_item_create_edit.html:63
+#: alt2/templates/settings/settings_site.html:55
+#: alt2/templates/settings/settings_site.html:65
+#: alt2/templates/settings/settings_site.html:76
+#: alt2/templates/settings/settings_user_update.html:82
+#: alt2/templates/settings/settings_user_update.html:93
 #: alt2/templates/video/video_search.html:67
 msgid "True"
 msgstr ""
@@ -599,13 +599,13 @@ msgstr ""
 #: alt2/templates/channel/channel_index.html:138
 #: alt2/templates/language/language_item.html:69
 #: alt2/templates/language/language_item.html:73
-#: alt2/templates/playlist/playlist_item_create_edit.html:49
-#: alt2/templates/playlist/playlist_item_create_edit.html:53
-#: alt2/templates/settings/settings_site.html:86
-#: alt2/templates/settings/settings_site.html:96
-#: alt2/templates/settings/settings_site.html:107
-#: alt2/templates/settings/settings_user_update.html:72
-#: alt2/templates/settings/settings_user_update.html:83
+#: alt2/templates/playlist/playlist_item_create_edit.html:60
+#: alt2/templates/playlist/playlist_item_create_edit.html:64
+#: alt2/templates/settings/settings_site.html:53
+#: alt2/templates/settings/settings_site.html:63
+#: alt2/templates/settings/settings_site.html:74
+#: alt2/templates/settings/settings_user_update.html:80
+#: alt2/templates/settings/settings_user_update.html:91
 #: alt2/templates/video/video_search.html:68
 msgid "False"
 msgstr ""
@@ -691,7 +691,7 @@ msgstr ""
 msgid "Credit Cards"
 msgstr ""
 
-#: alt2/templates/donate/donate_index.html:38
+#: alt2/templates/donate/donate_index.html:39
 msgid "it's us!"
 msgstr ""
 
@@ -699,13 +699,13 @@ msgstr ""
 msgid "Cryptocurrency"
 msgstr ""
 
-#: alt2/templates/donate/donate_index.html:62
+#: alt2/templates/donate/donate_index.html:64
 msgid ""
 "Thank-you Brave Browser/BAT users, your generous support makes a "
 "difference"
 msgstr ""
 
-#: alt2/templates/donate/donate_index.html:65
+#: alt2/templates/donate/donate_index.html:67
 msgid "Request additional cryptocurrency addresses via email to"
 msgstr ""
 
@@ -730,219 +730,227 @@ msgstr ""
 msgid "views"
 msgstr ""
 
-#: alt2/templates/playlist/playlist_item_create_edit.html:19
+#: alt2/templates/playlist/playlist_item_create_edit.html:30
 #: alt2/templates/settings/settings_index.html:52
-#: alt2/templates/settings/settings_site.html:50
-#: alt2/templates/user/user_playlist_index.html:20
+#: alt2/templates/user/user_playlist_index.html:29
 #: alt2/templates/video/video_search.html:111
 #: alt2/templates/vpn/vpn_index.html:55
+#: alt2/templates/widgets/settings_subnav.html:18
 msgid "Playlist"
 msgstr ""
 
-#: alt2/templates/playlist/playlist_item_create_edit.html:30
-#: alt2/templates/playlist/playlist_item_create_edit.html:34
+#: alt2/templates/playlist/playlist_item_create_edit.html:41
+#: alt2/templates/playlist/playlist_item_create_edit.html:45
 msgid "Title"
 msgstr ""
 
-#: alt2/templates/playlist/playlist_item_create_edit.html:30
+#: alt2/templates/playlist/playlist_item_create_edit.html:41
 msgid "The playlist name shown in listings. Max 18 characters."
 msgstr ""
 
-#: alt2/templates/playlist/playlist_item_create_edit.html:38
-#: alt2/templates/playlist/playlist_item_create_edit.html:42
-#: alt2/templates/settings/settings_user_update.html:60
+#: alt2/templates/playlist/playlist_item_create_edit.html:49
+#: alt2/templates/playlist/playlist_item_create_edit.html:53
+#: alt2/templates/settings/settings_user_update.html:68
 msgid "Description"
 msgstr ""
 
-#: alt2/templates/playlist/playlist_item_create_edit.html:38
+#: alt2/templates/playlist/playlist_item_create_edit.html:49
 msgid "A short summary shown under the playlist title. Max 50 characters."
 msgstr ""
 
-#: alt2/templates/playlist/playlist_item_create_edit.html:46
-#: alt2/templates/user/user_item.html:111
-#: alt2/templates/user/user_playlist_index.html:92
-#: alt2/templates/widgets/playlist.html:63
+#: alt2/templates/playlist/playlist_item_create_edit.html:57
+#: alt2/templates/user/user_item.html:119
+#: alt2/templates/user/user_playlist_index.html:101
+#: alt2/templates/widgets/playlist.html:75
 msgid "Public"
 msgstr ""
 
-#: alt2/templates/playlist/playlist_item_create_edit.html:46
+#: alt2/templates/playlist/playlist_item_create_edit.html:57
 msgid "When True, the playlist is visible to all visitors."
 msgstr ""
 
-#: alt2/templates/playlist/playlist_item_create_edit.html:59
+#: alt2/templates/playlist/playlist_item_create_edit.html:70
 msgid "Update Playlist"
 msgstr ""
 
-#: alt2/templates/playlist/playlist_item_create_edit.html:61
+#: alt2/templates/playlist/playlist_item_create_edit.html:72
 msgid "Create Playlist"
 msgstr ""
 
 #: alt2/templates/settings/settings_index.html:35
-#: alt2/templates/settings/settings_site.html:33
 #: alt2/templates/vpn/vpn_error.html:33 alt2/templates/vpn/vpn_index.html:33
+#: alt2/templates/widgets/settings_subnav.html:9
 msgid "Site"
 msgstr ""
 
 #: alt2/templates/settings/settings_index.html:36
-#: alt2/templates/settings/settings_site.html:34
+#: alt2/templates/widgets/settings_subnav.html:10
 msgid "Language, theme and playback preferences"
 msgstr ""
 
 #: alt2/templates/settings/settings_index.html:44
-#: alt2/templates/settings/settings_site.html:42
-#: alt2/templates/settings/settings_user_update.html:31
+#: alt2/templates/settings/settings_user_update.html:39
 #: alt2/templates/video/video_search.html:169
 #: alt2/templates/vpn/vpn_index.html:48 alt2/templates/widgets/navtabs.html:61
+#: alt2/templates/widgets/settings_subnav.html:26
 msgid "User"
 msgstr ""
 
 #: alt2/templates/settings/settings_index.html:45
-#: alt2/templates/settings/settings_site.html:43
-#: alt2/templates/settings/settings_user_update.html:32
+#: alt2/templates/settings/settings_user_update.html:40
+#: alt2/templates/widgets/settings_subnav.html:27
 msgid "Profile, email and account settings"
 msgstr ""
 
 #: alt2/templates/settings/settings_index.html:53
-#: alt2/templates/settings/settings_site.html:51
+#: alt2/templates/widgets/settings_subnav.html:19
 msgid "Create and manage your playlists"
 msgstr ""
 
-#: alt2/templates/settings/settings_site.html:64
+#: alt2/templates/settings/settings_site.html:31
 msgid "Language"
 msgstr ""
 
-#: alt2/templates/settings/settings_site.html:64
+#: alt2/templates/settings/settings_site.html:31
 msgid "Choose the display language for the site interface."
 msgstr ""
 
-#: alt2/templates/settings/settings_site.html:73
+#: alt2/templates/settings/settings_site.html:40
 msgid "Theme"
 msgstr ""
 
-#: alt2/templates/settings/settings_site.html:73
+#: alt2/templates/settings/settings_site.html:40
 msgid "Select the colour theme for the site."
 msgstr ""
 
-#: alt2/templates/settings/settings_site.html:82
+#: alt2/templates/settings/settings_site.html:49
 msgid "Auto Play"
 msgstr ""
 
-#: alt2/templates/settings/settings_site.html:82
+#: alt2/templates/settings/settings_site.html:49
 msgid "Automatically start playing a video when its page loads."
 msgstr ""
 
-#: alt2/templates/settings/settings_site.html:92
+#: alt2/templates/settings/settings_site.html:59
 msgid "Play Next"
 msgstr ""
 
-#: alt2/templates/settings/settings_site.html:92
+#: alt2/templates/settings/settings_site.html:59
 msgid "After a video ends, automatically navigate to the next one in the list."
 msgstr ""
 
-#: alt2/templates/settings/settings_site.html:103
+#: alt2/templates/settings/settings_site.html:70
 msgid "Loop List"
 msgstr ""
 
-#: alt2/templates/settings/settings_site.html:103
+#: alt2/templates/settings/settings_site.html:70
 msgid "When the last video in a list ends, start again from the first."
 msgstr ""
 
-#: alt2/templates/settings/settings_site.html:114
+#: alt2/templates/settings/settings_site.html:81
 msgid "Menu"
 msgstr ""
 
-#: alt2/templates/settings/settings_site.html:114
+#: alt2/templates/settings/settings_site.html:81
 msgid "Choose which sections appear in the top navigation bar."
 msgstr ""
 
-#: alt2/templates/settings/settings_site.html:135
+#: alt2/templates/settings/settings_site.html:102
 msgid "Save"
 msgstr ""
 
-#: alt2/templates/settings/settings_user_update.html:43
+#: alt2/templates/settings/settings_user_update.html:51
 msgid "Used for login and optional newsletter. Max 45 characters."
 msgstr ""
 
-#: alt2/templates/settings/settings_user_update.html:52
+#: alt2/templates/settings/settings_user_update.html:60
 msgid "Your public display name on the site. Max 18 characters."
 msgstr ""
 
-#: alt2/templates/settings/settings_user_update.html:60
+#: alt2/templates/settings/settings_user_update.html:68
 msgid "A short bio shown on your public profile. Max 50 characters."
 msgstr ""
 
-#: alt2/templates/settings/settings_user_update.html:68
+#: alt2/templates/settings/settings_user_update.html:76
 msgid "User Public"
 msgstr ""
 
-#: alt2/templates/settings/settings_user_update.html:68
+#: alt2/templates/settings/settings_user_update.html:76
 msgid "When True, your profile page is visible to other visitors."
 msgstr ""
 
-#: alt2/templates/settings/settings_user_update.html:79
+#: alt2/templates/settings/settings_user_update.html:87
 msgid "Email Subscribed"
 msgstr ""
 
-#: alt2/templates/settings/settings_user_update.html:79
+#: alt2/templates/settings/settings_user_update.html:87
 msgid "Opt in or out of the site newsletter."
 msgstr ""
 
-#: alt2/templates/settings/settings_user_update.html:90
+#: alt2/templates/settings/settings_user_update.html:98
 msgid "Featured Playlist"
 msgstr ""
 
-#: alt2/templates/settings/settings_user_update.html:90
+#: alt2/templates/settings/settings_user_update.html:98
 msgid "The playlist shown at the top of your public profile page."
 msgstr ""
 
-#: alt2/templates/settings/settings_user_update.html:95
+#: alt2/templates/settings/settings_user_update.html:103
 #: alt2/templates/video/video_item.html:156
 msgid "Select Playlist"
 msgstr ""
 
-#: alt2/templates/settings/settings_user_update.html:103
+#: alt2/templates/settings/settings_user_update.html:111
 msgid "Update User"
 msgstr ""
 
-#: alt2/templates/user/user_history_index.html:32
+#: alt2/templates/user/user_history_index.html:39
 msgid "history"
 msgstr ""
 
-#: alt2/templates/user/user_item.html:57
+#: alt2/templates/user/user_history_index.html:51
+msgid "Clear history"
+msgstr ""
+
+#: alt2/templates/user/user_item.html:65
 msgid "Edit profile settings"
 msgstr ""
 
-#: alt2/templates/user/user_item.html:63
+#: alt2/templates/user/user_item.html:71
 msgid "Delete your account"
 msgstr ""
 
-#: alt2/templates/user/user_item.html:80
-#: alt2/templates/widgets/playlist.html:92
+#: alt2/templates/user/user_item.html:88
+#: alt2/templates/widgets/playlist.html:104
 msgid "History"
 msgstr ""
 
-#: alt2/templates/user/user_item.html:81
+#: alt2/templates/user/user_item.html:89
 msgid "Videos you have recently watched"
 msgstr ""
 
-#: alt2/templates/user/user_item.html:94
-#: alt2/templates/user/user_watchlater_index.html:32
+#: alt2/templates/user/user_item.html:102
+#: alt2/templates/user/user_watchlater_index.html:39
 #: alt2/templates/video/video_item.html:161
-#: alt2/templates/widgets/playlist.html:98
+#: alt2/templates/widgets/playlist.html:110
 msgid "WatchLater"
 msgstr ""
 
-#: alt2/templates/user/user_item.html:95
+#: alt2/templates/user/user_item.html:103
 msgid "Videos you have saved to watch later"
 msgstr ""
 
-#: alt2/templates/user/user_item.html:114
-#: alt2/templates/user/user_playlist_index.html:95
+#: alt2/templates/user/user_item.html:122
+#: alt2/templates/user/user_playlist_index.html:104
 msgid "Private"
 msgstr ""
 
-#: alt2/templates/user/user_playlist_index.html:32
+#: alt2/templates/user/user_playlist_index.html:41
 msgid "Create a new playlist"
+msgstr ""
+
+#: alt2/templates/user/user_watchlater_index.html:51
+msgid "Clear watch later"
 msgstr ""
 
 #: alt2/templates/video/video_index.html:60
@@ -1042,16 +1050,32 @@ msgstr ""
 msgid "Admin"
 msgstr ""
 
+#: alt2/templates/widgets/playlist.html:26
+msgid "Edit playlist"
+msgstr ""
+
+#: alt2/templates/widgets/playlist.html:31
+msgid "Delete playlist"
+msgstr ""
+
+#: alt2/templates/widgets/playlist.html:48
+msgid "Done adding videos"
+msgstr ""
+
+#: alt2/templates/widgets/playlist.html:55
+msgid "Add videos to playlist"
+msgstr ""
+
 #: alt2/templates/widgets/videos.html:55 alt2/templates/widgets/videos.html:64
 #: alt2/templates/widgets/videos.html:79
 msgid "Add to WatchLater"
 msgstr ""
 
-#: alt2/templates/widgets/widgets_confirm.html:23
+#: alt2/templates/widgets/widgets_confirm.html:36
 msgid "Yes"
 msgstr ""
 
-#: alt2/templates/widgets/widgets_confirm.html:24
+#: alt2/templates/widgets/widgets_confirm.html:38
 msgid "No"
 msgstr ""
 

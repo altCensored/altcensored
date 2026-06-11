@@ -19,7 +19,7 @@ from .util import (
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-url_orig = config.RANDOM_VALUE
+url_orig = 'original_url'
 
 def find_user_by_email(email):
     try:

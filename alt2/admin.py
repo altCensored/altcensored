@@ -29,7 +29,7 @@ from werkzeug.utils import secure_filename
 bp = Blueprint('admin', __name__, url_prefix='/admin')
 
 ALLOWED_EXTENSIONS = {'htm', 'html', 'txt'}
-url_orig = config.RANDOM_VALUE
+url_orig = 'original_url'
 sender = config.SES_EMAIL_SOURCE
 
 

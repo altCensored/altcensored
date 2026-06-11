@@ -107,3 +107,11 @@ a.pure-menu-item.selected * {
     border-color: transparent !important;
     border-right-color: rgb(45, 57, 65) !important;
 }
+
+.donate-cc-links a:not([style*="color:"]) {
+    color: darkorange !important;
+}
+
+.donate-crypto summary b {
+    color: darkorange !important;
+}

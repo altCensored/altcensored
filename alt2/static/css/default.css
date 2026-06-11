@@ -179,13 +179,13 @@ img.responsive_revive {
   display: inline-block;
   position: relative;
   margin-left: 4px;
-  width: 16px;
-  height: 16px;
+  width: 19px;
+  height: 19px;
   border-radius: 50%;
   background-color: #5a7fa0;
   color: #fff;
-  font-size: 11px;
-  line-height: 16px;
+  font-size: 13px;
+  line-height: 19px;
   text-align: center;
   cursor: help;
   vertical-align: middle;
@@ -261,6 +261,10 @@ img.responsive_revive {
 .settings-nav-row {
   justify-content: center;
   gap: 2rem;
+}
+
+.settings-content {
+  margin-top: 1.5em;
 }
 
 .navtab-centered {
@@ -459,10 +463,45 @@ input[type="search"]::-webkit-search-cancel-button {
  * Footer
  */
 
+.about-content h3 {
+  margin-top: 2em;
+}
+
+.about-content h3:first-of-type {
+  margin-top: 0;
+}
+
+.donate-list {
+  line-height: 1.38;
+}
+
+.donate-crypto {
+  line-height: 1.32;
+  margin-bottom: 1.2em;
+}
+
+
+.about-content p {
+  margin-bottom: 1.2em;
+}
+
+.donate-list li {
+  margin-bottom: 0.96em;
+}
+
+.about-content details,
+.donate-crypto details {
+  margin-bottom: 0.8em;
+}
+
 .footer {
   color: #666666;
   margin: 2em 0;
   text-align: center;
+}
+
+.footer .pure-g:first-child {
+  margin-bottom: 0.27em;
 }
 
 .footer_left {

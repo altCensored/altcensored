@@ -25,24 +25,25 @@
   <div class="pure-u-1 pure-u-md-20-24">
     <div class="pure-g">
       <div class="pure-u-1 pure-u-md-1-1">
-        <div class="h-box">
+        <div class="h-box about-content">
           <h3>{{ gettext('Expenses Increase 2024') }}</h3>
 
-          <ul>
+          <ul class="donate-list">
               <li>{{ gettext('YouTube increased login requirements requiring more proxy services') }}</li>
               <li>{{ gettext('we set up our own') }} <a href="{{ config['VIDEOSERVER_URL'] }}nI_kH-e5_vc/nI_kH-e5_vc.mp4" target="_blank" rel="noopener noreferrer" span style="color: darkorange;"> {{ gettext('video storage service') }} </a>
                 {{ gettext('to be less dependent on the') }} <a href="https://archive.is/DPXi2" target="_blank" rel="noopener noreferrer" span style="color: darkorange;">  Internet Archive </a></li>
           </ul>
 
           <h3>{{ gettext('Credit Cards') }}</h3>
-          <a href = "https://www.paypal.biz/vitalvoip" target="_blank">paypal.biz/vitalvoip</a> ({{ gettext("it's us!") }})
-          <br>
-          <a href = "http://donorbox.org/altcensored" target="_blank">donorbox.org/altcensored</a>
-          <br>
-          <a href = "http://buymeacoffee.com/altcensored" target="_blank">buymeacoffee.com/altcensored</a>
+          <ul class="donate-list donate-cc-links">
+            <li><a href="https://www.paypal.biz/vitalvoip" target="_blank">paypal.biz/vitalvoip</a> ({{ gettext("it's us!") }})</li>
+            <li><a href="http://donorbox.org/altcensored" target="_blank">donorbox.org/altcensored</a></li>
+            <li><a href="http://buymeacoffee.com/altcensored" target="_blank">buymeacoffee.com/altcensored</a></li>
+          </ul>
           <p>
           <h3>{{ gettext('Cryptocurrency') }}</h3>
           </p>
+          <div class="donate-crypto">
           {% for crypto in cryptos %}
             <details>
             <summary>
@@ -58,6 +59,7 @@
           </p>
             </details>
             {% endfor %}
+          </div>
           <p>
           {{ gettext('Thank-you Brave Browser/BAT users, your generous support makes a difference') }}.
           </p>

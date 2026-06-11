@@ -32,12 +32,12 @@
 
 <meta name="twitter:site" content="@altcensored">
 <meta name="twitter:title" content="{{ video['title'] }}">
-<meta name="twitter:description" content="{{ video['description'] }} (Published on {{ video['published'].strftime('%b %e, %G') if video['published'] else '' }})">
+<meta name="twitter:description" content="{{ video['description'] if video['description'] else '' }} (Published on {{ video['published'].strftime('%b %e, %G') if video['published'] else '' }})">
 
 <meta property="og:site_name" content="{{ config['MYSERVER_NAME'] }}">
 <meta property="og:url" content="https://{{ config['MYSERVER_NAME'] }}/watch?v={{ video['extractor_data'] }}">
 <meta property="og:title" content="{{ video['title'] }}">
-<meta property="og:description" content="{{ video['description'] }} (Published on {{ video['published'].strftime('%b %e, %G') if video['published'] else '' }})">
+<meta property="og:description" content="{{ video['description'] if video['description'] else '' }} (Published on {{ video['published'].strftime('%b %e, %G') if video['published'] else '' }})">
 <meta property="og:type" content="article">
 
 <!--
@@ -125,11 +125,11 @@
 <div class="shareon" data-url="{{ config['MYSERVER_URL'] }}/watch?v={{ video_id }}"
      data-title="{{ video['title'] | truncate(60, False, '') | pprint + '; Channel: ' + video['ytc_title']  | truncate(95, False, '')
      | pprint + '\n' }}">
-  <a class="facebook" data-fb-app-id="225377455209362" data-hashtags="RemovedFromYouTube" </a>
+  <a class="facebook" data-fb-app-id="225377455209362" data-hashtags="RemovedFromYouTube"></a>
   <a class="twitter" data-hashtags="RemovedFromYouTube"></a>
-  <a class="telegram"</a>
+  <a class="telegram" data-title=" "></a>
   <a class="copy-url"></a>
-  <a class="whatsapp"></a>
+  <a class="whatsapp" data-title=" "></a>
   <a class="email"></a>
 </div>
               <a href="https://www.youtube.com/watch?v={{ video['extractor_data'] }}" target="_blank" style="display:inline-block; margin-top: 0.5em;">

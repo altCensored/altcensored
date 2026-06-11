@@ -161,7 +161,8 @@ def delete():
     l_msg = _l('Delete User')+' '
     item_quoted = f'"{user_email}"'
     message = l_msg + ' ' + item_quoted + '?'
-    redir = unquote_plus(request.args.get(url_orig, '/'))
+    default_redir = url_for('user.item', username=session['user']['username'])
+    redir = unquote_plus(request.args.get(url_orig, default_redir))
     if not redir.startswith('/') or redir.startswith('//'):
         redir = '/'
     if request.method == 'POST':
@@ -179,7 +180,8 @@ def delete():
                 redir = '/'
             flash(item_quoted + ' NOT deleted', 'error')
             return redirect(redir)
-    return render_template('widgets/widgets_confirm.html', message=message, redir=redir)
+    return render_template('widgets/widgets_confirm.html', message=message, redir=redir,
+                           active_nav='settings', active_settings='user')
 
 
 @bp.route('/authorize/<provider>')

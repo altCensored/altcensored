@@ -91,15 +91,15 @@ input[type="submit"].pure-button:hover {
     color: rgb(205, 195, 177) !important;
 }
 
-a.pure-menu-heading b,
-a.pure-menu-item b {
+a.pure-menu-heading b:not([style*="color:"]),
+a.pure-menu-item b:not([style*="color:"]) {
     color: rgb(185, 190, 176) !important;
 }
 
 a.pure-menu-heading.selected,
-a.pure-menu-heading.selected *,
+a.pure-menu-heading.selected *:not([style*="color:"]),
 a.pure-menu-item.selected,
-a.pure-menu-item.selected * {
+a.pure-menu-item.selected *:not([style*="color:"]) {
     color: rgb(215, 172, 140) !important;
 }
 

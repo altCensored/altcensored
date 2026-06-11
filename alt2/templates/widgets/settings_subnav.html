@@ -13,18 +13,18 @@
             {% if session.user %}
             <div class="pure-u-1-3" style="text-align:center">
                 <span class="nav-tooltip center">
-                    <a href="{{ url_for('user.item', username=session.user.username) }}" style="text-align:center;" class="pure-menu-heading {{ 'selected' if active_settings == 'user' }}">
-                        <i class='ion-ios-contact' style="font-size: 24px"></i>
-                        {{ gettext('User') }}</a>
-                    <span class="nav-tip-text">{{ gettext('Profile, email and account settings') }}</span>
+                    <a href="{{ url_for('user.playlist') }}" style="text-align:center;" class="pure-menu-heading {{ 'selected' if active_settings == 'playlist' }}">
+                        <i class='ion-md-list' style="font-size: 24px"></i>
+                        {{ gettext('Playlist') }}</a>
+                    <span class="nav-tip-text">{{ gettext('Create and manage your playlists') }}</span>
                 </span>
             </div>
             <div class="pure-u-1-3" style="text-align:center">
                 <span class="nav-tooltip flip">
-                    <a href="{{ url_for('user.playlist') }}" style="text-align:left;" class="pure-menu-heading {{ 'selected' if active_settings == 'playlist' }}">
-                        <i class='ion-md-list' style="font-size: 24px"></i>
-                        {{ gettext('Playlist') }}</a>
-                    <span class="nav-tip-text">{{ gettext('Create and manage your playlists') }}</span>
+                    <a href="{{ url_for('user.item', username=session.user.username) }}" style="text-align:center;" class="pure-menu-heading {{ 'selected' if active_settings == 'user' }}">
+                        <i class='ion-ios-contact' style="font-size: 24px"></i>
+                        {{ gettext('User') }}</a>
+                    <span class="nav-tip-text">{{ gettext('Profile, email and account settings') }}</span>
                 </span>
             </div>
             {% endif %}

@@ -717,11 +717,12 @@ ul.share-buttons img{
 
 .pure-menu-heading.selected {
   font-weight: bold;
+  color: #167ac6;
 }
-
 
 .pure-menu-item.selected {
   font-weight: bold;
+  color: #167ac6;
 }
 
 .collapse{

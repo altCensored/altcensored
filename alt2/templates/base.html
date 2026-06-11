@@ -29,17 +29,15 @@ Preserving deleted channels, restricted content and suppressed political speech 
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pure-min.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/grids-responsive-min.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}?v=19">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}?v=20">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/lighttheme.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/shareon.min.css') }}">
 
   {% if theme == 'dark' %}
-  <link id="dark-reader" rel="stylesheet" href="{{ url_for('static', filename='css/dark.css') }}">
+  <link id="dark-reader" rel="stylesheet" href="{{ url_for('static', filename='css/dark.css') }}?v=2">
   {% endif %}
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/ionicons.min.css') }}">
-
-  <link rel="preload" as="image" href="{{ url_for('static', filename='image_error.webp') }}" type="image/webp">
 
   {% block head %}
   {% endblock %}

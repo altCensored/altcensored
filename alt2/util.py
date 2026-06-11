@@ -26,7 +26,7 @@ from .models import Translation, Playlist, Mv_Channel, Mv_Video, User, \
 from . import config
 from .cache import cache
 
-url_orig = config.RANDOM_VALUE
+url_orig = 'original_url'
 
 BLUEPRINT_FIXES = {
     'kanal': 'channel', 'canale': 'channel', 'kanaal': 'channel',

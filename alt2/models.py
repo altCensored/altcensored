@@ -300,6 +300,8 @@ class User(UserMixin, Base):
         self.password = generate_password_hash(password)
 
     def check_password(self, password):
+        if not self.password:
+            return False
         return check_password_hash(self.password, password)
 
     def get_reset_password_token(self, expires_in=600):

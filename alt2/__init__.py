@@ -143,7 +143,7 @@ def create_app(test_config=None):
             videocount=util.get_videocount(),
             channelcount=util.get_channelcount(),
             delchannelcount=util.get_delchannelcount(),
-            url_orig=app.config['RANDOM_VALUE']
+            url_orig='original_url'
         )
 
     @login.user_loader

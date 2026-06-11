@@ -14,7 +14,7 @@ import datetime, json
 bp = Blueprint('user', __name__, url_prefix='/user' )
 
 PER_PAGE = 24
-url_orig = config.RANDOM_VALUE
+url_orig = 'original_url'
 
 
 @bp.route('/', defaults={'page': 1})

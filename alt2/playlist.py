@@ -326,9 +326,9 @@ def delete(playlist):
             db_session.delete(playlist)
             db_session.commit()
             flash('Playlist ' + item_quoted + ' removed', 'success')
-            return redirect(url_for('playlist.index'))
+            return redirect(url_for('user.playlist'))
         else:
             flash('Playlist ' + item_quoted + ' NOT removed', 'error')
             return redirect(url_for('user.playlist', playlist=playlist))
 
-    return render_template('widgets/widgets_confirm.html', message=message)
+    return render_template('widgets/widgets_confirm.html', message=message, active_nav='settings', active_settings='playlist')

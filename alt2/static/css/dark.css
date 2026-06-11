@@ -59,3 +59,17 @@ input:not([style*="background-image:"]),
 textarea:not([style*="background-image:"]) {
     background-image: none !important;
 }
+
+button.pure-button,
+a.pure-button,
+input[type="submit"].pure-button {
+    background-color: rgb(45, 57, 65) !important;
+    border: 1px solid rgb(117, 121, 113) !important;
+    color: rgb(205, 195, 177) !important;
+}
+
+button.pure-button:hover,
+a.pure-button:hover,
+input[type="submit"].pure-button:hover {
+    background-color: rgb(60, 75, 85) !important;
+}

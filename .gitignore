@@ -5,3 +5,4 @@ altcen.db
 venv/
 alt2/static/captcha_tmp.png
 .run/
+.yt-dlp-cache/

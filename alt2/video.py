@@ -9,6 +9,7 @@ from .database import db_session
 from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_user, User, Playlist
 from .pagination import Pagination
 import json
+from datetime import datetime, timezone
 from .util import (videos_newest, videos_popular, videos_latest, get_videocount, get_playnext,
                    ac_object_exist, videos_trending, get_ia_item, increment_video_counter)
 from minio import Minio
@@ -254,6 +255,7 @@ def watch():
             user.watched = [video.extractor_data]
 
         user.watched = list(dict.fromkeys(user.watched))
+        user.updated = datetime.now(timezone.utc)
         flag_modified(user, "watched")
         db_session.commit()
 

@@ -6,7 +6,7 @@ from flask import (
 )
 from flask_babelplus import lazy_gettext
 from .database import db_session
-from .models import Translation, User, Playlist
+from .models import Translation, User, Playlist, Mv_Video
 from . import util
 from .util import (
     email_exists, validate_user_email, username_exists,
@@ -146,10 +146,15 @@ def update_user():
         user = User.query.get(session['user']['id'])
         playlist = Playlist.query.filter(Playlist.title == ffeatured_playlist).scalar()
         if playlist is not None and playlist.featured_video_id is not None:
+            fv = Mv_Video.query.get(playlist.featured_video_id)
             user.featured_playlist = {
                 "pl_id": playlist.id,
                 "pl_title": playlist.title,
-                "extractor_data": playlist.featured_video_id
+                "extractor_data": playlist.featured_video_id,
+                "thumbnail": fv.thumbnail if fv else None,
+                "thumbnail_ac": fv.thumbnail_ac if fv else None,
+                "exists_ac": bool(fv.exists_ac) if fv else False,
+                "exists_ia": bool(fv.exists_ia) if fv else False,
             }
         elif playlist is not None and playlist.featured_video_id is None:
             flash(lazy_gettext('Playlist has no featured video — add a video to the playlist first'), 'error')

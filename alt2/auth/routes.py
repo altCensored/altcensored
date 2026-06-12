@@ -263,9 +263,13 @@ def oauth2_callback(provider):
     user = db_session.scalar(sa.select(User).where(User.email == email))
     if user is None:
         user = User(email=email, username=email.split('@')[0])
-#        db_session.add(user)
         create_user_altcen(user)
-#        db_session.commit()
+
+    # Google has verified this email — mark it verified if not already
+    if not user.email_verified:
+        user.email_verified = True
+        user.email_verified_date = sa.func.now()
+        db_session.commit()
 
     # log the user in
     login_user(user)

@@ -1110,6 +1110,8 @@ def create_user_altcen(user):
     user.email_lastsent_date = datetime.now(timezone.utc) - timedelta(30)
     user.email_verified = False
     user.view_counter = 0
+    user.watched = []
+    user.watchlater = []
     user.settings = {
         "theme": session['theme'],
         "locale": session['locale'],

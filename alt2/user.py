@@ -135,10 +135,11 @@ def history(page):
 def remove_video_history():
     video_id = request.args.get('v', None)
     user = User.query.filter(User.id == session['user']['id']).scalar()
-    video = Mv_Video.query.get(video_id)
-    if video.extractor_data in user.watched:
+    if user.watched and video_id in user.watched:
         user.watched = list(dict.fromkeys(user.watched))
-        user.watched.remove(video.extractor_data)
+        user.watched.remove(video_id)
+        user.updated = datetime.datetime.now(datetime.timezone.utc)
+        flag_modified(user, "watched")
         db_session.commit()
     return redirect(request.args.get(url_orig, '/'))
 
@@ -157,7 +158,8 @@ def clear_history():
         submitvalue = request.form['submitvalue']
         if submitvalue == 'yes':
             user = db_session.query(User).filter(User.email == session['user']['email']).one()
-            user.watched = None
+            user.watched = []
+            user.updated = datetime.datetime.now(datetime.timezone.utc)
             flag_modified(user, "watched")
             db_session.commit()
             hist_cleared = lazy_gettext('History Cleared')
@@ -202,10 +204,12 @@ def add_video_watchlater():
 #    video = Mv_Video.query.get(video_id)
     user = db_session.query(User).filter(User.email == session['user']['email']).one()
 
-    if not video_id in user.watchlater:
+    if user.watchlater is None:
+        user.watchlater = [video_id]
+    elif video_id not in user.watchlater:
         user.watchlater = list(dict.fromkeys(user.watchlater))
         user.watchlater.append(video_id)
-
+    user.updated = datetime.datetime.now(datetime.timezone.utc)
     flag_modified(user, "watchlater")
     db_session.commit()
     return redirect(request.args.get(url_orig, '/'))
@@ -218,21 +222,16 @@ def add_video_watchlater_post():
         data = json.loads(request.data)
         v = data['v']
         user = db_session.query(User).filter(User.email == session['user']['email']).one()
-
-        try:
-            user.watchlater += [v]
-        except:
+        if user.watchlater is None:
             user.watchlater = [v]
-
-#        if not v in user.watchlater:
-#            user.watchlater = list(dict.fromkeys(user.watchlater))
-#            user.watchlater.append(v)
-
+        elif v not in user.watchlater:
+            user.watchlater = list(dict.fromkeys(user.watchlater))
+            user.watchlater.append(v)
+        user.updated = datetime.datetime.now(datetime.timezone.utc)
         flag_modified(user, "watchlater")
         db_session.commit()
-        return json.dumps({'v': v })
-    else:
-        return json.dumps({'v': v })
+        return json.dumps({'v': v})
+    return json.dumps({})
 
 
 @bp.route('/remove_video_watchlater')
@@ -240,10 +239,11 @@ def add_video_watchlater_post():
 def remove_video_watchlater():
     video_id = request.args.get('v', None)
     user = User.query.filter(User.id == session['user']['id']).scalar()
-    video = Mv_Video.query.get(video_id)
-    if video.extractor_data in user.watchlater:
+    if user.watchlater and video_id in user.watchlater:
         user.watchlater = list(dict.fromkeys(user.watchlater))
-        user.watchlater.remove(video.extractor_data)
+        user.watchlater.remove(video_id)
+        user.updated = datetime.datetime.now(datetime.timezone.utc)
+        flag_modified(user, "watchlater")
         db_session.commit()
     return redirect(request.args.get(url_orig, '/'))
 
@@ -263,6 +263,7 @@ def clear_watchlater():
         if submitvalue == 'yes':
             user = db_session.query(User).filter(User.email == session['user']['email']).one()
             user.watchlater.clear()
+            user.updated = datetime.datetime.now(datetime.timezone.utc)
             flag_modified(user, "watchlater")
             db_session.commit()
             watch_clear = lazy_gettext('WatchLater Cleared')

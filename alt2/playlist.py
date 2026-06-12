@@ -226,27 +226,20 @@ def add_video_playlist():
 
     if playlist_ident == 'add_to_watchlater':
         user = User.query.get(session['user']['id'])
-
-        if user.watchlater is not None:
-            if not video_id in user.watchlater:
-                user.watchlater = list(dict.fromkeys(user.watchlater))
-                user.watchlater.append(video_id)
-
         if user.watchlater is None:
-            user.watchlater = []
+            user.watchlater = [video_id]
+        elif video_id not in user.watchlater:
+            user.watchlater = list(dict.fromkeys(user.watchlater))
             user.watchlater.append(video_id)
-
+        user.updated = datetime.datetime.now(timezone.utc)
         flag_modified(user, "watchlater")
         db_session.commit()
-        return redirect(url_for('video.watch', v=video_id ))
-
-    if playlist.videos is not None:
-        if not video_id in playlist.videos:
-            playlist.videos = list(dict.fromkeys(playlist.videos))
-            playlist.videos.append(video_id)
+        return redirect(url_for('video.watch', v=video_id))
 
     if playlist.videos is None:
-        playlist.videos = []
+        playlist.videos = [video_id]
+    elif video_id not in playlist.videos:
+        playlist.videos = list(dict.fromkeys(playlist.videos))
         playlist.videos.append(video_id)
 
     if not playlist.featured_video_id:
@@ -272,7 +265,9 @@ def add_video_playlist_post():
         p = data['p']
         playlist = Playlist.query.filter(Playlist.hashid == p).scalar()
 
-        if not v in playlist.videos:
+        if playlist.videos is None:
+            playlist.videos = [v]
+        elif v not in playlist.videos:
             playlist.videos = list(dict.fromkeys(playlist.videos))
             playlist.videos.append(v)
 
@@ -286,7 +281,7 @@ def add_video_playlist_post():
 
         return json.dumps({'v': v})
     else:
-        return json.dumps({'v': v})
+        return json.dumps({})
 
 
 @bp.route('/remove_video_playlist')

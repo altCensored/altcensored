@@ -1153,7 +1153,7 @@ def login_user_altcen(user):
 
 def logout_user_altcen():
     now = datetime.now(timezone.utc)
-    user = db_session.query(User).filter(User.email == session['user']['email']).one()
+    user = User.query.filter(User.id == session['user']['id']).scalar()
     user.updated = now
     user.settings = {
         "theme": session['theme'],

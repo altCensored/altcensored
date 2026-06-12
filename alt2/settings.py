@@ -151,6 +151,8 @@ def update_user():
                 "pl_title": playlist.title,
                 "extractor_data": playlist.featured_video_id
             }
+        elif playlist is not None and playlist.featured_video_id is None:
+            flash(lazy_gettext('Playlist has no featured video — add a video to the playlist first'), 'error')
 
         if email_changed is True:
             user.email_verified = False

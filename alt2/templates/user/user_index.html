@@ -50,7 +50,7 @@
                             <a href="{{ url_for('user.item', username=user.username) }}">
                                 {% if user.featured_playlist and user.featured_playlist.pl_title %}
                                     <div class="thumbnail">
-                                        <img class="thumbnail" src="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ user.featured_playlist.extractor_data ~ '/' ~ user.featured_playlist.title | ia_fname ~ '-' ~ user.featured_playlist.extractor_data ~ '.jpg' }}"onerror="this.onerror=null;this.src='{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ user.featured_playlist.extractor_data ~ '/__ia_thumb.jpg' }}';" >
+                                        <img class="thumbnail" src="{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ user.featured_playlist.extractor_data ~ '/' ~ user.featured_playlist.pl_title | ia_fname ~ '-' ~ user.featured_playlist.extractor_data ~ '.jpg' }}"onerror="this.onerror=null;this.src='{{ config.IPROXYBIG ~ config.IARCHIVEURL ~ user.featured_playlist.extractor_data ~ '/__ia_thumb.jpg' }}';" >
                                     </div>
                                 {% endif %}
                                 <i class='ion-ios-contact' style="font-size: 24px"></i>

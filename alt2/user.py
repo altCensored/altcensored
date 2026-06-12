@@ -113,21 +113,20 @@ def history(page):
     user = User.query.filter(User.id == session['user']['id']).scalar()
     playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
 
-    try:
-        ordering = case(
-            {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(user.watched))))},
-            value=Mv_Video.extractor_data
-        )
-        videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(user.watched)).order_by(ordering).limit(PER_PAGE).offset(offset)
-
-        videocount=len(user.watched)
-        pagination = Pagination(page, PER_PAGE, videocount)
-        return render_template('user/user_history_index.html', pagination=pagination, \
-                               videos=videos, videocount=videocount, playlist=playlist, watchlater=user.watchlater)
-    except:
+    if not user.watched:
         hist_empty = lazy_gettext('History Empty')
         flash(hist_empty, 'success')
         return redirect(request.args.get(url_orig, '/'))
+
+    ordering = case(
+        {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(user.watched))))},
+        value=Mv_Video.extractor_data
+    )
+    videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(user.watched)).order_by(ordering).limit(PER_PAGE).offset(offset)
+    videocount = len(user.watched)
+    pagination = Pagination(page, PER_PAGE, videocount)
+    return render_template('user/user_history_index.html', pagination=pagination,
+                           videos=videos, videocount=videocount, playlist=playlist, watchlater=user.watchlater)
 
 
 @bp.route('/remove_video_history')
@@ -157,7 +156,7 @@ def clear_history():
     if request.method == 'POST':
         submitvalue = request.form['submitvalue']
         if submitvalue == 'yes':
-            user = db_session.query(User).filter(User.email == session['user']['email']).one()
+            user = User.query.filter(User.id == session['user']['id']).scalar()
             user.watched = []
             user.updated = datetime.datetime.now(datetime.timezone.utc)
             flag_modified(user, "watched")
@@ -181,20 +180,20 @@ def watchlater(page):
     user = User.query.filter(User.id == session['user']['id']).scalar()
     playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
 
-    try:
-        ordering = case(
-            {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(user.watchlater))))},
-            value=Mv_Video.extractor_data
-        )
-        videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(user.watchlater)).order_by(ordering).limit(PER_PAGE).offset(offset)
-        videocount=len(user.watchlater)
-        pagination = Pagination(page, PER_PAGE, videocount)
-        return render_template('user/user_watchlater_index.html', pagination=pagination, \
-                               videos=videos, videocount=videocount, playlist=playlist, watchlater=user.watchlater)
-    except:
+    if not user.watchlater:
         no_watch = lazy_gettext('WatchLater Empty')
         flash(no_watch, 'success')
         return redirect(request.args.get(url_orig, '/'))
+
+    ordering = case(
+        {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(user.watchlater))))},
+        value=Mv_Video.extractor_data
+    )
+    videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(user.watchlater)).order_by(ordering).limit(PER_PAGE).offset(offset)
+    videocount = len(user.watchlater)
+    pagination = Pagination(page, PER_PAGE, videocount)
+    return render_template('user/user_watchlater_index.html', pagination=pagination,
+                           videos=videos, videocount=videocount, playlist=playlist, watchlater=user.watchlater)
 
 
 @bp.route('/add_video_watchlater')
@@ -202,12 +201,11 @@ def watchlater(page):
 def add_video_watchlater():
     video_id = request.args.get('v', None)
 #    video = Mv_Video.query.get(video_id)
-    user = db_session.query(User).filter(User.email == session['user']['email']).one()
+    user = User.query.filter(User.id == session['user']['id']).scalar()
 
     if user.watchlater is None:
         user.watchlater = [video_id]
     elif video_id not in user.watchlater:
-        user.watchlater = list(dict.fromkeys(user.watchlater))
         user.watchlater.append(video_id)
     user.updated = datetime.datetime.now(datetime.timezone.utc)
     flag_modified(user, "watchlater")
@@ -221,11 +219,10 @@ def add_video_watchlater_post():
     if request.method == 'POST':
         data = json.loads(request.data)
         v = data['v']
-        user = db_session.query(User).filter(User.email == session['user']['email']).one()
+        user = User.query.filter(User.id == session['user']['id']).scalar()
         if user.watchlater is None:
             user.watchlater = [v]
         elif v not in user.watchlater:
-            user.watchlater = list(dict.fromkeys(user.watchlater))
             user.watchlater.append(v)
         user.updated = datetime.datetime.now(datetime.timezone.utc)
         flag_modified(user, "watchlater")
@@ -261,7 +258,7 @@ def clear_watchlater():
     if request.method == 'POST':
         submitvalue = request.form['submitvalue']
         if submitvalue == 'yes':
-            user = db_session.query(User).filter(User.email == session['user']['email']).one()
+            user = User.query.filter(User.id == session['user']['id']).scalar()
             user.watchlater.clear()
             user.updated = datetime.datetime.now(datetime.timezone.utc)
             flag_modified(user, "watchlater")

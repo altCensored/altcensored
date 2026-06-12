@@ -247,7 +247,7 @@ def watch():
     not_in_watchlater = None
 
     if session.get('user') is not None:
-        user = db_session.query(User).filter(User.email == session['user']['email']).one()
+        user = User.query.filter(User.id == session['user']['id']).scalar()
 
         try:
             user.watched += [video.extractor_data]

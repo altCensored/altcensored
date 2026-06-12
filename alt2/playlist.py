@@ -118,9 +118,10 @@ def item(playlist,page):
         videocount = 0
         pagination = 0
 
-    playlist.video_count = videocount
-    flag_modified(playlist, "video_count")
-    db_session.commit()
+    if playlist.video_count != videocount:
+        playlist.video_count = videocount
+        flag_modified(playlist, "video_count")
+        db_session.commit()
 
     featured_video = None
     if playlist.featured_video_id:
@@ -229,7 +230,6 @@ def add_video_playlist():
         if user.watchlater is None:
             user.watchlater = [video_id]
         elif video_id not in user.watchlater:
-            user.watchlater = list(dict.fromkeys(user.watchlater))
             user.watchlater.append(video_id)
         user.updated = datetime.datetime.now(timezone.utc)
         flag_modified(user, "watchlater")
@@ -239,7 +239,6 @@ def add_video_playlist():
     if playlist.videos is None:
         playlist.videos = [video_id]
     elif video_id not in playlist.videos:
-        playlist.videos = list(dict.fromkeys(playlist.videos))
         playlist.videos.append(video_id)
 
     if not playlist.featured_video_id:
@@ -268,7 +267,6 @@ def add_video_playlist_post():
         if playlist.videos is None:
             playlist.videos = [v]
         elif v not in playlist.videos:
-            playlist.videos = list(dict.fromkeys(playlist.videos))
             playlist.videos.append(v)
 
         if not playlist.featured_video_id:
@@ -291,7 +289,7 @@ def remove_video_playlist():
     video_ext = request.args.get('v', None)
     playlist = Playlist.query.filter(Playlist.hashid == playlist_hashid).scalar()
 
-    if video_ext in playlist.videos:
+    if playlist.videos and video_ext in playlist.videos:
         playlist.videos = list(dict.fromkeys(playlist.videos))
         playlist.videos.remove(video_ext)
 

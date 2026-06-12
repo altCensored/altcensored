@@ -304,7 +304,7 @@ class User(UserMixin, Base):
             return False
         return check_password_hash(self.password, password)
 
-    def get_reset_password_token(self, expires_in=600):
+    def get_reset_password_token(self, expires_in=3600):
         return jwt.encode(
             {'reset_password': self.id, 'exp': time() + expires_in},
             current_app.config['SECRET_KEY'], algorithm='HS256')

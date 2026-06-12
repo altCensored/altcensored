@@ -110,10 +110,9 @@ def reset_password_request():
 
 @bp.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
-    if current_user.is_authenticated:
-        return redirect(url_for('video.index'))
     user = User.verify_reset_password_token(token)
     if not user:
+        flash(_('The password reset link is invalid or has expired.'), 'error')
         return redirect(url_for('video.index'))
     form = ResetPasswordForm()
     if form.validate_on_submit():

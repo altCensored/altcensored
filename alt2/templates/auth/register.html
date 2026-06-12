@@ -20,13 +20,19 @@
                         {% endfor %}
                     </div>
                     <div class="pure-control-group">
-                        {{ form.password(size=28) }}
+                        {{ form.password(size=28, class_="form-control", id="password") }}
+                        <span class="password-toggle" data-target="password">
+                            <i class='ion-ios-eye-off' style="font-size: 24px"></i>
+                        </span>
                         {% for error in form.password.errors %}
                         <span style="color: red;">[{{ error }}]</span>
                         {% endfor %}
                     </div>
                     <div class="pure-control-group">
-                        {{ form.password2(size=28) }}
+                        {{ form.password2(size=28, class_="form-control", id="password2") }}
+                        <span class="password-toggle" data-target="password2">
+                            <i class='ion-ios-eye-off' style="font-size: 24px"></i>
+                        </span>
                         {% for error in form.password2.errors %}
                         <span style="color: red;">[{{ error }}]</span>
                         {% endfor %}
@@ -49,4 +55,5 @@
     </div>
   </div>
 </div>
+<script src="{{ url_for('static', filename='js/show_password.js') }}" defer></script>
 {% endblock %}

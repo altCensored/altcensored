@@ -21,7 +21,7 @@
                     </div>
                     <div class="pure-control-group">
                         {{ form.password(size=28, class_="form-control", id="password") }}
-                        <span class="password-toggle" id="togglePassword">
+                        <span class="password-toggle" data-target="password">
                             <i class='ion-ios-eye-off'  style="font-size: 24px"></i>
                         </span>
                         {% for error in form.password.errors %}

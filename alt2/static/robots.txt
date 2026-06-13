@@ -70,7 +70,22 @@ Disallow:/
 User-agent: Go-http-client
 Disallow:/
 
+User-agent: Applebot-Extended
+Disallow:/
+
 User-agent: bingbot
+Disallow: /embed
+Disallow: /category
+Disallow: /language
+Disallow: /settings
+Disallow: /auth
+Disallow: /newsletter
+Disallow: /translations
+Disallow: /donate
+Disallow: /user
+Crawl-delay: 1
+
+User-agent: DuckDuckBot
 Disallow: /embed
 Disallow: /category
 Disallow: /language
@@ -92,19 +107,7 @@ Disallow: /newsletter
 Disallow: /translations
 Disallow: /donate
 Disallow: /user
-Crawl-delay: 2
-
-User-agent: DuckDuckBot
-Disallow: /embed
-Disallow: /category
-Disallow: /language
-Disallow: /settings
-Disallow: /auth
-Disallow: /newsletter
-Disallow: /translations
-Disallow: /donate
-Disallow: /user
-Crawl-delay: 1
+Crawl-delay: 8
 
 User-agent: *
 Disallow: /embed

@@ -37,7 +37,7 @@ class RegistrationForm(FlaskForm):
 
 
 class ResetPasswordRequestForm(FlaskForm):
-    email = StringField(_l('Email'), validators=[DataRequired(), Email()], render_kw={'placeholder': _l('Email')})
+    identity = StringField(_l('Email or Username'), validators=[DataRequired()], render_kw={'placeholder': _l('Email or Username')})
     submit = SubmitField(_l('Request Password Reset'), render_kw={'placeholder': _l('Password')})
 
 

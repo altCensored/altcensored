@@ -98,7 +98,10 @@ def reset_password_request():
     form = ResetPasswordRequestForm()
     if form.validate_on_submit():
         user = db_session.scalar(
-            sa.select(User).where(User.email == form.email.data))
+            sa.select(User).where(or_(
+                func.lower(User.email) == func.lower(form.identity.data),
+                func.lower(User.username) == func.lower(form.identity.data)
+            )))
         if user:
             send_password_reset_email(user)
         password_reset_emailed = _('Check your email for password reset instructions')

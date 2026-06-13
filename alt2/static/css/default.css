@@ -15,7 +15,6 @@
     position: relative;
     width: 16px;
     height: 16px;
-    border: 2px none;
 }
 
 .creator-heart-background-hearted {
@@ -50,7 +49,6 @@
 
 div {
   overflow-wrap: break-word;
-  word-wrap: break-word;
 }
 
 .loading {
@@ -63,7 +61,12 @@ div {
 }
 
 button.pure-button-primary,
-a.pure-button-primary, .channel-owner:hover {
+a.pure-button-primary {
+  background-color: #a0a0a0;
+  color: rgba(35, 35, 35, 1);
+}
+
+.channel-owner:hover {
   background-color: #a0a0a0;
   color: rgba(35, 35, 35, 1);
 }
@@ -330,9 +333,7 @@ details.settings-about p {
 }
 
 .navbar > .searchbar .pure-form input[type="search"] {
-  border-top: 0;
-  border-left: 0;
-  border-right: 0;
+  border: 0;
   border-bottom: 1px solid #ccc;
   border-radius: 0;
 
@@ -472,10 +473,6 @@ input[type="search"]::-webkit-search-cancel-button {
   margin-top: 0;
 }
 
-.donate-list {
-  line-height: 1.38;
-}
-
 .about-content p,
 .donate-crypto {
   margin-bottom: 1.2em;
@@ -486,16 +483,13 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 .about-content li {
-  margin-bottom: -0.4em;
-}
-
-.donate-list li {
+  line-height: 1.38;
   margin-bottom: 0.48em;
 }
 
 .about-content details,
 .donate-crypto details {
-  margin-bottom: 0.8em;
+  margin-bottom: 0.4em;
 }
 
 .footer,

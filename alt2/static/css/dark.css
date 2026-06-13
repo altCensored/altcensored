@@ -74,7 +74,8 @@ input[type="submit"].pure-button:hover {
     background-color: rgb(60, 75, 85) !important;
 }
 
-.nav-tip-text {
+.nav-tip-text,
+.help-balloon {
     background-color: rgb(45, 57, 65) !important;
     border: 1px solid rgb(117, 121, 113) !important;
     color: rgb(205, 195, 177) !important;
@@ -83,12 +84,6 @@ input[type="submit"].pure-button:hover {
 .help-tip {
     background-color: #5a7fa0 !important;
     color: #fff !important;
-}
-
-.help-balloon {
-    background-color: rgb(45, 57, 65) !important;
-    border: 1px solid rgb(117, 121, 113) !important;
-    color: rgb(205, 195, 177) !important;
 }
 
 a.pure-menu-heading b:not([style*="color:"]),
@@ -108,7 +103,7 @@ a.pure-menu-item.selected *:not([style*="color:"]) {
     border-right-color: rgb(45, 57, 65) !important;
 }
 
-.donate-cc-links a:not([style*="color:"]) {
+.about-content a:not([style*="color:"]) {
     color: darkorange !important;
 }
 

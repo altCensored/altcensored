@@ -2,12 +2,12 @@ from flask import (Blueprint, render_template, session, make_response, request, 
 from markupsafe import Markup
 from sqlalchemy import func
 from .database import db_session
-from .models import Mv_Video, Mv_Channel, User
+from .models import Mv_Video, Mv_Channel
 from .pagination import Pagination
 from datatables import ColumnDT, DataTables
 from .util import (channels_latest, channels_deleted, channels_popular, channels_newest, channels_limited, channels_archived,
                    channeli, channeli_videocount, channeli_videos_newest, channeli_videos_popular,
-                   get_channelcount, get_delchannelcount, get_archivechannelcount
+                   get_channelcount, get_delchannelcount, get_archivechannelcount, get_current_user
                    )
 from . import config
 
@@ -17,20 +17,25 @@ PER_PAGE = 24
 PER_PAGE_FEED = 100
 FLASH_MSG = config.FLASH_MSG
 
+
+def _channel_listing(page, channels_fn, count_fn, session_key, order, show_flash=True):
+    offset = (page - 1) * PER_PAGE
+    channels = channels_fn(PER_PAGE, offset)
+    if not channels and page != 1:
+        abort(404)
+    count_fn()
+    pagination = Pagination(page, PER_PAGE, session[session_key])
+    if show_flash and FLASH_MSG is not None:
+        flash(Markup(FLASH_MSG), 'error')
+    return render_template('channel/channel_index.html',
+                           pagination=pagination, channels=channels,
+                           channelcount=session[session_key], order=order)
+
+
 @bp.route('/', defaults={'page': 1})
 @bp.route('/page/<int:page>')
 def index(page):
-    offset = ((int(page)-1) * PER_PAGE)
-    order = 'latest'
-    channels = channels_latest(PER_PAGE, offset)
-    if not channels and page != 1:
-        abort(404)
-    get_channelcount()
-    pagination = Pagination(page, PER_PAGE, session['channelcount'])
-    if FLASH_MSG is not None:
-        flash(Markup(FLASH_MSG), 'error')
-
-    return render_template('channel/channel_index.html', pagination=pagination, channels=channels, order=order)
+    return _channel_listing(page, channels_latest, get_channelcount, 'channelcount', 'latest')
 
 
 @bp.route('/table')
@@ -88,56 +93,19 @@ def data_deleted():
 @bp.route('/new', defaults={'page': 1})
 @bp.route('/new/page/<int:page>')
 def new(page):
-    offset = ((int(page)-1) * PER_PAGE)
-    order = 'newest'
-#    channels = Mv_Channel.query.order_by(Mv_Channel.ytc_publishedat.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset)
-    channels = channels_newest(PER_PAGE, offset)
-    if not channels and page != 1:
-        abort(404)
-    get_channelcount()
-    pagination = Pagination(page, PER_PAGE, session['channelcount'])
-    if FLASH_MSG is not None:
-        flash(Markup(FLASH_MSG), 'error')
-
-    return render_template('channel/channel_index.html', pagination=pagination, channels=channels, order=order)
+    return _channel_listing(page, channels_newest, get_channelcount, 'channelcount', 'newest')
 
 
 @bp.route('/popular', defaults={'page': 1})
 @bp.route('/popular/page/<int:page>')
 def popular(page):
-    offset = ((int(page)-1) * PER_PAGE)
-    order = 'popular'
-#    channels = Mv_Channel.query.order_by(Mv_Channel.ytc_viewcount.desc()).limit(PER_PAGE).offset(offset)
-    channels = channels_popular(PER_PAGE, offset)
-    if not channels and page != 1:
-        abort(404)
-    get_channelcount()
-    pagination = Pagination(page, PER_PAGE, session['channelcount'])
-    if FLASH_MSG is not None:
-        flash(Markup(FLASH_MSG), 'error')
-
-    return render_template('channel/channel_index.html', pagination=pagination, channels=channels, order=order)
+    return _channel_listing(page, channels_popular, get_channelcount, 'channelcount', 'popular')
 
 
 @bp.route('/deleted', defaults={'page': 1})
 @bp.route('/deleted/page/<int:page>')
 def deleted(page):
-    offset = ((int(page)-1) * PER_PAGE)
-    order = 'deleted'
-#    channelcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
-#    videocount = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
-#    channels = Mv_Channel.query.filter(Mv_Channel.ytc_deleted).order_by(Mv_Channel.ytc_deleteddate.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset)
-    channels = channels_deleted(PER_PAGE, offset)
-    if not channels and page != 1:
-        abort(404)
-    get_delchannelcount()
-    pagination = Pagination(page, PER_PAGE, session['delchannelcount'])
-    if FLASH_MSG is not None:
-        flash(Markup(FLASH_MSG), 'error')
-
-    return render_template('channel/channel_index.html', 
-#        pagination=pagination, channels=channels, channelcount=channelcount, videocount=videocount, order=order)
-        pagination = pagination, channels = channels, channelcount=session['delchannelcount'], order=order)
+    return _channel_listing(page, channels_deleted, get_delchannelcount, 'delchannelcount', 'deleted', show_flash=False)
 
 @bp.route('/deleted/feed', defaults={'page': 1})
 @bp.route('/deleted/feed/page/<int:page>')
@@ -162,37 +130,13 @@ def deleted_feed(page):
 @bp.route('/limited', defaults={'page': 1})
 @bp.route('/limited/page/<int:page>')
 def limited(page):
-    offset = ((int(page)-1) * PER_PAGE)
-    order = 'limited'
-#    videocount = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
-#    channels = Mv_Channel.query.order_by(Mv_Channel.limited.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset)
-    channels = channels_limited(PER_PAGE, offset)
-    if not channels and page != 1:
-        abort(404)
-    get_channelcount()
-    pagination = Pagination(page, PER_PAGE, session['channelcount'])
-    if FLASH_MSG is not None:
-        flash(Markup(FLASH_MSG), 'error')
-
-    return render_template('channel/channel_index.html', pagination=pagination, channels=channels, order=order)
+    return _channel_listing(page, channels_limited, get_channelcount, 'channelcount', 'limited')
 
 
 @bp.route('/archived', defaults={'page': 1})
 @bp.route('/archived/page/<int:page>')
 def archived(page):
-    offset = ((int(page)-1) * PER_PAGE)
-    order = 'archived'
-#    videocount = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
-#    channels = Mv_Channel.query.filter(Mv_Channel.ytc_archive).limit(PER_PAGE).offset(offset)
-    channels = channels_archived(PER_PAGE, offset)
-    if not channels and page != 1:
-        abort(404)
-    get_archivechannelcount()
-    pagination = Pagination(page, PER_PAGE, session['archivechannelcount'])
-    if FLASH_MSG is not None:
-        flash(Markup(FLASH_MSG), 'error')
-
-    return render_template('channel/channel_index.html', pagination=pagination, channels=channels, channelcount=session['archivechannelcount'], order=order)
+    return _channel_listing(page, channels_archived, get_archivechannelcount, 'archivechannelcount', 'archived')
 
 
 @bp.route('/feed', defaults={'page': 1})
@@ -225,11 +169,7 @@ def item(ytc_id,page):
     if not videos and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)
-    watchlater = None
-    if session.get('user') is not None:
-        user = User.query.filter(User.id == session['user']['id']).scalar()
-        if user.watchlater:
-            watchlater = user.watchlater
+    watchlater = get_current_user().watchlater if get_current_user() else None
     if FLASH_MSG is not None:
         flash(Markup(FLASH_MSG), 'error')
 
@@ -249,11 +189,7 @@ def item_popular(ytc_id,page):
     if not videos and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)
-    watchlater = None
-    if session.get('user') is not None:
-        user = User.query.filter(User.id == session['user']['id']).scalar()
-        if user.watchlater:
-            watchlater = user.watchlater
+    watchlater = get_current_user().watchlater if get_current_user() else None
     return render_template('channel/channel_item.html', pagination=pagination, channel=channel, videos=videos, videocount=videocount, order=order, watchlater=watchlater)
 
 

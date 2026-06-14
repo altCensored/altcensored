@@ -274,7 +274,7 @@ def oauth2_callback(provider):
         abort(401)
 
     # find or create the user in the database
-    user = db_session.scalar(sa.select(User).where(User.email == email))
+    user = db_session.scalar(sa.select(User).where(func.lower(User.email) == func.lower(email)))
     if user is None:
         user = User(email=email, username=email.split('@')[0])
         create_user_altcen(user)

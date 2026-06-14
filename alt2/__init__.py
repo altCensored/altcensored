@@ -1,4 +1,6 @@
 import os, re, logging
+import urllib3
+from minio import Minio
 from flask import Flask, request, url_for, render_template, g, has_request_context
 from jinja2 import pass_eval_context
 from flask_babelplus import Babel, lazy_gettext as _l
@@ -115,6 +117,17 @@ def create_app(test_config=None):
     mail.init_app(app)
     login.init_app(app)
     csrf.init_app(app)  # ← add this line
+
+    try:
+        app.minio_client = Minio(
+            app.config['AC_S3_ENDPOINT'],
+            access_key=app.config['AC_S3_ACCESS_KEY'],
+            secret_key=app.config['AC_S3_SECRET_KEY'],
+            http_client=urllib3.PoolManager(timeout=urllib3.Timeout(connect=2.0, read=2.0)),
+        )
+    except Exception:
+        app.minio_client = None
+        app.logger.warning("Minio client init failed — S3 videos will be unavailable")
 
     @babel.localeselector
     def get_locale():

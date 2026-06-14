@@ -1045,6 +1045,14 @@ def ac_object_exist(client, s3_bucket, itemname: str) -> bool:
     return False
 
 
+@cache.memoize(timeout=3600)
+def check_ac_object_exists(video_id: str) -> bool:
+    client = current_app.minio_client
+    if client is None:
+        return False
+    return ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id)
+
+
 def site_is_online(url, timeout=1):
     """Return True if the target URL is online.
 

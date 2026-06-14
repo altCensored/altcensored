@@ -3,7 +3,7 @@ from flask import (
     Blueprint, session, render_template, flash, redirect, request, url_for, abort)
 
 logger = logging.getLogger(__name__)
-from sqlalchemy import func, case
+from sqlalchemy import func, case, update
 from sqlalchemy.orm.attributes import flag_modified
 from flask_babelplus import lazy_gettext
 from .database import db_session
@@ -137,17 +137,19 @@ def history(page):
 @login_required
 def remove_video_history():
     video_id = request.args.get('v', None)
-    user = User.query.filter(User.id == session['user']['id']).scalar()
-    if user.watched and video_id in user.watched:
-        user.watched = list(dict.fromkeys(user.watched))
-        user.watched.remove(video_id)
-        user.updated = datetime.datetime.now(datetime.timezone.utc)
-        flag_modified(user, "watched")
-        try:
-            db_session.commit()
-        except Exception:
-            db_session.rollback()
-            flash(lazy_gettext('Error removing video from history'), 'error')
+    try:
+        db_session.execute(
+            update(User)
+            .where(User.id == session['user']['id'])
+            .values(
+                watched=func.array_remove(User.watched, video_id),
+                updated=datetime.datetime.now(datetime.timezone.utc),
+            )
+        )
+        db_session.commit()
+    except Exception:
+        db_session.rollback()
+        flash(lazy_gettext('Error removing video from history'), 'error')
     return redirect(request.args.get(url_orig, '/'))
 
 
@@ -254,17 +256,19 @@ def add_video_watchlater_post():
 @login_required
 def remove_video_watchlater():
     video_id = request.args.get('v', None)
-    user = User.query.filter(User.id == session['user']['id']).scalar()
-    if user.watchlater and video_id in user.watchlater:
-        user.watchlater = list(dict.fromkeys(user.watchlater))
-        user.watchlater.remove(video_id)
-        user.updated = datetime.datetime.now(datetime.timezone.utc)
-        flag_modified(user, "watchlater")
-        try:
-            db_session.commit()
-        except Exception:
-            db_session.rollback()
-            flash(lazy_gettext('Error updating watchlater'), 'error')
+    try:
+        db_session.execute(
+            update(User)
+            .where(User.id == session['user']['id'])
+            .values(
+                watchlater=func.array_remove(User.watchlater, video_id),
+                updated=datetime.datetime.now(datetime.timezone.utc),
+            )
+        )
+        db_session.commit()
+    except Exception:
+        db_session.rollback()
+        flash(lazy_gettext('Error updating watchlater'), 'error')
     return redirect(request.args.get(url_orig, '/'))
 
 

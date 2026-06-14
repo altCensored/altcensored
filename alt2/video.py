@@ -1,5 +1,6 @@
 import logging
 import os
+import json
 from flask import (
     Blueprint, render_template, request, make_response, session, current_app, abort, flash, jsonify)
 from markupsafe import Markup
@@ -9,12 +10,9 @@ from threading import Thread
 from .database import db_session
 from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_user, User, Playlist
 from .pagination import Pagination
-import json
 from datetime import datetime, timezone
 from .util import (videos_newest, videos_popular, videos_latest, get_videocount, get_playnext,
-                   ac_object_exist, videos_trending, get_ia_item, increment_video_counter)
-from minio import Minio
-import urllib3
+                   videos_trending, get_ia_item, increment_video_counter, check_ac_object_exists)
 from . import config
 
 logger = logging.getLogger(__name__)
@@ -34,14 +32,8 @@ def _resolve_video_url(video: Mv_Video, video_id: str) -> str:
     # Only hit S3 when exists_ac is truthy — None and False both skip the round-trip.
     # The scraper sets exists_ac=True on upload, so None reliably means "never in S3".
     if video.exists_ac:
-        client = Minio(
-            current_app.config['AC_S3_ENDPOINT'],
-            access_key=current_app.config['AC_S3_ACCESS_KEY'],
-            secret_key=current_app.config['AC_S3_SECRET_KEY'],
-            http_client=urllib3.PoolManager(timeout=urllib3.Timeout(connect=2.0, read=2.0)),
-        )
         try:
-            s3_exists = ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id)
+            s3_exists = check_ac_object_exists(video_id)
         except Exception:
             s3_exists = False
         if s3_exists:

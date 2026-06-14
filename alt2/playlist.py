@@ -5,7 +5,7 @@ from flask import (
 
 logger = logging.getLogger(__name__)
 from markupsafe import Markup
-from sqlalchemy import func, case
+from sqlalchemy import case
 from sqlalchemy.orm.attributes import flag_modified
 from hashids import Hashids
 from flask_babelplus import lazy_gettext
@@ -109,26 +109,17 @@ def item(playlist,page):
     now = datetime.datetime.now(timezone.utc) + datetime.timedelta(seconds = 60 * 3.4)
     timediff = timeago.format(updated, now)
 
+    videocount = len(playlist.videos) if playlist.videos else 0
     if playlist.videos:
         ordering = case(
             {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(playlist.videos))))},
             value=Mv_Video.extractor_data
         )
         videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(playlist.videos)).order_by(ordering).limit(PER_PAGE).offset(offset)
-        videocount = db_session.query(func.count(Mv_Video.id)).filter(Mv_Video.extractor_data.in_(playlist.videos)).scalar()
         pagination = Pagination(page, PER_PAGE, videocount)
     else:
         videos = []
-        videocount = 0
         pagination = 0
-
-    if playlist.video_count != videocount:
-        playlist.video_count = videocount
-        flag_modified(playlist, "video_count")
-        try:
-            db_session.commit()
-        except Exception:
-            db_session.rollback()
 
     featured_video = None
     if playlist.featured_video_id:

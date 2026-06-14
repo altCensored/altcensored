@@ -51,6 +51,7 @@ def send_mass_email(email, sender, subject, filename, service):
     now = datetime.datetime.now(timezone.utc)
     user.email_lastsent_date = now
     db_session.add(user)
+    db_session.commit()
 
 
 def db_unsubscribe_email(tablename, email, action):
@@ -213,6 +214,7 @@ def channel_table_new_data():
 
 
 @bp.route('/channel_table_new_data', methods=['POST'])
+@util.admin_login_required
 def update():
     data = request.get_json()
     pprint.pp(data)
@@ -680,7 +682,7 @@ def update_bounce():
 
 @bp.route('/confirm/<token>', methods=['GET', 'POST'])
 def unsubscribe_email(token):
-    email = confirm_token(token, None)
+    email = confirm_token(token, 86400)
     l_msg = lazy_gettext('Unsubscribe')+' '
     item_quoted = (f'"{email}"')
     message = l_msg + ' ' + item_quoted + '?'

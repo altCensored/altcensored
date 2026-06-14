@@ -306,7 +306,7 @@ def login_required(view):
 def admin_login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
-        if session['user']['username'] != 'admin':
+        if session.get('user') is None or session['user']['username'] != 'admin':
             return redirect(url_for('video.index'))
         return view(**kwargs)
     return wrapped_view
@@ -982,7 +982,7 @@ def get_video_files(item):
 
 
 def check_video_files(ia_item):
-    files_list = (ia_item.item_metadata['files'])
+    files_list = ia_item.item_metadata.get('files', [])
     extensionsToCheck = ['.webm', '.mp4', '.ogv', '.mkv']
     filename = None
     for x in files_list:
@@ -992,7 +992,7 @@ def check_video_files(ia_item):
 
 
 def get_video_files_2(ia_item):
-    files_list = (ia_item.item_metadata['files'])
+    files_list = ia_item.item_metadata.get('files', [])
     extensionsToCheck = ['.webm', '.mp4', '.ogv', '.mkv']
     videofile_full = None
     for x in files_list:
@@ -1001,7 +1001,7 @@ def get_video_files_2(ia_item):
     return videofile_full
 
 def get_image_file(ia_item):
-    files_list = ia_item.item_metadata['files']
+    files_list = ia_item.item_metadata.get('files', [])
     image_extensions = ('.jpg', '.webp', '.png')
     allowed_formats = {'JPEG', 'WebP', 'PNG'}
 

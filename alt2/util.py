@@ -8,7 +8,7 @@ from captcha.image import ImageCaptcha
 from datetime import datetime, timezone, timedelta, date
 from email_validator import validate_email, EmailNotValidError
 from flask import (
-    session, request, redirect, render_template, url_for, current_app, flash
+    session, request, redirect, render_template, url_for, current_app, flash, g
 )
 from flask_babelplus import lazy_gettext
 from http.client import HTTPSConnection
@@ -29,6 +29,22 @@ from . import config
 from .cache import cache
 
 url_orig = 'original_url'
+
+
+def get_current_user():
+    """Return the logged-in User ORM object for this request, or None.
+
+    Result is cached on flask.g so the DB is hit at most once per request,
+    and only on requests that actually need user data.
+    """
+    if not hasattr(g, '_current_user_loaded'):
+        if session.get('user') is not None:
+            g._current_user = User.query.filter(User.id == session['user']['id']).scalar()
+        else:
+            g._current_user = None
+        g._current_user_loaded = True
+    return g._current_user
+
 
 BLUEPRINT_FIXES = {
     'kanal': 'channel', 'canale': 'channel', 'kanaal': 'channel',

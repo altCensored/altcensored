@@ -12,7 +12,8 @@ from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_us
 from .pagination import Pagination
 from datetime import datetime, timezone
 from .util import (videos_newest, videos_popular, videos_latest, get_videocount, get_playnext,
-                   videos_trending, get_ia_item, increment_video_counter, check_ac_object_exists)
+                   videos_trending, get_ia_item, increment_video_counter, check_ac_object_exists,
+                   get_current_user)
 from . import config
 
 logger = logging.getLogger(__name__)
@@ -73,11 +74,7 @@ def index(page):
         abort(404)
     session['videocount'] = get_videocount()
     pagination = Pagination(page, PER_PAGE, session['videocount'])
-    watchlater = None
-    if session.get('user') is not None:
-        user = User.query.filter(User.id == session['user']['id']).scalar()
-        if user.watchlater:
-            watchlater = user.watchlater
+    watchlater = get_current_user().watchlater if get_current_user() else None
     if FLASH_MSG is not None:
         flash(Markup(FLASH_MSG), 'error')
 
@@ -97,11 +94,7 @@ def new(page):
         abort(404)
     get_videocount()
     pagination = Pagination(page, PER_PAGE, session['videocount'])
-    watchlater = None
-    if session.get('user') is not None:
-        user = User.query.filter(User.id == session['user']['id']).scalar()
-        if user.watchlater:
-            watchlater = user.watchlater
+    watchlater = get_current_user().watchlater if get_current_user() else None
     if FLASH_MSG is not None:
         flash(Markup(FLASH_MSG), 'error')
 
@@ -119,11 +112,7 @@ def popular(page):
         abort(404)
     get_videocount()
     pagination = Pagination(page, PER_PAGE, session['videocount'])
-    watchlater = None
-    if session.get('user') is not None:
-        user = User.query.filter(User.id == session['user']['id']).scalar()
-        if user.watchlater:
-            watchlater = user.watchlater
+    watchlater = get_current_user().watchlater if get_current_user() else None
     if FLASH_MSG is not None:
         flash(Markup(FLASH_MSG), 'error')
 
@@ -141,11 +130,7 @@ def latest(page):
         abort(404)
     get_videocount()
     pagination = Pagination(page, PER_PAGE, session['videocount'])
-    watchlater = None
-    if session.get('user') is not None:
-        user = User.query.filter(User.id == session['user']['id']).scalar()
-        if user.watchlater:
-            watchlater = user.watchlater
+    watchlater = get_current_user().watchlater if get_current_user() else None
     if FLASH_MSG is not None:
         flash(Markup(FLASH_MSG), 'error')
 
@@ -211,20 +196,18 @@ def watch():
         videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(playlist.videos)).order_by(ordering)
 
     elif userlist == "history":
-        user = User.query.filter(User.id == session['user']['id']).scalar()
         ordering = case(
-            {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(user.watched))))},
+            {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(get_current_user().watched))))},
             value=Mv_Video.extractor_data
         )
-        videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(user.watched)).order_by(ordering)
+        videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(get_current_user().watched)).order_by(ordering)
 
     elif userlist == "watchlater":
-        user = User.query.filter(User.id == session['user']['id']).scalar()
         ordering = case(
-            {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(user.watchlater))))},
+            {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(get_current_user().watchlater))))},
             value=Mv_Video.extractor_data
         )
-        videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(user.watchlater)).order_by(ordering)
+        videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(get_current_user().watchlater)).order_by(ordering)
 
     else:
         vid_filter = [Mv_Video.ytc_id == video.ytc_id, Mv_Video.extractor_data != video_id]
@@ -243,8 +226,8 @@ def watch():
     playlist_titles = []
     not_in_watchlater = None
 
-    if session.get('user') is not None:
-        user = User.query.filter(User.id == session['user']['id']).scalar()
+    if get_current_user() is not None:
+        user = get_current_user()
 
         try:
             user.watched += [video.extractor_data]
@@ -285,30 +268,12 @@ def watch():
                            playlist_titles=playlist_titles, video_url_download=video_url_download)
 
 
-@bp.route('/embed/<video_id>')
-def embed(video_id):
-    if video_id is None:
-        abort(404)
-    video = db_session.execute(select(Mv_Video).filter(Mv_Video.extractor_data == video_id)).scalar()
-    if video is None:
-        abort(404)
-
-    playlist = request.args.get('playlist', None)
-    userlist = request.args.get('userlist', None)
-
-    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-    header = request.headers.get('User-Agent')
-    Thread(target=increment_video_counter, args=(video_id, ip, header)).start()
-
-    video_url = _resolve_video_url(video, video_id)
-
+def _get_next_video(video, playlist=None, userlist=None):
+    """Return the extractor_data of the next video to play, or None."""
     next_video = None
 
-    if playlist:
-        playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
-        if playlist is None:
-            abort(404)
-        if len(playlist.videos) > 1:
+    if playlist is not None:
+        if playlist.videos and len(playlist.videos) > 1:
             existing = {r[0] for r in db_session.query(Mv_Video.extractor_data)
                         .filter(Mv_Video.extractor_data.in_(playlist.videos))}
             active = [v for v in playlist.videos if v in existing]
@@ -318,58 +283,77 @@ def embed(video_id):
                 if not session.get('looplist') and idx == 0:
                     next_video = None
 
-    elif userlist == "history":
-        user = User.query.filter(User.id == session['user']['id']).scalar()
-        if len(user.watched) > 1:
-            existing = {r[0] for r in db_session.query(Mv_Video.extractor_data)
-                        .filter(Mv_Video.extractor_data.in_(user.watched))}
-            active = [v for v in user.watched if v in existing]
-            if len(active) > 1 and video.extractor_data in active:
-                idx = active.index(video.extractor_data)
-                next_video = active[idx - 1]
-                if not session.get('looplist') and idx == 0:
-                    next_video = None
-
-    elif userlist == "watchlater":
-        user = User.query.filter(User.id == session['user']['id']).scalar()
-        if len(user.watchlater) > 1:
-            existing = {r[0] for r in db_session.query(Mv_Video.extractor_data)
-                        .filter(Mv_Video.extractor_data.in_(user.watchlater))}
-            active = [v for v in user.watchlater if v in existing]
-            if len(active) > 1 and video.extractor_data in active:
-                idx = active.index(video.extractor_data)
-                next_video = active[idx - 1]
-                if not session.get('looplist') and idx == 0:
-                    next_video = None
+    elif userlist in ("history", "watchlater"):
+        user = get_current_user()
+        if user:
+            user_list = user.watched if userlist == "history" else user.watchlater
+            if user_list and len(user_list) > 1:
+                existing = {r[0] for r in db_session.query(Mv_Video.extractor_data)
+                            .filter(Mv_Video.extractor_data.in_(user_list))}
+                active = [v for v in user_list if v in existing]
+                if len(active) > 1 and video.extractor_data in active:
+                    idx = active.index(video.extractor_data)
+                    next_video = active[idx - 1]
+                    if not session.get('looplist') and idx == 0:
+                        next_video = None
 
     else:
         try:
-            videos = db_session.query(Mv_Video.extractor_data).filter(Mv_Video.ytc_id == video.ytc_id,
-                                                                      Mv_Video.published <= session['first_vid_pub']) \
-                .order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE)
+            channel_vids = db_session.query(Mv_Video.extractor_data).filter(
+                Mv_Video.ytc_id == video.ytc_id,
+                Mv_Video.published <= session['first_vid_pub']
+            ).order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE)
         except Exception:
-            logger.exception("next-video published filter failed, falling back for video_id=%s", video_id)
-            videos = db_session.query(Mv_Video.extractor_data).filter(Mv_Video.ytc_id == video.ytc_id) \
-                .order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE)
+            logger.exception("next-video published filter failed, falling back for video_id=%s", video.extractor_data)
+            channel_vids = db_session.query(Mv_Video.extractor_data).filter(
+                Mv_Video.ytc_id == video.ytc_id
+            ).order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE)
 
-        if videos.count() > 1:
-            videos_extractor_list = [r[0] for r in videos]
-            videos_extractor_list.reverse()
-
+        if channel_vids.count() > 1:
+            vlist = [r[0] for r in channel_vids]
+            vlist.reverse()
             try:
-                idx = (videos_extractor_list).index(video.extractor_data)
+                idx = vlist.index(video.extractor_data)
             except Exception:
-                idx = len(videos_extractor_list)
-            next_video = (videos_extractor_list).pop(idx - 1)
+                idx = len(vlist)
+            next_video = vlist.pop(idx - 1)
             try:
-                videos_extractor_list.remove(video_id)
+                vlist.remove(video.extractor_data)
             except Exception:
                 pass
             if not session.get('looplist') and idx == 0:
                 next_video = None
 
-    return render_template('video/video_embed.html', video_url=video_url, next_video=next_video, playlist=playlist,
-                           userlist=userlist)
+    return next_video
+
+
+@bp.route('/embed/<video_id>')
+def embed(video_id):
+    if video_id is None:
+        abort(404)
+    video = db_session.execute(select(Mv_Video).filter(Mv_Video.extractor_data == video_id)).scalar()
+    if video is None:
+        abort(404)
+
+    playlist_hash = request.args.get('playlist', None)
+    userlist = request.args.get('userlist', None)
+
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    header = request.headers.get('User-Agent')
+    Thread(target=increment_video_counter, args=(video_id, ip, header)).start()
+
+    video_url = _resolve_video_url(video, video_id)
+
+    playlist = None
+    if playlist_hash:
+        playlist = Playlist.query.filter(Playlist.hashid == playlist_hash).scalar()
+        if playlist is None:
+            abort(404)
+
+    next_video = _get_next_video(video, playlist=playlist, userlist=userlist)
+
+    return render_template('video/video_embed.html', video_url=video_url, next_video=next_video,
+                           playlist=playlist, userlist=userlist)
 
 
 @bp.route('/api/video-sources/<video_id>')
@@ -390,68 +374,11 @@ def video_sources_api(video_id):
     header = request.headers.get('User-Agent')
     Thread(target=increment_video_counter, args=(video_id, ip, header)).start()
 
-    next_video = None
-
+    playlist = None
     if playlist_hash:
         playlist = Playlist.query.filter(Playlist.hashid == playlist_hash).scalar()
-        if playlist and len(playlist.videos) > 1:
-            existing = {r[0] for r in db_session.query(Mv_Video.extractor_data)
-                        .filter(Mv_Video.extractor_data.in_(playlist.videos))}
-            active = [v for v in playlist.videos if v in existing]
-            if len(active) > 1 and video.extractor_data in active:
-                idx = active.index(video.extractor_data)
-                next_video = active[idx - 1]
-                if not session.get('looplist') and idx == 0:
-                    next_video = None
-    elif userlist == "history":
-        if session.get('user'):
-            user = User.query.filter(User.id == session['user']['id']).scalar()
-            if user and len(user.watched) > 1:
-                existing = {r[0] for r in db_session.query(Mv_Video.extractor_data)
-                            .filter(Mv_Video.extractor_data.in_(user.watched))}
-                active = [v for v in user.watched if v in existing]
-                if len(active) > 1 and video.extractor_data in active:
-                    idx = active.index(video.extractor_data)
-                    next_video = active[idx - 1]
-                    if not session.get('looplist') and idx == 0:
-                        next_video = None
-    elif userlist == "watchlater":
-        if session.get('user'):
-            user = User.query.filter(User.id == session['user']['id']).scalar()
-            if user and len(user.watchlater) > 1:
-                existing = {r[0] for r in db_session.query(Mv_Video.extractor_data)
-                            .filter(Mv_Video.extractor_data.in_(user.watchlater))}
-                active = [v for v in user.watchlater if v in existing]
-                if len(active) > 1 and video.extractor_data in active:
-                    idx = active.index(video.extractor_data)
-                    next_video = active[idx - 1]
-                    if not session.get('looplist') and idx == 0:
-                        next_video = None
-    else:
-        try:
-            videos = db_session.query(Mv_Video.extractor_data).filter(
-                Mv_Video.ytc_id == video.ytc_id,
-                Mv_Video.published <= session['first_vid_pub']
-            ).order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE)
-        except Exception:
-            videos = db_session.query(Mv_Video.extractor_data).filter(
-                Mv_Video.ytc_id == video.ytc_id
-            ).order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE)
 
-        if videos.count() > 1:
-            videos_extractor_list = [r[0] for r in videos]
-            videos_extractor_list.reverse()
-            try:
-                idx = videos_extractor_list.index(video.extractor_data)
-            except Exception:
-                idx = len(videos_extractor_list)
-            next_video = videos_extractor_list.pop(idx - 1)
-            try:
-                videos_extractor_list.remove(video_id)
-            except Exception:
-                pass
-            if not session.get('looplist') and idx == 0:
-                next_video = None
+    next_video = _get_next_video(video, playlist=playlist, userlist=userlist)
 
     next_watch_url = None
     if next_video:
@@ -465,70 +392,44 @@ def video_sources_api(video_id):
     return jsonify({'video_url': video_url, 'next_watch_url': next_watch_url})
 
 
-@bp.route("/search", defaults={'page': 1})
-@bp.route('/search/page/<int:page>')
-def search(page):
+def _search_impl(rawsearch, video_order, order_label, page):
     offset = ((int(page) - 1) * PER_PAGE)
-    rawsearch = request.args.get('q', None)
     if rawsearch is None:
         abort(404)
-    search = rawsearch.strip()
-    order = 'default'
-    playlist_ident = request.args.get('playlist', None)
+    term = rawsearch.strip()
 
-    if search.lower().partition("youtube.com/watch?v=")[2] != "":
-        search = (search.lower().partition("youtube.com/watch?v=")[2])
-    elif search.lower().partition("youtube.com/channel/")[2] != "":
-        search = (search.lower().partition("youtube.com/channel/")[2])
+    if term.lower().partition("youtube.com/watch?v=")[2]:
+        term = term.lower().partition("youtube.com/watch?v=")[2]
+    elif term.lower().partition("youtube.com/channel/")[2]:
+        term = term.lower().partition("youtube.com/channel/")[2]
 
-    my_to_tsquery_video = text("mv_video.document @@ websearch_to_tsquery(:search)")
-    my_ts_rank_video = text("ts_rank(mv_video.document, websearch_to_tsquery(:search)) DESC")
-    videos = db_session.query(Mv_Video). \
-        filter(my_to_tsquery_video). \
-        order_by(my_ts_rank_video). \
-        limit(PER_PAGE).offset(offset). \
-        params(search=search).all()
+    tsv = text("mv_video.document @@ websearch_to_tsquery(:search)")
+    tsc = text("Mv_Channel.document @@ websearch_to_tsquery(:search)")
+    tsp = text("Mv_Playlist.document @@ websearch_to_tsquery(:search)")
+    tsu = text("Mv_Altcen_user.document @@ websearch_to_tsquery(:search)")
+    rank_c = text("ts_rank(Mv_Channel.document, websearch_to_tsquery(:search)) DESC")
+    rank_p = text("ts_rank(Mv_Playlist.document, websearch_to_tsquery(:search)) DESC")
+    rank_u = text("ts_rank(Mv_Altcen_user.document, websearch_to_tsquery(:search)) DESC")
 
-    my_to_tsquery_channel = text("Mv_Channel.document @@ websearch_to_tsquery(:search)")
-    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, websearch_to_tsquery(:search)) DESC")
-    channels = db_session.query(Mv_Channel). \
-        filter(my_to_tsquery_channel). \
-        order_by(my_ts_rank_channel). \
-        params(search=search).all()
+    videos = db_session.query(Mv_Video).filter(tsv).order_by(video_order) \
+        .limit(PER_PAGE).offset(offset).params(search=term).all()
+    channels = db_session.query(Mv_Channel).filter(tsc).order_by(rank_c).params(search=term).all()
+    searchplaylists = db_session.query(Mv_Playlist).filter(Mv_Playlist.public, tsp) \
+        .order_by(rank_p).params(search=term).all()
+    altcen_users = db_session.query(Mv_Altcen_user).filter(Mv_Altcen_user.public, tsu) \
+        .order_by(rank_u).limit(PER_PAGE).offset(offset).params(search=term).all()
 
-    my_to_tsquery_playlist = text("Mv_Playlist.document @@ websearch_to_tsquery(:search)")
-    my_ts_rank_playlist = text("ts_rank(Mv_Playlist.document, websearch_to_tsquery(:search)) DESC")
-    searchplaylists = db_session.query(Mv_Playlist). \
-        filter((Mv_Playlist.public), (my_to_tsquery_playlist)). \
-        order_by(my_ts_rank_playlist). \
-        params(search=search).all()
-
-    my_to_tsquery_altcen_user = text("Mv_Altcen_user.document @@ websearch_to_tsquery(:search)")
-    my_ts_rank_altcen_user = text("ts_rank(Mv_Altcen_user.document, websearch_to_tsquery(:search)) DESC")
-    altcen_users = db_session.query(Mv_Altcen_user). \
-        filter((Mv_Altcen_user.public), (my_to_tsquery_altcen_user)). \
-        order_by(my_ts_rank_altcen_user). \
-        limit(PER_PAGE).offset(offset). \
-        params(search=search).all()
-
-    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(
-        search=search).scalar()
-    channcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(my_to_tsquery_channel).params(
-        search=search).scalar()
-    searchplaylistcount = db_session.query(func.count(Mv_Playlist.id)).filter(my_to_tsquery_playlist).params(
-        search=search).scalar()
-    usercount = db_session.query(func.count(Mv_Altcen_user.id)).filter((Mv_Altcen_user.public),
-                                                                       (my_to_tsquery_altcen_user)).params(
-        search=search).scalar()
+    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(tsv).params(search=term).scalar()
+    channcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(tsc).params(search=term).scalar()
+    searchplaylistcount = db_session.query(func.count(Mv_Playlist.id)).filter(tsp).params(search=term).scalar()
+    usercount = db_session.query(func.count(Mv_Altcen_user.id)).filter(Mv_Altcen_user.public, tsu) \
+        .params(search=term).scalar()
 
     pagination = Pagination(page, PER_PAGE, videocount)
 
-    watchlater = None
-    if session.get('user') is not None:
-        user = User.query.filter(User.id == session['user']['id']).scalar()
-        if user.watchlater:
-            watchlater = user.watchlater
+    watchlater = get_current_user().watchlater if get_current_user() else None
 
+    playlist_ident = request.args.get('playlist', None)
     playlist = None
     if playlist_ident:
         channels = None
@@ -542,257 +443,39 @@ def search(page):
 
     if not videos and page != 1:
         abort(404)
-    return render_template('video/video_search.html', videos=videos, pagination=pagination, usercount=usercount, \
-                           channcount=channcount, searchplaylistcount=searchplaylistcount, rawsearch=rawsearch, \
-                           searchplaylists=searchplaylists, altcen_users=altcen_users, \
-                           order=order, channels=channels, videocount=videocount, watchlater=watchlater,
-                           playlist=playlist, featured_search_videos=featured_search_videos)
+    return render_template('video/video_search.html', videos=videos, pagination=pagination,
+                           usercount=usercount, channcount=channcount,
+                           searchplaylistcount=searchplaylistcount, rawsearch=rawsearch,
+                           searchplaylists=searchplaylists, altcen_users=altcen_users,
+                           order=order_label, channels=channels, videocount=videocount,
+                           watchlater=watchlater, playlist=playlist,
+                           featured_search_videos=featured_search_videos)
+
+
+@bp.route("/search", defaults={'page': 1})
+@bp.route('/search/page/<int:page>')
+def search(page):
+    return _search_impl(request.args.get('q'),
+                        text("ts_rank(mv_video.document, websearch_to_tsquery(:search)) DESC"),
+                        'default', page)
 
 
 @bp.route("/search/latest", defaults={'page': 1})
 @bp.route('/search/latest/page/<int:page>')
 def search_latest(page):
-    offset = ((int(page) - 1) * PER_PAGE)
-    rawsearch = request.args.get('q', None)
-    if rawsearch is None:
-        abort(404)
-    search = rawsearch.strip()
-    order = 'latest'
-    playlist_ident = request.args.get('playlist', None)
-
-    if search.lower().partition("youtube.com/watch?v=")[2] != "":
-        search = (search.lower().partition("youtube.com/watch?v=")[2])
-    elif search.lower().partition("youtube.com/channel/")[2] != "":
-        search = (search.lower().partition("youtube.com/channel/")[2])
-
-    my_to_tsquery_video = text("mv_video.document @@ websearch_to_tsquery(:search)")
-    videos = db_session.query(Mv_Video). \
-        filter(my_to_tsquery_video). \
-        order_by(Mv_Video.id.desc()). \
-        limit(PER_PAGE).offset(offset). \
-        params(search=search).all()
-
-    my_to_tsquery_channel = text("Mv_Channel.document @@ websearch_to_tsquery(:search)")
-    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, websearch_to_tsquery(:search)) DESC")
-    channels = db_session.query(Mv_Channel). \
-        filter(my_to_tsquery_channel). \
-        order_by(my_ts_rank_channel). \
-        params(search=search).all()
-
-    my_to_tsquery_playlist = text("Mv_Playlist.document @@ websearch_to_tsquery(:search)")
-    my_ts_rank_playlist = text("ts_rank(Mv_Playlist.document, websearch_to_tsquery(:search)) DESC")
-    searchplaylists = db_session.query(Mv_Playlist). \
-        filter((Mv_Playlist.public), (my_to_tsquery_playlist)). \
-        order_by(my_ts_rank_playlist). \
-        params(search=search).all()
-
-    my_to_tsquery_altcen_user = text("Mv_Altcen_user.document @@ websearch_to_tsquery(:search)")
-    my_ts_rank_altcen_user = text("ts_rank(Mv_Altcen_user.document, websearch_to_tsquery(:search)) DESC")
-    altcen_users = db_session.query(Mv_Altcen_user). \
-        filter((Mv_Altcen_user.public), (my_to_tsquery_altcen_user)). \
-        order_by(my_ts_rank_altcen_user). \
-        limit(PER_PAGE).offset(offset). \
-        params(search=search).all()
-
-    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(
-        search=search).scalar()
-    channcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(my_to_tsquery_channel).params(
-        search=search).scalar()
-    searchplaylistcount = db_session.query(func.count(Mv_Playlist.id)).filter(my_to_tsquery_playlist).params(
-        search=search).scalar()
-    usercount = db_session.query(func.count(Mv_Altcen_user.id)).filter(my_to_tsquery_altcen_user).params(
-        search=search).scalar()
-
-    pagination = Pagination(page, PER_PAGE, videocount)
-
-    watchlater = None
-    if session.get('user') is not None:
-        user = User.query.filter(User.id == session['user']['id']).scalar()
-        if user.watchlater:
-            watchlater = user.watchlater
-
-    playlist = None
-    if playlist_ident:
-        channels = None
-        playlist = Playlist.query.filter(Playlist.hashid == playlist_ident).scalar()
-
-    fv_ids = [p.featured_video_id for p in searchplaylists if p.featured_video_id]
-    featured_search_videos = {}
-    if fv_ids:
-        fvs = Mv_Video.query.filter(Mv_Video.extractor_data.in_(fv_ids)).all()
-        featured_search_videos = {fv.extractor_data: fv for fv in fvs}
-
-    if not videos and page != 1:
-        abort(404)
-    return render_template('video/video_search.html', videos=videos, pagination=pagination, usercount=usercount, \
-                           channcount=channcount, searchplaylistcount=searchplaylistcount, rawsearch=rawsearch, \
-                           searchplaylists=searchplaylists, altcen_users=altcen_users, \
-                           order=order, channels=channels, videocount=videocount, watchlater=watchlater,
-                           playlist=playlist, featured_search_videos=featured_search_videos)
+    return _search_impl(request.args.get('q'), Mv_Video.id.desc(), 'latest', page)
 
 
 @bp.route("/search/new", defaults={'page': 1})
 @bp.route('/search/new/page/<int:page>')
 def search_new(page):
-    offset = ((int(page) - 1) * PER_PAGE)
-    rawsearch = request.args.get('q', None)
-    if rawsearch is None:
-        abort(404)
-    search = rawsearch.strip()
-    order = 'newest'
-    playlist_ident = request.args.get('playlist', None)
-
-    if search.lower().partition("youtube.com/watch?v=")[2] != "":
-        search = (search.lower().partition("youtube.com/watch?v=")[2])
-    elif search.lower().partition("youtube.com/channel/")[2] != "":
-        search = (search.lower().partition("youtube.com/channel/")[2])
-
-    my_to_tsquery_video = text("mv_video.document @@ websearch_to_tsquery(:search)")
-    videos = db_session.query(Mv_Video). \
-        filter(my_to_tsquery_video). \
-        order_by(Mv_Video.published.desc()). \
-        limit(PER_PAGE).offset(offset). \
-        params(search=search).all()
-
-    my_to_tsquery_channel = text("Mv_Channel.document @@ websearch_to_tsquery(:search)")
-    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, websearch_to_tsquery(:search)) DESC")
-    channels = db_session.query(Mv_Channel). \
-        filter(my_to_tsquery_channel). \
-        order_by(my_ts_rank_channel). \
-        params(search=search).all()
-
-    my_to_tsquery_playlist = text("Mv_Playlist.document @@ websearch_to_tsquery(:search)")
-    my_ts_rank_playlist = text("ts_rank(Mv_Playlist.document, websearch_to_tsquery(:search)) DESC")
-    searchplaylists = db_session.query(Mv_Playlist). \
-        filter((Mv_Playlist.public), (my_to_tsquery_playlist)). \
-        order_by(my_ts_rank_playlist). \
-        params(search=search).all()
-
-    my_to_tsquery_altcen_user = text("Mv_Altcen_user.document @@ websearch_to_tsquery(:search)")
-    my_ts_rank_altcen_user = text("ts_rank(Mv_Altcen_user.document, websearch_to_tsquery(:search)) DESC")
-    altcen_users = db_session.query(Mv_Altcen_user). \
-        filter((Mv_Altcen_user.public), (my_to_tsquery_altcen_user)). \
-        order_by(my_ts_rank_altcen_user). \
-        limit(PER_PAGE).offset(offset). \
-        params(search=search).all()
-
-    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(
-        search=search).scalar()
-    channcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(my_to_tsquery_channel).params(
-        search=search).scalar()
-    searchplaylistcount = db_session.query(func.count(Mv_Playlist.id)).filter(my_to_tsquery_playlist).params(
-        search=search).scalar()
-    usercount = db_session.query(func.count(Mv_Altcen_user.id)).filter(my_to_tsquery_altcen_user).params(
-        search=search).scalar()
-
-    pagination = Pagination(page, PER_PAGE, videocount)
-
-    watchlater = None
-    if session.get('user') is not None:
-        user = User.query.filter(User.id == session['user']['id']).scalar()
-        if user.watchlater:
-            watchlater = user.watchlater
-
-    playlist = None
-    if playlist_ident:
-        channels = None
-        playlist = Playlist.query.filter(Playlist.hashid == playlist_ident).scalar()
-
-    fv_ids = [p.featured_video_id for p in searchplaylists if p.featured_video_id]
-    featured_search_videos = {}
-    if fv_ids:
-        fvs = Mv_Video.query.filter(Mv_Video.extractor_data.in_(fv_ids)).all()
-        featured_search_videos = {fv.extractor_data: fv for fv in fvs}
-
-    if not videos and page != 1:
-        abort(404)
-    return render_template('video/video_search.html', videos=videos, pagination=pagination, usercount=usercount, \
-                           channcount=channcount, searchplaylistcount=searchplaylistcount, rawsearch=rawsearch, \
-                           searchplaylists=searchplaylists, altcen_users=altcen_users, \
-                           order=order, channels=channels, videocount=videocount, watchlater=watchlater,
-                           playlist=playlist, featured_search_videos=featured_search_videos)
+    return _search_impl(request.args.get('q'), Mv_Video.published.desc(), 'newest', page)
 
 
 @bp.route("/search/popular", defaults={'page': 1})
 @bp.route('/search/popular/page/<int:page>')
 def search_popular(page):
-    offset = ((int(page) - 1) * PER_PAGE)
-    rawsearch = request.args.get('q', None)
-    if rawsearch is None:
-        abort(404)
-    search = rawsearch.strip()
-    order = 'popular'
-    playlist_ident = request.args.get('playlist', None)
-
-    if search.lower().partition("youtube.com/watch?v=")[2] != "":
-        search = (search.lower().partition("youtube.com/watch?v=")[2])
-    elif search.lower().partition("youtube.com/channel/")[2] != "":
-        search = (search.lower().partition("youtube.com/channel/")[2])
-
-    my_to_tsquery_video = text("mv_video.document @@ websearch_to_tsquery(:search)")
-    videos = db_session.query(Mv_Video). \
-        filter(my_to_tsquery_video). \
-        order_by(Mv_Video.yt_views.desc()). \
-        limit(PER_PAGE).offset(offset). \
-        params(search=search).all()
-
-    my_to_tsquery_channel = text("Mv_Channel.document @@ websearch_to_tsquery(:search)")
-    my_ts_rank_channel = text("ts_rank(Mv_Channel.document, websearch_to_tsquery(:search)) DESC")
-    channels = db_session.query(Mv_Channel). \
-        filter(my_to_tsquery_channel). \
-        order_by(my_ts_rank_channel). \
-        params(search=search).all()
-
-    my_to_tsquery_playlist = text("Mv_Playlist.document @@ websearch_to_tsquery(:search)")
-    my_ts_rank_playlist = text("ts_rank(Mv_Playlist.document, websearch_to_tsquery(:search)) DESC")
-    searchplaylists = db_session.query(Mv_Playlist). \
-        filter((Mv_Playlist.public), (my_to_tsquery_playlist)). \
-        order_by(my_ts_rank_playlist). \
-        params(search=search).all()
-
-    my_to_tsquery_altcen_user = text("Mv_Altcen_user.document @@ websearch_to_tsquery(:search)")
-    my_ts_rank_altcen_user = text("ts_rank(Mv_Altcen_user.document, websearch_to_tsquery(:search)) DESC")
-    altcen_users = db_session.query(Mv_Altcen_user). \
-        filter((Mv_Altcen_user.public), (my_to_tsquery_altcen_user)). \
-        order_by(my_ts_rank_altcen_user). \
-        limit(PER_PAGE).offset(offset). \
-        params(search=search).all()
-
-    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter(my_to_tsquery_video).params(
-        search=search).scalar()
-    channcount = db_session.query(func.count(Mv_Channel.ytc_id)).filter(my_to_tsquery_channel).params(
-        search=search).scalar()
-    searchplaylistcount = db_session.query(func.count(Mv_Playlist.id)).filter(my_to_tsquery_playlist).params(
-        search=search).scalar()
-    usercount = db_session.query(func.count(Mv_Altcen_user.id)).filter(my_to_tsquery_altcen_user).params(
-        search=search).scalar()
-
-    pagination = Pagination(page, PER_PAGE, videocount)
-
-    watchlater = None
-    if session.get('user') is not None:
-        user = User.query.filter(User.id == session['user']['id']).scalar()
-        if user.watchlater:
-            watchlater = user.watchlater
-
-    playlist = None
-    if playlist_ident:
-        channels = None
-        playlist = Playlist.query.filter(Playlist.hashid == playlist_ident).scalar()
-
-    fv_ids = [p.featured_video_id for p in searchplaylists if p.featured_video_id]
-    featured_search_videos = {}
-    if fv_ids:
-        fvs = Mv_Video.query.filter(Mv_Video.extractor_data.in_(fv_ids)).all()
-        featured_search_videos = {fv.extractor_data: fv for fv in fvs}
-
-    if not videos and page != 1:
-        abort(404)
-    return render_template('video/video_search.html', videos=videos, pagination=pagination, usercount=usercount, \
-                           channcount=channcount, searchplaylistcount=searchplaylistcount, rawsearch=rawsearch, \
-                           searchplaylists=searchplaylists, altcen_users=altcen_users, \
-                           order=order, channels=channels, videocount=videocount, watchlater=watchlater,
-                           playlist=playlist, featured_search_videos=featured_search_videos)
+    return _search_impl(request.args.get('q'), Mv_Video.yt_views.desc(), 'popular', page)
 
 
 @bp.route('/play-next', methods=['GET', 'POST'])

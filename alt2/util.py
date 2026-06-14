@@ -431,27 +431,37 @@ def ssh_command(sys_name, commands, sys_user='root'):
                                shell=False,
                                stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE)
-        result = ssh.stdout.readlines()
-        if not result:
-            error = ssh.stderr.readlines()
-            flash(error, 'error')
-        else:
-            flash(result, 'success')
+        try:
+            stdout, stderr = ssh.communicate(timeout=30)
+            result = stdout.splitlines()
+            if not result:
+                flash(stderr.decode(errors='replace'), 'error')
+            else:
+                flash(result, 'success')
+        except subprocess.TimeoutExpired:
+            ssh.kill()
+            ssh.communicate()
+            flash('SSH command timed out', 'error')
 
 
 def local_command(commands):
     for command in commands:
         localcmd = subprocess.Popen([command],
                                 executable='/bin/bash',
-                                shell = True,
-                                stdout = subprocess.PIPE,
-                                stderr = subprocess.PIPE)
-        result = localcmd.stdout.readlines()
-        if not result:
-            error = localcmd.stderr.readlines()
-            flash(error, 'error')
-        else:
-            flash(result, 'success')
+                                shell=True,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
+        try:
+            stdout, stderr = localcmd.communicate(timeout=30)
+            result = stdout.splitlines()
+            if not result:
+                flash(stderr.decode(errors='replace'), 'error')
+            else:
+                flash(result, 'success')
+        except subprocess.TimeoutExpired:
+            localcmd.kill()
+            localcmd.communicate()
+            flash('Local command timed out', 'error')
 
 
 def video_toggle_allow(video_id, bool_allow=None, bool_deleted=None):
@@ -574,7 +584,7 @@ def send_all_mass_email(email, sender, subject, html, service):
 def wg_api_call(node_fqdn, api_request, method='GET', data_raw=None):
     url = 'https://' + node_fqdn + ':' + config.VPN_API_PORT + api_request
     headers = {'Authorization':config.VPN_API_AUTH}
-    r = requests.request(method, url, headers=headers, json=data_raw)
+    r = requests.request(method, url, headers=headers, json=data_raw, timeout=5)
     data = r.json()
     return data
 
@@ -583,9 +593,9 @@ def generate_add_key_data_raw(p_bwLimit=config.VPN_FREE_BWLIMIT, *args, **kwargs
     p_subExpiry = kwargs.get('b', config.VPN_DEFAULT_SUBEXPIRY)
     p_ipIndex = kwargs.get('c', config.VPN_DEFAULT_IPINDEX)
 
-    privkey = subprocess.check_output("wg genkey", shell=True).decode("utf-8").strip()
-    pubkey = subprocess.check_output(f"echo '{privkey}' | wg pubkey", shell=True).decode("utf-8").strip()
-    sharedkey = subprocess.check_output("wg genpsk", shell=True).decode("utf-8").strip()
+    privkey = subprocess.check_output("wg genkey", shell=True, timeout=30).decode("utf-8").strip()
+    pubkey = subprocess.check_output(f"echo '{privkey}' | wg pubkey", shell=True, timeout=30).decode("utf-8").strip()
+    sharedkey = subprocess.check_output("wg genpsk", shell=True, timeout=30).decode("utf-8").strip()
 
     data_raw = {
         "publicKey": pubkey,
@@ -1175,6 +1185,7 @@ def verify_turnstile_token(token, secret_key):
         data={
             'secret': secret_key,
             'response': token
-        }
+        },
+        timeout=5
     )
     return response.json()

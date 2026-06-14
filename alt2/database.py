@@ -12,7 +12,10 @@ engine = create_engine(dbase,
 #                       echo=True,
 #                       echo_pool="debug",
 #                       pool_use_lifo=True,
-                       pool_pre_ping=True
+                       pool_pre_ping=True,
+                       pool_recycle=1800,
+                       pool_timeout=10,
+                       connect_args={"connect_timeout": 5},
                        )
 
 db_session = scoped_session(sessionmaker(autocommit=False,

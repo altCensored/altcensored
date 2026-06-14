@@ -245,7 +245,7 @@ def oauth2_callback(provider):
         'grant_type': 'authorization_code',
         'redirect_uri': url_for('auth.oauth2_callback', provider=provider,
                                 _external=True),
-    }, headers={'Accept': 'application/json'})
+    }, headers={'Accept': 'application/json'}, timeout=5)
     if response.status_code != 200:
         abort(401)
     oauth2_token = response.json().get('access_token')
@@ -256,7 +256,7 @@ def oauth2_callback(provider):
     response = requests.get(provider_data['userinfo']['url'], headers={
         'Authorization': 'Bearer ' + oauth2_token,
         'Accept': 'application/json',
-    })
+    }, timeout=5)
     if response.status_code != 200:
         abort(401)
     email = provider_data['userinfo']['email'](response.json(), oauth2_token)
@@ -266,7 +266,7 @@ def oauth2_callback(provider):
         r2 = requests.get(provider_data['email_fallback_url'], headers={
             'Authorization': 'Bearer ' + oauth2_token,
             'Accept': 'application/json',
-        })
+        }, timeout=5)
         if r2.status_code == 200:
             primary = next((e['email'] for e in r2.json() if e['primary'] and e['verified']), None)
             email = primary

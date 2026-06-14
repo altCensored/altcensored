@@ -13,6 +13,7 @@ from datetime import datetime, timezone
 from .util import (videos_newest, videos_popular, videos_latest, get_videocount, get_playnext,
                    ac_object_exist, videos_trending, get_ia_item, increment_video_counter)
 from minio import Minio
+import urllib3
 from . import config
 
 bp = Blueprint('video', __name__)
@@ -34,6 +35,7 @@ def _resolve_video_url(video: Mv_Video, video_id: str) -> str:
             current_app.config['AC_S3_ENDPOINT'],
             access_key=current_app.config['AC_S3_ACCESS_KEY'],
             secret_key=current_app.config['AC_S3_SECRET_KEY'],
+            http_client=urllib3.PoolManager(timeout=urllib3.Timeout(connect=2.0, read=2.0)),
         )
         try:
             s3_exists = ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id)

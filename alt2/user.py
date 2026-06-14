@@ -83,13 +83,14 @@ def item(username):
     myhash=hash(ip+header+today+username)
 
     if Counter.query.filter(Counter.hash == myhash).scalar() is None:
-        counter = Counter (hash=myhash)
+        counter = Counter(hash=myhash)
         db_session.add(counter)
-        db_session.commit()
-
         user.view_counter = user.view_counter + 1
         flag_modified(user, "view_counter")
-        db_session.commit()
+        try:
+            db_session.commit()
+        except Exception:
+            db_session.rollback()
 
     if not username and page != 1:
         abort(404)
@@ -139,7 +140,11 @@ def remove_video_history():
         user.watched.remove(video_id)
         user.updated = datetime.datetime.now(datetime.timezone.utc)
         flag_modified(user, "watched")
-        db_session.commit()
+        try:
+            db_session.commit()
+        except Exception:
+            db_session.rollback()
+            flash(lazy_gettext('Error removing video from history'), 'error')
     return redirect(request.args.get(url_orig, '/'))
 
 
@@ -160,9 +165,12 @@ def clear_history():
             user.watched = []
             user.updated = datetime.datetime.now(datetime.timezone.utc)
             flag_modified(user, "watched")
-            db_session.commit()
-            hist_cleared = lazy_gettext('History Cleared')
-            flash(hist_cleared, 'success')
+            try:
+                db_session.commit()
+                flash(lazy_gettext('History Cleared'), 'success')
+            except Exception:
+                db_session.rollback()
+                flash(lazy_gettext('Error clearing history'), 'error')
         else:
             hist_not_cleared = lazy_gettext('History Not Cleared')
             flash(hist_not_cleared, 'error')
@@ -209,7 +217,11 @@ def add_video_watchlater():
         user.watchlater.append(video_id)
     user.updated = datetime.datetime.now(datetime.timezone.utc)
     flag_modified(user, "watchlater")
-    db_session.commit()
+    try:
+        db_session.commit()
+    except Exception:
+        db_session.rollback()
+        flash(lazy_gettext('Error updating watchlater'), 'error')
     return redirect(request.args.get(url_orig, '/'))
 
 
@@ -226,8 +238,12 @@ def add_video_watchlater_post():
             user.watchlater.append(v)
         user.updated = datetime.datetime.now(datetime.timezone.utc)
         flag_modified(user, "watchlater")
-        db_session.commit()
-        return json.dumps({'v': v})
+        try:
+            db_session.commit()
+            return json.dumps({'v': v})
+        except Exception:
+            db_session.rollback()
+            return json.dumps({'error': 'db error'}), 500
     return json.dumps({})
 
 
@@ -241,7 +257,11 @@ def remove_video_watchlater():
         user.watchlater.remove(video_id)
         user.updated = datetime.datetime.now(datetime.timezone.utc)
         flag_modified(user, "watchlater")
-        db_session.commit()
+        try:
+            db_session.commit()
+        except Exception:
+            db_session.rollback()
+            flash(lazy_gettext('Error updating watchlater'), 'error')
     return redirect(request.args.get(url_orig, '/'))
 
 
@@ -262,9 +282,12 @@ def clear_watchlater():
             user.watchlater.clear()
             user.updated = datetime.datetime.now(datetime.timezone.utc)
             flag_modified(user, "watchlater")
-            db_session.commit()
-            watch_clear = lazy_gettext('WatchLater Cleared')
-            flash(watch_clear, 'success')
+            try:
+                db_session.commit()
+                flash(lazy_gettext('WatchLater Cleared'), 'success')
+            except Exception:
+                db_session.rollback()
+                flash(lazy_gettext('Error clearing watchlater'), 'error')
             return redirect(url_for('user.item', username=session['user']['username']))
 
         else:

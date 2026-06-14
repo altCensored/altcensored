@@ -51,7 +51,10 @@ def send_mass_email(email, sender, subject, filename, service):
     now = datetime.datetime.now(timezone.utc)
     user.email_lastsent_date = now
     db_session.add(user)
-    db_session.commit()
+    try:
+        db_session.commit()
+    except Exception:
+        db_session.rollback()
 
 
 def db_unsubscribe_email(tablename, email, action):
@@ -64,7 +67,10 @@ def db_unsubscribe_email(tablename, email, action):
     user.email_action = action
     user.updated = now
     db_session.add(user)
-    db_session.commit()
+    try:
+        db_session.commit()
+    except Exception:
+        db_session.rollback()
 
 
 def db_add_email_list(email, email_source):
@@ -76,7 +82,10 @@ def db_add_email_list(email, email_source):
         created_date=now, updated=now, email_lastsent_date=email_lastsent_date, \
         )
     db_session.add(user)
-    db_session.commit()
+    try:
+        db_session.commit()
+    except Exception:
+        db_session.rollback()
 
 
 @bp.route('/')
@@ -241,7 +250,11 @@ def update():
             delta = timedelta(days=intdays)
             setattr(source, field, delta)
 
-    db_session.commit()
+    try:
+        db_session.commit()
+    except Exception:
+        db_session.rollback()
+        return '', 500
     return '', 204
 
 
@@ -638,7 +651,10 @@ def mass_email():
                 send_mass_email(user.email, sender, subject, filename, service)
                 flash(user.email)
 
-        db_session.commit()
+        try:
+            db_session.commit()
+        except Exception:
+            db_session.rollback()
         return redirect(url_for('admin.index'))
 
     return render_template('admin/admin_mass_email.html', title=title)
@@ -728,8 +744,8 @@ def aws_bounce():
     # AWS sends JSON with text/plain mimetype
     try:
         js = json.loads(request.data)
-    except:
-        pass
+    except json.JSONDecodeError:
+        return 'OK\n'
 
     hdr = request.headers.get('X-Amz-Sns-Message-Type')
 
@@ -760,8 +776,8 @@ def aws_complaint():
     # AWS sends JSON with text/plain mimetype
     try:
         js = json.loads(request.data)
-    except:
-        pass
+    except json.JSONDecodeError:
+        return 'OK\n'
 
     hdr = request.headers.get('X-Amz-Sns-Message-Type')
 

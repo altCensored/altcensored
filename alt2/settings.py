@@ -69,7 +69,11 @@ def update_site():
             user.navtabs = [session['navtabs']['navtab1'], session['navtabs']['navtab2'], session['navtabs']['navtab3']]
             user.navtabs_index = [session['navtabs_index']['navtab1'], session['navtabs_index']['navtab2'],
                                   session['navtabs_index']['navtab3']]
-            db_session.commit()
+            try:
+                db_session.commit()
+            except Exception:
+                db_session.rollback()
+                flash(lazy_gettext('Error saving settings'), 'error')
 
             return redirect(url_for('settings.index'))
 
@@ -161,9 +165,6 @@ def update_user():
 
         if email_changed is True:
             user.email_verified = False
-            send_confirm_email(femail)
-            conf_email_resent = lazy_gettext('New Email not verified. Confirmation email sent')
-            flash(conf_email_resent, 'success')
 
         now = datetime.datetime.now(timezone.utc)
         user.updated = now
@@ -173,7 +174,16 @@ def update_user():
         user.public = fpublic
         user.email_subscribed = femail_subscribed
 
-        db_session.commit()
+        try:
+            db_session.commit()
+        except Exception:
+            db_session.rollback()
+            flash(lazy_gettext('Error saving user settings'), 'error')
+            return redirect(url_for('settings.update_user'))
+
+        if email_changed is True:
+            send_confirm_email(femail)
+            flash(lazy_gettext('New Email not verified. Confirmation email sent'), 'success')
 
         return redirect(url_for('settings.index'))
 

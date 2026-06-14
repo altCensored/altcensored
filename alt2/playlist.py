@@ -93,13 +93,14 @@ def item(playlist,page):
     myhash = hash(ip+header+today+str(playlist.hashid))
 
     if Counter.query.filter(Counter.hash == myhash).scalar() is None:
-        counter = Counter (hash=myhash)
+        counter = Counter(hash=myhash)
         db_session.add(counter)
-        db_session.commit()
-
         playlist.view_counter = playlist.view_counter + 1
         flag_modified(playlist, "view_counter")
-        db_session.commit()
+        try:
+            db_session.commit()
+        except Exception:
+            db_session.rollback()
 
     updated = playlist.updated
     now = datetime.datetime.now(timezone.utc) + datetime.timedelta(seconds = 60 * 3.4)
@@ -121,7 +122,10 @@ def item(playlist,page):
     if playlist.video_count != videocount:
         playlist.video_count = videocount
         flag_modified(playlist, "video_count")
-        db_session.commit()
+        try:
+            db_session.commit()
+        except Exception:
+            db_session.rollback()
 
     featured_video = None
     if playlist.featured_video_id:
@@ -131,7 +135,10 @@ def item(playlist,page):
                         .filter(Mv_Video.extractor_data.in_(playlist.videos))}
             new_fv_id = next((v for v in playlist.videos if v in existing), None)
             playlist.featured_video_id = new_fv_id
-            db_session.commit()
+            try:
+                db_session.commit()
+            except Exception:
+                db_session.rollback()
             if new_fv_id:
                 featured_video = Mv_Video.query.get(new_fv_id)
 
@@ -172,7 +179,12 @@ def create():
                              video_count=0, videos=empty_list)
 
         db_session.add(playlist)
-        db_session.commit()
+        try:
+            db_session.commit()
+        except Exception:
+            db_session.rollback()
+            flash(lazy_gettext('Error creating playlist'), 'error')
+            return redirect(url_for('playlist.create'))
 
         return redirect(url_for('playlist.item', playlist=hashid))
 
@@ -206,7 +218,11 @@ def edit(playlist):
         playlist.title = ftitle
         playlist.description = fdescription
         playlist.public = fpublic
-        db_session.commit()
+        try:
+            db_session.commit()
+        except Exception:
+            db_session.rollback()
+            flash(lazy_gettext('Error saving playlist'), 'error')
         return redirect(url_for('playlist.item', playlist=playlist.hashid))
 
     return render_template('playlist/playlist_item_create_edit.html', playlist=playlist)
@@ -233,7 +249,11 @@ def add_video_playlist():
             user.watchlater.append(video_id)
         user.updated = datetime.datetime.now(timezone.utc)
         flag_modified(user, "watchlater")
-        db_session.commit()
+        try:
+            db_session.commit()
+        except Exception:
+            db_session.rollback()
+            flash(lazy_gettext('Error updating watchlater'), 'error')
         return redirect(url_for('video.watch', v=video_id))
 
     if playlist.videos is None:
@@ -247,10 +267,14 @@ def add_video_playlist():
     now = datetime.datetime.now(timezone.utc)
     playlist.updated = now
     flag_modified(playlist, "videos")
-    db_session.commit()
+    try:
+        db_session.commit()
+    except Exception:
+        db_session.rollback()
+        flash(lazy_gettext('Error updating playlist'), 'error')
 
     if request.method == 'POST':
-        return redirect(url_for('video.watch', v=video_id ))
+        return redirect(url_for('video.watch', v=video_id))
 
     return redirect(request.args.get(url_orig, '/'))
 
@@ -275,9 +299,12 @@ def add_video_playlist_post():
         now = datetime.datetime.now(timezone.utc)
         playlist.updated = now
         flag_modified(playlist, "videos")
-        db_session.commit()
-
-        return json.dumps({'v': v})
+        try:
+            db_session.commit()
+            return json.dumps({'v': v})
+        except Exception:
+            db_session.rollback()
+            return json.dumps({'error': 'db error'}), 500
     else:
         return json.dumps({})
 
@@ -299,7 +326,11 @@ def remove_video_playlist():
         now = datetime.datetime.now(timezone.utc)
         playlist.updated = now
         flag_modified(playlist, "videos")
-        db_session.commit()
+        try:
+            db_session.commit()
+        except Exception:
+            db_session.rollback()
+            flash(lazy_gettext('Error updating playlist'), 'error')
 
     return redirect(request.args.get(url_orig, '/'))
 
@@ -317,8 +348,12 @@ def delete(playlist):
         if submitvalue == 'yes':
             playlist = db_session.query(Playlist).filter(Playlist.id == playlist).one()
             db_session.delete(playlist)
-            db_session.commit()
-            flash('Playlist ' + item_quoted + ' removed', 'success')
+            try:
+                db_session.commit()
+                flash('Playlist ' + item_quoted + ' removed', 'success')
+            except Exception:
+                db_session.rollback()
+                flash('Error removing playlist ' + item_quoted, 'error')
             return redirect(url_for('user.playlist'))
         else:
             flash('Playlist ' + item_quoted + ' NOT removed', 'error')

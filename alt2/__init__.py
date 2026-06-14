@@ -257,7 +257,7 @@ def create_app(test_config=None):
         return video_title
 
     _LINKIFY_ALLOWED_TAGS = {'a', 'br'}
-    _LINKIFY_ALLOWED_ATTRS = {'a': {'href', 'rel'}}
+    _LINKIFY_ALLOWED_ATTRS = {'a': {'href'}}
 
     @app.template_filter('linkify')
     def linkify(s):

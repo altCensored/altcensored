@@ -105,9 +105,21 @@ OAUTH2_PROVIDERS = {
         'token_url': 'https://accounts.google.com/o/oauth2/token',
         'userinfo': {
             'url': 'https://www.googleapis.com/oauth2/v3/userinfo',
-            'email': lambda json: json['email'],
+            'email': lambda json, token: json['email'],
         },
         'scopes': ['https://www.googleapis.com/auth/userinfo.email'],
-    }
+    },
+    'github': {
+        'client_id': os.getenv('GITHUB_CLIENT_ID'),
+        'client_secret': os.getenv('GITHUB_CLIENT_SECRET'),
+        'authorize_url': 'https://github.com/login/oauth/authorize',
+        'token_url': 'https://github.com/login/oauth/access_token',
+        'userinfo': {
+            'url': 'https://api.github.com/user',
+            'email': lambda json, token: json.get('email'),
+        },
+        'scopes': ['user:email'],
+        'email_fallback_url': 'https://api.github.com/user/emails',
+    },
 }
 WTF_CSRF_SSL_STRICT = False

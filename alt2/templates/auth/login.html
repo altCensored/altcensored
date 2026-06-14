@@ -38,6 +38,8 @@
                     </div>
                     <a class="pure-button " href="{{ url_for('auth.oauth2_authorize', provider='google') }}">
                         <i class='ion-logo-google'></i>     &nbsp;Login with Google</a>
+                    <a class="pure-button" href="{{ url_for('auth.oauth2_authorize', provider='github') }}">
+                        <i class='ion-logo-github'></i> &nbsp;Login with GitHub</a>
                 </fieldset>
             </form>
             <br/>

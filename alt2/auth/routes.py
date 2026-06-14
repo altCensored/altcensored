@@ -259,7 +259,19 @@ def oauth2_callback(provider):
     })
     if response.status_code != 200:
         abort(401)
-    email = provider_data['userinfo']['email'](response.json())
+    email = provider_data['userinfo']['email'](response.json(), oauth2_token)
+
+    # GitHub users with private emails need a second call to /user/emails
+    if email is None and 'email_fallback_url' in provider_data:
+        r2 = requests.get(provider_data['email_fallback_url'], headers={
+            'Authorization': 'Bearer ' + oauth2_token,
+            'Accept': 'application/json',
+        })
+        if r2.status_code == 200:
+            primary = next((e['email'] for e in r2.json() if e['primary'] and e['verified']), None)
+            email = primary
+    if email is None:
+        abort(401)
 
     # find or create the user in the database
     user = db_session.scalar(sa.select(User).where(User.email == email))

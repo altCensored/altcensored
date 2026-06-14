@@ -714,21 +714,21 @@ def reset_conns():
     db_session.commit()
 
 
-@cache.cached(key_prefix="data"+"%s")
+@cache.memoize(timeout=3600)
 def videos_trending(PER_PAGE, offset):
     video_values = db_session.execute(db_session.query(Mv_Video).order_by(nullslast(Mv_Video.ac_views.desc())).limit(PER_PAGE).offset(offset))
     videos = [r[0] for r in video_values]
     return videos
 
 
-@cache.cached(key_prefix="data"+"%s")
+@cache.memoize(timeout=3600)
 def videos_latest(PER_PAGE, offset):
     video_values = db_session.execute(db_session.query(Mv_Video).order_by(nullslast(Mv_Video.yt_deleted_date.desc())).limit(PER_PAGE).offset(offset))
     videos = [r[0] for r in video_values]
     return videos
 
 
-@cache.cached(key_prefix="data"+"%s")
+@cache.memoize(timeout=3600)
 def videos_newest(PER_PAGE, offset):
     video_values = db_session.execute(db_session.query(Mv_Video).order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset))
 #    videos = Mv_Video.query.order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset)
@@ -736,14 +736,14 @@ def videos_newest(PER_PAGE, offset):
     return videos
 
 
-@cache.cached(key_prefix="data"+"%s")
+@cache.memoize(timeout=3600)
 def videos_popular(PER_PAGE, offset):
     video_values = db_session.execute(db_session.query(Mv_Video).order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset))
     videos = [r[0] for r in video_values]
     return videos
 
 
-@cache.cached(key_prefix="data"+"%s")
+@cache.memoize(timeout=3600)
 def channels_latest(PER_PAGE, offset):
     channel_values = db_session.execute(db_session.query(Mv_Channel).order_by(Mv_Channel.id.desc()).limit(PER_PAGE).offset(offset))
 #    channels = Mv_Channel.query.limit(PER_PAGE).offset(offset)
@@ -751,28 +751,28 @@ def channels_latest(PER_PAGE, offset):
     return channels
 
 
-@cache.cached(key_prefix="data"+"%s")
+@cache.memoize(timeout=3600)
 def channels_newest(PER_PAGE, offset):
     channel_values = db_session.execute(db_session.query(Mv_Channel).order_by(Mv_Channel.ytc_publishedat.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset))
 #    channels = Mv_Channel.query.order_by(Mv_Channel.ytc_publishedat.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset)
     channels = [r[0] for r in channel_values]
     return channels
 
-@cache.cached(key_prefix="data"+"%s")
+@cache.memoize(timeout=3600)
 def channels_popular(PER_PAGE, offset):
     channel_values = db_session.execute(db_session.query(Mv_Channel).order_by(Mv_Channel.ytc_viewcount.desc()).limit(PER_PAGE).offset(offset))
 #    channels = Mv_Channel.query.order_by(Mv_Channel.ytc_viewcount.desc()).limit(PER_PAGE).offset(offset)
     channels = [r[0] for r in channel_values]
     return channels
 
-@cache.cached(key_prefix="data"+"%s")
+@cache.memoize(timeout=3600)
 def channels_deleted(PER_PAGE, offset):
     channel_values = db_session.execute(db_session.query(Mv_Channel).filter(Mv_Channel.ytc_deleted).order_by(Mv_Channel.ytc_deleteddate.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset))
 #    channels = Mv_Channel.query.filter(Mv_Channel.ytc_deleted).order_by(Mv_Channel.ytc_deleteddate.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset)
     channels = [r[0] for r in channel_values]
     return channels
 
-@cache.cached(key_prefix="data"+"%s")
+@cache.memoize(timeout=3600)
 def channels_limited(PER_PAGE, offset):
     channel_values = db_session.execute(db_session.query(Mv_Channel).order_by(Mv_Channel.limited.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset))
 #    channels = Mv_Channel.query.order_by(Mv_Channel.limited.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset)
@@ -780,13 +780,13 @@ def channels_limited(PER_PAGE, offset):
     return channels
 
 
-@cache.cached(key_prefix="data"+"%s")
+@cache.memoize(timeout=3600)
 def channels_archived(PER_PAGE, offset):
     channel_values = db_session.execute(db_session.query(Mv_Channel).filter(Mv_Channel.ytc_archive).limit(PER_PAGE).offset(offset))
     channels = [r[0] for r in channel_values]
     return channels
 
-@cache.memoize()
+@cache.memoize(timeout=3600)
 def channeli(ytc_id):
     # Try exact match first (fast primary key lookup)
     channel = Mv_Channel.query.get(ytc_id)
@@ -799,27 +799,27 @@ def channeli(ytc_id):
     return channel
 
 
-@cache.cached(key_prefix="data"+"%s"+"/channeli_videocount")
+@cache.memoize(timeout=3600)
 def channeli_videocount(ytc_id):
     channeli_videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter_by(ytc_id=ytc_id).scalar()
     return channeli_videocount
 
 
-@cache.cached(key_prefix="data"+"%s")
+@cache.memoize(timeout=3600)
 def channeli_videos_newest(ytc_id, PER_PAGE, offset):
     video_values = db_session.execute(db_session.query(Mv_Video).filter_by(ytc_id=ytc_id).order_by(Mv_Video.published.desc()).limit(PER_PAGE).offset(offset))
     videos = [r[0] for r in video_values]
     return videos
 
 
-@cache.cached(key_prefix="data"+"%s")
+@cache.memoize(timeout=3600)
 def channeli_videos_popular(ytc_id, PER_PAGE, offset):
     video_values = db_session.execute(db_session.query(Mv_Video).filter_by(ytc_id=ytc_id).order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset))
     videos = [r[0] for r in video_values]
     return videos
 
 
-@cache.cached(key_prefix="data"+"%s")
+@cache.memoize(timeout=3600)
 def ytc_popular(ytc_id, PER_PAGE, offset):
     videos_values = db_session.execute(db_session.query(Mv_Video).filter_by(ytc_id=ytc_id).order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset))
 #    videos = Mv_Video.query.filter_by(ytc_id=ytc_id).order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset)
@@ -827,8 +827,7 @@ def ytc_popular(ytc_id, PER_PAGE, offset):
     return videos
 
 
-@cache.cached(key_prefix="data"+"%s")
-#@cache.memoize()
+@cache.memoize(timeout=3600)
 def playlists_newest(PER_PAGE, offset):
     playlists_values = db_session.execute(db_session.query(Playlist).filter(Playlist.public).filter(Playlist.featured_video_id.isnot(None)) \
                                           .order_by(Playlist.updated.desc()).limit(PER_PAGE).offset(offset))
@@ -844,8 +843,7 @@ def playlists_newest(PER_PAGE, offset):
 # lazy load operation of attribute 'user' cannot proceed (Background on this error at: https://sqlalche.me/e/14/bhk3)
 #
 
-@cache.cached(key_prefix="data"+"%s")
-#@cache.memoize()
+@cache.memoize(timeout=3600)
 def playlists_popular(PER_PAGE, offset):
 #    playlists_values = db_session.execute(db_session.query(Playlist).filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
 #                                          .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset))
@@ -858,7 +856,7 @@ def playlists_popular(PER_PAGE, offset):
 # _pickle.PicklingError: Can't pickle <class 'sqlalchemy.orm.session.Session'>: it's not the same object as sqlalchemy.orm.session.Session
 
 
-@cache.memoize()
+@cache.memoize(timeout=3600)
 def playlisti(playlist):
     playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
     return playlist
@@ -870,8 +868,7 @@ def playlisti(playlist):
 # lazy load operation of attribute 'user' cannot proceed (Background on this error at: https://sqlalche.me/e/14/bhk3)
 #
 
-#@cache.memoize()
-@cache.cached(key_prefix="data"+"%s"+"/channeli_videocount")
+@cache.memoize(timeout=3600)
 def playlisti_videocount(playlist):
 #    videocount = db_session.query(func.count(Mv_Video.id)).filter(Mv_Video.extractor_data.in_(playlist.videos)).scalar()
     playlisti_videocount = db_session.query(func.count(Mv_Video.id)).filter(Mv_Video.extractor_data.in_(playlist.videos)).scalar()
@@ -884,8 +881,7 @@ def playlisti_videocount(playlist):
 
 
 
-@cache.cached(key_prefix="data"+"%s")
-#@cache.memoize()
+@cache.memoize(timeout=3600)
 def playlisti_videos(playlist, ordering, PER_PAGE, offset):
 #    playlisti_videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(playlist.videos)).order_by(ordering).limit(PER_PAGE).offset(offset)
     playlisti_values = db_session.execute(db_session.query(Mv_Video).filter(Mv_Video.extractor_data.in_(playlist.videos)).order_by(ordering).limit(PER_PAGE).offset(offset))
@@ -895,7 +891,7 @@ def playlisti_videos(playlist, ordering, PER_PAGE, offset):
     return videos
 
 
-@cache.cached(key_prefix="data"+"%s")
+@cache.memoize(timeout=3600)
 def users_newest(PER_PAGE, offset):
     users_values = db_session.execute(db_session.query(User).filter(User.public).order_by(User.id.desc()).limit(PER_PAGE).offset(offset))
 #    users = User.query.filter(User.public).order_by(User.id.desc()).limit(PER_PAGE).offset(offset)
@@ -903,7 +899,7 @@ def users_newest(PER_PAGE, offset):
     return users
 
 
-@cache.cached(key_prefix="data"+"%s")
+@cache.memoize(timeout=3600)
 def users_popular(PER_PAGE, offset):
     users_values = db_session.execute(db_session.query(User).filter(User.public).order_by(User.view_counter.desc()).limit(PER_PAGE).offset(offset))
 #    users = User.query.filter(User.public).order_by(User.view_counter.desc()).limit(PER_PAGE).offset(offset)
@@ -911,61 +907,61 @@ def users_popular(PER_PAGE, offset):
     return users
 
 
-@cache.cached(key_prefix="data"+"%s")
+@cache.memoize(timeout=3600)
 def useri(username):
     user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
     return user
 
 
-@cache.cached(key_prefix="data"+"%s"+"videocount")
+@cache.cached(key_prefix="cache:videocount", timeout=3600)
 def videocount_cache():
     videocount_cache = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
     return videocount_cache
 
 
-@cache.cached(key_prefix="data"+"%s"+"channelcount")
+@cache.cached(key_prefix="cache:channelcount", timeout=3600)
 def channelcount_cache():
     channelcount_cache = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
     #        session['channelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
     return channelcount_cache
 
 
-@cache.cached(key_prefix="data"+"%s"+"delchannelcount")
+@cache.cached(key_prefix="cache:delchannelcount", timeout=3600)
 def delchannelcount_cache():
     delchannelcount_cache = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
     #        session['delchannelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
     return delchannelcount_cache
 
 
-@cache.cached(key_prefix="data"+"%s"+"archivechannelcount")
+@cache.cached(key_prefix="cache:archivechannelcount", timeout=3600)
 def archivechannelcount_cache():
     archivechannelcount_cache = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_archive).scalar()
     #        session['archivechannelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_archive).scalar()
     return archivechannelcount_cache
 
 
-@cache.cached(key_prefix="data"+"%s"+"playlistcount")
+@cache.cached(key_prefix="cache:playlistcount", timeout=3600)
 def playlistcount_cache():
     playlistcount_cache = db_session.query(func.count(Playlist.id).filter(Playlist.public).filter(Playlist.featured_video_id.isnot(None))).scalar()
     #        session['playlistcount'] = db_session.query(func.count(Playlist.id).filter(Playlist.public).filter(Playlist.featured_video.isnot(None))).scalar()
     return playlistcount_cache
 
 
-@cache.cached(key_prefix="data"+"%s"+"usercount")
+@cache.cached(key_prefix="cache:usercount", timeout=3600)
 def usercount_cache():
     usercount_cache = db_session.query(func.count(User.id).filter(User.public)).scalar()
     #        session['usercount'] =db_session.query(func.count(User.id).filter(User.public)).scalar()
     return usercount_cache
 
 
-@cache.memoize()
+@cache.memoize(timeout=3600)
 def navtabs_cache(locale):
     navtabs_cache = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, locale)).all()
 #        row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, session['locale'])).all()
     return navtabs_cache
 
 
-@cache.cached(key_prefix="data"+"%s"+"navtabs_index")
+@cache.cached(key_prefix="cache:navtabs_index", timeout=3600)
 def navtabs_index_cache():
     navtabs_index_cache = db_session.query(Translation).with_entities(Translation.varname, Translation.en).all()
 #    row = db_session.query(Translation).with_entities(Translation.varname, Translation.en).all()

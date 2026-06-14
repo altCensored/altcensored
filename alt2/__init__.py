@@ -129,6 +129,30 @@ def create_app(test_config=None):
 
     @app.context_processor
     def inject_context():
+        try:
+            navtabs = util.get_navtabs()
+        except Exception:
+            navtabs = {}
+        try:
+            navtabs_index = util.get_navtabs_index()
+        except Exception:
+            navtabs_index = {}
+        try:
+            usercount = util.get_usercount()
+        except Exception:
+            usercount = 0
+        try:
+            videocount = util.get_videocount()
+        except Exception:
+            videocount = 0
+        try:
+            channelcount = util.get_channelcount()
+        except Exception:
+            channelcount = 0
+        try:
+            delchannelcount = util.get_delchannelcount()
+        except Exception:
+            delchannelcount = 0
         return dict(
             locale=util.get_locale(),
             theme=util.get_theme(),
@@ -137,12 +161,12 @@ def create_app(test_config=None):
             looplist=util.get_looplist(),
             current_url=quote_plus(request.url),
             current_path=quote_plus(request.full_path),
-            navtabs=util.get_navtabs(),
-            navtabs_index=util.get_navtabs_index(),
-            usercount=util.get_usercount(),
-            videocount=util.get_videocount(),
-            channelcount=util.get_channelcount(),
-            delchannelcount=util.get_delchannelcount(),
+            navtabs=navtabs,
+            navtabs_index=navtabs_index,
+            usercount=usercount,
+            videocount=videocount,
+            channelcount=channelcount,
+            delchannelcount=delchannelcount,
             url_orig='original_url'
         )
 

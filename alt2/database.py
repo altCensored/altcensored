@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker, declarative_base
+from gevent import getcurrent
 from . import config
 
 dbase = config.SQLALCHEMY_DATABASE_URI
@@ -20,7 +21,8 @@ engine = create_engine(dbase,
 
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
-                                         bind=engine))
+                                         bind=engine),
+                            scopefunc=getcurrent)
 Base = declarative_base()
 Base.query = db_session.query_property()
 

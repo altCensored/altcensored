@@ -6,6 +6,7 @@ from flask_babelplus import gettext as _, lazy_gettext as _l
 from urllib.parse import urlsplit
 import requests
 import secrets
+from alt2 import limiter
 
 logger = logging.getLogger(__name__)
 import sqlalchemy as sa
@@ -32,6 +33,7 @@ cloudflare_secret_key = config.CLOUDFLARE_SECRET_KEY
 
 @bp.route('/', methods=['GET', 'POST'])
 @bp.route('/login', methods=['GET', 'POST'])
+@limiter.limit("10 per minute")
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('video.index'))
@@ -95,6 +97,7 @@ def register():
 
 
 @bp.route('/reset_password_request', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")
 def reset_password_request():
     if current_user.is_authenticated:
         return redirect(url_for('video.index'))

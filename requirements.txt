@@ -3,6 +3,8 @@ backports.csv
 bcrypt
 better-profanity
 bleach
+Flask-Limiter[redis]
+nh3
 boto3>=1.24.19
 botocore>=1.27.19
 captcha

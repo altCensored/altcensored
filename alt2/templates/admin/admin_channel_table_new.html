@@ -34,7 +34,7 @@
       <div id="table"></div>
     </div>
   <script src="{{ url_for('static', filename='js/gridjs.umd.js') }}"></script>
-    <script>
+    <script nonce="{{ csp_nonce() }}">
       const tableDiv = document.getElementById('table');
 
       const updateUrl = (prev, query) => {

@@ -54,7 +54,7 @@ style="outline:none;
 
 <script src="{{ url_for('static', filename='js/video.min.js') }}"></script>
 
-<script type="text/javascript">
+<script type="text/javascript" nonce="{{ csp_nonce() }}">
   (function(){
     var player = videojs('video-player', {
     controlBar: {skipButtons: {backward:10, forward:10}} });

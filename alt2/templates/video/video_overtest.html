@@ -29,7 +29,7 @@
  <source src="http://vjs.zencdn.net/v/oceans.webm" type="video/webm">
 </video>
 
-<script>
+<script nonce="{{ csp_nonce() }}">
 // initialize video.js
 var my_video_id = videojs('video_1');
 

@@ -1,6 +1,8 @@
 import os, re, logging
 import urllib3
 from minio import Minio
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from flask import Flask, request, url_for, render_template, g, has_request_context
 from jinja2 import pass_eval_context
 from flask_babelplus import Babel, lazy_gettext as _l
@@ -13,6 +15,7 @@ from markupsafe import escape, Markup
 import timeago, datetime
 from datetime import timezone
 import bleach
+import nh3
 import unicodedata
 import math
 from . import util
@@ -48,7 +51,6 @@ csp = {
     ],
     'script-src': [
         '\'self\'',
-        '\'unsafe-inline\'',
         '*.cloudflare.com',
         '*.altcensored.com'
     ],
@@ -67,11 +69,16 @@ csp = {
         'data:'
     ],
     'frame-src': [
-        '*'
+        '\'self\'',
+        'altcensored.com',
+        '*.altcensored.com',
+        'archive.org',
+        '*.archive.org',
     ],
     'frame-ancestors': [
-        '*',
-        'data:'
+        '\'self\'',
+        'altcensored.com',
+        '*.altcensored.com',
     ]
 }
 
@@ -79,6 +86,7 @@ mail = Mail()
 login = LoginManager()
 login.login_view = 'video.index'
 login.login_message = _l('Please log in to access this page.')
+limiter = Limiter(key_func=get_remote_address, default_limits=[])
 
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
@@ -113,10 +121,11 @@ def create_app(test_config=None):
     babel = Babel(app)
     QRcode(app)
     cache.init_app(app)
-    Talisman(app, content_security_policy=csp)
+    Talisman(app, content_security_policy=csp, content_security_policy_nonce_in=['script-src'])
     mail.init_app(app)
     login.init_app(app)
     csrf.init_app(app)  # ← add this line
+    limiter.init_app(app)
 
     try:
         app.minio_client = Minio(
@@ -247,9 +256,13 @@ def create_app(test_config=None):
         video_title = video_title.rstrip('_').lstrip('_')
         return video_title
 
+    _LINKIFY_ALLOWED_TAGS = {'a', 'br'}
+    _LINKIFY_ALLOWED_ATTRS = {'a': {'href', 'rel'}}
+
     @app.template_filter('linkify')
     def linkify(s):
-        return bleach.linkify(s)
+        linked = bleach.linkify(str(s) if s is not None else '')
+        return nh3.clean(linked, tags=_LINKIFY_ALLOWED_TAGS, attributes=_LINKIFY_ALLOWED_ATTRS)
 
     _paragraph_re = re.compile(r'(?:\r\n|\r|\n){2,}')
 

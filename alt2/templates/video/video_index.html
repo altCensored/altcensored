@@ -25,7 +25,7 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/UCMLbmp5tcLxzahMLTmeM4lg/fee
 <meta property="og:image" content="https://{{ config['MYSERVER_NAME'] }}/logo_clip.png?3">
 <meta property="og:image:secure_url" content="https://{{ config['MYSERVER_NAME'] }}/logo_clip.png?3">
 
-<script type="application/ld+json">
+<script type="application/ld+json" nonce="{{ csp_nonce() }}">
 {
   "@context": "https://schema.org",
   "@type": "WebSite",

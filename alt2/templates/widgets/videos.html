@@ -115,7 +115,7 @@
 </div>
 
 
-<script type="application/javascript">
+<script type="application/javascript" nonce="{{ csp_nonce() }}">
   function add_video_WatchLater(vid){
     fetch('{{ url_for('user.add_video_watchlater_post') }}', {
       method: 'POST',

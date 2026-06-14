@@ -70,7 +70,7 @@
   <script src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}"></script>
   <script src="{{ url_for('static', filename='js/datatables.min.js') }}"></script>
 
-  <script type="text/javascript" charset="utf-8">
+  <script type="text/javascript" charset="utf-8" nonce="{{ csp_nonce() }}">
 
     $(document).ready(function () {
       var table = $('#channels').DataTable({

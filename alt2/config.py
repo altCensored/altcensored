@@ -68,6 +68,11 @@ CACHE_DEFAULT_TIMEOUT = 3600
 CACHE_REDIS_HOST=os.getenv('CACHE_REDIS_HOST')
 CACHE_REDIS_DB=1
 
+from datetime import timedelta
+PERMANENT_SESSION_LIFETIME = timedelta(days=7)
+
+RATELIMIT_STORAGE_URI = 'redis://' + (os.getenv('CACHE_REDIS_HOST') or 'localhost') + '/1'
+
 REV_ID = os.getenv('REV_ID')
 
 SENTRY_DSN = os.getenv('SENTRY_DSN')

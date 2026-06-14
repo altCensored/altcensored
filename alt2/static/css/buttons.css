@@ -44,6 +44,16 @@
     display: none;
 }
 
+.pure-button-google {
+    background-color: #4285F4;
+    color: #fff;
+}
+
+.pure-button-github {
+    background-color: #24292e;
+    color: #fff;
+}
+
 .pure-button-primary,
 .pure-button-selected,
 a.pure-button-primary,

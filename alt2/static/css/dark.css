@@ -1,14 +1,14 @@
 /* Common theme */
 html,
 body,
-:not([style*="background-color:"]):not(.shareon > *):not(.help-tip):not(.help-balloon) {
+:not([style*="background-color:"]):not(.shareon > *):not(.help-tip):not(.help-balloon):not(.pure-button-google):not(.pure-button-github):not(.pure-button-primary) {
     background-color: rgb(21, 21, 20) !important;
 }
 html,
 body,
-:not([style*="color:"]) {
+:not([style*="color:"]):not(.pure-button-google):not(.pure-button-github):not(.pure-button-primary) {
 /*    color: rgb(186, 173, 148) !important;  */
-    color: rgb(205, 195, 177) !important; 
+    color: rgb(205, 195, 177) !important;
 }
 h1:not([style*="color:"]),
 h2:not([style*="color:"]),
@@ -101,6 +101,33 @@ a.pure-menu-item.selected *:not([style*="color:"]) {
 .help-balloon::before {
     border-color: transparent !important;
     border-right-color: rgb(45, 57, 65) !important;
+}
+
+button.pure-button-primary,
+a.pure-button-primary,
+input[type="submit"].pure-button-primary {
+    background-color: #4a6a80 !important;
+    color: #fff !important;
+    border-color: #4a6a80 !important;
+}
+
+button.pure-button-primary:hover,
+a.pure-button-primary:hover,
+input[type="submit"].pure-button-primary:hover {
+    background-color: rgba(0, 182, 240, 0.8) !important;
+    color: #fff !important;
+}
+
+a.pure-button-google {
+    background-color: #4285F4 !important;
+    color: #fff !important;
+    border-color: #4285F4 !important;
+}
+
+a.pure-button-github {
+    background-color: #444d56 !important;
+    color: #fff !important;
+    border-color: #444d56 !important;
 }
 
 .about-content a:not([style*="color:"]) {

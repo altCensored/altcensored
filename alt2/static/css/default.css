@@ -61,9 +61,10 @@ div {
 }
 
 button.pure-button-primary,
-a.pure-button-primary {
-  background-color: #a0a0a0;
-  color: rgba(35, 35, 35, 1);
+a.pure-button-primary,
+input[type="submit"].pure-button-primary {
+  background-color: #61809b;
+  color: #fff;
 }
 
 .channel-owner:hover {
@@ -72,7 +73,8 @@ a.pure-button-primary {
 }
 
 button.pure-button-primary:hover,
-a.pure-button-primary:hover {
+a.pure-button-primary:hover,
+input[type="submit"].pure-button-primary:hover {
   background-color: rgba(0, 182, 240, 1);
   color: #fff;
 }

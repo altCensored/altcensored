@@ -36,9 +36,9 @@
                     <div class="pure-control-group">
                         {{ form.submit(class_="pure-button pure-button-primary") }}
                     </div>
-                    <a class="pure-button " href="{{ url_for('auth.oauth2_authorize', provider='google') }}">
-                        <i class='ion-logo-google'></i>     &nbsp;Login with Google</a>
-                    <a class="pure-button" href="{{ url_for('auth.oauth2_authorize', provider='github') }}">
+                    <a class="pure-button pure-button-google" href="{{ url_for('auth.oauth2_authorize', provider='google') }}">
+                        <i class='ion-logo-google'></i> &nbsp;Login with Google</a>
+                    <a class="pure-button pure-button-github" href="{{ url_for('auth.oauth2_authorize', provider='github') }}">
                         <i class='ion-logo-github'></i> &nbsp;Login with GitHub</a>
                 </fieldset>
             </form>

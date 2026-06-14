@@ -1,4 +1,5 @@
 import datetime
+import logging
 import os
 import pprint
 import re
@@ -6,6 +7,8 @@ import requests
 import time
 import json
 import base64
+
+logger = logging.getLogger(__name__)
 
 from datetime import timezone, timedelta
 from flask_babelplus import lazy_gettext
@@ -325,7 +328,8 @@ def add_channel():
         try:
             local_command(commands)
             flash(channel_id + " added using afs")
-        except:
+        except Exception:
+            logger.exception("local_command failed for add_channel channel_id=%s", channel_id)
             flash(channel_id + " NOT added using afs")
 
     return render_template('admin/admin_channels.html', title=title, ddays=ddays)
@@ -753,7 +757,8 @@ def update_bounce():
                     try:
                         db_unsubscribe_email(email, action)
                         flash(email)
-                    except:
+                    except Exception:
+                        logger.exception("db_unsubscribe_email failed for email=%s", email)
                         flash(email + ' NOT UNSUBSCRIBED')
 
             return redirect(url_for('admin.index'))

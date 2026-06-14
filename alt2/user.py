@@ -1,5 +1,8 @@
+import logging
 from flask import (
     Blueprint, session, render_template, flash, redirect, request, url_for, abort)
+
+logger = logging.getLogger(__name__)
 from sqlalchemy import func, case
 from sqlalchemy.orm.attributes import flag_modified
 from flask_babelplus import lazy_gettext

@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime, timezone
 from flask import render_template, redirect, url_for, flash, request, session, make_response, abort
 from flask_login import login_user, logout_user, current_user
@@ -5,6 +6,8 @@ from flask_babelplus import gettext as _, lazy_gettext as _l
 from urllib.parse import urlsplit
 import requests
 import secrets
+
+logger = logging.getLogger(__name__)
 import sqlalchemy as sa
 from sqlalchemy import or_, func
 from urllib.parse import urlencode, unquote_plus
@@ -237,10 +240,12 @@ def oauth2_callback(provider):
     # make sure that the state parameter matches the one we created in the
     # authorization request
     if request.args['state'] != session.get('oauth2_state'):
+        logger.warning("oauth2_callback state mismatch for provider=%s", provider)
         abort(401)
 
     # make sure that the authorization code is present
     if 'code' not in request.args:
+        logger.warning("oauth2_callback missing code parameter for provider=%s", provider)
         abort(401)
 
     # exchange the authorization code for an access token
@@ -253,9 +258,13 @@ def oauth2_callback(provider):
                                 _external=True),
     }, headers={'Accept': 'application/json'}, timeout=5)
     if response.status_code != 200:
+        logger.warning("oauth2_callback token exchange failed for provider=%s status=%d body=%.200s",
+                       provider, response.status_code, response.text)
         abort(401)
     oauth2_token = response.json().get('access_token')
     if not oauth2_token:
+        logger.warning("oauth2_callback no access_token in response for provider=%s body=%.200s",
+                       provider, response.text)
         abort(401)
 
     # use the access token to get the user's email address
@@ -264,6 +273,8 @@ def oauth2_callback(provider):
         'Accept': 'application/json',
     }, timeout=5)
     if response.status_code != 200:
+        logger.warning("oauth2_callback userinfo failed for provider=%s status=%d body=%.200s",
+                       provider, response.status_code, response.text)
         abort(401)
     email = provider_data['userinfo']['email'](response.json(), oauth2_token)
 
@@ -277,6 +288,7 @@ def oauth2_callback(provider):
             primary = next((e['email'] for e in r2.json() if e['primary'] and e['verified']), None)
             email = primary
     if email is None:
+        logger.warning("oauth2_callback could not determine email for provider=%s", provider)
         abort(401)
 
     # find or create the user in the database

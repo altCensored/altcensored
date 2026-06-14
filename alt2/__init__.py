@@ -307,7 +307,9 @@ def create_app(test_config=None):
 
     @app.teardown_appcontext
     def shutdown_session(exception=None):
-        db_session.remove()    
+        if exception:
+            db_session.rollback()
+        db_session.remove()
 
     from . import video, channel, about, category, language, settings, admin, playlist, theme, user, newsletter, donate, sitemap
 

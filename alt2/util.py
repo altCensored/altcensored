@@ -1,5 +1,7 @@
-import functools, os, string, random, subprocess, requests, datetime, qrcode, base64
+import functools, os, string, random, subprocess, requests, datetime, qrcode, base64, logging
 import boto3
+
+logger = logging.getLogger(__name__)
 
 from better_profanity import profanity
 from captcha.image import ImageCaptcha
@@ -269,7 +271,7 @@ def confirm_token(token, expiration):
             salt=config.SECURITY_PASSWORD_SALT,
             max_age=expiration
         )
-    except:
+    except Exception:
         return False
     return email
 
@@ -472,7 +474,8 @@ def video_toggle_allow(video_id, bool_allow=None, bool_deleted=None):
             video.yt_deleted = bool_deleted
         db_session.commit()
         return True
-    except:
+    except Exception:
+        logger.exception("video_toggle_allow failed for video")
         return False
 
 
@@ -511,7 +514,8 @@ def channel_update(channel_id, delta=None, archive_type=None, deleted=None, view
             channel.ytc_deleteddate = deleteddate
         db_session.commit()
         return True
-    except:
+    except Exception:
+        logger.exception("channel_update failed for channel_id=%s", channel_id)
         return False
 
 
@@ -1062,19 +1066,23 @@ def site_is_online(url, timeout=1):
     return False
 
 def increment_video_counter(video_id, ip, header):
-    entity_video = Entity.query.filter(Entity.extractor_data == video_id).scalar()
-    today = str(date.today())
-    myhash = hash(ip+header+today+str(entity_video.extractor_data))
-    if Counter.query.filter(Counter.hash == myhash).scalar() is None:
-        counter = Counter (hash=myhash)
-        db_session.add(counter)
+    try:
+        entity_video = Entity.query.filter(Entity.extractor_data == video_id).scalar()
+        today = str(date.today())
+        myhash = hash(ip+header+today+str(entity_video.extractor_data))
+        if Counter.query.filter(Counter.hash == myhash).scalar() is None:
+            counter = Counter (hash=myhash)
+            db_session.add(counter)
 
-        if entity_video.ac_views is None:
-            entity_video.ac_views = 0
+            if entity_video.ac_views is None:
+                entity_video.ac_views = 0
 
-        entity_video.ac_views = entity_video.ac_views + 1
-        flag_modified(entity_video, "ac_views")
-        db_session.commit()
+            entity_video.ac_views = entity_video.ac_views + 1
+            flag_modified(entity_video, "ac_views")
+            db_session.commit()
+    except Exception:
+        logger.exception("increment_video_counter failed for video_id=%s", video_id)
+        db_session.rollback()
 
 
 def get_ia_item(extractor_data):

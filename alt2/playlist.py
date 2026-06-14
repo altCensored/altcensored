@@ -1,6 +1,9 @@
+import logging
 from flask import (
     Blueprint, session, render_template, request, flash, redirect, url_for, abort
 )
+
+logger = logging.getLogger(__name__)
 from markupsafe import Markup
 from sqlalchemy import func, case
 from sqlalchemy.orm.attributes import flag_modified

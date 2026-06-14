@@ -1,3 +1,4 @@
+import logging
 import os
 from flask import (
     Blueprint, render_template, request, make_response, session, current_app, abort, flash, jsonify)
@@ -15,6 +16,8 @@ from .util import (videos_newest, videos_popular, videos_latest, get_videocount,
 from minio import Minio
 import urllib3
 from . import config
+
+logger = logging.getLogger(__name__)
 
 bp = Blueprint('video', __name__)
 FLASH_MSG = config.FLASH_MSG
@@ -352,7 +355,8 @@ def embed(video_id):
             videos = db_session.query(Mv_Video.extractor_data).filter(Mv_Video.ytc_id == video.ytc_id,
                                                                       Mv_Video.published <= session['first_vid_pub']) \
                 .order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE)
-        except:
+        except Exception:
+            logger.exception("next-video published filter failed, falling back for video_id=%s", video_id)
             videos = db_session.query(Mv_Video.extractor_data).filter(Mv_Video.ytc_id == video.ytc_id) \
                 .order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE)
 
@@ -362,12 +366,12 @@ def embed(video_id):
 
             try:
                 idx = (videos_extractor_list).index(video.extractor_data)
-            except:
+            except Exception:
                 idx = len(videos_extractor_list)
             next_video = (videos_extractor_list).pop(idx - 1)
             try:
                 videos_extractor_list.remove(video_id)
-            except:
+            except Exception:
                 pass
             if not session.get('looplist') and idx == 0:
                 next_video = None

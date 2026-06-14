@@ -1,5 +1,8 @@
 import datetime
+import logging
 from datetime import timezone
+
+logger = logging.getLogger(__name__)
 
 from flask import (
     Blueprint, flash, redirect, render_template, request, url_for, current_app, session
@@ -199,7 +202,7 @@ def update_user():
         featured_playlist = (user.featured_playlist).get("pl_title")
         try:
             playlist_titles.remove(featured_playlist)
-        except:
+        except Exception:
             pass
 
     return render_template('settings/settings_user_update.html', playlist_titles=playlist_titles, featured_playlist=featured_playlist)

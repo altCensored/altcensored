@@ -1,6 +1,9 @@
 import datetime
 import json
+import logging
 from datetime import timezone
+
+logger = logging.getLogger(__name__)
 from flask import (
     Blueprint, redirect, request, session, render_template, flash, url_for, make_response
 )
@@ -89,10 +92,7 @@ def login():
         password = request.form['password']
         submitvalue = request.form['submitvalue']
         ret_val = validate_user_email(email)
-        try:
-            username = request.form['username']
-        except:
-            username = None
+        username = request.form.get('username')
 
         if ret_val is not None:
             flash(str(ret_val), 'error')

@@ -15,7 +15,7 @@ from alt2.auth.forms import LoginForm, RegistrationForm, \
     ResetPasswordRequestForm, ResetPasswordForm
 from alt2.models import User
 from alt2.auth.email import send_password_reset_email, send_welcome_email
-from alt2.util import create_user_altcen, login_user_altcen, logout_user_altcen, login_required, verify_turnstile_token
+from alt2.util import create_user_altcen, login_user_altcen, logout_user_altcen, login_required, verify_turnstile_token, confirm_token
 
 url_orig = 'original_url'
 
@@ -129,7 +129,13 @@ def reset_password(token):
 
 @bp.route('/confirm_email/<token>', methods=['GET', 'POST'])
 def confirm_email(token):
-    user = User.verify_reset_password_token(token)
+    email = confirm_token(token, 86400)
+    if not email:
+        conf_bad = _l('The confirmation link is invalid or has expired')
+        flash(conf_bad, 'error')
+        return redirect(url_for('video.index'))
+
+    user = db_session.scalar(sa.select(User).where(func.lower(User.email) == func.lower(email)))
     if not user:
         conf_bad = _l('The confirmation link is invalid or has expired')
         flash(conf_bad, 'error')

@@ -306,16 +306,18 @@ class User(UserMixin, Base):
 
     def get_reset_password_token(self, expires_in=3600):
         return jwt.encode(
-            {'reset_password': self.id, 'exp': time() + expires_in},
+            {'reset_password': self.id, 'type': 'reset_password', 'exp': time() + expires_in},
             current_app.config['SECRET_KEY'], algorithm='HS256')
 
     @staticmethod
     def verify_reset_password_token(token):
         try:
-            id = jwt.decode(token, current_app.config['SECRET_KEY'],
-                            algorithms=['HS256'])['reset_password']
+            payload = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
+            if payload.get('type') != 'reset_password':
+                return None
+            id = payload['reset_password']
         except Exception:
-            return
+            return None
         return db_session.get(User, id)
 
 

@@ -446,9 +446,8 @@ def ssh_command(sys_name, commands, sys_user='root'):
 
 def local_command(commands):
     for command in commands:
-        localcmd = subprocess.Popen([command],
-                                executable='/bin/bash',
-                                shell=True,
+        localcmd = subprocess.Popen(['/bin/bash', '-c', command],
+                                shell=False,
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE)
         try:

@@ -195,6 +195,10 @@ def create():
 @login_required
 def edit(playlist):
     playlist = Playlist.query.get(playlist)
+    if playlist is None:
+        abort(404)
+    if playlist.user_id != session['user']['id']:
+        abort(403)
 
     if request.method == 'POST':
         ftitle = request.form['title']
@@ -339,6 +343,10 @@ def remove_video_playlist():
 @login_required
 def delete(playlist):
     playlistobj = Playlist.query.get(playlist)
+    if playlistobj is None:
+        abort(404)
+    if playlistobj.user_id != session['user']['id']:
+        abort(403)
     l_msg = lazy_gettext('Remove Playlist')
     item_quoted = (f'"{playlistobj.title}"')
     message = l_msg + ' ' + item_quoted + '?'

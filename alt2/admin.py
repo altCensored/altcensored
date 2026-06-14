@@ -1,9 +1,11 @@
 import datetime
 import os
 import pprint
+import re
 import requests
 import time
 import json
+import base64
 
 from datetime import timezone, timedelta
 from flask_babelplus import lazy_gettext
@@ -29,6 +31,45 @@ from werkzeug.utils import secure_filename
 bp = Blueprint('admin', __name__, url_prefix='/admin')
 
 ALLOWED_EXTENSIONS = {'htm', 'html', 'txt'}
+
+_CHANNEL_ID_RE = re.compile(r'^UC[A-Za-z0-9_-]{22}$')
+_SNS_CERT_URL_RE = re.compile(r'^https://sns\.[a-z0-9-]+\.amazonaws\.com/.*\.pem$')
+_sns_cert_cache = {}
+
+def _valid_channel_id(channel_id):
+    return bool(channel_id and _CHANNEL_ID_RE.match(channel_id))
+
+def _valid_delta(delta):
+    try:
+        return int(delta) > 0
+    except (ValueError, TypeError):
+        return False
+
+def _sns_signing_string(msg):
+    if msg.get('Type') == 'SubscriptionConfirmation':
+        keys = ['Message', 'MessageId', 'SubscribeURL', 'Timestamp', 'Token', 'TopicArn', 'Type']
+    else:
+        keys = ['Message', 'MessageId', 'Subject', 'Timestamp', 'TopicArn', 'Type']
+    return ''.join(k + '\n' + msg[k] + '\n' for k in keys if k in msg).encode('utf-8')
+
+def _verify_sns_signature(msg):
+    cert_url = msg.get('SigningCertURL', '')
+    if not _SNS_CERT_URL_RE.match(cert_url):
+        return False
+    try:
+        if cert_url not in _sns_cert_cache:
+            _sns_cert_cache[cert_url] = requests.get(cert_url, timeout=5).content
+        from cryptography.x509 import load_pem_x509_certificate
+        from cryptography.hazmat.primitives.asymmetric import padding as asym_padding
+        from cryptography.hazmat.primitives import hashes
+        cert = load_pem_x509_certificate(_sns_cert_cache[cert_url])
+        sig = base64.b64decode(msg['Signature'])
+        signing_str = _sns_signing_string(msg)
+        hash_alg = hashes.SHA256() if msg.get('SignatureVersion') == '2' else hashes.SHA1()
+        cert.public_key().verify(sig, signing_str, asym_padding.PKCS1v15(), hash_alg)
+        return True
+    except Exception:
+        return False
 url_orig = 'original_url'
 sender = config.SES_EMAIL_SOURCE
 
@@ -265,8 +306,14 @@ def add_channel():
     ddays = request.args.get('ddays', '5')
     if request.method == 'POST':
         channel_id = (request.form['channel_id'])
-        action = ' afs '
         delta = (request.form['delta'])
+        if not _valid_channel_id(channel_id):
+            flash('Invalid channel ID', 'error')
+            return render_template('admin/admin_channels.html', title=title, ddays=ddays)
+        if not _valid_delta(delta):
+            flash('Invalid delta value', 'error')
+            return render_template('admin/admin_channels.html', title=title, ddays=ddays)
+        action = ' afs '
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
 
         params1 = ' yt-syncac '
@@ -356,6 +403,9 @@ def enable_channel():
     title = "Enable"
     if request.method == 'POST':
         channel_id = (request.form['channel_id'])
+        if not _valid_channel_id(channel_id):
+            flash('Invalid channel ID', 'error')
+            return render_template('admin/admin_channels.html', title=title)
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
         action = ' enable '
 
@@ -376,6 +426,9 @@ def disable_channel():
     if request.method == 'POST' or ytc_id is not None:
         if not ytc_id:
             ytc_id = (request.form['channel_id'])
+        if not _valid_channel_id(ytc_id):
+            flash('Invalid channel ID', 'error')
+            return render_template('admin/admin_channels.html', title=title)
         channel_url = "https://www.youtube.com/playlist?list=UU" + (ytc_id[2:])
         action = ' disable '
 
@@ -394,6 +447,9 @@ def resync_channel():
     title = "Resync"
     if request.method == 'POST':
         channel_id = (request.form['channel_id'])
+        if not _valid_channel_id(channel_id):
+            flash('Invalid channel ID', 'error')
+            return render_template('admin/admin_channels.html', title=title)
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
         action = ' resync '
 
@@ -412,6 +468,9 @@ def remove_channel():
     title = "Remove"
     if request.method == 'POST':
         channel_id = (request.form['channel_id'])
+        if not _valid_channel_id(channel_id):
+            flash('Invalid channel ID', 'error')
+            return render_template('admin/admin_channels.html', title=title)
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
         action = ' remove '
 
@@ -443,6 +502,9 @@ def mirror_channel():
         sys_name = current_app.config['AC_SSH_HOST']
         s3_user = current_app.config['AC_S3_USER']
         channel_id = (request.form['channel_id'])
+        if not _valid_channel_id(channel_id):
+            flash('Invalid channel ID', 'error')
+            return render_template('admin/admin_channels.html', title=title)
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
         action = ' mirror '
         cookie = ' -cf $IA_COOKIES '
@@ -464,6 +526,9 @@ def status_channel():
     title = "Status"
     if request.method == 'POST':
         channel_id = (request.form['channel_id'])
+        if not _valid_channel_id(channel_id):
+            flash('Invalid channel ID', 'error')
+            return render_template('admin/admin_channels.html', title=title)
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
         action = ' status '
         params1 = ' yt-syncac -q '
@@ -747,6 +812,9 @@ def aws_bounce():
     except json.JSONDecodeError:
         return 'OK\n'
 
+    if not _verify_sns_signature(js):
+        abort(400)
+
     hdr = request.headers.get('X-Amz-Sns-Message-Type')
 
     # subscribe to the SNS topic
@@ -778,6 +846,9 @@ def aws_complaint():
         js = json.loads(request.data)
     except json.JSONDecodeError:
         return 'OK\n'
+
+    if not _verify_sns_signature(js):
+        abort(400)
 
     hdr = request.headers.get('X-Amz-Sns-Message-Type')
 

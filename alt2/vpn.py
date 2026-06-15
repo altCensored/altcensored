@@ -99,7 +99,7 @@ def conn_action():
         return send_file(
             mem,
             as_attachment=True,
-            attachment_filename=filename,
+            download_name=filename,
             mimetype='text/csv')
 
     return redirect(url_for('vpn.index'))

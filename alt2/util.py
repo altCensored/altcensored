@@ -28,10 +28,6 @@ from .services.archive import (
     get_video_files, get_video_files_2, get_image_file, check_video_files,
     ac_object_exist, check_ac_object_exists, site_is_online, get_ia_item,
 )
-from .services.vpn import (
-    wg_api_call, generate_add_key_data_raw, add_key_to_conn,
-    update_conns, reset_conns,
-)
 
 url_orig = 'original_url'
 
@@ -243,25 +239,6 @@ def admin_login_required(view):
         return view(**kwargs)
     return wrapped_view
 
-
-def email_verified_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if not session['user']['email_verified']:
-            msg = lazy_gettext('Email verification is required for VPN')
-            flash(msg, 'error')
-            return redirect(url_for('settings.index'))
-        return view(**kwargs)
-    return wrapped_view
-
-
-def contributor_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if not session['user']['contributor']:
-            return redirect(url_for('settings.index'))
-        return view(**kwargs)
-    return wrapped_view
 
 
 def email_exists(email):

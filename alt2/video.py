@@ -298,16 +298,11 @@ def _get_next_video(video, playlist=None, userlist=None):
                         next_video = None
 
     else:
-        try:
-            channel_vids = db_session.query(Mv_Video.extractor_data).filter(
-                Mv_Video.ytc_id == video.ytc_id,
-                Mv_Video.published <= session['first_vid_pub']
-            ).order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE)
-        except Exception:
-            logger.exception("next-video published filter failed, falling back for video_id=%s", video.extractor_data)
-            channel_vids = db_session.query(Mv_Video.extractor_data).filter(
-                Mv_Video.ytc_id == video.ytc_id
-            ).order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE)
+        first_vid_pub = session.get('first_vid_pub')
+        q = db_session.query(Mv_Video.extractor_data).filter(Mv_Video.ytc_id == video.ytc_id)
+        if first_vid_pub is not None:
+            q = q.filter(Mv_Video.published <= first_vid_pub)
+        channel_vids = q.order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE)
 
         if channel_vids.count() > 1:
             vlist = [r[0] for r in channel_vids]

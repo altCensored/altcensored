@@ -1,5 +1,4 @@
-import functools, os, string, random, subprocess, requests, datetime, qrcode, base64, logging
-import boto3
+import functools, os, string, random, subprocess, requests, logging
 
 logger = logging.getLogger(__name__)
 
@@ -11,22 +10,28 @@ from flask import (
     session, request, redirect, render_template, url_for, current_app, flash, g
 )
 from flask_babelplus import lazy_gettext
-from http.client import HTTPSConnection
-from io import BytesIO
-from internetarchive import get_item
-from itsdangerous import URLSafeTimedSerializer
-from mailjet_rest import Client
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
 from sqlalchemy import func, nullslast
-from urllib.parse import urlparse
-
 from sqlalchemy.orm.attributes import flag_modified
 from .database import db_session
 from .models import Translation, Playlist, Mv_Channel, Mv_Video, User, \
-    Email_list, Channels, Channels_part, Vpn_node, Vpn_conn, Entity, Source, Counter
+    Email_list, Channels, Channels_part, Entity, Source, Counter
 from . import config
 from .cache import cache
+
+# Re-exports for backward compatibility — callers continue to import from util
+from .services.email import (
+    generate_confirmation_token, confirm_token,
+    send_confirm_email, send_forgot_password_email,
+    send_sgrid_email, send_all_mass_email,
+)
+from .services.archive import (
+    get_video_files, get_video_files_2, get_image_file, check_video_files,
+    ac_object_exist, check_ac_object_exists, site_is_online, get_ia_item,
+)
+from .services.vpn import (
+    wg_api_call, generate_add_key_data_raw, add_key_to_conn,
+    update_conns, reset_conns,
+)
 
 url_orig = 'original_url'
 
@@ -51,6 +56,7 @@ BLUEPRINT_FIXES = {
     'videos': 'video',
 }
 
+
 def get_locale():
     if 'locale' in session:
         return session['locale']
@@ -65,6 +71,7 @@ def get_theme():
     else:
         session['theme'] = config.DEFAULT_THEME
     return session['theme']
+
 
 def get_playnext():
     if 'playnext' in session:
@@ -95,7 +102,6 @@ def get_navtabs():
         return session['navtabs']
     else:
         row = navtabs_cache(session['locale'])
-#        row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, session['locale'])).all()
         rowtuple = tuple(row)
         session['navtabs'] = dict(rowtuple)
     return session['navtabs']
@@ -106,27 +112,15 @@ def get_navtabs_index():
         return session['navtabs_index']
     else:
         row = navtabs_index_cache()
-#        row = db_session.query(Translation).with_entities(Translation.varname, Translation.en).all()
         rowtuple = tuple(row)
         session['navtabs_index'] = dict(rowtuple)
     return session['navtabs_index']
-
-#
-# not being used
-#
-#def get_navtabs_perm():
-#    session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys())
-#    row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, session['locale'])).all()
-#    rowtuple = tuple(row)
-#    navtabs_perm = dict(rowtuple)
-#    return navtabs_perm
 
 
 def get_videocount():
     if 'videocount' in session:
         return session['videocount']
     else:
-#        session['videocount'] = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
         session['videocount'] = videocount_cache()
     return session['videocount']
 
@@ -135,7 +129,6 @@ def get_channelcount():
     if 'channelcount' in session:
         return session['channelcount']
     else:
-#        session['channelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
         session['channelcount'] = channelcount_cache()
     return session['channelcount']
 
@@ -144,7 +137,6 @@ def get_delchannelcount():
     if 'delchannelcount' in session:
         return session['delchannelcount']
     else:
-#        session['delchannelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
         session['delchannelcount'] = delchannelcount_cache()
     return session['delchannelcount']
 
@@ -153,7 +145,6 @@ def get_archivechannelcount():
     if 'archivechannelcount' in session:
         return session['archivechannelcount']
     else:
-#        session['archivechannelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_archive).scalar()
         session['archivechannelcount'] = archivechannelcount_cache()
     return session['archivechannelcount']
 
@@ -162,7 +153,6 @@ def get_playlistcount():
     if 'playlistcount' in session:
         return session['playlistcount']
     else:
-#        session['playlistcount'] = db_session.query(func.count(Playlist.id).filter(Playlist.public).filter(Playlist.featured_video.isnot(None))).scalar()
         session['playlistcount'] = playlistcount_cache()
     return session['playlistcount']
 
@@ -171,132 +161,60 @@ def get_usercount():
     if 'usercount' in session:
         return session['usercount']
     else:
-#        session['usercount'] =db_session.query(func.count(User.id).filter(User.public)).scalar()
         session['usercount'] = usercount_cache()
     return session['usercount']
 
 
-def set_session() -> object:
-    """
-    :rtype: object
-    """
-    if 'locale' in session:
-        pass
-    else:
-        #        session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys())
-        session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys(), default='en')
-
-    if 'theme' in session:
-        pass
-    else:
-        session['theme'] = 'light'
-
-    if 'playnext' in session:
-        pass
-    else:
-        session['playnext'] = False
-
-    if 'looplist' in session:
-        pass
-    else:
-        session['looplist'] = True
-
-    if 'navtabs' in session:
-        pass
-    else:
-        session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys(), default='en')
-        row = db_session.query(Translation).with_entities(Translation.varname,
-                                                          getattr(Translation, session['locale'])).all()
-        rowtuple = tuple(row)
-        session['navtabs'] = dict(rowtuple)
-
-    if 'navtabs_index' in session:
-        pass
-    else:
-        row = db_session.query(Translation).with_entities(Translation.varname, Translation.en).all()
-        rowtuple = tuple(row)
-        session['navtabs_index'] = dict(rowtuple)
-
-    if 'navtabs_perm' in session:
-        pass
-    else:
-        session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys(), default='en')
-        row = db_session.query(Translation).with_entities(Translation.varname,
-                                                          getattr(Translation, session['locale'])).all()
-        rowtuple = tuple(row)
-        session['navtabs_perm'] = dict(rowtuple)
-
-    if 'videocount' in session:
-        pass
-    else:
-        session['videocount'] = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
-
-    if 'usercount' in session:
-        pass
-    else:
-        session['usercount'] = db_session.query(func.count(User.id).filter(User.public)).scalar()
-
-    if 'playlistcount' in session:
-        pass
-    else:
-        session['playlistcount'] = db_session.query(
-            func.count(Playlist.id).filter(Playlist.public).filter(Playlist.featured_video_id.isnot(None))).scalar()
-
-    if 'channelcount' in session:
-        pass
-    else:
-        session['channelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
-
-    if 'delchannelcount' in session:
-        pass
-    else:
-        session['delchannelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).filter(
-            Mv_Channel.ytc_deleted).scalar()
+# Static session keys with their defaults (item 43)
+_SESSION_STATIC_DEFAULTS = {
+    'theme': 'light',
+    'playnext': False,
+    'looplist': True,
+}
 
 
-def send_confirm_email(email):
-    token = generate_confirmation_token(email)
-    confirm_url = url_for('auth.confirm_email', token=token, _external=True)
-    sender = config.SES_EMAIL_SOURCE_WELCOME
-    subject = 'Welcome to altCensored.com! Confirm your Email for Full Access'
-    html = render_template('auth/auth_activate.html', confirm_url=confirm_url)
-    send_all_mass_email(email, sender, subject, html, service='aws')
+def set_session():
+    for key, value in _SESSION_STATIC_DEFAULTS.items():
+        session.setdefault(key, value)
 
-
-def send_forgot_password_email(email, content):
-    message = Mail(
-        from_email='registration@altCensored.com',
-        to_emails=email,
-        subject='altCensored: Reset your password',
-        html_content=content)
-
-    sg = SendGridAPIClient(config.SENDGRID_API_KEY)
-    sg.send(message)
-
-
-def generate_confirmation_token(email):
-    serializer = URLSafeTimedSerializer(config.SECRET_KEY)
-    return serializer.dumps(email, salt=config.SECURITY_PASSWORD_SALT)
-
-
-def confirm_token(token, expiration):
-    serializer = URLSafeTimedSerializer(config.SECRET_KEY)
-    try:
-        email = serializer.loads(
-            token,
-            salt=config.SECURITY_PASSWORD_SALT,
-            max_age=expiration
+    if 'locale' not in session:
+        session['locale'] = request.accept_languages.best_match(
+            config.SUPPORTED_LANGUAGES.keys(), default='en'
         )
-    except Exception:
-        return False
-    return email
+
+    if 'navtabs' not in session:
+        row = db_session.query(Translation).with_entities(
+            Translation.varname, getattr(Translation, session['locale'])
+        ).all()
+        session['navtabs'] = dict(row)
+
+    if 'navtabs_index' not in session:
+        row = db_session.query(Translation).with_entities(Translation.varname, Translation.en).all()
+        session['navtabs_index'] = dict(row)
+
+    if 'navtabs_perm' not in session:
+        row = db_session.query(Translation).with_entities(
+            Translation.varname, getattr(Translation, session['locale'])
+        ).all()
+        session['navtabs_perm'] = dict(row)
+
+    if 'videocount' not in session:
+        session['videocount'] = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
+    if 'usercount' not in session:
+        session['usercount'] = db_session.query(func.count(User.id).filter(User.public)).scalar()
+    if 'playlistcount' not in session:
+        session['playlistcount'] = db_session.query(
+            func.count(Playlist.id).filter(Playlist.public).filter(Playlist.featured_video_id.isnot(None))
+        ).scalar()
+    if 'channelcount' not in session:
+        session['channelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
+    if 'delchannelcount' not in session:
+        session['delchannelcount'] = db_session.query(
+            func.count(Mv_Channel.ytc_id)
+        ).filter(Mv_Channel.ytc_deleted).scalar()
 
 
 def str_to_bool(s) -> object:
-    """
-
-    :rtype: 
-    """
     if s == 'True':
         return True
     elif s == 'False':
@@ -306,10 +224,7 @@ def str_to_bool(s) -> object:
 
 
 def contains_profanity(dirty_text):
-    if profanity.contains_profanity(dirty_text):
-        return True
-    else:
-        return False
+    return profanity.contains_profanity(dirty_text)
 
 
 def login_required(view):
@@ -345,8 +260,6 @@ def contributor_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if not session['user']['contributor']:
-#            msg = lazy_gettext('Contributor status is required for premium VPN')
-#            flash(msg, 'error')
             return redirect(url_for('settings.index'))
         return view(**kwargs)
     return wrapped_view
@@ -383,12 +296,6 @@ def username_exists(username):
 
 def generate_random(size=4, chars=string.ascii_uppercase):
     return ''.join(random.choice(chars) for _ in range(size))
-
-
-def response_success(sub_reset):
-    response = sub_reset['response']
-    if 'success' in response:
-        return True
 
 
 def create_captcha(myrandom, mycaptcha):
@@ -535,456 +442,227 @@ def channel_update(channel_id, delta=None, archive_type=None, deleted=None, view
         return False
 
 
-def send_sgrid_email(email, subject, content):
-    message = Mail(
-        from_email='admin@altCensored.com',
-        to_emails=email,
-        subject=subject,
-        html_content=content)
-
-    sg = SendGridAPIClient(config.SENDGRID_API_KEY)
-    sg.send(message)
-
-
-def send_all_mass_email(email, sender, subject, html, service):
-    if service == 'sgrid':
-        message = Mail(
-            from_email=sender,
-            to_emails=email,
-            subject=subject,
-            html_content=html)
-
-        sg = SendGridAPIClient(config.SENDGRID_API_KEY)
-        sg.send(message)
-
-    if service == 'aws':
-        email = list((email,))
-        ses = boto3.client(
-            'ses',
-            region_name=config.SES_REGION_NAME,
-            aws_access_key_id=config.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=config.AWS_SECRET_ACCESS_KEY
-        )
-        sender = sender
-        ses.send_email(
-            Source=sender,
-            Destination={'ToAddresses': email},
-            Message={
-                'Subject': {'Data': subject},
-                'Body': {
-                    'Html': {'Data': html}
-                }
-            },
-        )
-
-    if service == 'mjet':
-        mailjet = Client(auth=(config.MJ_API_KEY, config.MJ_API_SECRET), version='v3.1')
-        sender = sender
-        data = {
-            'Messages': [
-                {
-                    "From": {
-                        "Email": sender,
-                        "Name": "altCensored"
-                    },
-                    "To": [
-                        {
-                            "Email": email,
-                        }
-                    ],
-                    "Subject": subject,
-                    "HTMLPart": html
-                }
-            ]
-        }
-        result = mailjet.send.create(data=data)
-
-
-def wg_api_call(node_fqdn, api_request, method='GET', data_raw=None):
-    url = 'https://' + node_fqdn + ':' + config.VPN_API_PORT + api_request
-    headers = {'Authorization':config.VPN_API_AUTH}
-    r = requests.request(method, url, headers=headers, json=data_raw, timeout=5)
-    data = r.json()
-    return data
-
-
-def generate_add_key_data_raw(p_bwLimit=config.VPN_FREE_BWLIMIT, *args, **kwargs):
-    p_subExpiry = kwargs.get('b', config.VPN_DEFAULT_SUBEXPIRY)
-    p_ipIndex = kwargs.get('c', config.VPN_DEFAULT_IPINDEX)
-
-    privkey = subprocess.check_output("wg genkey", shell=True, timeout=30).decode("utf-8").strip()
-    pubkey = subprocess.check_output(f"echo '{privkey}' | wg pubkey", shell=True, timeout=30).decode("utf-8").strip()
-    sharedkey = subprocess.check_output("wg genpsk", shell=True, timeout=30).decode("utf-8").strip()
-
-    data_raw = {
-        "publicKey": pubkey,
-        "presharedKey": sharedkey,
-        "bwLimit": p_bwLimit,
-        "subExpiry": p_subExpiry,
-        "ipIndex": p_ipIndex
-    }
-    return data_raw, privkey
-
-
-def add_key_to_conn(data_raw, newkey, node, privkey, node_fqdn):
-    l1='[Interface]'
-    l2='PrivateKey = '+privkey
-    l3='Address = '+newkey['ipv4Address']
-    l4='Address = '+newkey['ipv6Address']
-    l5='DNS = '+newkey['dns']
-    l6=None
-    l7='[Peer]'
-    l8='PublicKey = '+newkey['publicKey']
-    l9='PresharedKey = '+data_raw['presharedKey']
-    l10='AllowedIPs = '+newkey['allowedIPs']
-    l11='Endpoint = '+node_fqdn+':'+config.VPN_PORT
-
-    config_file=l1+chr(10)+l2+chr(10)+l3+chr(10)+l4+chr(10)+l5+chr(10)+chr(10)+l7+chr(10)+l8+chr(10)+l9+chr(10)+l10+chr(10)+l11+chr(10)
-    image = qrcode.make(config_file)
-    bytesbuf = BytesIO()
-    image.save(bytesbuf, format='PNG')
-    bytes_out = bytesbuf.getvalue()
-    encoded = base64.b64encode(bytes_out)
-    encoded_ascii = encoded.decode('ascii')
-
-    now = datetime.datetime.now(timezone.utc)
-    vpn_conn = Vpn_conn(
-        publickey=data_raw['publicKey'], vpn_node_name=node, altcen_user_id=session['user']['id'], privatekey=privkey, \
-        sharedkey=data_raw['presharedKey'], key_id=newkey['keyID'], bw_limit=data_raw['bwLimit'], bw_used=0, \
-        sub_expiry=data_raw['subExpiry'], expired=False, enabled=True, allowedips=newkey['allowedIPs'], dns=newkey['dns'], \
-        ipaddress=newkey['ipAddress'], ipv4address=newkey['ipv4Address'], ipv6address=newkey['ipv6Address'], created=now, \
-        vpn_node_publickey=newkey['publicKey'], vpn_node_fqdn=node_fqdn, config_file=config_file, config_qrcode=encoded_ascii \
-        )
-    db_session.add(vpn_conn)
-    db_session.commit()
-
-
-def string_boolean(text):
-    if text.lower() in ['true', '1', 't', 'y', 'yes']:
-        return True
-    else:
-        return False
-
-
-def update_conns():
-    nodes = Vpn_node.query.filter(Vpn_node.free).all()
-    for node in nodes:
-        node_fqdn = node.fqdn
-        #
-        # update keys for 'Enabled'
-        #
-        api_request = '/manager/key'
-        keys_upd = wg_api_call(node_fqdn, api_request)
-        keys = keys_upd['Keys']
-        for key in keys:
-            conn = Vpn_conn.query. \
-                    filter_by(vpn_node_name=node.name). \
-                    filter_by(key_id=key['KeyID']). \
-                    scalar()
-            if conn is not None:
-                conn.enabled = string_boolean(key['Enabled'])
-        #
-        # update subs for 'BandwidthUsed'
-        #
-        api_request = '/manager/subscription/all'
-        subs_upd = wg_api_call(node_fqdn, api_request)
-        subs = subs_upd['subscriptions']
-        for sub in subs:
-            conn = Vpn_conn.query. \
-                    filter_by(vpn_node_name=node.name). \
-                    filter_by(key_id=sub['KeyID']). \
-                    scalar()
-            if conn is not None:
-                conn.bw_used = sub['BandwidthUsed']
-
-    db_session.commit()
-
-
-def reset_conns():
-    conns = Vpn_conn.query. \
-        filter(Vpn_conn.bw_used != 0). \
-        all()
-    for conn in conns:
-        #
-        # reset bwidth used
-        #
-        node_fqdn = conn.vpn_node_fqdn
-        api_request = '/manager/subscription/edit'
-        method = 'POST'
-        data_raw = {
-            "keyID": str(conn.key_id),
-            "subExpiry": "2032-Oct-21 12:49:05 PM",
-            "bwReset": True
-        }
-        reset_bw = wg_api_call(node_fqdn, api_request, method, data_raw)
-        if response_success(reset_bw):
-            conn.bw_used = 0
-        #
-        # enable
-        #
-        api_request = '/manager/key/enable'
-        method = 'POST'
-        data_raw = {
-            "keyID": str(conn.key_id),
-        }
-        enable_key = wg_api_call(node_fqdn, api_request, method, data_raw)
-        if response_success(enable_key):
-            conn.enabled = True
-    db_session.commit()
+# Private helper for cached paginated listings (item 42)
+def _exec_listing(query, per_page, offset):
+    return [r[0] for r in db_session.execute(query.limit(per_page).offset(offset))]
 
 
 @cache.memoize(timeout=3600)
 def videos_trending(PER_PAGE, offset):
-    video_values = db_session.execute(db_session.query(Mv_Video).order_by(nullslast(Mv_Video.ac_views.desc())).limit(PER_PAGE).offset(offset))
-    videos = [r[0] for r in video_values]
-    return videos
+    return _exec_listing(
+        db_session.query(Mv_Video).order_by(nullslast(Mv_Video.ac_views.desc())),
+        PER_PAGE, offset,
+    )
 
 
 @cache.memoize(timeout=3600)
 def videos_latest(PER_PAGE, offset):
-    video_values = db_session.execute(db_session.query(Mv_Video).order_by(nullslast(Mv_Video.yt_deleted_date.desc())).limit(PER_PAGE).offset(offset))
-    videos = [r[0] for r in video_values]
-    return videos
+    return _exec_listing(
+        db_session.query(Mv_Video).order_by(nullslast(Mv_Video.yt_deleted_date.desc())),
+        PER_PAGE, offset,
+    )
 
 
 @cache.memoize(timeout=3600)
 def videos_newest(PER_PAGE, offset):
-    video_values = db_session.execute(db_session.query(Mv_Video).order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset))
-#    videos = Mv_Video.query.order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()).limit(PER_PAGE).offset(offset)
-    videos = [r[0] for r in video_values]
-    return videos
+    return _exec_listing(
+        db_session.query(Mv_Video).order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()),
+        PER_PAGE, offset,
+    )
 
 
 @cache.memoize(timeout=3600)
 def videos_popular(PER_PAGE, offset):
-    video_values = db_session.execute(db_session.query(Mv_Video).order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset))
-    videos = [r[0] for r in video_values]
-    return videos
+    return _exec_listing(
+        db_session.query(Mv_Video).order_by(Mv_Video.yt_views.desc()),
+        PER_PAGE, offset,
+    )
 
 
 @cache.memoize(timeout=3600)
 def channels_latest(PER_PAGE, offset):
-    channel_values = db_session.execute(db_session.query(Mv_Channel).order_by(Mv_Channel.id.desc()).limit(PER_PAGE).offset(offset))
-#    channels = Mv_Channel.query.limit(PER_PAGE).offset(offset)
-    channels = [r[0] for r in channel_values]
-    return channels
+    return _exec_listing(
+        db_session.query(Mv_Channel).order_by(Mv_Channel.id.desc()),
+        PER_PAGE, offset,
+    )
 
 
 @cache.memoize(timeout=3600)
 def channels_newest(PER_PAGE, offset):
-    channel_values = db_session.execute(db_session.query(Mv_Channel).order_by(Mv_Channel.ytc_publishedat.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset))
-#    channels = Mv_Channel.query.order_by(Mv_Channel.ytc_publishedat.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset)
-    channels = [r[0] for r in channel_values]
-    return channels
+    return _exec_listing(
+        db_session.query(Mv_Channel).order_by(Mv_Channel.ytc_publishedat.desc(), Mv_Channel.ytc_id.desc()),
+        PER_PAGE, offset,
+    )
+
 
 @cache.memoize(timeout=3600)
 def channels_popular(PER_PAGE, offset):
-    channel_values = db_session.execute(db_session.query(Mv_Channel).order_by(Mv_Channel.ytc_viewcount.desc()).limit(PER_PAGE).offset(offset))
-#    channels = Mv_Channel.query.order_by(Mv_Channel.ytc_viewcount.desc()).limit(PER_PAGE).offset(offset)
-    channels = [r[0] for r in channel_values]
-    return channels
+    return _exec_listing(
+        db_session.query(Mv_Channel).order_by(Mv_Channel.ytc_viewcount.desc()),
+        PER_PAGE, offset,
+    )
+
 
 @cache.memoize(timeout=3600)
 def channels_deleted(PER_PAGE, offset):
-    channel_values = db_session.execute(db_session.query(Mv_Channel).filter(Mv_Channel.ytc_deleted).order_by(Mv_Channel.ytc_deleteddate.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset))
-#    channels = Mv_Channel.query.filter(Mv_Channel.ytc_deleted).order_by(Mv_Channel.ytc_deleteddate.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset)
-    channels = [r[0] for r in channel_values]
-    return channels
+    return _exec_listing(
+        db_session.query(Mv_Channel).filter(Mv_Channel.ytc_deleted)
+        .order_by(Mv_Channel.ytc_deleteddate.desc(), Mv_Channel.ytc_id.desc()),
+        PER_PAGE, offset,
+    )
+
 
 @cache.memoize(timeout=3600)
 def channels_limited(PER_PAGE, offset):
-    channel_values = db_session.execute(db_session.query(Mv_Channel).order_by(Mv_Channel.limited.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset))
-#    channels = Mv_Channel.query.order_by(Mv_Channel.limited.desc(),Mv_Channel.ytc_id.desc()).limit(PER_PAGE).offset(offset)
-    channels = [r[0] for r in channel_values]
-    return channels
+    return _exec_listing(
+        db_session.query(Mv_Channel).order_by(Mv_Channel.limited.desc(), Mv_Channel.ytc_id.desc()),
+        PER_PAGE, offset,
+    )
 
 
 @cache.memoize(timeout=3600)
 def channels_archived(PER_PAGE, offset):
-    channel_values = db_session.execute(db_session.query(Mv_Channel).filter(Mv_Channel.ytc_archive).limit(PER_PAGE).offset(offset))
-    channels = [r[0] for r in channel_values]
-    return channels
+    return _exec_listing(
+        db_session.query(Mv_Channel).filter(Mv_Channel.ytc_archive),
+        PER_PAGE, offset,
+    )
+
 
 @cache.memoize(timeout=3600)
 def channeli(ytc_id):
-    # Try exact match first (fast primary key lookup)
     channel = Mv_Channel.query.get(ytc_id)
     if channel is None:
-        # Fall back to case-insensitive lookup for URLs from external sources
         channel = Mv_Channel.query.filter(
             func.lower(Mv_Channel.ytc_id) == func.lower(ytc_id)
         ).first()
-
     return channel
 
 
 @cache.memoize(timeout=3600)
 def channeli_videocount(ytc_id):
-    channeli_videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter_by(ytc_id=ytc_id).scalar()
-    return channeli_videocount
+    return db_session.query(func.count(Mv_Video.extractor_data)).filter_by(ytc_id=ytc_id).scalar()
 
 
 @cache.memoize(timeout=3600)
 def channeli_videos_newest(ytc_id, PER_PAGE, offset):
-    video_values = db_session.execute(db_session.query(Mv_Video).filter_by(ytc_id=ytc_id).order_by(Mv_Video.published.desc()).limit(PER_PAGE).offset(offset))
-    videos = [r[0] for r in video_values]
-    return videos
+    return _exec_listing(
+        db_session.query(Mv_Video).filter_by(ytc_id=ytc_id).order_by(Mv_Video.published.desc()),
+        PER_PAGE, offset,
+    )
 
 
 @cache.memoize(timeout=3600)
 def channeli_videos_popular(ytc_id, PER_PAGE, offset):
-    video_values = db_session.execute(db_session.query(Mv_Video).filter_by(ytc_id=ytc_id).order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset))
-    videos = [r[0] for r in video_values]
-    return videos
+    return _exec_listing(
+        db_session.query(Mv_Video).filter_by(ytc_id=ytc_id).order_by(Mv_Video.yt_views.desc()),
+        PER_PAGE, offset,
+    )
 
 
 @cache.memoize(timeout=3600)
 def ytc_popular(ytc_id, PER_PAGE, offset):
-    videos_values = db_session.execute(db_session.query(Mv_Video).filter_by(ytc_id=ytc_id).order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset))
-#    videos = Mv_Video.query.filter_by(ytc_id=ytc_id).order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset)
-    videos = [r[0] for r in videos_values]
-    return videos
+    return _exec_listing(
+        db_session.query(Mv_Video).filter_by(ytc_id=ytc_id).order_by(Mv_Video.yt_views.desc()),
+        PER_PAGE, offset,
+    )
 
 
 @cache.memoize(timeout=3600)
 def playlists_newest(PER_PAGE, offset):
-    playlists_values = db_session.execute(db_session.query(Playlist).filter(Playlist.public).filter(Playlist.featured_video_id.isnot(None)) \
-                                          .order_by(Playlist.updated.desc()).limit(PER_PAGE).offset(offset))
-#    playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
-#            .order_by(Playlist.updated.desc()).limit(PER_PAGE).offset(offset)
-    playlists = [r[0] for r in playlists_values]
-    return playlists
-#
-# does not work because object is lazy loaded, and i am not using the ORM and calling with the session object, because that causes the
-# cannot pickle error message
-#
-# sqlalchemy.orm.exc.DetachedInstanceError: Parent instance <Playlist at 0x7f201f705600> is not bound to a Session;
-# lazy load operation of attribute 'user' cannot proceed (Background on this error at: https://sqlalche.me/e/14/bhk3)
-#
+    return _exec_listing(
+        db_session.query(Playlist)
+        .filter(Playlist.public, Playlist.featured_video_id.isnot(None))
+        .order_by(Playlist.updated.desc()),
+        PER_PAGE, offset,
+    )
+
 
 @cache.memoize(timeout=3600)
 def playlists_popular(PER_PAGE, offset):
-#    playlists_values = db_session.execute(db_session.query(Playlist).filter(Playlist.public).filter(Playlist.featured_video.isnot(None)) \
-#                                          .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset))
     playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video_id.isnot(None)) \
         .order_by(Playlist.updated.desc()).limit(PER_PAGE).offset(offset)
-#    playlists = [r[0] for r in playlists_values]
     return playlists
-#
-# calling with the ORM and using the session object causes the 'cannot pickle session object' error message:
-# _pickle.PicklingError: Can't pickle <class 'sqlalchemy.orm.session.Session'>: it's not the same object as sqlalchemy.orm.session.Session
 
 
 @cache.memoize(timeout=3600)
 def playlisti(playlist):
-    playlist = Playlist.query.filter(Playlist.hashid == playlist).scalar()
-    return playlist
-#
-# does not work because object is lazy loaded, and i am not using the ORM and calling with the session object, because that causes the
-# cannot pickle error message
-#
-# sqlalchemy.orm.exc.DetachedInstanceError: Parent instance <Playlist at 0x7f201f705600> is not bound to a Session;
-# lazy load operation of attribute 'user' cannot proceed (Background on this error at: https://sqlalche.me/e/14/bhk3)
-#
+    return Playlist.query.filter(Playlist.hashid == playlist).scalar()
+
 
 @cache.memoize(timeout=3600)
 def playlisti_videocount(playlist):
-#    videocount = db_session.query(func.count(Mv_Video.id)).filter(Mv_Video.extractor_data.in_(playlist.videos)).scalar()
-    playlisti_videocount = db_session.query(func.count(Mv_Video.id)).filter(Mv_Video.extractor_data.in_(playlist.videos)).scalar()
-    print(playlisti_videocount)
-    return playlisti_videocount
-#
-# sqlalchemy.orm.exc.DetachedInstanceError: Parent instance <Playlist at 0x7f201f705600> is not bound to a Session;
-# lazy load operation of attribute 'user' cannot proceed (Background on this error at: https://sqlalche.me/e/14/bhk3)
-#
-
+    return db_session.query(func.count(Mv_Video.id)).filter(Mv_Video.extractor_data.in_(playlist.videos)).scalar()
 
 
 @cache.memoize(timeout=3600)
 def playlisti_videos(playlist, ordering, PER_PAGE, offset):
-#    playlisti_videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(playlist.videos)).order_by(ordering).limit(PER_PAGE).offset(offset)
-    playlisti_values = db_session.execute(db_session.query(Mv_Video).filter(Mv_Video.extractor_data.in_(playlist.videos)).order_by(ordering).limit(PER_PAGE).offset(offset))
-#    video_values = db_session.execute(db_session.query(Mv_Video).filter_by(ytc_id=ytc_id).order_by(Mv_Video.id.desc()).limit(PER_PAGE).offset(offset))
-
-    videos = [r[0] for r in playlisti_values]
-    return videos
+    return _exec_listing(
+        db_session.query(Mv_Video).filter(Mv_Video.extractor_data.in_(playlist.videos)).order_by(ordering),
+        PER_PAGE, offset,
+    )
 
 
 @cache.memoize(timeout=3600)
 def users_newest(PER_PAGE, offset):
-    users_values = db_session.execute(db_session.query(User).filter(User.public).order_by(User.id.desc()).limit(PER_PAGE).offset(offset))
-#    users = User.query.filter(User.public).order_by(User.id.desc()).limit(PER_PAGE).offset(offset)
-    users = [r[0] for r in users_values]
-    return users
+    return _exec_listing(
+        db_session.query(User).filter(User.public).order_by(User.id.desc()),
+        PER_PAGE, offset,
+    )
 
 
 @cache.memoize(timeout=3600)
 def users_popular(PER_PAGE, offset):
-    users_values = db_session.execute(db_session.query(User).filter(User.public).order_by(User.view_counter.desc()).limit(PER_PAGE).offset(offset))
-#    users = User.query.filter(User.public).order_by(User.view_counter.desc()).limit(PER_PAGE).offset(offset)
-    users = [r[0] for r in users_values]
-    return users
+    return _exec_listing(
+        db_session.query(User).filter(User.public).order_by(User.view_counter.desc()),
+        PER_PAGE, offset,
+    )
 
 
 @cache.memoize(timeout=3600)
 def useri(username):
-    user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
-    return user
+    return User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
 
 
 @cache.cached(key_prefix="cache:videocount", timeout=3600)
 def videocount_cache():
-    videocount_cache = db_session.query(func.count(Mv_Video.extractor_data)).scalar()
-    return videocount_cache
+    return db_session.query(func.count(Mv_Video.extractor_data)).scalar()
 
 
 @cache.cached(key_prefix="cache:channelcount", timeout=3600)
 def channelcount_cache():
-    channelcount_cache = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
-    #        session['channelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
-    return channelcount_cache
+    return db_session.query(func.count(Mv_Channel.ytc_id)).scalar()
 
 
 @cache.cached(key_prefix="cache:delchannelcount", timeout=3600)
 def delchannelcount_cache():
-    delchannelcount_cache = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
-    #        session['delchannelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
-    return delchannelcount_cache
+    return db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted).scalar()
 
 
 @cache.cached(key_prefix="cache:archivechannelcount", timeout=3600)
 def archivechannelcount_cache():
-    archivechannelcount_cache = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_archive).scalar()
-    #        session['archivechannelcount'] = db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_archive).scalar()
-    return archivechannelcount_cache
+    return db_session.query(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_archive).scalar()
 
 
 @cache.cached(key_prefix="cache:playlistcount", timeout=3600)
 def playlistcount_cache():
-    playlistcount_cache = db_session.query(func.count(Playlist.id).filter(Playlist.public).filter(Playlist.featured_video_id.isnot(None))).scalar()
-    #        session['playlistcount'] = db_session.query(func.count(Playlist.id).filter(Playlist.public).filter(Playlist.featured_video.isnot(None))).scalar()
-    return playlistcount_cache
+    return db_session.query(
+        func.count(Playlist.id).filter(Playlist.public).filter(Playlist.featured_video_id.isnot(None))
+    ).scalar()
 
 
 @cache.cached(key_prefix="cache:usercount", timeout=3600)
 def usercount_cache():
-    usercount_cache = db_session.query(func.count(User.id).filter(User.public)).scalar()
-    #        session['usercount'] =db_session.query(func.count(User.id).filter(User.public)).scalar()
-    return usercount_cache
+    return db_session.query(func.count(User.id).filter(User.public)).scalar()
 
 
 @cache.memoize(timeout=3600)
 def navtabs_cache(locale):
-    navtabs_cache = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, locale)).all()
-#        row = db_session.query(Translation).with_entities(Translation.varname,getattr(Translation, session['locale'])).all()
-    return navtabs_cache
+    return db_session.query(Translation).with_entities(Translation.varname, getattr(Translation, locale)).all()
 
 
 @cache.cached(key_prefix="cache:navtabs_index", timeout=3600)
 def navtabs_index_cache():
-    navtabs_index_cache = db_session.query(Translation).with_entities(Translation.varname, Translation.en).all()
-#    row = db_session.query(Translation).with_entities(Translation.varname, Translation.en).all()
-    return navtabs_index_cache
+    return db_session.query(Translation).with_entities(Translation.varname, Translation.en).all()
 
 
 def print_session():
@@ -992,110 +670,13 @@ def print_session():
         print(k, v)
 
 
-def get_video_files(item):
-    extensions = ['webm', 'mp4', 'ogv', 'mkv']
-
-    video_files = []
-    for ext in extensions:
-        for file in item.get_files(glob_pattern=f"*.{ext}"):
-            video_files.append(file)
-
-        if video_files:
-            break
-
-    return video_files
-
-
-def check_video_files(ia_item):
-    files_list = ia_item.item_metadata.get('files', [])
-    extensionsToCheck = ['.webm', '.mp4', '.ogv', '.mkv']
-    filename = None
-    for x in files_list:
-        if x['source']=='original' and any (ext in x['name'] for ext in extensionsToCheck):
-            filename = (x.get("name"))
-    return filename
-
-
-def get_video_files_2(ia_item):
-    files_list = ia_item.item_metadata.get('files', [])
-    extensionsToCheck = ['.webm', '.mp4', '.ogv', '.mkv']
-    videofile_full = None
-    for x in files_list:
-        if x['source']=='original' and any (ext in x['name'] for ext in extensionsToCheck):
-            videofile_full = (x.get("name"))
-    return videofile_full
-
-def get_image_file(ia_item):
-    files_list = ia_item.item_metadata.get('files', [])
-    image_extensions = ('.jpg', '.webp', '.png')
-    allowed_formats = {'JPEG', 'WebP', 'PNG'}
-
-    # Priority 1: file named {video_id}.ext — standard for modern yt-dlp archives
-    video_id = ia_item.identifier.replace('youtube-', '', 1)
-    for ext in image_extensions:
-        for x in files_list:
-            if x['name'] == video_id + ext:
-                return x['name']
-
-    # Priority 2: any original source file with a known image format
-    for x in files_list:
-        if (
-            x['source'] == 'original'
-            and x.get('format') in allowed_formats
-            and x['name'].endswith(image_extensions)
-        ):
-            return x['name']
-
-    # Priority 3: IA auto-generated thumbnail (always present for archived items)
-    for x in files_list:
-        if x['name'] == '__ia_thumb.jpg':
-            return x['name']
-
-    return None
-
-
-def ac_object_exist(client, s3_bucket, itemname: str) -> bool:
-    objects = client.list_objects(s3_bucket, prefix=itemname)
-    if any(True for _ in objects):
-        return True
-    return False
-
-
-@cache.memoize(timeout=3600)
-def check_ac_object_exists(video_id: str) -> bool:
-    client = current_app.minio_client
-    if client is None:
-        return False
-    return ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id)
-
-
-def site_is_online(url, timeout=1):
-    """Return True if the target URL is online.
-
-    Raise an exception otherwise.
-    """
-    error = Exception("unknown error")
-    parser = urlparse(url)
-    host = parser.netloc or parser.path.split("/")[0]
-    for port in (80, 443):
-        connection = HTTPSConnection(host=host, port=port, timeout=timeout)
-        try:
-            connection.request("HEAD", "/")
-            return True
-        except Exception as e:
-            error = e
-        finally:
-            connection.close()
-#    raise error
-    return False
-
 def increment_video_counter(video_id, ip, header):
     try:
         entity_video = Entity.query.filter(Entity.extractor_data == video_id).scalar()
         today = str(date.today())
-        myhash = hash(ip+header+today+str(entity_video.extractor_data))
+        myhash = hash(ip + header + today + str(entity_video.extractor_data))
         if Counter.query.filter(Counter.hash == myhash).scalar() is None:
-            counter = Counter (hash=myhash)
+            counter = Counter(hash=myhash)
             db_session.add(counter)
 
             if entity_video.ac_views is None:
@@ -1107,33 +688,6 @@ def increment_video_counter(video_id, ip, header):
     except Exception:
         logger.exception("increment_video_counter failed for video_id=%s", video_id)
         db_session.rollback()
-
-
-def get_ia_item(extractor_data):
-    IARCHIVEURL = current_app.config['IARCHIVEURL']
-    VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
-    ia_value = 'youtube-' + extractor_data
-    ia_item = get_item(ia_value)
-    entity_video = Entity.query.filter(Entity.extractor_data == extractor_data).scalar()
-    if len(ia_item.item_metadata) != 0:
-        videofile_full = get_video_files_2(ia_item)
-        thumbnail_full = get_image_file(ia_item)
-        if thumbnail_full:
-            entity_video.thumbnail = thumbnail_full
-        if videofile_full:
-            root, ext = os.path.splitext(videofile_full)
-            entity_video.videofile = root
-            flag_modified(entity_video, "thumbnail")
-            flag_modified(entity_video, "videofile")
-            db_session.commit()
-            return IARCHIVEURL + extractor_data + "/" + root
-        else:
-            entity_video.novideo_ia = True
-            flag_modified(entity_video, "novideo_ia")
-            db_session.commit()
-            return f'{VIDEOSERVER_URL}unavailable/unavailable'
-    else:
-        return f'{VIDEOSERVER_URL}unavailable/unavailable'
 
 
 def create_user_altcen(user):
@@ -1156,11 +710,12 @@ def create_user_altcen(user):
         "playnext": session['playnext'],
         "looplist": session['looplist']
     }
-    user.navtabs=navtabs_value
-    user.navtabs_index=navtabs_index_value
+    user.navtabs = navtabs_value
+    user.navtabs_index = navtabs_index_value
     db_session.add(user)
     db_session.commit()
     return user
+
 
 def login_user_altcen(user):
     session['user'] = dict(id=user.id,
@@ -1188,6 +743,7 @@ def login_user_altcen(user):
     session['navtabs_index']['navtab2'] = BLUEPRINT_FIXES.get(user.navtabs_index[1], user.navtabs_index[1])
     session['navtabs_index']['navtab3'] = BLUEPRINT_FIXES.get(user.navtabs_index[2], user.navtabs_index[2])
 
+
 def logout_user_altcen():
     now = datetime.now(timezone.utc)
     user = User.query.filter(User.id == session['user']['id']).scalar()
@@ -1199,8 +755,8 @@ def logout_user_altcen():
         "playnext": session['playnext']
     }
 
-    user.navtabs =  [ session['navtabs']['navtab1'], session['navtabs']['navtab2'], session['navtabs']['navtab3'] ]
-    user.navtabs_index =  [ session['navtabs_index']['navtab1'], session['navtabs_index']['navtab2'], session['navtabs_index']['navtab3'] ]
+    user.navtabs = [session['navtabs']['navtab1'], session['navtabs']['navtab2'], session['navtabs']['navtab3']]
+    user.navtabs_index = [session['navtabs_index']['navtab1'], session['navtabs_index']['navtab2'], session['navtabs_index']['navtab3']]
     db_session.commit()
 
     session['user'] = None
@@ -1209,10 +765,7 @@ def logout_user_altcen():
 def verify_turnstile_token(token, secret_key):
     response = requests.post(
         'https://challenges.cloudflare.com/turnstile/v0/siteverify',
-        data={
-            'secret': secret_key,
-            'response': token
-        },
-        timeout=5
+        data={'secret': secret_key, 'response': token},
+        timeout=5,
     )
     return response.json()

@@ -291,7 +291,6 @@ class User(UserMixin, Base):
     settings = Column(MutableDict.as_mutable(JSON))
     featured_playlist = Column(MutableDict.as_mutable(JSON))
     playlists = relationship("Playlist", cascade="all", back_populates="user")
-    vpn_conns = relationship("Vpn_conn", cascade="all, delete-orphan", back_populates="user")
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -369,45 +368,6 @@ class Channels_part(Base):
     working = Column(Boolean, nullable=True)
     syncdate = Column(DateTime, nullable=True)
 
-
-class Vpn_node(Base):
-    __tablename__ = 'vpn_node'
-    name = Column(String, primary_key=True, nullable=False)
-    fqdn = Column(String, nullable=False)
-    publickey = Column(String)
-    privatekey = Column(String)
-    ipaddress = Column(String)
-    dns_ipaddress = Column(String)
-    free = Column(Boolean, nullable=False, default=False)
-
-
-class Vpn_conn(Base):
-    __tablename__ = 'vpn_conn'
-    __table_args__ = (
-        UniqueConstraint('vpn_node_name', 'publickey'),
-    )
-    vpn_node_name = Column(String, ForeignKey("vpn_node.name"), primary_key=True, nullable=False)
-    key_id = Column(Integer, primary_key=True)
-    publickey = Column(String, unique=True, nullable=False)
-    altcen_user_id = Column(Integer, ForeignKey("altcen_user.id"), nullable=False)
-    privatekey = Column(String, nullable=False)
-    sharedkey = Column(String, nullable=False)
-    bw_limit = Column(Integer)
-    bw_used = Column(Integer, nullable=False, default=0)
-    sub_expiry = Column(String)
-    expired = Column(Boolean, nullable=False, default=False)
-    enabled = Column(Boolean, nullable=False, default=True)
-    allowedips = Column(String)
-    dns = Column(String)
-    ipaddress = Column(String)
-    ipv4address = Column(String)
-    ipv6address = Column(String)
-    vpn_node_publickey = Column(String, nullable=False)
-    vpn_node_fqdn = Column(String, nullable=False)
-    config_file = Column(String)
-    config_qrcode = Column(String)
-    created = Column(DateTime, nullable=True)
-    user = relationship("User", back_populates="vpn_conns")
 
 
 class Crypto(Base):

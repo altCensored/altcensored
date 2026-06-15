@@ -59,7 +59,7 @@ schema
 sendgrid
 sentry-sdk[flask]
 six
-SQLAlchemy==1.4.49
+SQLAlchemy>=2.0,<3.0
 sqlalchemy-datatables
 starkbank-ecdsa
 timeago

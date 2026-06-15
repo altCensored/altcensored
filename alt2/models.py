@@ -13,10 +13,11 @@ from sqlalchemy import (
     BigInteger,
     JSON,
     func,
+    event,
 )
 from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 from sqlalchemy.ext.mutable import MutableDict
-from sqlalchemy.orm import relationship, column_property
+from sqlalchemy.orm import relationship, column_property, Session
 from flask import current_app
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -24,6 +25,24 @@ from alt2.database import Base
 import jwt
 from .database import db_session
 from time import time
+
+
+class MaterializedView(Base):
+    """Abstract base for PostgreSQL materialized-view ORM models.
+
+    Views are populated exclusively by the external scraper process.
+    The before_flush guard below makes accidental app-side writes a hard error.
+    """
+    __abstract__ = True
+
+
+@event.listens_for(Session, 'before_flush')
+def _block_mv_writes(session, ctx, instances):
+    for obj in (*session.new, *session.dirty, *session.deleted):
+        if isinstance(obj, MaterializedView):
+            raise RuntimeError(
+                f"Write to read-only materialized view {type(obj).__tablename__!r} blocked"
+            )
 
 
 class Entity(Base):
@@ -74,7 +93,6 @@ class Entity(Base):
     __mapper_args__ = {
         "polymorphic_on": type,
         "polymorphic_identity": __tablename__,
-        "with_polymorphic": "*",
     }
     __table_args__ = (
         UniqueConstraint(
@@ -378,7 +396,7 @@ class Crypto(Base):
     address = Column(String, nullable=False)
 
 
-class Mv_Video(Base):
+class Mv_Video(MaterializedView):
     __tablename__ = 'mv_video'
     id = Column(Integer, nullable=False, unique=True)
     extractor_data = Column(String, primary_key=True, nullable=False)
@@ -404,27 +422,11 @@ class Mv_Video(Base):
     novideo_ia = Column(Boolean, nullable=True)
     yt_deleted_date = Column(DateTime, nullable=True)
 
-    def __init__(self, extractor_data=None, allow=None):
-        self.id = id
-        self.extractor_data = extractor_data
-        self.published = published
-        self.title = title
-        self.thumbnail = thumbnail
-        self.thumbnail_ac = thumbnail_ac
-        self.yt_views = yt_views
-        self.duration = duration
-        self.ytc_title = ytc_title
-        self.ytc_id = ytc_id
-        self.description = description
-        self.category = category
-        self.tags = tags
-        self.document = document
-
     def __repr__(self):
         return '<Mv_Video %r>' % (self.id)
 
 
-class Mv_Channel(Base):
+class Mv_Channel(MaterializedView):
     __tablename__ = 'mv_channel'
     id = Column(Integer, unique=True, nullable=False)
     ytc_id = Column(String, primary_key=True, nullable=False)
@@ -456,29 +458,6 @@ class Mv_Channel(Base):
     ytc_videocount = Column(Integer, nullable=True)
 
 
-    def __init__(self, ytc_id=None, ytc_title=None):
-        self.id = id
-        self.ytc_id = ytc_id
-        self.ytc_title = ytc_title
-        self.ytc_publishedat = ytc_publishedat
-        self.ytc_thumbnail = ytc_thumbnail
-        self.ytc_thumbnailurl = ytc_thumbnailurl
-        self.ytc_viewcount = ytc_viewcount
-        self.ytc_subscribercount = ytc_subscribercount
-        self.total = total
-        self.limited = limited
-        self.archived = archived
-        self.ytc_description = ytc_description
-        self.ytc_deleted = ytc_deleted
-        self.ytc_archive = ytc_archive
-        self.allow = allow
-        self.delta = delta
-        self.ytc_deleteddate = ytc_deleteddate
-        self.ytc_addeddate = ytc_addeddate
-        self.ytc_partarchive = ytc_partarchive
-        self.ytc_latestarchive = ytc_latestarchive
-        self.ytc_thumbnail = ytc_thumbnail
-
     def __repr__(self):
         return '<Mv_Channel %r>' % (self.ytc_id)
 
@@ -505,24 +484,18 @@ class Mv_Channel(Base):
             'ytc_videocount': self.ytc_videocount,
         }
 
-class Mv_Category(Base):
+class Mv_Category(MaterializedView):
     __tablename__ = 'mv_category'
     cat_id = Column(Integer, primary_key=True, unique=True, nullable=False)
     cat_name = Column(String, unique=True, nullable=False)
     cat_image  = Column(String, nullable=False)
     cat_count = Column(Integer, nullable=False)
 
-    def __init__(self, next=None, delta=None):
-        self.cat_id = cat_id
-        self.cat_name = cat_name
-        self.cat_image = cat_image
-        self.cat_count = cat_count
-
     def __repr__(self):
         return '<Mv_Category %r>' % (self.cat_id)
 
 
-class Mv_Playlist(Base):
+class Mv_Playlist(MaterializedView):
     __tablename__ = 'mv_playlist'
     id = Column(Integer, primary_key=True, nullable=False)
     hashid = Column(String, nullable=False)
@@ -539,18 +512,11 @@ class Mv_Playlist(Base):
     featured_video_id = Column(String, nullable=True)
     user = relationship("User", backref="mv_playlist")
 
-
-    def __init__(self, next=None, delta=None):
-        self.id = id
-        self.hashid = hashid
-        self.title = title
-        self.description = description
-
     def __repr__(self):
         return '<Mv_Playlist %r>' % (self.id)
 
 
-class Mv_Altcen_user(Base):
+class Mv_Altcen_user(MaterializedView):
     __tablename__ = 'mv_altcen_user'
     id = Column(Integer, primary_key=True, nullable=False)
     username = Column(String, nullable=True)
@@ -558,11 +524,6 @@ class Mv_Altcen_user(Base):
     public = Column(Boolean, nullable=False, default=False)
     view_counter = Column(Integer, nullable=True)
     featured_playlist = Column(MutableDict.as_mutable(JSON))
-
-    def __init__(self, next=None, delta=None):
-        self.id = id
-        self.username = username
-        self.description = description
 
     def __repr__(self):
         return '<Mv_Altcen_user %r>' % (self.id)

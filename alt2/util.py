@@ -1,4 +1,4 @@
-import functools, os, string, random, subprocess, requests, logging
+import functools, hashlib, os, string, random, subprocess, requests, logging
 
 logger = logging.getLogger(__name__)
 
@@ -675,7 +675,9 @@ def increment_video_counter(video_id, ip, header):
             select(Entity).filter(Entity.extractor_data == video_id)
         ).scalar_one_or_none()
         today = str(date.today())
-        myhash = hash(ip + header + today + str(entity_video.extractor_data))
+        myhash = int(hashlib.sha256(
+            (ip + header + today + str(entity_video.extractor_data)).encode()
+        ).hexdigest(), 16) % (2 ** 63)
         if db_session.execute(select(Counter).filter(Counter.hash == myhash)).scalar_one_or_none() is None:
             counter = Counter(hash=myhash)
             db_session.add(counter)

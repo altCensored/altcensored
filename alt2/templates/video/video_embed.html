@@ -108,6 +108,15 @@ style="outline:none;
     {% endif %}
     var player = videojs('video-player');
 
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden && !player.paused()) {
+        var t = player.currentTime();
+        player.pause();
+        player.currentTime(t);
+        player.play();
+      }
+    });
+
     // --- swipe overlay (vertical bar indicator) ---
     var overlay = document.createElement('div');
     overlay.style.cssText = 'position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.65);color:#fff;width:52px;padding:14px 0;border-radius:26px;pointer-events:none;display:none;z-index:100;text-align:center;';

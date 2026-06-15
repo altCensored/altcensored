@@ -691,6 +691,8 @@ def increment_video_counter(video_id, ip, header):
     except Exception:
         logger.exception("increment_video_counter failed for video_id=%s", video_id)
         db_session.rollback()
+    finally:
+        db_session.remove()
 
 
 def create_user_altcen(user):

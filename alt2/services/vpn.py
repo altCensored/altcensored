@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from io import BytesIO
 
 from flask import session
+from sqlalchemy import select
 
 from ..database import db_session
 from ..models import Vpn_conn, Vpn_node
@@ -96,19 +97,23 @@ def add_key_to_conn(data_raw, newkey, node, privkey, node_fqdn):
 
 
 def update_conns():
-    nodes = Vpn_node.query.filter(Vpn_node.free).all()
+    nodes = db_session.execute(select(Vpn_node).filter(Vpn_node.free)).scalars().all()
     for node in nodes:
         node_fqdn = node.fqdn
 
         keys_upd = wg_api_call(node_fqdn, '/manager/key')
         for key in keys_upd['Keys']:
-            conn = Vpn_conn.query.filter_by(vpn_node_name=node.name).filter_by(key_id=key['KeyID']).scalar()
+            conn = db_session.execute(
+                select(Vpn_conn).filter(Vpn_conn.vpn_node_name == node.name, Vpn_conn.key_id == key['KeyID'])
+            ).scalar_one_or_none()
             if conn is not None:
                 conn.enabled = string_boolean(key['Enabled'])
 
         subs_upd = wg_api_call(node_fqdn, '/manager/subscription/all')
         for sub in subs_upd['subscriptions']:
-            conn = Vpn_conn.query.filter_by(vpn_node_name=node.name).filter_by(key_id=sub['KeyID']).scalar()
+            conn = db_session.execute(
+                select(Vpn_conn).filter(Vpn_conn.vpn_node_name == node.name, Vpn_conn.key_id == sub['KeyID'])
+            ).scalar_one_or_none()
             if conn is not None:
                 conn.bw_used = sub['BandwidthUsed']
 
@@ -116,7 +121,7 @@ def update_conns():
 
 
 def reset_conns():
-    conns = Vpn_conn.query.filter(Vpn_conn.bw_used != 0).all()
+    conns = db_session.execute(select(Vpn_conn).filter(Vpn_conn.bw_used != 0)).scalars().all()
     for conn in conns:
         node_fqdn = conn.vpn_node_fqdn
 

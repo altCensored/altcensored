@@ -1,6 +1,18 @@
 from math import ceil
 
 
+class CursorPagination:
+    """Pagination state for keyset (cursor) paginated listings."""
+    def __init__(self, has_next, next_cursor, page=1):
+        self.has_next = has_next
+        self.next_cursor = next_cursor  # str | None
+        self.page = page
+
+    @property
+    def has_prev(self):
+        return self.page > 1
+
+
 class Pagination(object):
     def __init__(self, page, per_page, total_count):
         self.page = page

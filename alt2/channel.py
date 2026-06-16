@@ -3,7 +3,7 @@ from markupsafe import Markup
 from sqlalchemy import func
 from .database import db_session
 from .models import Mv_Video, Mv_Channel
-from .pagination import Pagination
+from .pagination import Pagination, CursorPagination
 from datatables import ColumnDT, DataTables
 from .util import (channels_latest, channels_deleted, channels_popular, channels_newest, channels_limited, channels_archived,
                    channeli, channeli_videocount, channeli_videos_newest, channeli_videos_popular,
@@ -18,24 +18,24 @@ PER_PAGE_FEED = 100
 FLASH_MSG = config.FLASH_MSG
 
 
-def _channel_listing(page, channels_fn, count_fn, session_key, order, show_flash=True):
-    offset = (page - 1) * PER_PAGE
-    channels = channels_fn(PER_PAGE, offset)
-    if not channels and page != 1:
+def _channel_listing(channels_fn, after_str, order, count_fn=None, show_flash=True):
+    page = int(request.args.get('p', 1))
+    channels, has_next, next_cursor = channels_fn(PER_PAGE, after_str)
+    if not channels and after_str:
         abort(404)
-    count_fn()
-    pagination = Pagination(page, PER_PAGE, session[session_key])
+    count = count_fn() if count_fn else None
+    pagination = CursorPagination(has_next, next_cursor, page)
     if show_flash and FLASH_MSG is not None:
         flash(Markup(FLASH_MSG), 'error')
     return render_template('channel/channel_index.html',
                            pagination=pagination, channels=channels,
-                           channelcount=session[session_key], order=order)
+                           channelcount=count, order=order)
 
 
-@bp.route('/', defaults={'page': 1})
-@bp.route('/page/<int:page>')
-def index(page):
-    return _channel_listing(page, channels_latest, get_channelcount, 'channelcount', 'latest')
+@bp.route('/')
+def index():
+    after_str = request.args.get('after') or None
+    return _channel_listing(channels_latest, after_str, 'latest', get_channelcount)
 
 
 @bp.route('/table')
@@ -90,22 +90,22 @@ def data_deleted():
     return jsonify(rowTable.output_result())
 
 
-@bp.route('/new', defaults={'page': 1})
-@bp.route('/new/page/<int:page>')
-def new(page):
-    return _channel_listing(page, channels_newest, get_channelcount, 'channelcount', 'newest')
+@bp.route('/new')
+def new():
+    after_str = request.args.get('after') or None
+    return _channel_listing(channels_newest, after_str, 'newest', get_channelcount)
 
 
-@bp.route('/popular', defaults={'page': 1})
-@bp.route('/popular/page/<int:page>')
-def popular(page):
-    return _channel_listing(page, channels_popular, get_channelcount, 'channelcount', 'popular')
+@bp.route('/popular')
+def popular():
+    after_str = request.args.get('after') or None
+    return _channel_listing(channels_popular, after_str, 'popular', get_channelcount)
 
 
-@bp.route('/deleted', defaults={'page': 1})
-@bp.route('/deleted/page/<int:page>')
-def deleted(page):
-    return _channel_listing(page, channels_deleted, get_delchannelcount, 'delchannelcount', 'deleted', show_flash=False)
+@bp.route('/deleted')
+def deleted():
+    after_str = request.args.get('after') or None
+    return _channel_listing(channels_deleted, after_str, 'deleted', get_delchannelcount, show_flash=False)
 
 @bp.route('/deleted/feed', defaults={'page': 1})
 @bp.route('/deleted/feed/page/<int:page>')
@@ -127,16 +127,16 @@ def deleted_feed(page):
     return response
 
 
-@bp.route('/limited', defaults={'page': 1})
-@bp.route('/limited/page/<int:page>')
-def limited(page):
-    return _channel_listing(page, channels_limited, get_channelcount, 'channelcount', 'limited')
+@bp.route('/limited')
+def limited():
+    after_str = request.args.get('after') or None
+    return _channel_listing(channels_limited, after_str, 'limited', get_channelcount)
 
 
-@bp.route('/archived', defaults={'page': 1})
-@bp.route('/archived/page/<int:page>')
-def archived(page):
-    return _channel_listing(page, channels_archived, get_archivechannelcount, 'archivechannelcount', 'archived')
+@bp.route('/archived')
+def archived():
+    after_str = request.args.get('after') or None
+    return _channel_listing(channels_archived, after_str, 'archived', get_archivechannelcount)
 
 
 @bp.route('/feed', defaults={'page': 1})
@@ -156,39 +156,38 @@ def feed(page):
     return response
 
 
-@bp.route('/<ytc_id>', defaults={'page': 1})
-@bp.route('/<ytc_id>/page/<int:page>')
-def item(ytc_id,page):
-    offset = ((int(page)-1) * PER_PAGE)
+@bp.route('/<ytc_id>')
+def item(ytc_id):
+    after_str = request.args.get('after') or None
+    page = int(request.args.get('p', 1))
     order = 'newest'
     channel = channeli(ytc_id)
     if channel is None:
         abort(404)
     videocount = channeli_videocount(ytc_id)
-    videos = channeli_videos_newest(ytc_id, PER_PAGE, offset)
-    if not videos and page != 1:
+    videos, has_next, next_cursor = channeli_videos_newest(ytc_id, PER_PAGE, after_str)
+    if not videos and after_str:
         abort(404)
-    pagination = Pagination(page, PER_PAGE, videocount)
+    pagination = CursorPagination(has_next, next_cursor, page)
     watchlater = get_current_user().watchlater if get_current_user() else None
     if FLASH_MSG is not None:
         flash(Markup(FLASH_MSG), 'error')
-
     return render_template('channel/channel_item.html', pagination=pagination, channel=channel, videos=videos, videocount=videocount, order=order, watchlater=watchlater)
 
 
-@bp.route('/<ytc_id>/popular', defaults={'page': 1})
-@bp.route('/<ytc_id>/popular/page/<int:page>')
-def item_popular(ytc_id,page):
-    offset = ((int(page)-1) * PER_PAGE)
+@bp.route('/<ytc_id>/popular')
+def item_popular(ytc_id):
+    after_str = request.args.get('after') or None
+    page = int(request.args.get('p', 1))
     order = 'popular'
     channel = channeli(ytc_id)
     if channel is None:
         abort(404)
     videocount = channeli_videocount(ytc_id)
-    videos = channeli_videos_popular(ytc_id, PER_PAGE, offset)
-    if not videos and page != 1:
+    videos, has_next, next_cursor = channeli_videos_popular(ytc_id, PER_PAGE, after_str)
+    if not videos and after_str:
         abort(404)
-    pagination = Pagination(page, PER_PAGE, videocount)
+    pagination = CursorPagination(has_next, next_cursor, page)
     watchlater = get_current_user().watchlater if get_current_user() else None
     return render_template('channel/channel_item.html', pagination=pagination, channel=channel, videos=videos, videocount=videocount, order=order, watchlater=watchlater)
 

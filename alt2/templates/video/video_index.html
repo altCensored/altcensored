@@ -97,7 +97,7 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/UCMLbmp5tcLxzahMLTmeM4lg/fee
 
 {% if pagination %}
   {% with pagination=pagination %}
-      {% include "widgets/pagination.html" %}
+      {% include "widgets/cursor_pagination.html" %}
   {% endwith %}
 {% endif %}
 

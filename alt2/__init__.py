@@ -3,7 +3,7 @@ import urllib3
 from minio import Minio
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from flask import Flask, request, url_for, render_template, g, has_request_context
+from flask import Flask, request, url_for, render_template, g, has_request_context, flash, redirect
 from jinja2 import pass_eval_context
 from flask_babelplus import Babel, lazy_gettext as _l
 from flask_mail import Mail
@@ -307,8 +307,9 @@ def create_app(test_config=None):
     def page_not_found(e):
         if has_request_context():
             app.logger.error('404 Not Found: Requested URL: %s', request.url)
-        else:
-            app.logger.error(e)
+            flash(f'{request.url} not available', 'error')
+            return redirect(request.referrer or url_for('video.index'))
+        app.logger.error(e)
         return render_template('video/404.html'), 404
 
     def internal_server_error(e):
@@ -356,13 +357,17 @@ def create_app(test_config=None):
     app.register_blueprint(donate.bp)
     app.register_blueprint(sitemap.bp)
 
-    app.add_url_rule('/', endpoint='video.index', defaults={'page': 1})
-
     def url_for_other_page(page):
         args = request.view_args.copy()
         args['page'] = page
         return url_for(request.endpoint, **args)
 
     app.jinja_env.globals['url_for_other_page'] = url_for_other_page
+
+    def url_for_cursor_page(cursor, page):
+        args = request.view_args.copy()
+        return url_for(request.endpoint, after=cursor, p=page, **args)
+
+    app.jinja_env.globals['url_for_cursor_page'] = url_for_cursor_page
 
     return app

@@ -1,116 +1,85 @@
-/* Common theme */
-html,
-body,
-:not([style*="background-color:"]):not(.shareon > *):not(.help-tip):not(.help-balloon):not(.pure-button-google):not(.pure-button-github):not(.pure-button-primary):not(.flash-error):not(.flash-success) {
-    background-color: rgb(21, 21, 20) !important;
-}
-html,
-body,
-:not([style*="color:"]):not(.pure-button-google):not(.pure-button-github):not(.pure-button-primary):not(.flash-error):not(.flash-success):not(.flash-message) {
-/*    color: rgb(186, 173, 148) !important;  */
-    color: rgb(205, 195, 177) !important;
-}
-h1:not([style*="color:"]),
-h2:not([style*="color:"]),
-h3:not([style*="color:"]),
-h4:not([style*="color:"]),
-h5:not([style*="color:"]),
-h6:not([style*="color:"]) {
-    color: rgb(215, 172, 140) !important;
-}
-cite:not([style*="color:"]) {
-    color: rgb(193, 204, 166) !important;
+/* ===== Palette ===== */
+:root {
+    --dk-bg:          rgb(21, 21, 20);
+    --dk-text:        rgb(205, 195, 177);
+    --dk-heading:     rgb(215, 172, 140);
+    --dk-cite:        rgb(193, 204, 166);
+    --dk-link:        rgb(185, 190, 176);
+    --dk-link-hover:  rgb(184, 199, 196);
+    --dk-link-active: rgb(184, 207, 216);
+    --dk-border:      rgb(117, 121, 113);
+    --dk-btn:         rgb(45, 57, 65);
+    --dk-btn-hover:   rgb(60, 75, 85);
+    --dk-btn-active:  rgb(44, 59, 71);
+    --dk-placeholder: rgb(186, 173, 148);
+    --dk-tooltip:     rgb(45, 57, 65);
+    --dk-primary:     #4a6a80;
+    --dk-footer:      rgb(140, 135, 125);
 }
 
-input:not([style*="background-color:"]):hover,
-textarea:not([style*="background-color:"]):hover,
-button:not([style*="background-color:"]):hover,
-[role="button"]:hover {
-    background-color: rgb(45, 57, 65) !important;
+/* ===== Base ===== */
+html, body {
+    background-color: var(--dk-bg);
 }
-input:not([style*="background-color:"]):active, input:not([style*="background-color:"]):focus,
-textarea:not([style*="background-color:"]):active, textarea:not([style*="background-color:"]):focus,
-button:not([style*="background-color:"]):active, button:not([style*="background-color:"]):focus,
-[role="button"]:active, [role="button"]:focus {
-    background-color: rgb(44, 59, 71) !important;
+body {
+    color: var(--dk-text);
 }
-a:not([style*="color:"]) {
-    color: rgb(185, 190, 176) !important;
-}
-a:not([style*="color:"]):hover {
-    color: rgb(184, 199, 196) !important;
-}
-a:not([style*="color:"]):active, a:not([style*="color:"]):focus {
-    color: rgb(184, 207, 216) !important;
-}
-:not([style*="border-color:"]),
-::before,
-::after {
-    border-color: rgb(117, 121, 113) !important;
-}
-div:empty {
-    background-color: rgb(21, 21, 20) !important;
+
+/* ===== Typography ===== */
+h1, h2, h3, h4, h5, h6 { color: var(--dk-heading); }
+cite                    { color: var(--dk-cite); }
+.footer, .footer_left   { color: var(--dk-footer); }
+
+/* ===== Links ===== */
+a                  { color: var(--dk-link); }
+a:hover            { color: var(--dk-link-hover); }
+a:active, a:focus  { color: var(--dk-link-active); }
+
+/* ===== Form elements ===== */
+input, textarea, select {
+    background-color: var(--dk-bg) !important;
+    color: var(--dk-text) !important;
+    border-color: var(--dk-border) !important;
+    background-image: none;
 }
 input::placeholder,
 textarea::placeholder {
-    color: rgb(186, 173, 148) !important;
+    color: var(--dk-placeholder);
 }
-input:not([style*="background-image:"]),
-textarea:not([style*="background-image:"]) {
-    background-image: none !important;
+input:hover, textarea:hover, button:hover, [role="button"]:hover {
+    background-color: var(--dk-btn) !important;
+}
+input:active, input:focus,
+textarea:active, textarea:focus,
+button:active, button:focus,
+[role="button"]:active, [role="button"]:focus {
+    background-color: var(--dk-btn-active) !important;
 }
 
+/* ===== Structural borders ===== */
+hr, details, summary { border-color: var(--dk-border); }
+
+/* ===== Pure CSS buttons ===== */
 button.pure-button,
 a.pure-button,
 input[type="submit"].pure-button {
-    background-color: rgb(45, 57, 65) !important;
-    border: 1px solid rgb(117, 121, 113) !important;
-    color: rgb(205, 195, 177) !important;
+    background-color: var(--dk-btn) !important;
+    border: 1px solid var(--dk-border) !important;
+    color: var(--dk-text) !important;
 }
-
 button.pure-button:hover,
 a.pure-button:hover,
 input[type="submit"].pure-button:hover {
-    background-color: rgb(60, 75, 85) !important;
-}
-
-.nav-tip-text,
-.help-balloon {
-    background-color: rgb(45, 57, 65) !important;
-    border: 1px solid rgb(117, 121, 113) !important;
-    color: rgb(205, 195, 177) !important;
-}
-
-.help-tip {
-    background-color: #5a7fa0 !important;
-    color: #fff !important;
-}
-
-a.pure-menu-heading b:not([style*="color:"]),
-a.pure-menu-item b:not([style*="color:"]) {
-    color: rgb(185, 190, 176) !important;
-}
-
-a.pure-menu-heading.selected,
-a.pure-menu-heading.selected *:not([style*="color:"]),
-a.pure-menu-item.selected,
-a.pure-menu-item.selected *:not([style*="color:"]) {
-    color: rgb(215, 172, 140) !important;
-}
-
-.help-balloon::before {
-    border-color: transparent !important;
-    border-right-color: rgb(45, 57, 65) !important;
+    background-color: var(--dk-btn-hover) !important;
 }
 
 button.pure-button-primary,
 a.pure-button-primary,
 input[type="submit"].pure-button-primary {
-    background-color: #4a6a80 !important;
+    background-color: var(--dk-primary) !important;
     color: #fff !important;
-    border-color: #4a6a80 !important;
+    border-color: var(--dk-primary) !important;
 }
-
 button.pure-button-primary:hover,
 a.pure-button-primary:hover,
 input[type="submit"].pure-button-primary:hover {
@@ -118,34 +87,58 @@ input[type="submit"].pure-button-primary:hover {
     color: #fff !important;
 }
 
+/* ===== OAuth buttons (preserve brand colours) ===== */
 a.pure-button-google {
     background-color: #4285F4 !important;
     color: #fff !important;
     border-color: #4285F4 !important;
 }
-
 a.pure-button-github {
     background-color: #444d56 !important;
     color: #fff !important;
     border-color: #444d56 !important;
 }
 
-.about-content a:not([style*="color:"]) {
-    color: darkorange !important;
+/* ===== Nav / menus ===== */
+a.pure-menu-heading b,
+a.pure-menu-item b { color: var(--dk-link); }
+
+a.pure-menu-heading.selected,
+a.pure-menu-heading.selected *,
+a.pure-menu-item.selected,
+a.pure-menu-item.selected * { color: var(--dk-heading); }
+
+/* ===== Help tooltips ===== */
+.help-tip {
+    background-color: #5a7fa0 !important;
+    color: #fff !important;
+}
+.help-balloon,
+.nav-tip-text {
+    background-color: var(--dk-tooltip) !important;
+    border: 1px solid var(--dk-border) !important;
+    color: var(--dk-text) !important;
+}
+.help-balloon::before {
+    border-color: transparent !important;
+    border-right-color: var(--dk-tooltip) !important;
 }
 
+/* ===== Flash messages ===== */
 .flash.flash-error {
     background: hsl(0, 60%, 18%);
     color: hsl(0, 100%, 70%);
     border: 1px solid hsl(0, 100%, 50%);
 }
-
 .flash.flash-success {
     background: hsl(100, 40%, 15%);
     color: hsl(100, 70%, 60%);
     border: 1px solid hsl(100, 60%, 40%);
 }
 
-.donate-crypto summary b {
-    color: darkorange !important;
-}
+/* ===== About / donate page ===== */
+.about-content a         { color: darkorange; }
+.donate-crypto summary b { color: darkorange; }
+
+/* ===== Progress bar ===== */
+#progress-container { background-color: rgb(60, 60, 60); }

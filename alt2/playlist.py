@@ -1,4 +1,3 @@
-import hashlib
 import logging
 from flask import (
     Blueprint, session, render_template, request, flash, redirect, url_for, abort
@@ -6,7 +5,7 @@ from flask import (
 
 logger = logging.getLogger(__name__)
 from markupsafe import Markup
-from sqlalchemy import case, select, and_, or_
+from sqlalchemy import case
 from sqlalchemy.orm.attributes import flag_modified
 from hashids import Hashids
 from flask_babelplus import lazy_gettext
@@ -14,11 +13,10 @@ import random, timeago, datetime, json
 from datetime import timezone
 from .database import db_session
 from .models import User, Playlist, Mv_Video, Counter
-from .pagination import Pagination, CursorPagination
+from .pagination import Pagination
 from . import (util,config)
 from .util import (
-    login_required, str_to_bool, title_exists, get_playlistcount,
-    decode_cursor, encode_cursor, _exec_keyset
+    login_required, str_to_bool, title_exists, get_playlistcount
     )
 bp = Blueprint('playlist', __name__, url_prefix='/playlist')
 
@@ -30,27 +28,17 @@ FLASH_MSG = config.FLASH_MSG
 url_orig = 'original_url'
 
 
-@bp.route('/')
-def index():
-    after_str = request.args.get('after') or None
-    page = int(request.args.get('p', 1))
+@bp.route('/', defaults={'page': 1})
+@bp.route('/page/<int:page>')
+def index(page):
+    offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
-    cursor = decode_cursor(after_str)
-    stmt = (
-        select(Playlist)
-        .filter(Playlist.public, Playlist.featured_video_id.isnot(None))
-        .order_by(Playlist.updated.desc(), Playlist.id.desc())
-    )
-    if cursor:
-        v = datetime.datetime.fromisoformat(cursor['updated'])
-        t = cursor['id']
-        stmt = stmt.where(or_(Playlist.updated < v, and_(Playlist.updated == v, Playlist.id < t)))
-    playlists, has_next = _exec_keyset(stmt, PER_PAGE)
-    if not playlists and after_str:
+    playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video_id.isnot(None)) \
+        .order_by(Playlist.updated.desc()).limit(PER_PAGE).offset(offset).all()
+    if not playlists and page != 1:
         abort(404)
-    next_cursor = encode_cursor({'updated': playlists[-1].updated, 'id': playlists[-1].id}) if has_next else None
-    pagination = CursorPagination(has_next, next_cursor, page)
     playlistcount = get_playlistcount()
+    pagination = Pagination(page, PER_PAGE, playlistcount)
     if FLASH_MSG is not None:
         flash(Markup(FLASH_MSG), 'error')
     fv_ids = [p.featured_video_id for p in playlists if p.featured_video_id]
@@ -63,28 +51,17 @@ def index():
                            pagination=pagination, playlists=playlists, playlistcount=playlistcount,
                            order=order, featured_videos=featured_videos)
 
-
-@bp.route('/popular')
-def popular():
-    after_str = request.args.get('after') or None
-    page = int(request.args.get('p', 1))
+@bp.route('/popular', defaults={'page': 1})
+@bp.route('/popular/page/<int:page>')
+def popular(page):
+    offset = ((int(page)-1) * PER_PAGE)
     order = 'popular'
-    cursor = decode_cursor(after_str)
-    stmt = (
-        select(Playlist)
-        .filter(Playlist.public, Playlist.featured_video_id.isnot(None))
-        .order_by(Playlist.view_counter.desc(), Playlist.id.desc())
-    )
-    if cursor:
-        v = cursor['views']
-        t = cursor['id']
-        stmt = stmt.where(or_(Playlist.view_counter < v, and_(Playlist.view_counter == v, Playlist.id < t)))
-    playlists, has_next = _exec_keyset(stmt, PER_PAGE)
-    if not playlists and after_str:
+    playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video_id.isnot(None)) \
+        .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset).all()
+    if not playlists and page != 1:
         abort(404)
-    next_cursor = encode_cursor({'views': playlists[-1].view_counter, 'id': playlists[-1].id}) if has_next else None
-    pagination = CursorPagination(has_next, next_cursor, page)
     playlistcount = get_playlistcount()
+    pagination = Pagination(page, PER_PAGE, playlistcount)
     if FLASH_MSG is not None:
         flash(Markup(FLASH_MSG), 'error')
     fv_ids = [p.featured_video_id for p in playlists if p.featured_video_id]
@@ -116,7 +93,7 @@ def item(playlist,page):
     ip = request.headers.get('X-Forwarded-For', request.remote_addr)
     header = request.headers.get('User-Agent')
     today = str(datetime.date.today())
-    myhash = hashlib.sha256((ip+header+today+str(playlist.hashid)).encode()).hexdigest()
+    myhash = hash(ip+header+today+str(playlist.hashid))
 
     if Counter.query.filter(Counter.hash == myhash).scalar() is None:
         counter = Counter(hash=myhash)

@@ -140,10 +140,10 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
         {% include "widgets/videos.html" %}
     {% endwith %}
 
-    {% from "_helpers.html" import render_cursor_pagination %}
+    {% from "_helpers.html" import render_pagination %}
     <div class="pure-u-1 pure-u-md-4-4">
         <div class="h-box">
-            {{ render_cursor_pagination(pagination) }}
+            {{ render_pagination(pagination) }}
         </div>
     </div>
 

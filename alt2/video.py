@@ -9,7 +9,7 @@ from sqlalchemy.orm.attributes import flag_modified
 from threading import Thread
 from .database import db_session
 from .models import Mv_Video, Mv_Channel, Mv_Category, Mv_Playlist, Mv_Altcen_user, User, Playlist
-from .pagination import Pagination, CursorPagination
+from .pagination import Pagination
 from datetime import datetime, timezone
 from .util import (videos_newest, videos_popular, videos_latest, get_videocount, get_playnext,
                    videos_trending, get_ia_item, increment_video_counter, check_ac_object_exists,
@@ -62,16 +62,18 @@ def _resolve_video_url(video: Mv_Video, video_id: str) -> str:
     return get_ia_item(video.extractor_data)
 
 
-@bp.route('/')
-def index():
-    after_str = request.args.get('after') or None
-    page = int(request.args.get('p', 1))
+@bp.route('/', defaults={'page': 1})
+@bp.route('/page/<int:page>')
+def index(page):
+    offset = ((int(page) - 1) * PER_PAGE)
+#    order = 'trending'
+#    videos = videos_trending(PER_PAGE, offset)
     order = 'newest'
-    videos, has_next, next_cursor = videos_newest(PER_PAGE, after_str)
-    if not videos and after_str:
+    videos = videos_newest(PER_PAGE, offset)
+    if not videos and page != 1:
         abort(404)
-    get_videocount()
-    pagination = CursorPagination(has_next, next_cursor, page)
+    session['videocount'] = get_videocount()
+    pagination = Pagination(page, PER_PAGE, session['videocount'])
     watchlater = get_current_user().watchlater if get_current_user() else None
     if FLASH_MSG is not None:
         flash(Markup(FLASH_MSG), 'error')
@@ -80,16 +82,18 @@ def index():
                            watchlater=watchlater)
 
 
-@bp.route('/new')
-def new():
-    after_str = request.args.get('after') or None
-    page = int(request.args.get('p', 1))
+@bp.route('/new', defaults={'page': 1})
+@bp.route('/new/page/<int:page>')
+def new(page):
+    offset = ((int(page) - 1) * PER_PAGE)
+#    order = 'newest'
+#    videos = videos_newest(PER_PAGE, offset)
     order = 'trending'
-    videos, has_next, next_cursor = videos_trending(PER_PAGE, after_str)
-    if not videos and after_str:
+    videos = videos_trending(PER_PAGE, offset)
+    if not videos and page != 1:
         abort(404)
     get_videocount()
-    pagination = CursorPagination(has_next, next_cursor, page)
+    pagination = Pagination(page, PER_PAGE, session['videocount'])
     watchlater = get_current_user().watchlater if get_current_user() else None
     if FLASH_MSG is not None:
         flash(Markup(FLASH_MSG), 'error')
@@ -98,16 +102,16 @@ def new():
                            watchlater=watchlater)
 
 
-@bp.route('/popular')
-def popular():
-    after_str = request.args.get('after') or None
-    page = int(request.args.get('p', 1))
+@bp.route('/popular', defaults={'page': 1})
+@bp.route('/popular/page/<int:page>')
+def popular(page):
+    offset = ((int(page) - 1) * PER_PAGE)
     order = 'popular'
-    videos, has_next, next_cursor = videos_popular(PER_PAGE, after_str)
-    if not videos and after_str:
+    videos = videos_popular(PER_PAGE, offset)
+    if not videos and page != 1:
         abort(404)
     get_videocount()
-    pagination = CursorPagination(has_next, next_cursor, page)
+    pagination = Pagination(page, PER_PAGE, session['videocount'])
     watchlater = get_current_user().watchlater if get_current_user() else None
     if FLASH_MSG is not None:
         flash(Markup(FLASH_MSG), 'error')
@@ -116,16 +120,16 @@ def popular():
                            watchlater=watchlater)
 
 
-@bp.route('/latest')
-def latest():
-    after_str = request.args.get('after') or None
-    page = int(request.args.get('p', 1))
+@bp.route('/latest', defaults={'page': 1})
+@bp.route('/latest/page/<int:page>')
+def latest(page):
+    offset = ((int(page) - 1) * PER_PAGE)
     order = 'latest'
-    videos, has_next, next_cursor = videos_latest(PER_PAGE, after_str)
-    if not videos and after_str:
+    videos = videos_latest(PER_PAGE, offset)
+    if not videos and page != 1:
         abort(404)
     get_videocount()
-    pagination = CursorPagination(has_next, next_cursor, page)
+    pagination = Pagination(page, PER_PAGE, session['videocount'])
     watchlater = get_current_user().watchlater if get_current_user() else None
     if FLASH_MSG is not None:
         flash(Markup(FLASH_MSG), 'error')

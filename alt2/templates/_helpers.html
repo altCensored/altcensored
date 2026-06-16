@@ -26,24 +26,6 @@
 </center></h3>
 {% endmacro %}
 
-{% macro render_cursor_pagination(pagination) %}
-  <div class=pagination>
-<center><h3>
-  {% if pagination.has_prev or pagination.has_next %}
-    {% if pagination.has_prev %}
-      <a class="pag-page" href="{{ url_for(request.endpoint, **request.view_args) }}">1</a>
-      {% if pagination.page > 2 %}<span class=ellipsis>…</span>{% endif %}<strong class="pag-page">{{ pagination.page }}</strong>
-    {% else %}
-      <strong class="pag-page">{{ pagination.page }}</strong>
-    {% endif %}
-    {% if pagination.has_next %}
-      &nbsp;&nbsp;&nbsp;<strong class="pag-next"><a href="{{ url_for_cursor_page(pagination.next_cursor, pagination.page + 1) }}">&gt;&gt;</a></strong>
-    {% endif %}
-  {% endif %}
-</h3></center>
-</div>
-{% endmacro %}
-
 {% macro render_pagination_search(pagination) %}
   <div class=pagination>
 <center><h3>

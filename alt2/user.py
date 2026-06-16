@@ -8,7 +8,7 @@ from sqlalchemy.orm.attributes import flag_modified
 from flask_babelplus import lazy_gettext
 from .database import db_session
 from .models import User, Mv_Video, Playlist, Counter
-from .pagination import Pagination, CursorPagination
+from .pagination import Pagination
 from .util import login_required, get_usercount, users_newest, users_popular
 from . import config
 
@@ -20,29 +20,32 @@ PER_PAGE = 24
 url_orig = 'original_url'
 
 
-@bp.route('/')
-def index():
-    after_str = request.args.get('after') or None
-    page = int(request.args.get('p', 1))
+@bp.route('/', defaults={'page': 1})
+@bp.route('/page/<int:page>')
+def index(page):
+    offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
-    users, has_next, next_cursor = users_newest(PER_PAGE, after_str)
-    if not users and after_str:
+#    users = User.query.filter(User.public).order_by(User.id.desc()).limit(PER_PAGE).offset(offset)
+    users = users_newest(PER_PAGE, offset)
+    if not users and page != 1:
         abort(404)
     get_usercount()
-    pagination = CursorPagination(has_next, next_cursor, page)
+    pagination = Pagination(page, PER_PAGE, session['usercount'])
+
     return render_template('user/user_index.html', pagination=pagination, users=users, order=order)
 
-
-@bp.route('/popular')
-def popular():
-    after_str = request.args.get('after') or None
-    page = int(request.args.get('p', 1))
+@bp.route('/popular', defaults={'page': 1})
+@bp.route('/popular/page/<int:page>')
+def popular(page):
+    offset = ((int(page) - 1) * PER_PAGE)
     order = 'popular'
-    users, has_next, next_cursor = users_popular(PER_PAGE, after_str)
-    if not users and after_str:
+#    users = User.query.filter(User.public).order_by(User.view_counter.desc()).limit(PER_PAGE).offset(offset)
+    users = users_popular(PER_PAGE, offset)
+    if not users and page != 1:
         abort(404)
-    get_usercount()
-    pagination = CursorPagination(has_next, next_cursor, page)
+    usercount = get_usercount()
+    pagination = Pagination(page, PER_PAGE, usercount)
+
     return render_template('user/user_index.html', pagination=pagination, users=users, order=order)
 
 @bp.route('/<username>')

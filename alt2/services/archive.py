@@ -83,9 +83,14 @@ def check_ac_object_exists(video_id: str) -> bool:
 
 
 def get_ia_item(extractor_data):
+    import requests
     IARCHIVEURL = current_app.config['IARCHIVEURL']
     VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
-    ia_item = get_item('youtube-' + extractor_data)
+    try:
+        ia_item = get_item('youtube-' + extractor_data)
+    except (requests.exceptions.ConnectionError, requests.exceptions.RetryError) as exc:
+        logger.warning("archive.org unreachable for %s: %s", extractor_data, exc)
+        return f'{VIDEOSERVER_URL}unavailable/unavailable'
     entity_video = Entity.query.filter(Entity.extractor_data == extractor_data).scalar()
     if len(ia_item.item_metadata) != 0:
         videofile_full = get_video_files_2(ia_item)

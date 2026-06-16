@@ -10,8 +10,7 @@ from flask import (
     session, request, redirect, render_template, url_for, current_app, flash, g
 )
 from flask_babelplus import lazy_gettext
-import base64, json
-from sqlalchemy import func, nullslast, select, and_, or_
+from sqlalchemy import func, nullslast, select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.orm.attributes import flag_modified
 from .database import db_session
@@ -432,188 +431,90 @@ def channel_update(channel_id, delta=None, archive_type=None, deleted=None, view
         return False
 
 
-# ── Cursor helpers ────────────────────────────────────────────────────────────
-
-def encode_cursor(d: dict) -> str:
-    return base64.urlsafe_b64encode(json.dumps(d, default=str).encode()).decode()
-
-
-def decode_cursor(token) -> dict | None:
-    if not token:
-        return None
-    try:
-        return json.loads(base64.urlsafe_b64decode(token.encode()))
-    except Exception:
-        return None
-
-
-def _exec_keyset(stmt, per_page):
-    """Fetch per_page+1 rows; return (items[:per_page], has_next)."""
-    rows = db_session.execute(stmt.limit(per_page + 1)).scalars().all()
-    has_next = len(rows) > per_page
-    return rows[:per_page], has_next
-
-
-def _keyset_where(col, tie_col, cursor, col_key, tie_key, parse_datetime=False):
-    """Build WHERE clause for ORDER BY nullable_col DESC NULLS LAST, tie_col DESC.
-
-    Handles NULL primary sort values correctly: NULLs sort last (after all
-    non-null values), so a cursor at a NULL item only matches later NULLs.
-    """
-    v_raw = cursor.get(col_key)
-    t = cursor[tie_key]
-    if v_raw is None:
-        return and_(col.is_(None), tie_col < t)
-    v = datetime.fromisoformat(v_raw) if parse_datetime else v_raw
-    return or_(col < v, and_(col == v, tie_col < t), col.is_(None))
-
-
-def _keyset_where_nonnull(col, cursor, col_key):
-    """WHERE clause for ORDER BY non-nullable col DESC (no tie needed)."""
-    return col < cursor[col_key]
-
-
-# ── OFFSET helper (used by feeds/search which keep OFFSET pagination) ─────────
-
 # Private helper for cached paginated listings
 def _exec_listing(stmt, per_page, offset):
     return db_session.execute(stmt.limit(per_page).offset(offset)).scalars().all()
 
 
 @cache.memoize(timeout=3600)
-def videos_trending(PER_PAGE, after_cursor_str):
-    cursor = decode_cursor(after_cursor_str)
-    stmt = select(Mv_Video).order_by(
-        nullslast(Mv_Video.ac_views.desc()), Mv_Video.extractor_data.desc()
+def videos_trending(PER_PAGE, offset):
+    return _exec_listing(
+        select(Mv_Video).order_by(nullslast(Mv_Video.ac_views.desc())),
+        PER_PAGE, offset,
     )
-    if cursor:
-        stmt = stmt.where(_keyset_where(
-            Mv_Video.ac_views, Mv_Video.extractor_data, cursor, 'views', 'eid'
-        ))
-    items, has_next = _exec_keyset(stmt, PER_PAGE)
-    next_cursor = encode_cursor({'views': items[-1].ac_views, 'eid': items[-1].extractor_data}) if has_next else None
-    return items, has_next, next_cursor
 
 
 @cache.memoize(timeout=3600)
-def videos_latest(PER_PAGE, after_cursor_str):
-    cursor = decode_cursor(after_cursor_str)
-    stmt = select(Mv_Video).order_by(
-        nullslast(Mv_Video.yt_deleted_date.desc()), Mv_Video.extractor_data.desc()
+def videos_latest(PER_PAGE, offset):
+    return _exec_listing(
+        select(Mv_Video).order_by(nullslast(Mv_Video.yt_deleted_date.desc())),
+        PER_PAGE, offset,
     )
-    if cursor:
-        stmt = stmt.where(_keyset_where(
-            Mv_Video.yt_deleted_date, Mv_Video.extractor_data, cursor, 'del_date', 'eid',
-            parse_datetime=True
-        ))
-    items, has_next = _exec_keyset(stmt, PER_PAGE)
-    next_cursor = encode_cursor({'del_date': items[-1].yt_deleted_date, 'eid': items[-1].extractor_data}) if has_next else None
-    return items, has_next, next_cursor
 
 
 @cache.memoize(timeout=3600)
-def videos_newest(PER_PAGE, after_cursor_str):
-    cursor = decode_cursor(after_cursor_str)
-    stmt = select(Mv_Video).order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc())
-    if cursor:
-        stmt = stmt.where(_keyset_where(
-            Mv_Video.published, Mv_Video.extractor_data, cursor, 'pub', 'eid',
-            parse_datetime=True
-        ))
-    items, has_next = _exec_keyset(stmt, PER_PAGE)
-    next_cursor = encode_cursor({'pub': items[-1].published, 'eid': items[-1].extractor_data}) if has_next else None
-    return items, has_next, next_cursor
-
-
-@cache.memoize(timeout=3600)
-def videos_popular(PER_PAGE, after_cursor_str):
-    cursor = decode_cursor(after_cursor_str)
-    stmt = select(Mv_Video).order_by(Mv_Video.yt_views.desc(), Mv_Video.extractor_data.desc())
-    if cursor:
-        stmt = stmt.where(_keyset_where(
-            Mv_Video.yt_views, Mv_Video.extractor_data, cursor, 'views', 'eid'
-        ))
-    items, has_next = _exec_keyset(stmt, PER_PAGE)
-    next_cursor = encode_cursor({'views': items[-1].yt_views, 'eid': items[-1].extractor_data}) if has_next else None
-    return items, has_next, next_cursor
-
-
-@cache.memoize(timeout=3600)
-def channels_latest(PER_PAGE, after_cursor_str):
-    cursor = decode_cursor(after_cursor_str)
-    stmt = select(Mv_Channel).order_by(Mv_Channel.id.desc())
-    if cursor:
-        stmt = stmt.where(_keyset_where_nonnull(Mv_Channel.id, cursor, 'id'))
-    items, has_next = _exec_keyset(stmt, PER_PAGE)
-    next_cursor = encode_cursor({'id': items[-1].id}) if has_next else None
-    return items, has_next, next_cursor
-
-
-@cache.memoize(timeout=3600)
-def channels_newest(PER_PAGE, after_cursor_str):
-    cursor = decode_cursor(after_cursor_str)
-    stmt = select(Mv_Channel).order_by(Mv_Channel.ytc_publishedat.desc(), Mv_Channel.ytc_id.desc())
-    if cursor:
-        stmt = stmt.where(_keyset_where(
-            Mv_Channel.ytc_publishedat, Mv_Channel.ytc_id, cursor, 'pub', 'ytc_id',
-            parse_datetime=True
-        ))
-    items, has_next = _exec_keyset(stmt, PER_PAGE)
-    next_cursor = encode_cursor({'pub': items[-1].ytc_publishedat, 'ytc_id': items[-1].ytc_id}) if has_next else None
-    return items, has_next, next_cursor
-
-
-@cache.memoize(timeout=3600)
-def channels_popular(PER_PAGE, after_cursor_str):
-    cursor = decode_cursor(after_cursor_str)
-    stmt = select(Mv_Channel).order_by(Mv_Channel.ytc_viewcount.desc(), Mv_Channel.ytc_id.desc())
-    if cursor:
-        stmt = stmt.where(_keyset_where(
-            Mv_Channel.ytc_viewcount, Mv_Channel.ytc_id, cursor, 'views', 'ytc_id'
-        ))
-    items, has_next = _exec_keyset(stmt, PER_PAGE)
-    next_cursor = encode_cursor({'views': items[-1].ytc_viewcount, 'ytc_id': items[-1].ytc_id}) if has_next else None
-    return items, has_next, next_cursor
-
-
-@cache.memoize(timeout=3600)
-def channels_deleted(PER_PAGE, after_cursor_str):
-    cursor = decode_cursor(after_cursor_str)
-    stmt = select(Mv_Channel).filter(Mv_Channel.ytc_deleted).order_by(
-        Mv_Channel.ytc_deleteddate.desc(), Mv_Channel.ytc_id.desc()
+def videos_newest(PER_PAGE, offset):
+    return _exec_listing(
+        select(Mv_Video).order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()),
+        PER_PAGE, offset,
     )
-    if cursor:
-        stmt = stmt.where(_keyset_where(
-            Mv_Channel.ytc_deleteddate, Mv_Channel.ytc_id, cursor, 'del_date', 'ytc_id',
-            parse_datetime=True
-        ))
-    items, has_next = _exec_keyset(stmt, PER_PAGE)
-    next_cursor = encode_cursor({'del_date': items[-1].ytc_deleteddate, 'ytc_id': items[-1].ytc_id}) if has_next else None
-    return items, has_next, next_cursor
 
 
 @cache.memoize(timeout=3600)
-def channels_limited(PER_PAGE, after_cursor_str):
-    cursor = decode_cursor(after_cursor_str)
-    stmt = select(Mv_Channel).order_by(Mv_Channel.limited.desc(), Mv_Channel.ytc_id.desc())
-    if cursor:
-        stmt = stmt.where(_keyset_where(
-            Mv_Channel.limited, Mv_Channel.ytc_id, cursor, 'lim', 'ytc_id'
-        ))
-    items, has_next = _exec_keyset(stmt, PER_PAGE)
-    next_cursor = encode_cursor({'lim': items[-1].limited, 'ytc_id': items[-1].ytc_id}) if has_next else None
-    return items, has_next, next_cursor
+def videos_popular(PER_PAGE, offset):
+    return _exec_listing(
+        select(Mv_Video).order_by(Mv_Video.yt_views.desc()),
+        PER_PAGE, offset,
+    )
 
 
 @cache.memoize(timeout=3600)
-def channels_archived(PER_PAGE, after_cursor_str):
-    cursor = decode_cursor(after_cursor_str)
-    stmt = select(Mv_Channel).filter(Mv_Channel.ytc_archive).order_by(Mv_Channel.ytc_id.desc())
-    if cursor:
-        stmt = stmt.where(_keyset_where_nonnull(Mv_Channel.ytc_id, cursor, 'ytc_id'))
-    items, has_next = _exec_keyset(stmt, PER_PAGE)
-    next_cursor = encode_cursor({'ytc_id': items[-1].ytc_id}) if has_next else None
-    return items, has_next, next_cursor
+def channels_latest(PER_PAGE, offset):
+    return _exec_listing(
+        select(Mv_Channel).order_by(Mv_Channel.id.desc()),
+        PER_PAGE, offset,
+    )
+
+
+@cache.memoize(timeout=3600)
+def channels_newest(PER_PAGE, offset):
+    return _exec_listing(
+        select(Mv_Channel).order_by(Mv_Channel.ytc_publishedat.desc(), Mv_Channel.ytc_id.desc()),
+        PER_PAGE, offset,
+    )
+
+
+@cache.memoize(timeout=3600)
+def channels_popular(PER_PAGE, offset):
+    return _exec_listing(
+        select(Mv_Channel).order_by(Mv_Channel.ytc_viewcount.desc()),
+        PER_PAGE, offset,
+    )
+
+
+@cache.memoize(timeout=3600)
+def channels_deleted(PER_PAGE, offset):
+    return _exec_listing(
+        select(Mv_Channel).filter(Mv_Channel.ytc_deleted)
+        .order_by(Mv_Channel.ytc_deleteddate.desc(), Mv_Channel.ytc_id.desc()),
+        PER_PAGE, offset,
+    )
+
+
+@cache.memoize(timeout=3600)
+def channels_limited(PER_PAGE, offset):
+    return _exec_listing(
+        select(Mv_Channel).order_by(Mv_Channel.limited.desc(), Mv_Channel.ytc_id.desc()),
+        PER_PAGE, offset,
+    )
+
+
+@cache.memoize(timeout=3600)
+def channels_archived(PER_PAGE, offset):
+    return _exec_listing(
+        select(Mv_Channel).filter(Mv_Channel.ytc_archive),
+        PER_PAGE, offset,
+    )
 
 
 @cache.memoize(timeout=3600)
@@ -634,64 +535,45 @@ def channeli_videocount(ytc_id):
 
 
 @cache.memoize(timeout=3600)
-def channeli_videos_newest(ytc_id, PER_PAGE, after_cursor_str):
-    cursor = decode_cursor(after_cursor_str)
-    stmt = select(Mv_Video).filter(Mv_Video.ytc_id == ytc_id).order_by(
-        Mv_Video.published.desc(), Mv_Video.extractor_data.desc()
+def channeli_videos_newest(ytc_id, PER_PAGE, offset):
+    return _exec_listing(
+        select(Mv_Video).filter(Mv_Video.ytc_id == ytc_id).order_by(Mv_Video.published.desc()),
+        PER_PAGE, offset,
     )
-    if cursor:
-        stmt = stmt.where(_keyset_where(
-            Mv_Video.published, Mv_Video.extractor_data, cursor, 'pub', 'eid',
-            parse_datetime=True
-        ))
-    items, has_next = _exec_keyset(stmt, PER_PAGE)
-    next_cursor = encode_cursor({'pub': items[-1].published, 'eid': items[-1].extractor_data}) if has_next else None
-    return items, has_next, next_cursor
 
 
 @cache.memoize(timeout=3600)
-def channeli_videos_popular(ytc_id, PER_PAGE, after_cursor_str):
-    cursor = decode_cursor(after_cursor_str)
-    stmt = select(Mv_Video).filter(Mv_Video.ytc_id == ytc_id).order_by(
-        Mv_Video.yt_views.desc(), Mv_Video.extractor_data.desc()
+def channeli_videos_popular(ytc_id, PER_PAGE, offset):
+    return _exec_listing(
+        select(Mv_Video).filter(Mv_Video.ytc_id == ytc_id).order_by(Mv_Video.yt_views.desc()),
+        PER_PAGE, offset,
     )
-    if cursor:
-        stmt = stmt.where(_keyset_where(
-            Mv_Video.yt_views, Mv_Video.extractor_data, cursor, 'views', 'eid'
-        ))
-    items, has_next = _exec_keyset(stmt, PER_PAGE)
-    next_cursor = encode_cursor({'views': items[-1].yt_views, 'eid': items[-1].extractor_data}) if has_next else None
-    return items, has_next, next_cursor
 
 
 @cache.memoize(timeout=3600)
-def playlists_newest(PER_PAGE, after_cursor_str):
-    cursor = decode_cursor(after_cursor_str)
-    stmt = (select(Playlist)
-            .filter(Playlist.public, Playlist.featured_video_id.isnot(None))
-            .order_by(Playlist.updated.desc(), Playlist.id.desc()))
-    if cursor:
-        stmt = stmt.where(_keyset_where(
-            Playlist.updated, Playlist.id, cursor, 'upd', 'id', parse_datetime=True
-        ))
-    items, has_next = _exec_keyset(stmt, PER_PAGE)
-    next_cursor = encode_cursor({'upd': items[-1].updated, 'id': items[-1].id}) if has_next else None
-    return items, has_next, next_cursor
+def ytc_popular(ytc_id, PER_PAGE, offset):
+    return _exec_listing(
+        select(Mv_Video).filter(Mv_Video.ytc_id == ytc_id).order_by(Mv_Video.yt_views.desc()),
+        PER_PAGE, offset,
+    )
 
 
 @cache.memoize(timeout=3600)
-def playlists_popular(PER_PAGE, after_cursor_str):
-    cursor = decode_cursor(after_cursor_str)
-    stmt = (select(Playlist)
-            .filter(Playlist.public, Playlist.featured_video_id.isnot(None))
-            .order_by(Playlist.view_counter.desc(), Playlist.id.desc()))
-    if cursor:
-        stmt = stmt.where(_keyset_where(
-            Playlist.view_counter, Playlist.id, cursor, 'views', 'id'
-        ))
-    items, has_next = _exec_keyset(stmt, PER_PAGE)
-    next_cursor = encode_cursor({'views': items[-1].view_counter, 'id': items[-1].id}) if has_next else None
-    return items, has_next, next_cursor
+def playlists_newest(PER_PAGE, offset):
+    return _exec_listing(
+        select(Playlist).filter(Playlist.public, Playlist.featured_video_id.isnot(None))
+        .order_by(Playlist.updated.desc()),
+        PER_PAGE, offset,
+    )
+
+
+@cache.memoize(timeout=3600)
+def playlists_popular(PER_PAGE, offset):
+    return _exec_listing(
+        select(Playlist).filter(Playlist.public, Playlist.featured_video_id.isnot(None))
+        .order_by(Playlist.updated.desc()),
+        PER_PAGE, offset,
+    )
 
 
 @cache.memoize(timeout=3600)
@@ -717,27 +599,19 @@ def playlisti_videos(playlist, ordering, PER_PAGE, offset):
 
 
 @cache.memoize(timeout=3600)
-def users_newest(PER_PAGE, after_cursor_str):
-    cursor = decode_cursor(after_cursor_str)
-    stmt = select(User).filter(User.public).order_by(User.id.desc())
-    if cursor:
-        stmt = stmt.where(_keyset_where_nonnull(User.id, cursor, 'id'))
-    items, has_next = _exec_keyset(stmt, PER_PAGE)
-    next_cursor = encode_cursor({'id': items[-1].id}) if has_next else None
-    return items, has_next, next_cursor
+def users_newest(PER_PAGE, offset):
+    return _exec_listing(
+        select(User).filter(User.public).order_by(User.id.desc()),
+        PER_PAGE, offset,
+    )
 
 
 @cache.memoize(timeout=3600)
-def users_popular(PER_PAGE, after_cursor_str):
-    cursor = decode_cursor(after_cursor_str)
-    stmt = select(User).filter(User.public).order_by(User.view_counter.desc(), User.id.desc())
-    if cursor:
-        stmt = stmt.where(_keyset_where(
-            User.view_counter, User.id, cursor, 'views', 'id'
-        ))
-    items, has_next = _exec_keyset(stmt, PER_PAGE)
-    next_cursor = encode_cursor({'views': items[-1].view_counter, 'id': items[-1].id}) if has_next else None
-    return items, has_next, next_cursor
+def users_popular(PER_PAGE, offset):
+    return _exec_listing(
+        select(User).filter(User.public).order_by(User.view_counter.desc()),
+        PER_PAGE, offset,
+    )
 
 
 @cache.memoize(timeout=3600)

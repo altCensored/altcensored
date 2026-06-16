@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-06-11 20:24-0300\n"
+"POT-Creation-Date: 2026-06-16 06:47-0300\n"
 "PO-Revision-Date: 2020-06-24 13:44+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -17,6 +17,14 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
+
+#: alt2/__init__.py:88
+msgid "Please log in to access this page."
+msgstr ""
+
+#: alt2/__init__.py:310
+msgid "not available"
+msgstr "non disponible"
 
 #: alt2/auth/email.py:8
 msgid "Welcome to altCensored.com! Confirm your Email for Full Access"
@@ -28,6 +36,47 @@ msgstr ""
 msgid "altCensored.com Reset Your Password"
 msgstr "altCensored.com Réinitialisez votre mot de passe"
 
+#: alt2/auth/forms.py:11
+#, fuzzy
+msgid "Email / Username"
+msgstr "Nom d'utilisateur"
+
+#: alt2/auth/forms.py:12 alt2/auth/forms.py:20 alt2/auth/forms.py:22
+#: alt2/auth/forms.py:23 alt2/auth/forms.py:41 alt2/auth/forms.py:45
+#: alt2/templates/auth/reset_password_request.html:12
+#: alt2/templates/auth_old/auth_index.html:26
+#: alt2/templates/auth_old/auth_index.html:27
+#: alt2/templates/auth_old/auth_index.html:53
+#: alt2/templates/auth_old/auth_index.html:54 alt2/templates/base_login.html:64
+msgid "Password"
+msgstr "mot de passe"
+
+#: alt2/auth/forms.py:13
+msgid "Remember Me"
+msgstr ""
+
+#: alt2/auth/forms.py:14 alt2/auth/routes.py:64 alt2/templates/base.html:95
+#: alt2/templates/base_nomessages.html:97
+msgid "Log In"
+msgstr "S'identifier"
+
+#: alt2/auth/forms.py:18 alt2/templates/auth_old/auth_index.html:30
+#: alt2/templates/auth_old/auth_index.html:31
+#: alt2/templates/settings/settings_user_update.html:60
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+#: alt2/auth/forms.py:19 alt2/templates/auth_old/auth_index.html:22
+#: alt2/templates/auth_old/auth_index.html:49
+#: alt2/templates/settings/settings_user_update.html:51
+msgid "Email"
+msgstr "E-mail"
+
+#: alt2/auth/forms.py:24 alt2/auth/routes.py:95
+#: alt2/templates/auth_old/auth_index.html:44 alt2/templates/base_login.html:61
+msgid "Register"
+msgstr "S'inscrir"
+
 #: alt2/auth/forms.py:30
 msgid "Please use a different username."
 msgstr "Veuillez utiliser un nom d'utilisateur différent."
@@ -36,38 +85,68 @@ msgstr "Veuillez utiliser un nom d'utilisateur différent."
 msgid "Please use a different email address."
 msgstr "Veuillez utiliser une adresse e-mail différente."
 
-#: alt2/auth/routes.py:44
+#: alt2/auth/forms.py:40
+#, fuzzy
+msgid "Email or Username"
+msgstr "Nom d'utilisateur"
+
+#: alt2/auth/forms.py:41 alt2/auth/forms.py:49
+#, fuzzy
+msgid "Request Password Reset"
+msgstr "Réinitialiser le mot de passe"
+
+#: alt2/auth/forms.py:47
+#, fuzzy
+msgid "Repeat Password"
+msgstr "Réinitialiser le mot de passe"
+
+#: alt2/auth/routes.py:49
 msgid "Invalid username or password"
 msgstr "Nom d'utilisateur ou mot de passe invalide"
 
-#: alt2/auth/routes.py:59 alt2/templates/base.html:95
-#: alt2/templates/base_nomessages.html:97
-msgid "Log In"
-msgstr "S'identifier"
+#: alt2/auth/routes.py:56 alt2/auth/routes.py:87
+msgid "Confirmation email sent"
+msgstr ""
 
-#: alt2/auth/routes.py:86
+#: alt2/auth/routes.py:91
 msgid "Cloudflare Turnstile Captcha Failed"
 msgstr "Échec du Captcha Cloudflare Turnstile"
 
-#: alt2/auth/routes.py:90 alt2/templates/auth_old/auth_index.html:44
-#: alt2/templates/base_login.html:60
-msgid "Register"
-msgstr "S'inscrir"
-
-#: alt2/auth/routes.py:104
+#: alt2/auth/routes.py:113
 msgid "Check your email for password reset instructions"
 msgstr ""
 "Vérifiez votre e-mail pour les instructions de réinitialisation du mot de"
 " passe"
 
-#: alt2/auth/routes.py:108 alt2/templates/auth_old/auth_index.html:58
+#: alt2/auth/routes.py:117 alt2/templates/auth_old/auth_index.html:58
 msgid "Reset Password"
 msgstr "Réinitialiser le mot de passe"
 
-#: alt2/auth/routes.py:122
+#: alt2/auth/routes.py:124
+msgid "The password reset link is invalid or has expired."
+msgstr ""
+
+#: alt2/auth/routes.py:130
 #, fuzzy
 msgid "Your password has been reset."
 msgstr "Le mot de passe a été mis à jour"
+
+#: alt2/auth/routes.py:140 alt2/auth/routes.py:146
+msgid "The confirmation link is invalid or has expired"
+msgstr ""
+
+#: alt2/auth/routes.py:153
+msgid "Account already confirmed. Please login"
+msgstr ""
+
+#: alt2/auth/routes.py:165
+msgid "Thank-you for confirming your account"
+msgstr ""
+
+#: alt2/auth/routes.py:175
+#, fuzzy
+msgid "Delete User"
+msgstr "Réviser Utilisateur"
 
 #: alt2/templates/base.html:61 alt2/templates/base_nomessages.html:63
 #: alt2/templates/widgets/playlist.html:116
@@ -78,50 +157,42 @@ msgstr "recherchez"
 msgid "Log Out"
 msgstr "Se déconnecter"
 
-#: alt2/templates/base.html:144 alt2/templates/base_login.html:106
+#: alt2/templates/base.html:144 alt2/templates/base_login.html:107
 #: alt2/templates/base_nomessages.html:132
 msgid "Donate"
 msgstr "Donner"
 
-#: alt2/templates/base.html:147 alt2/templates/base_login.html:109
+#: alt2/templates/base.html:147 alt2/templates/base_login.html:110
 #: alt2/templates/base_nomessages.html:135
 msgid "Released under the"
 msgstr "Libéré en vertu de la"
 
-#: alt2/templates/base.html:150 alt2/templates/base_login.html:112
+#: alt2/templates/base.html:150 alt2/templates/base_login.html:113
 msgid "Shop"
 msgstr "Boutique"
 
-#: alt2/templates/base.html:156 alt2/templates/base_login.html:118
+#: alt2/templates/base.html:156 alt2/templates/base_login.html:119
 #: alt2/templates/base_nomessages.html:141
 msgid "About"
 msgstr "Nous"
 
-#: alt2/templates/base.html:159 alt2/templates/base_login.html:121
+#: alt2/templates/base.html:159 alt2/templates/base_login.html:122
 #: alt2/templates/base_nomessages.html:144
 msgid "Privacy"
 msgstr "Intimité"
 
-#: alt2/templates/base.html:162 alt2/templates/base_login.html:124
+#: alt2/templates/base.html:162 alt2/templates/base_login.html:125
 #: alt2/templates/base_nomessages.html:147
 msgid "FAQ"
 msgstr "FAQ"
 
-#: alt2/templates/auth/reset_password_request.html:12
-#: alt2/templates/auth_old/auth_index.html:26
-#: alt2/templates/auth_old/auth_index.html:27
-#: alt2/templates/auth_old/auth_index.html:53
-#: alt2/templates/auth_old/auth_index.html:54 alt2/templates/base_login.html:63
-msgid "Password"
-msgstr "mot de passe"
-
 #: alt2/templates/about/about_example.html:29
-#: alt2/templates/about/about_index.html:161
+#: alt2/templates/about/about_index.html:162
 msgid "How can I embed videos?"
 msgstr "Comment puis-je intégrer des vidéos?"
 
 #: alt2/templates/about/about_example.html:30
-#: alt2/templates/about/about_index.html:162
+#: alt2/templates/about/about_index.html:163
 msgid ""
 "Videos can be embedded (with or without iframes) using the same syntax as"
 " YouTube"
@@ -230,15 +301,15 @@ msgstr "Envoyez vos suggestions de nouveaux canaux par courriel à"
 msgid " together we <b>show what they hide</b>."
 msgstr "(ensemble nous montrons ce qu'ils cachent)"
 
-#: alt2/templates/about/about_index.html:80
+#: alt2/templates/about/about_index.html:81
 msgid "Privacy Policy"
 msgstr "Politique de Confidentialité"
 
-#: alt2/templates/about/about_index.html:84
+#: alt2/templates/about/about_index.html:85
 msgid "Data you directly provide"
 msgstr "Données que vous fournissez directement"
 
-#: alt2/templates/about/about_index.html:85
+#: alt2/templates/about/about_index.html:86
 msgid ""
 "Data that you provide to the website for the purpose of its operation "
 "(e.g., an account name or password, or playlist) will be stored in the "
@@ -256,11 +327,11 @@ msgstr ""
 "seront pas être intentionnellement partagé avec n'importe qui ou quoi que"
 " ce soit"
 
-#: alt2/templates/about/about_index.html:87
+#: alt2/templates/about/about_index.html:88
 msgid "Information stored about a registered user is limited to"
 msgstr "Les informations stockées sur un utilisateur enregistré sont limitées à"
 
-#: alt2/templates/about/about_index.html:89
+#: alt2/templates/about/about_index.html:90
 msgid ""
 "a user ID (for persistent storage of preferences and playlists) and "
 "hashed password"
@@ -270,30 +341,30 @@ msgstr ""
 " permanent des préférences et des listes de lecture) et mot de passe "
 "haché"
 
-#: alt2/templates/about/about_index.html:90
+#: alt2/templates/about/about_index.html:91
 msgid "a json object containing user preferences"
 msgstr "un objet json contenant les préférences de l'utilisateur"
 
-#: alt2/templates/about/about_index.html:91
+#: alt2/templates/about/about_index.html:92
 msgid "a list of video IDs identifying watched videos"
 msgstr "une liste d'identifiants vidéo identifiant les vidéos regardées"
 
-#: alt2/templates/about/about_index.html:93
+#: alt2/templates/about/about_index.html:94
 msgid "Users can clear their watch history using the "
 msgstr ""
 "Les utilisateurs peuvent effacer leur historique de visionnage via le Les"
 " utilisateurs peuvent effacer leur historique de surveillance à l'aide du"
 " "
 
-#: alt2/templates/about/about_index.html:93
+#: alt2/templates/about/about_index.html:94
 msgid "clear watch history"
 msgstr "effacer l'historique des montres"
 
-#: alt2/templates/about/about_index.html:95
+#: alt2/templates/about/about_index.html:96
 msgid "Data you passively provide"
 msgstr "Données que vous fournissez passivement"
 
-#: alt2/templates/about/about_index.html:96
+#: alt2/templates/about/about_index.html:97
 msgid ""
 "When you request any resource from this website (e.g., a page, font, or "
 "image) information about the request may be logged"
@@ -304,31 +375,31 @@ msgstr ""
 "exemple, une page, une police ou une image), des informations sur la "
 "demande peuvent être enregistrées"
 
-#: alt2/templates/about/about_index.html:97
+#: alt2/templates/about/about_index.html:98
 msgid "Information about a request is limited to"
 msgstr "Les informations relatives à une demande sont limitées à"
 
-#: alt2/templates/about/about_index.html:99
+#: alt2/templates/about/about_index.html:100
 msgid "the time the request was made"
 msgstr "l'heure à laquelle la demande a été faite"
 
-#: alt2/templates/about/about_index.html:100
+#: alt2/templates/about/about_index.html:101
 msgid "the status code of the response"
 msgstr "le code d'état de la réponse"
 
-#: alt2/templates/about/about_index.html:101
+#: alt2/templates/about/about_index.html:102
 msgid "the method of the request"
 msgstr "la méthode de la demande"
 
-#: alt2/templates/about/about_index.html:102
+#: alt2/templates/about/about_index.html:103
 msgid "the requested URL"
 msgstr "L'URL demandée"
 
-#: alt2/templates/about/about_index.html:103
+#: alt2/templates/about/about_index.html:104
 msgid "how long it took to complete the request"
 msgstr "combien de temps il a fallu pour traiter la demande"
 
-#: alt2/templates/about/about_index.html:106
+#: alt2/templates/about/about_index.html:107
 msgid ""
 "No identifying information is logged, such as the visitors cookie, user-"
 "agent, or full IP address (only the  first /24 bits are stored for "
@@ -342,7 +413,7 @@ msgstr ""
 "(seuls les premiers / 24 bits sont stockés pour le retour géographique). "
 "Voici quelques lignes à titre d'exemple"
 
-#: alt2/templates/about/about_index.html:112
+#: alt2/templates/about/about_index.html:113
 msgid ""
 "This website does not store the visitors user-agent or full IP address "
 "and does not use fingerprinting, advertisements, or tracking of any form"
@@ -354,11 +425,11 @@ msgstr ""
 "d'empreintes digitales, de publicités ou de suivi de quelque forme que ce"
 " soit"
 
-#: alt2/templates/about/about_index.html:115
+#: alt2/templates/about/about_index.html:116
 msgid "Data stored in your browser"
 msgstr "Données stockées dans votre navigateur"
 
-#: alt2/templates/about/about_index.html:116
+#: alt2/templates/about/about_index.html:117
 msgid ""
 "This website uses browser cookies to authenticate registered users. This "
 "data consists of"
@@ -368,7 +439,7 @@ msgstr ""
 "des cookies de navigateur pour authentifier les utilisateurs enregistrés."
 " Ces données se composent de"
 
-#: alt2/templates/about/about_index.html:118
+#: alt2/templates/about/about_index.html:119
 msgid ""
 "An account token to keep you logged into the website between visits, "
 "which is sent when any page is loaded while you are logged in"
@@ -379,7 +450,7 @@ msgstr ""
 "entre les visites, qui est envoyé lorsqu'une page est chargée alors que "
 "vous êtes connecté"
 
-#: alt2/templates/about/about_index.html:120
+#: alt2/templates/about/about_index.html:121
 msgid ""
 "This website also provides an option to store site preferences (e.g., "
 "theme or locale) without an account. Using this feature will store a "
@@ -397,7 +468,7 @@ msgstr ""
 "préférences. Ce cookie est envoyé à chaque demande et ne contient aucune "
 "information d'identification "
 
-#: alt2/templates/about/about_index.html:122
+#: alt2/templates/about/about_index.html:123
 msgid ""
 "You can remove this data from your browser by logging out of this "
 "website, or by using your browsers cookie-related controls to delete the "
@@ -409,11 +480,11 @@ msgstr ""
 " vous déconnectant de ce site Web, ou en utilisant les contrôles liés aux"
 " cookies de votre navigateur pour supprimer les données"
 
-#: alt2/templates/about/about_index.html:124
+#: alt2/templates/about/about_index.html:125
 msgid "Removal of data"
 msgstr "Suppression des données"
 
-#: alt2/templates/about/about_index.html:125
+#: alt2/templates/about/about_index.html:126
 msgid ""
 "To remove data stored in your browser, you can log out of the website, or"
 " you can use your browsers cookie-related controls to delete the data"
@@ -425,7 +496,7 @@ msgstr ""
 "utiliser les contrôles liés aux cookies de votre navigateur pour "
 "supprimer les données"
 
-#: alt2/templates/about/about_index.html:126
+#: alt2/templates/about/about_index.html:127
 msgid ""
 "To remove data that has been stored in the websites database, you can use"
 " the "
@@ -434,19 +505,19 @@ msgstr ""
 "vous pouvez utiliser la Pour supprimer les données qui ont été stockées "
 "dans la base de données des sites Web, vous pouvez utiliser le "
 
-#: alt2/templates/about/about_index.html:127
+#: alt2/templates/about/about_index.html:128
 msgid "delete my account</u></a></b> page"
 msgstr "supprimer mon compte </u> </a> </b> page"
 
-#: alt2/templates/about/about_index.html:131
+#: alt2/templates/about/about_index.html:132
 msgid "Frequently Asked Questions"
 msgstr "Questions fréquemment posées"
 
-#: alt2/templates/about/about_index.html:134
+#: alt2/templates/about/about_index.html:135
 msgid "How can I find videos/channels?"
 msgstr "Comment puis-je trouver des vidéos / chaînes?"
 
-#: alt2/templates/about/about_index.html:135
+#: alt2/templates/about/about_index.html:136
 msgid ""
 "The search bar at the top of every page is the best way to locate "
 "channels and videos. Use the minimum number of exact words. YouTube "
@@ -460,11 +531,11 @@ msgstr ""
 "nombre minimum de mots exacts. Les identifiants YouTube de chaîne et de "
 "vidéo peuvent également être utilisés"
 
-#: alt2/templates/about/about_index.html:142
+#: alt2/templates/about/about_index.html:143
 msgid "How can I upload my videos/channels?"
 msgstr "Comment puis-je télécharger mes vidéos / chaînes?"
 
-#: alt2/templates/about/about_index.html:143
+#: alt2/templates/about/about_index.html:144
 msgid ""
 "We receive channel suggestions (preferably through <b>altCensored AT "
 "protonmail.com</b>) and add channels that have experienced, or are at-"
@@ -474,39 +545,39 @@ msgstr ""
 "altCensored AT protonmail.com </b>) et ajoutons des chaînes qui ont connu"
 " ou risquent de subir"
 
-#: alt2/templates/about/about_index.html:145
+#: alt2/templates/about/about_index.html:146
 msgid "videos placed in "
 msgstr "vidéos placées dans "
 
-#: alt2/templates/about/about_index.html:147
+#: alt2/templates/about/about_index.html:148
 msgid "Limited State"
 msgstr "État Limité"
 
-#: alt2/templates/about/about_index.html:147
+#: alt2/templates/about/about_index.html:148
 msgid " or arbitrarily"
 msgstr " ou arbitrairement"
 
-#: alt2/templates/about/about_index.html:149
+#: alt2/templates/about/about_index.html:150
 msgid "age-restricted"
 msgstr "soumis à une limite d'âge"
 
-#: alt2/templates/about/about_index.html:149
+#: alt2/templates/about/about_index.html:150
 msgid "by"
 msgstr "par"
 
-#: alt2/templates/about/about_index.html:150
+#: alt2/templates/about/about_index.html:151
 msgid "videos removed or demonetized"
 msgstr "vidéos supprimées ou démonétisées"
 
-#: alt2/templates/about/about_index.html:151
+#: alt2/templates/about/about_index.html:152
 msgid "channel demonetization"
 msgstr "démonétisation du canal"
 
-#: alt2/templates/about/about_index.html:154
+#: alt2/templates/about/about_index.html:155
 msgid "How can I download videos/channels?"
 msgstr "Comment puis-je télécharger des vidéos / chaînes?"
 
-#: alt2/templates/about/about_index.html:156
+#: alt2/templates/about/about_index.html:157
 msgid "Download videos with \"right mouse button click\" inside the video window"
 msgstr ""
 "Téléchargez des vidéos avec un \"clic droit de la souris\" dans la "
@@ -514,12 +585,12 @@ msgstr ""
 "de la souris \"  dans la fenêtre vidéo ou utilisez le lien \" Télécharger"
 " le torrent \""
 
-#: alt2/templates/about/about_index.html:232
+#: alt2/templates/about/about_index.html:234
 #, fuzzy
 msgid "Creator Guide"
 msgstr "Créé"
 
-#: alt2/templates/about/about_index.html:234
+#: alt2/templates/about/about_index.html:236
 msgid "Press Kit"
 msgstr "Dossier de presse"
 
@@ -544,18 +615,6 @@ msgstr "Tableau Tous"
 msgid "Reset"
 msgstr "S'inscrir"
 
-#: alt2/templates/auth_old/auth_index.html:22
-#: alt2/templates/auth_old/auth_index.html:49
-#: alt2/templates/settings/settings_user_update.html:51
-msgid "Email"
-msgstr "E-mail"
-
-#: alt2/templates/auth_old/auth_index.html:30
-#: alt2/templates/auth_old/auth_index.html:31
-#: alt2/templates/settings/settings_user_update.html:60
-msgid "Username"
-msgstr "Nom d'utilisateur"
-
 #: alt2/templates/auth_old/auth_index.html:39
 msgid "Captcha"
 msgstr "Captcha"
@@ -573,7 +632,7 @@ msgid "Video"
 msgstr "Vidéo"
 
 #: alt2/templates/auth_old/auth_reset_password.html:21
-#: alt2/templates/channel/channel_item.html:66
+#: alt2/templates/channel/channel_item.html:62
 #: alt2/templates/video/video_search.html:29
 msgid "Channel"
 msgstr "Chaîne"
@@ -598,14 +657,14 @@ msgstr "Mettre à jour le mot de passe"
 #: alt2/templates/language/language_item.html:125
 #: alt2/templates/language/language_item.html:139
 #: alt2/templates/language/language_item.html:154
-#: alt2/templates/video/video_search.html:228
-#: alt2/templates/video/video_search.html:243
+#: alt2/templates/video/video_search.html:235
+#: alt2/templates/video/video_search.html:250
 msgid "latest"
 msgstr "dernier"
 
 #: alt2/templates/category/category_item.html:49
 #: alt2/templates/channel/channel_index.html:78
-#: alt2/templates/channel/channel_item.html:128
+#: alt2/templates/channel/channel_item.html:124
 #: alt2/templates/language/language_item.html:114
 #: alt2/templates/language/language_item.html:128
 #: alt2/templates/language/language_item.html:142
@@ -613,14 +672,14 @@ msgstr "dernier"
 #: alt2/templates/playlist/playlist_index.html:42
 #: alt2/templates/user/user_index.html:30
 #: alt2/templates/user/user_playlist_index.html:49
-#: alt2/templates/video/video_search.html:232
-#: alt2/templates/video/video_search.html:247
+#: alt2/templates/video/video_search.html:239
+#: alt2/templates/video/video_search.html:254
 msgid "newest"
 msgstr "le plus récent"
 
 #: alt2/templates/category/category_item.html:53
 #: alt2/templates/channel/channel_index.html:82
-#: alt2/templates/channel/channel_item.html:132
+#: alt2/templates/channel/channel_item.html:128
 #: alt2/templates/language/language_item.html:120
 #: alt2/templates/language/language_item.html:134
 #: alt2/templates/language/language_item.html:148
@@ -629,8 +688,8 @@ msgstr "le plus récent"
 #: alt2/templates/user/user_index.html:34
 #: alt2/templates/user/user_playlist_index.html:53
 #: alt2/templates/video/video_index.html:84
-#: alt2/templates/video/video_search.html:236
-#: alt2/templates/video/video_search.html:251
+#: alt2/templates/video/video_search.html:243
+#: alt2/templates/video/video_search.html:258
 msgid "popular"
 msgstr "populaire"
 
@@ -643,27 +702,27 @@ msgid "most limited"
 msgstr "le plus limité"
 
 #: alt2/templates/channel/channel_index.html:119
-#: alt2/templates/channel/channel_item.html:55
+#: alt2/templates/channel/channel_item.html:51
 #: alt2/templates/video/video_search.html:48
 msgid "Censored"
 msgstr "Censuré"
 
 #: alt2/templates/channel/channel_index.html:123
-#: alt2/templates/channel/channel_item.html:57
+#: alt2/templates/channel/channel_item.html:53
 #: alt2/templates/video/video_search.html:52
 #, fuzzy
 msgid "Archived"
 msgstr "Archiver"
 
 #: alt2/templates/channel/channel_index.html:126
-#: alt2/templates/channel/channel_item.html:59
+#: alt2/templates/channel/channel_item.html:55
 #: alt2/templates/language/language_item.html:57
 #: alt2/templates/video/video_search.html:55
 msgid "Total"
 msgstr "Total"
 
 #: alt2/templates/channel/channel_index.html:128
-#: alt2/templates/channel/channel_item.html:60
+#: alt2/templates/channel/channel_item.html:56
 #: alt2/templates/language/language_item.html:58
 #: alt2/templates/video/video_item.html:141
 #: alt2/templates/video/video_search.html:57
@@ -748,24 +807,24 @@ msgstr "Créé"
 msgid "Deleted"
 msgstr "Supprimé"
 
-#: alt2/templates/channel/channel_item.html:61
+#: alt2/templates/channel/channel_item.html:57
 msgid "Subscribers"
 msgstr "Abonnés"
 
-#: alt2/templates/channel/channel_item.html:67
+#: alt2/templates/channel/channel_item.html:63
 msgid "Stats"
 msgstr "Statistiques"
 
-#: alt2/templates/channel/channel_item.html:69
+#: alt2/templates/channel/channel_item.html:65
 #, fuzzy
 msgid "Created:"
 msgstr "Créé"
 
-#: alt2/templates/channel/channel_item.html:70
+#: alt2/templates/channel/channel_item.html:66
 msgid "Added"
 msgstr "Ajouté"
 
-#: alt2/templates/channel/channel_item.html:73
+#: alt2/templates/channel/channel_item.html:69
 #, fuzzy
 msgid "Deleted:"
 msgstr "Supprimé"
@@ -838,10 +897,9 @@ msgid "views"
 msgstr "vues"
 
 #: alt2/templates/playlist/playlist_item_create_edit.html:30
-#: alt2/templates/settings/settings_index.html:52
+#: alt2/templates/settings/settings_index.html:44
 #: alt2/templates/user/user_playlist_index.html:29
 #: alt2/templates/video/video_search.html:111
-#: alt2/templates/vpn/vpn_index.html:55
 #: alt2/templates/widgets/settings_subnav.html:18
 msgid "Playlist"
 msgstr "Playlist"
@@ -866,7 +924,7 @@ msgid "A short summary shown under the playlist title. Max 50 characters."
 msgstr "Un bref résumé sous le titre de la liste. Max. 50 caractères."
 
 #: alt2/templates/playlist/playlist_item_create_edit.html:57
-#: alt2/templates/user/user_item.html:119
+#: alt2/templates/user/user_item.html:127
 #: alt2/templates/user/user_playlist_index.html:101
 #: alt2/templates/widgets/playlist.html:75
 msgid "Public"
@@ -885,7 +943,6 @@ msgid "Create Playlist"
 msgstr "Créer une Playlist"
 
 #: alt2/templates/settings/settings_index.html:35
-#: alt2/templates/vpn/vpn_error.html:33 alt2/templates/vpn/vpn_index.html:33
 #: alt2/templates/widgets/settings_subnav.html:9
 msgid "Site"
 msgstr "Site"
@@ -895,24 +952,24 @@ msgstr "Site"
 msgid "Language, theme and playback preferences"
 msgstr "Préférences de langue, de thème et de lecture"
 
-#: alt2/templates/settings/settings_index.html:44
+#: alt2/templates/settings/settings_index.html:45
+#: alt2/templates/widgets/settings_subnav.html:19
+msgid "Create and manage your playlists"
+msgstr "Créer et gérer vos listes de lecture"
+
+#: alt2/templates/settings/settings_index.html:52
 #: alt2/templates/settings/settings_user_update.html:39
 #: alt2/templates/video/video_search.html:169
-#: alt2/templates/vpn/vpn_index.html:48 alt2/templates/widgets/navtabs.html:61
+#: alt2/templates/widgets/navtabs.html:61
 #: alt2/templates/widgets/settings_subnav.html:26
 msgid "User"
 msgstr "Utilisateur"
 
-#: alt2/templates/settings/settings_index.html:45
+#: alt2/templates/settings/settings_index.html:53
 #: alt2/templates/settings/settings_user_update.html:40
 #: alt2/templates/widgets/settings_subnav.html:27
 msgid "Profile, email and account settings"
 msgstr "Paramètres de profil, d'e-mail et de compte"
-
-#: alt2/templates/settings/settings_index.html:53
-#: alt2/templates/widgets/settings_subnav.html:19
-msgid "Create and manage your playlists"
-msgstr "Créer et gérer vos listes de lecture"
 
 #: alt2/templates/settings/settings_site.html:31
 msgid "Language"
@@ -1023,35 +1080,35 @@ msgstr "histoire"
 msgid "Clear history"
 msgstr "Effacer l'historique"
 
-#: alt2/templates/user/user_item.html:65
+#: alt2/templates/user/user_item.html:73
 msgid "Edit profile settings"
 msgstr "Modifier les paramètres du profil"
 
-#: alt2/templates/user/user_item.html:71
+#: alt2/templates/user/user_item.html:79
 msgid "Delete your account"
 msgstr "supprimer mon compte </u> </a> </b> page"
 
-#: alt2/templates/user/user_item.html:88
+#: alt2/templates/user/user_item.html:96
 #: alt2/templates/widgets/playlist.html:104
 msgid "History"
 msgstr "Histoire"
 
-#: alt2/templates/user/user_item.html:89
+#: alt2/templates/user/user_item.html:97
 msgid "Videos you have recently watched"
 msgstr "Vidéos que vous avez récemment regardées"
 
-#: alt2/templates/user/user_item.html:102
+#: alt2/templates/user/user_item.html:110
 #: alt2/templates/user/user_watchlater_index.html:39
 #: alt2/templates/video/video_item.html:161
 #: alt2/templates/widgets/playlist.html:110
 msgid "WatchLater"
 msgstr "LirePlusTard"
 
-#: alt2/templates/user/user_item.html:103
+#: alt2/templates/user/user_item.html:111
 msgid "Videos you have saved to watch later"
 msgstr "Vidéos que vous avez enregistrées pour regarder plus tard"
 
-#: alt2/templates/user/user_item.html:122
+#: alt2/templates/user/user_item.html:130
 #: alt2/templates/user/user_playlist_index.html:104
 msgid "Private"
 msgstr "Privé"
@@ -1092,71 +1149,6 @@ msgstr "Publié le"
 #: alt2/templates/video/video_item.html:225
 msgid "AutoPlay Next Video"
 msgstr "AutoPlay Suivante Video"
-
-#: alt2/templates/vpn/vpn_error.html:40 alt2/templates/vpn/vpn_index.html:40
-msgid "VPN"
-msgstr "VPN"
-
-#: alt2/templates/vpn/vpn_error.html:48 alt2/templates/vpn/vpn_index.html:130
-msgid "Why use the altCensored VPN?"
-msgstr "Pourquoi utiliser le VPN altCensored ?"
-
-#: alt2/templates/vpn/vpn_error.html:50 alt2/templates/vpn/vpn_index.html:132
-msgid ""
-"A virtual private network (VPN) service provides a proxy server to help "
-"users bypass Internet censorship such as                     geoblocking "
-"and users who want to protect their communications against data profiling"
-" or MitM attacks on hostile networks"
-msgstr ""
-"Un service de réseau privé virtuel (VPN) fournit un serveur proxy pour "
-"aider les utilisateurs à contourner la censure d'Internet telle que le "
-"géoblocage et les utilisateurs qui veulent protéger leurs communications "
-"contre le profilage des donnéesou les attaques MitM sur des réseaux "
-"hostiles"
-
-#: alt2/templates/vpn/vpn_error.html:54 alt2/templates/vpn/vpn_index.html:136
-msgid "Our goal is to raise funds for fighting censorship"
-msgstr "Notre objectif est de récolter des fonds pour lutter contre la censure\""
-
-#: alt2/templates/vpn/vpn_error.html:55 alt2/templates/vpn/vpn_index.html:137
-msgid "(together we show what they hide)"
-msgstr "(ensemble nous montrons ce qu'ils cachent)"
-
-#: alt2/templates/vpn/vpn_error.html:56 alt2/templates/vpn/vpn_index.html:138
-msgid "and improve online privacy"
-msgstr "et améliorer la confidentialité en ligne"
-
-#: alt2/templates/vpn/vpn_error.html:57 alt2/templates/vpn/vpn_index.html:139
-msgid "(together we hide what they want)"
-msgstr "(ensemble nous cachons ce qu'ils veulent)"
-
-#: alt2/templates/vpn/vpn_error.html:64 alt2/templates/vpn/vpn_index.html:146
-msgid "Wireguard Client Setup"
-msgstr "Configuration du client Wireguard"
-
-#: alt2/templates/vpn/vpn_error.html:66 alt2/templates/vpn/vpn_index.html:148
-msgid "Official"
-msgstr "Officiel"
-
-#: alt2/templates/vpn/vpn_error.html:67 alt2/templates/vpn/vpn_index.html:149
-msgid "Wireguard Clients"
-msgstr "Clients Wireguard"
-
-#: alt2/templates/vpn/vpn_index.html:62
-msgid "Connections"
-msgstr "Connexions"
-
-#: alt2/templates/vpn/vpn_index.html:95
-msgid "Download"
-msgstr "Télécharger"
-
-#: alt2/templates/vpn/vpn_index.html:111
-msgid "Nodes"
-msgstr "Nœuds"
-
-#: alt2/templates/vpn/vpn_index.html:122
-msgid "Create New Connection"
-msgstr "Créer une nouvelle connexion"
 
 #: alt2/templates/widgets/navtabs.html:45
 msgid "Settings"
@@ -1391,4 +1383,63 @@ msgstr "Non"
 
 #~ msgid "Manage your public profile, email address, and newsletter preferences."
 #~ msgstr ""
+
+#~ msgid "VPN"
+#~ msgstr "VPN"
+
+#~ msgid "Why use the altCensored VPN?"
+#~ msgstr "Pourquoi utiliser le VPN altCensored ?"
+
+#~ msgid ""
+#~ "A virtual private network (VPN) service"
+#~ " provides a proxy server to help "
+#~ "users bypass Internet censorship such as"
+#~ "                     geoblocking and users who"
+#~ " want to protect their communications "
+#~ "against data profiling or MitM attacks"
+#~ " on hostile networks"
+#~ msgstr ""
+#~ "Un service de réseau privé virtuel "
+#~ "(VPN) fournit un serveur proxy pour "
+#~ "aider les utilisateurs à contourner la"
+#~ " censure d'Internet telle que le "
+#~ "géoblocage et les utilisateurs qui "
+#~ "veulent protéger leurs communications contre"
+#~ " le profilage des donnéesou les "
+#~ "attaques MitM sur des réseaux hostiles"
+
+#~ msgid "Our goal is to raise funds for fighting censorship"
+#~ msgstr ""
+#~ "Notre objectif est de récolter des "
+#~ "fonds pour lutter contre la censure\""
+
+#~ msgid "(together we show what they hide)"
+#~ msgstr "(ensemble nous montrons ce qu'ils cachent)"
+
+#~ msgid "and improve online privacy"
+#~ msgstr "et améliorer la confidentialité en ligne"
+
+#~ msgid "(together we hide what they want)"
+#~ msgstr "(ensemble nous cachons ce qu'ils veulent)"
+
+#~ msgid "Wireguard Client Setup"
+#~ msgstr "Configuration du client Wireguard"
+
+#~ msgid "Official"
+#~ msgstr "Officiel"
+
+#~ msgid "Wireguard Clients"
+#~ msgstr "Clients Wireguard"
+
+#~ msgid "Connections"
+#~ msgstr "Connexions"
+
+#~ msgid "Download"
+#~ msgstr "Télécharger"
+
+#~ msgid "Nodes"
+#~ msgstr "Nœuds"
+
+#~ msgid "Create New Connection"
+#~ msgstr "Créer une nouvelle connexion"
 

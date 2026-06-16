@@ -1,12 +1,12 @@
 /* Common theme */
 html,
 body,
-:not([style*="background-color:"]):not(.shareon > *):not(.help-tip):not(.help-balloon):not(.pure-button-google):not(.pure-button-github):not(.pure-button-primary) {
+:not([style*="background-color:"]):not(.shareon > *):not(.help-tip):not(.help-balloon):not(.pure-button-google):not(.pure-button-github):not(.pure-button-primary):not(.flash-error):not(.flash-success) {
     background-color: rgb(21, 21, 20) !important;
 }
 html,
 body,
-:not([style*="color:"]):not(.pure-button-google):not(.pure-button-github):not(.pure-button-primary) {
+:not([style*="color:"]):not(.pure-button-google):not(.pure-button-github):not(.pure-button-primary):not(.flash-error):not(.flash-success):not(.flash-message) {
 /*    color: rgb(186, 173, 148) !important;  */
     color: rgb(205, 195, 177) !important;
 }
@@ -132,6 +132,18 @@ a.pure-button-github {
 
 .about-content a:not([style*="color:"]) {
     color: darkorange !important;
+}
+
+.flash.flash-error {
+    background: hsl(0, 60%, 18%);
+    color: hsl(0, 100%, 70%);
+    border: 1px solid hsl(0, 100%, 50%);
+}
+
+.flash.flash-success {
+    background: hsl(100, 40%, 15%);
+    color: hsl(100, 70%, 60%);
+    border: 1px solid hsl(100, 60%, 40%);
 }
 
 .donate-crypto summary b {

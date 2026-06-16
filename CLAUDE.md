@@ -28,15 +28,17 @@ Production runs as gunicorn behind nginx (no Docker). The `docker-compose.yml` i
 ## Development workflow
 
 1. **Before making any changes**, create a new local branch: `git checkout -b <short-descriptive-name>`
-2. **Make all changes on that branch.** Never commit directly to `master` or `main`.
-3. **The user tests locally** against the running Flask dev server (see Running the development server below).
-4. **When the user says "commit & push"**, create a commit and push to all three remotes:
+2. **Make all changes and commit on that branch.** Never commit directly to `master` or `main`.
+3. **Wait** — do not push the branch or merge to master. The user tests locally against the running Flask dev server.
+4. **When the user says "tested, now merge push commit"** (or equivalent confirmation), merge the branch into master and push to all three remotes:
    ```bash
+   git checkout master
+   git merge <branch-name>
    git push github HEAD
    git push bbucket_key HEAD
    git push codeberg HEAD
    ```
-5. Do not push until explicitly told to.
+5. Do not merge or push until the user explicitly confirms testing is done.
 
 The three remotes are:
 - `github` — git@github.com:altCensored/altcensored.git
@@ -89,7 +91,7 @@ User preferences (locale, theme, playnext, autoplay, looplist) and navbar transl
 Flask-BabelPlus with 8 languages: `en, de, es, fr, pt, nl, it, se`. UI strings are also stored in the `translation` DB table and served per-session locale via `get_navtabs()`. `.po`/`.mo` files live in `alt2/translations/`. To extract/compile translations:
 
 ```bash
-pybabel extract -F alt2/babel.cfg -o alt2/messages.pot alt2/
+pybabel extract -F alt2/babel.cfg --keyword=_l -o alt2/messages.pot alt2/
 pybabel update -i alt2/messages.pot -d alt2/translations
 pybabel compile -d alt2/translations
 ```

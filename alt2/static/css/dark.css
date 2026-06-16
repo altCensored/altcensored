@@ -99,6 +99,18 @@ a.pure-button-github {
     border-color: #444d56 !important;
 }
 
+/* ===== Navbar icons and auth link ===== */
+.navbar a.pure-menu-heading,
+.navbar a.pure-menu-heading .icon,
+.navbar button .icon {
+    color: var(--dk-footer);
+}
+.navbar a.pure-menu-heading:hover,
+.navbar a.pure-menu-heading:hover .icon,
+.navbar button:hover .icon {
+    color: var(--dk-link-hover);
+}
+
 /* ===== Nav / menus ===== */
 a.pure-menu-heading b,
 a.pure-menu-item b { color: var(--dk-link); }

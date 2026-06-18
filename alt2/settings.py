@@ -5,7 +5,7 @@ from datetime import timezone
 logger = logging.getLogger(__name__)
 
 from flask import (
-    Blueprint, flash, redirect, render_template, request, url_for, current_app, session
+    Blueprint, abort, flash, redirect, render_template, request, url_for, current_app, session
 )
 from flask_babelplus import lazy_gettext
 from .database import db_session
@@ -34,9 +34,13 @@ def update_site():
         session['playnext'] = util.str_to_bool(request.form['playnext'])
         session['looplist'] = util.str_to_bool(request.form['looplist'])
 
-        if session['locale'] != request.form['locale']:
+        form_locale = request.form.get('locale', '')
+        if form_locale not in current_app.config['SUPPORTED_LANGUAGES']:
+            abort(400)
+
+        if session['locale'] != form_locale:
             row = db_session.query(Translation).with_entities(getattr(Translation, session['locale']),
-                                                              getattr(Translation, request.form['locale'])).all()
+                                                              getattr(Translation, form_locale)).all()
             rowtuple = tuple(row)
             navtabs_change_locale = dict(rowtuple)
 
@@ -44,7 +48,7 @@ def update_site():
             fnt2 = navtabs_change_locale[fnt2]
             fnt3 = navtabs_change_locale[fnt3]
 
-        session['locale'] = request.form['locale']
+        session['locale'] = form_locale
 
         row = db_session.query(Translation).with_entities(getattr(Translation, session['locale']), Translation.en).all()
         rowtuple = tuple(row)

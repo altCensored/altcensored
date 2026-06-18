@@ -82,7 +82,7 @@ def update_site():
                 db_session.rollback()
                 flash(lazy_gettext('Error saving settings'), 'error')
 
-            return redirect(url_for('settings.index'))
+        return redirect(url_for('settings.index'))
 
     session['locale'] = util.get_locale()
     locales = (current_app.config['SUPPORTED_LANGUAGES'].keys())

@@ -240,7 +240,7 @@ def add_video_playlist():
         playlist = Playlist.query.filter(Playlist.hashid == playlist_ident).scalar()
 
     if playlist_ident == 'add_to_watchlater':
-        user = User.query.get(session['user']['id'])
+        user = db_session.get(User, session['user']['id'])
         if user.watchlater is None:
             user.watchlater = [video_id]
         elif video_id not in user.watchlater:
@@ -336,7 +336,7 @@ def remove_video_playlist():
 @bp.route('/delete/<playlist>', methods=['GET', 'POST'])
 @login_required
 def delete(playlist):
-    playlistobj = Playlist.query.get(playlist)
+    playlistobj = db_session.get(Playlist, playlist)
     if playlistobj is None:
         abort(404)
     if playlistobj.user_id != session['user']['id']:

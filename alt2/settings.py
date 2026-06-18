@@ -63,7 +63,7 @@ def update_site():
         session['navtabs']['navtab3'] = fnt3
 
         if 'user' in session:
-            user = User.query.get(session['user']['id'])
+            user = db_session.get(User, session['user']['id'])
             now = datetime.datetime.now(timezone.utc)
             user.updated = now
             user.settings = {
@@ -154,10 +154,10 @@ def update_user():
         session['user']['email_subscribed'] = femail_subscribed
         session.modified = True
 
-        user = User.query.get(session['user']['id'])
+        user = db_session.get(User, session['user']['id'])
         playlist = Playlist.query.filter(Playlist.title == ffeatured_playlist).scalar()
         if playlist is not None and playlist.featured_video_id is not None:
-            fv = Mv_Video.query.get(playlist.featured_video_id)
+            fv = db_session.get(Mv_Video, playlist.featured_video_id)
             user.featured_playlist = {
                 "pl_id": playlist.id,
                 "pl_title": playlist.title,
@@ -199,7 +199,7 @@ def update_user():
     playlist_titles = [r[0] for r in playlist_titles]
     playlist_titles = list(playlist_titles)
 
-    user = User.query.get(session['user']['id'])
+    user = db_session.get(User, session['user']['id'])
     featured_playlist = None
 
     if user.featured_playlist is not None:

@@ -33,7 +33,7 @@ def item(cat_id,page):
         abort(404)
     offset = ((int(page)-1) * PER_PAGE)
     order = 'latest'
-    category = Mv_Category.query.get(cat_id)
+    category = db_session.get(Mv_Category, cat_id)
     if category is None:
         abort(404)
     cat_name = category.cat_name
@@ -59,7 +59,7 @@ def item_new(cat_id,page):
         abort(404)
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
-    category = Mv_Category.query.get(cat_id)
+    category = db_session.get(Mv_Category, cat_id)
     if category is None:
         abort(404)
     cat_name = category.cat_name
@@ -85,7 +85,7 @@ def item_popular(cat_id,page):
         abort(404)
     offset = ((int(page)-1) * PER_PAGE)
     order = 'popular'
-    category = Mv_Category.query.get(cat_id)
+    category = db_session.get(Mv_Category, cat_id)
     if category is None:
         abort(404)
     cat_name = category.cat_name

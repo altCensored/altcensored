@@ -461,6 +461,29 @@ input[type="search"]::-webkit-search-cancel-button {
     padding-bottom: 0.075em;
   }
 
+  /* Mobile-responsive forms: stack label above input, full-width controls */
+  .form-responsive.pure-form-aligned .pure-control-group {
+    margin-bottom: 0.75em;
+  }
+
+  .form-responsive.pure-form-aligned .pure-control-group label {
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin: 0 0 0.3em 0;
+  }
+
+  .form-responsive.pure-form-aligned .pure-control-group input,
+  .form-responsive.pure-form-aligned .pure-control-group select {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .form-responsive.pure-form-aligned .pure-controls {
+    margin: 0.75em 0 0 0;
+  }
+
 }
 
 /* 

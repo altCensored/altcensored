@@ -24,7 +24,7 @@
         <div class="pure-u-1 pure-u-md-20-24">
             {% with active_settings='site' %}{% include "widgets/settings_subnav.html" %}{% endwith %}
             <div class="h-box settings-content">
-                <form class="pure-form pure-form-aligned" name=site method="post">
+                <form class="pure-form pure-form-aligned form-responsive" name=site method="post">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <fieldset>
                         <div class="pure-control-group">

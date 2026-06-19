@@ -17,7 +17,7 @@ from flask import (
 from sqlalchemy import func, or_
 
 from .database import db_session
-from .models import Mv_Channel, User, Entity, Source, Sources_to_Videos, Email_list, Category
+from .models import MvChannel, User, Entity, Source, Sources_to_Videos, EmailList, Category
 from datatables import ColumnDT, DataTables
 from threading import Thread
 
@@ -89,7 +89,7 @@ def send_mass_email(email, sender, subject, filename, service):
     if email_exists(email):
         user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
     else:
-        user = db_session.query(Email_list).filter(func.lower(Email_list.email) == func.lower(email)).one()
+        user = db_session.query(EmailList).filter(func.lower(EmailList.email) == func.lower(email)).one()
 
     now = datetime.datetime.now(timezone.utc)
     user.email_lastsent_date = now
@@ -104,7 +104,7 @@ def db_unsubscribe_email(tablename, email, action):
     if tablename == 'User':
         user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
     else:
-        user = db_session.query(Email_list).filter(func.lower(Email_list.email) == func.lower(email)).one()
+        user = db_session.query(EmailList).filter(func.lower(EmailList.email) == func.lower(email)).one()
     now = datetime.datetime.now(timezone.utc)
     user.email_subscribed = False
     user.email_action = action
@@ -120,7 +120,7 @@ def db_add_email_list(email, email_source):
     now = datetime.datetime.now(timezone.utc)
     email_lastsent_date = datetime.datetime.now(timezone.utc) - datetime.timedelta(30)
     username = email.split("@")[0]
-    user = Email_list(
+    user = EmailList(
         email=email.lower(), username=username, email_source=email_source, \
         created_date=now, updated=now, email_lastsent_date=email_lastsent_date, \
         )
@@ -149,23 +149,23 @@ def channel_table():
 @util.admin_login_required
 def channel_data_all():
     columns = [
-        ColumnDT(Mv_Channel.ytc_title),
-        ColumnDT(Mv_Channel.ytc_id),
-        ColumnDT(Mv_Channel.ytc_subscribercount),
-        ColumnDT(Mv_Channel.ytc_viewcount),
-        ColumnDT(Mv_Channel.total),
-        ColumnDT(Mv_Channel.limited),
-        ColumnDT(Mv_Channel.archive),
-        ColumnDT(Mv_Channel.allow),
-        ColumnDT(Mv_Channel.was_full),
-        ColumnDT(func.to_char(Mv_Channel.delta,'dd')),
-        ColumnDT(func.to_char(Mv_Channel.newest_video,'YYYY-mm-dd')),
-        ColumnDT(func.to_char(Mv_Channel.ytc_publishedat,'YYYY-mm-dd')),
-        ColumnDT(func.to_char(Mv_Channel.ytc_deleteddate,'YYYY-mm-dd')),
-        ColumnDT(func.to_char(Mv_Channel.ytc_addeddate, 'YYYY-mm-dd')),
+        ColumnDT(MvChannel.ytc_title),
+        ColumnDT(MvChannel.ytc_id),
+        ColumnDT(MvChannel.ytc_subscribercount),
+        ColumnDT(MvChannel.ytc_viewcount),
+        ColumnDT(MvChannel.total),
+        ColumnDT(MvChannel.limited),
+        ColumnDT(MvChannel.archive),
+        ColumnDT(MvChannel.allow),
+        ColumnDT(MvChannel.was_full),
+        ColumnDT(func.to_char(MvChannel.delta,'dd')),
+        ColumnDT(func.to_char(MvChannel.newest_video,'YYYY-mm-dd')),
+        ColumnDT(func.to_char(MvChannel.ytc_publishedat,'YYYY-mm-dd')),
+        ColumnDT(func.to_char(MvChannel.ytc_deleteddate,'YYYY-mm-dd')),
+        ColumnDT(func.to_char(MvChannel.ytc_addeddate, 'YYYY-mm-dd')),
     ]
 
-    query = db_session.query().select_from(Mv_Channel)
+    query = db_session.query().select_from(MvChannel)
     params = request.args.to_dict()
     rowTable = DataTables(params, query, columns)
     return jsonify(rowTable.output_result())
@@ -221,16 +221,16 @@ def channel_table_new():
 @bp.route('/channel_table_new_data')
 @util.admin_login_required
 def channel_table_new_data():
-#    query = db_session.query(Mv_Channel)
-#    query = db_session.query(Mv_Channel).filter(Mv_Channel.ytc_deleted)
-    query = db_session.query(Mv_Channel).filter(Mv_Channel.ytc_deleted == False)
+#    query = db_session.query(MvChannel)
+#    query = db_session.query(MvChannel).filter(MvChannel.ytc_deleted)
+    query = db_session.query(MvChannel).filter(MvChannel.ytc_deleted == False)
 
     # search filter
     search = request.args.get('search')
     if search:
         query = query.filter(or_(
-            Mv_Channel.ytc_id.ilike(f'%{search}%'),
-            Mv_Channel.ytc_title.ilike(f'%{search}%')
+            MvChannel.ytc_id.ilike(f'%{search}%'),
+            MvChannel.ytc_title.ilike(f'%{search}%')
         ))
 
     total = query.count()
@@ -245,7 +245,7 @@ def channel_table_new_data():
             if name not in ['ytc_videocount', 'total', 'archived', 'limited', 'newest', 'updated',
                             'delta', 'allow', 'ytc_archive', 'ytc_partarchive', 'was_full', 'was_part']:
                 name = 'name'
-            col = getattr(Mv_Channel, name)
+            col = getattr(MvChannel, name)
             if direction == '-':
                 col = col.desc()
             order.append(col)
@@ -656,13 +656,13 @@ def mass_email():
                 limit(sendlimit).all()
 
         if recipients == 'friends':
-            usercount = db_session.query(func.count(Email_list.id)). \
-                filter((Email_list.email_lastsent_date) < func.current_date() - dayslastsent). \
-                filter(Email_list.email_subscribed). \
+            usercount = db_session.query(func.count(EmailList.id)). \
+                filter((EmailList.email_lastsent_date) < func.current_date() - dayslastsent). \
+                filter(EmailList.email_subscribed). \
                 scalar()
-            users = db_session.query(Email_list). \
-                filter((Email_list.email_lastsent_date) < func.current_date() - dayslastsent). \
-                filter(Email_list.email_subscribed). \
+            users = db_session.query(EmailList). \
+                filter((EmailList.email_lastsent_date) < func.current_date() - dayslastsent). \
+                filter(EmailList.email_subscribed). \
                 order_by(func.random()). \
                 limit(sendlimit).all()
 
@@ -741,7 +741,7 @@ def unsubscribe_email(token):
         if email_exists(email):
             user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
         else:
-            user = db_session.query(Email_list).filter(func.lower(Email_list.email) == func.lower(email)).one()
+            user = db_session.query(EmailList).filter(func.lower(EmailList.email) == func.lower(email)).one()
 
         if not user.email_subscribed:
             conf = item_quoted + ' ' + lazy_gettext('has already been unsubscribed')
@@ -755,8 +755,8 @@ def unsubscribe_email(token):
                 user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
                 tablename = 'User'
             else:
-                user = db_session.query(Email_list).filter(func.lower(Email_list.email) == func.lower(email)).one()
-                tablename = 'Email_list'
+                user = db_session.query(EmailList).filter(func.lower(EmailList.email) == func.lower(email)).one()
+                tablename = 'EmailList'
             action = 'altc_unsub'
             db_unsubscribe_email(tablename, user.email, action)
             conf = item_quoted + ' ' + lazy_gettext('was unsubscribed')
@@ -797,7 +797,7 @@ def aws_bounce():
             user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
             tablename = 'User'
         else:
-            tablename = 'Email_list'
+            tablename = 'EmailList'
 
         db_unsubscribe_email(tablename, email, action)
 
@@ -832,7 +832,7 @@ def aws_complaint():
             user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
             tablename = 'User'
         else:
-            tablename = 'Email_list'
+            tablename = 'EmailList'
 
         db_unsubscribe_email(tablename, email, action)
 

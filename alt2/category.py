@@ -1,7 +1,7 @@
 from flask import ( Blueprint, render_template, session, abort )
 from sqlalchemy import func
 from .database import db_session
-from .models import Mv_Video, Mv_Category, Language, User
+from .models import MvVideo, MvCategory, Language, User
 from .pagination import Pagination
 from .util import set_session
 
@@ -14,8 +14,8 @@ PER_PAGE = 24
 def index(page):
 #    set_session()
     offset = ((int(page)-1) * PER_PAGE)
-    categorycount = db_session.query(func.count(Mv_Category.cat_id)).scalar()
-    categories = Mv_Category.query.limit(PER_PAGE).offset(offset)
+    categorycount = db_session.query(func.count(MvCategory.cat_id)).scalar()
+    categories = MvCategory.query.limit(PER_PAGE).offset(offset)
     if not categories and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, categorycount)
@@ -33,12 +33,12 @@ def item(cat_id,page):
         abort(404)
     offset = ((int(page)-1) * PER_PAGE)
     order = 'latest'
-    category = db_session.get(Mv_Category, cat_id)
+    category = db_session.get(MvCategory, cat_id)
     if category is None:
         abort(404)
     cat_name = category.cat_name
-    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter_by(category=cat_name).scalar()
-    videos = Mv_Video.query.filter_by(category=cat_name).order_by(Mv_Video.id.desc()).limit(PER_PAGE).offset(offset)
+    videocount = db_session.query(func.count(MvVideo.extractor_data)).filter_by(category=cat_name).scalar()
+    videos = MvVideo.query.filter_by(category=cat_name).order_by(MvVideo.id.desc()).limit(PER_PAGE).offset(offset)
     if not videos and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)
@@ -59,12 +59,12 @@ def item_new(cat_id,page):
         abort(404)
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
-    category = db_session.get(Mv_Category, cat_id)
+    category = db_session.get(MvCategory, cat_id)
     if category is None:
         abort(404)
     cat_name = category.cat_name
-    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter_by(category=cat_name).scalar()
-    videos = Mv_Video.query.filter_by(category=cat_name).order_by(Mv_Video.published.desc()).limit(PER_PAGE).offset(offset)
+    videocount = db_session.query(func.count(MvVideo.extractor_data)).filter_by(category=cat_name).scalar()
+    videos = MvVideo.query.filter_by(category=cat_name).order_by(MvVideo.published.desc()).limit(PER_PAGE).offset(offset)
     if not videos and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)
@@ -85,12 +85,12 @@ def item_popular(cat_id,page):
         abort(404)
     offset = ((int(page)-1) * PER_PAGE)
     order = 'popular'
-    category = db_session.get(Mv_Category, cat_id)
+    category = db_session.get(MvCategory, cat_id)
     if category is None:
         abort(404)
     cat_name = category.cat_name
-    videocount = db_session.query(func.count(Mv_Video.extractor_data)).filter_by(category=cat_name).scalar()
-    videos = Mv_Video.query.filter_by(category=cat_name).order_by(Mv_Video.yt_views.desc()).limit(PER_PAGE).offset(offset)
+    videocount = db_session.query(func.count(MvVideo.extractor_data)).filter_by(category=cat_name).scalar()
+    videos = MvVideo.query.filter_by(category=cat_name).order_by(MvVideo.yt_views.desc()).limit(PER_PAGE).offset(offset)
     if not videos and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)

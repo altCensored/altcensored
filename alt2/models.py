@@ -12,15 +12,6 @@ import jwt
 from .database import db_session
 from time import time
 
-# Backward-compat aliases for all blueprint imports
-Email_list = EmailList
-Mv_Video = MvVideo
-Mv_Channel = MvChannel
-Mv_Category = MvCategory
-Mv_Playlist = MvPlaylist
-Mv_Altcen_user = MvAltcenUser
-
-
 def _set_password(self, password):
     self.password = generate_password_hash(password)
 

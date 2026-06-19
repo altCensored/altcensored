@@ -7,7 +7,7 @@ from sqlalchemy import func, case, update
 from sqlalchemy.orm.attributes import flag_modified
 from flask_babelplus import lazy_gettext
 from .database import db_session
-from .models import User, Mv_Video, Playlist, Counter
+from .models import User, MvVideo, Playlist, Counter
 from .pagination import Pagination
 from .util import login_required, get_usercount, users_newest, users_popular
 from . import config
@@ -101,7 +101,7 @@ def item(username):
     fv_ids = [p.featured_video_id for p in playlists if p.featured_video_id]
     featured_videos = {}
     if fv_ids:
-        fvs = Mv_Video.query.filter(Mv_Video.extractor_data.in_(fv_ids)).all()
+        fvs = MvVideo.query.filter(MvVideo.extractor_data.in_(fv_ids)).all()
         featured_videos = {fv.extractor_data: fv for fv in fvs}
     return render_template('user/user_item.html', user=user, playlistcount=playlistcount, \
                            historycount=historycount, watchlatercount=watchlatercount, playlists=playlists,
@@ -124,9 +124,9 @@ def history(page):
 
     ordering = case(
         {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(user.watched))))},
-        value=Mv_Video.extractor_data
+        value=MvVideo.extractor_data
     )
-    videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(user.watched)).order_by(ordering).limit(PER_PAGE).offset(offset)
+    videos = MvVideo.query.filter(MvVideo.extractor_data.in_(user.watched)).order_by(ordering).limit(PER_PAGE).offset(offset)
     videocount = len(user.watched)
     pagination = Pagination(page, PER_PAGE, videocount)
     return render_template('user/user_history_index.html', pagination=pagination,
@@ -200,9 +200,9 @@ def watchlater(page):
 
     ordering = case(
         {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(user.watchlater))))},
-        value=Mv_Video.extractor_data
+        value=MvVideo.extractor_data
     )
-    videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(user.watchlater)).order_by(ordering).limit(PER_PAGE).offset(offset)
+    videos = MvVideo.query.filter(MvVideo.extractor_data.in_(user.watchlater)).order_by(ordering).limit(PER_PAGE).offset(offset)
     videocount = len(user.watchlater)
     pagination = Pagination(page, PER_PAGE, videocount)
     return render_template('user/user_watchlater_index.html', pagination=pagination,
@@ -213,7 +213,7 @@ def watchlater(page):
 @login_required
 def add_video_watchlater():
     video_id = request.args.get('v', None)
-#    video = Mv_Video.query.get(video_id)
+#    video = MvVideo.query.get(video_id)
     user = User.query.filter(User.id == session['user']['id']).scalar()
 
     if user.watchlater is None:
@@ -329,7 +329,7 @@ def playlist(page):
     fv_ids = [p.featured_video_id for p in playlists if p.featured_video_id]
     featured_videos = {}
     if fv_ids:
-        fvs = Mv_Video.query.filter(Mv_Video.extractor_data.in_(fv_ids)).all()
+        fvs = MvVideo.query.filter(MvVideo.extractor_data.in_(fv_ids)).all()
         featured_videos = {fv.extractor_data: fv for fv in fvs}
     return render_template('user/user_playlist_index.html',
                            pagination=pagination, playlistcount=playlistcount, playlists=playlists,

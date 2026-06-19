@@ -12,7 +12,7 @@ from flask_babelplus import lazy_gettext
 import random, timeago, datetime, json
 from datetime import timezone
 from .database import db_session
-from .models import User, Playlist, Mv_Video, Counter
+from .models import User, Playlist, MvVideo, Counter
 from .pagination import Pagination
 from . import (util,config)
 from .util import (
@@ -44,7 +44,7 @@ def index(page):
     fv_ids = [p.featured_video_id for p in playlists if p.featured_video_id]
     featured_videos = {}
     if fv_ids:
-        fvs = Mv_Video.query.filter(Mv_Video.extractor_data.in_(fv_ids)).all()
+        fvs = MvVideo.query.filter(MvVideo.extractor_data.in_(fv_ids)).all()
         featured_videos = {fv.extractor_data: fv for fv in fvs}
 
     return render_template('playlist/playlist_index.html',
@@ -67,7 +67,7 @@ def popular(page):
     fv_ids = [p.featured_video_id for p in playlists if p.featured_video_id]
     featured_videos = {}
     if fv_ids:
-        fvs = Mv_Video.query.filter(Mv_Video.extractor_data.in_(fv_ids)).all()
+        fvs = MvVideo.query.filter(MvVideo.extractor_data.in_(fv_ids)).all()
         featured_videos = {fv.extractor_data: fv for fv in fvs}
 
     return render_template('playlist/playlist_index.html',
@@ -113,9 +113,9 @@ def item(playlist,page):
     if playlist.videos:
         ordering = case(
             {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(playlist.videos))))},
-            value=Mv_Video.extractor_data
+            value=MvVideo.extractor_data
         )
-        videos = Mv_Video.query.filter(Mv_Video.extractor_data.in_(playlist.videos)).order_by(ordering).limit(PER_PAGE).offset(offset)
+        videos = MvVideo.query.filter(MvVideo.extractor_data.in_(playlist.videos)).order_by(ordering).limit(PER_PAGE).offset(offset)
         pagination = Pagination(page, PER_PAGE, videocount)
     else:
         videos = []
@@ -123,10 +123,10 @@ def item(playlist,page):
 
     featured_video = None
     if playlist.featured_video_id:
-        featured_video = db_session.get(Mv_Video, playlist.featured_video_id)
+        featured_video = db_session.get(MvVideo, playlist.featured_video_id)
         if featured_video is None and playlist.videos:
-            existing = {r[0] for r in db_session.query(Mv_Video.extractor_data)
-                        .filter(Mv_Video.extractor_data.in_(playlist.videos))}
+            existing = {r[0] for r in db_session.query(MvVideo.extractor_data)
+                        .filter(MvVideo.extractor_data.in_(playlist.videos))}
             new_fv_id = next((v for v in playlist.videos if v in existing), None)
             playlist.featured_video_id = new_fv_id
             try:
@@ -134,7 +134,7 @@ def item(playlist,page):
             except Exception:
                 db_session.rollback()
             if new_fv_id:
-                featured_video = db_session.get(Mv_Video, new_fv_id)
+                featured_video = db_session.get(MvVideo, new_fv_id)
 
     return render_template('playlist/playlist_item.html', playlist=playlist, timediff=timediff, \
                            videos=videos, videocount=videocount, pagination=pagination, watchlater=watchlater,

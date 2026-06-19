@@ -14,8 +14,8 @@ from sqlalchemy import func, nullslast, select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.orm.attributes import flag_modified
 from .database import db_session
-from .models import Translation, Playlist, Mv_Channel, Mv_Video, User, \
-    Email_list, Entity, Source, Counter
+from .models import Translation, Playlist, MvChannel, MvVideo, User, \
+    EmailList, Entity, Source, Counter
 from . import config
 from .cache import cache
 
@@ -195,7 +195,7 @@ def set_session():
         session['navtabs_perm'] = dict(row)
 
     if 'videocount' not in session:
-        session['videocount'] = db_session.scalar(select(func.count(Mv_Video.extractor_data)))
+        session['videocount'] = db_session.scalar(select(func.count(MvVideo.extractor_data)))
     if 'usercount' not in session:
         session['usercount'] = db_session.scalar(select(func.count(User.id)).filter(User.public))
     if 'playlistcount' not in session:
@@ -203,10 +203,10 @@ def set_session():
             select(func.count(Playlist.id)).filter(Playlist.public, Playlist.featured_video_id.isnot(None))
         )
     if 'channelcount' not in session:
-        session['channelcount'] = db_session.scalar(select(func.count(Mv_Channel.ytc_id)))
+        session['channelcount'] = db_session.scalar(select(func.count(MvChannel.ytc_id)))
     if 'delchannelcount' not in session:
         session['delchannelcount'] = db_session.scalar(
-            select(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted)
+            select(func.count(MvChannel.ytc_id)).filter(MvChannel.ytc_deleted)
         )
 
 
@@ -252,7 +252,7 @@ def email_exists(email):
 
 def email_list_exists(email):
     if db_session.scalar(
-        select(Email_list.email).filter(func.lower(Email_list.email) == func.lower(email))
+        select(EmailList.email).filter(func.lower(EmailList.email) == func.lower(email))
     ) is not None:
         return True
 
@@ -398,7 +398,7 @@ def _exec_listing(stmt, per_page, offset):
 @cache.memoize(timeout=3600)
 def videos_trending(PER_PAGE, offset):
     return _exec_listing(
-        select(Mv_Video).order_by(nullslast(Mv_Video.ac_views.desc())),
+        select(MvVideo).order_by(nullslast(MvVideo.ac_views.desc())),
         PER_PAGE, offset,
     )
 
@@ -406,7 +406,7 @@ def videos_trending(PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def videos_latest(PER_PAGE, offset):
     return _exec_listing(
-        select(Mv_Video).order_by(nullslast(Mv_Video.yt_deleted_date.desc())),
+        select(MvVideo).order_by(nullslast(MvVideo.yt_deleted_date.desc())),
         PER_PAGE, offset,
     )
 
@@ -414,7 +414,7 @@ def videos_latest(PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def videos_newest(PER_PAGE, offset):
     return _exec_listing(
-        select(Mv_Video).order_by(Mv_Video.published.desc(), Mv_Video.extractor_data.desc()),
+        select(MvVideo).order_by(MvVideo.published.desc(), MvVideo.extractor_data.desc()),
         PER_PAGE, offset,
     )
 
@@ -422,7 +422,7 @@ def videos_newest(PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def videos_popular(PER_PAGE, offset):
     return _exec_listing(
-        select(Mv_Video).order_by(Mv_Video.yt_views.desc()),
+        select(MvVideo).order_by(MvVideo.yt_views.desc()),
         PER_PAGE, offset,
     )
 
@@ -430,7 +430,7 @@ def videos_popular(PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def channels_latest(PER_PAGE, offset):
     return _exec_listing(
-        select(Mv_Channel).order_by(Mv_Channel.id.desc()),
+        select(MvChannel).order_by(MvChannel.id.desc()),
         PER_PAGE, offset,
     )
 
@@ -438,7 +438,7 @@ def channels_latest(PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def channels_newest(PER_PAGE, offset):
     return _exec_listing(
-        select(Mv_Channel).order_by(Mv_Channel.ytc_publishedat.desc(), Mv_Channel.ytc_id.desc()),
+        select(MvChannel).order_by(MvChannel.ytc_publishedat.desc(), MvChannel.ytc_id.desc()),
         PER_PAGE, offset,
     )
 
@@ -446,7 +446,7 @@ def channels_newest(PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def channels_popular(PER_PAGE, offset):
     return _exec_listing(
-        select(Mv_Channel).order_by(Mv_Channel.ytc_viewcount.desc()),
+        select(MvChannel).order_by(MvChannel.ytc_viewcount.desc()),
         PER_PAGE, offset,
     )
 
@@ -454,8 +454,8 @@ def channels_popular(PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def channels_deleted(PER_PAGE, offset):
     return _exec_listing(
-        select(Mv_Channel).filter(Mv_Channel.ytc_deleted)
-        .order_by(Mv_Channel.ytc_deleteddate.desc(), Mv_Channel.ytc_id.desc()),
+        select(MvChannel).filter(MvChannel.ytc_deleted)
+        .order_by(MvChannel.ytc_deleteddate.desc(), MvChannel.ytc_id.desc()),
         PER_PAGE, offset,
     )
 
@@ -463,7 +463,7 @@ def channels_deleted(PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def channels_limited(PER_PAGE, offset):
     return _exec_listing(
-        select(Mv_Channel).order_by(Mv_Channel.limited.desc(), Mv_Channel.ytc_id.desc()),
+        select(MvChannel).order_by(MvChannel.limited.desc(), MvChannel.ytc_id.desc()),
         PER_PAGE, offset,
     )
 
@@ -471,17 +471,17 @@ def channels_limited(PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def channels_archived(PER_PAGE, offset):
     return _exec_listing(
-        select(Mv_Channel).filter(Mv_Channel.ytc_archive),
+        select(MvChannel).filter(MvChannel.ytc_archive),
         PER_PAGE, offset,
     )
 
 
 @cache.memoize(timeout=3600)
 def channeli(ytc_id):
-    channel = db_session.get(Mv_Channel, ytc_id)
+    channel = db_session.get(MvChannel, ytc_id)
     if channel is None:
         channel = db_session.execute(
-            select(Mv_Channel).filter(func.lower(Mv_Channel.ytc_id) == func.lower(ytc_id))
+            select(MvChannel).filter(func.lower(MvChannel.ytc_id) == func.lower(ytc_id))
         ).scalar_one_or_none()
     return channel
 
@@ -489,14 +489,14 @@ def channeli(ytc_id):
 @cache.memoize(timeout=3600)
 def channeli_videocount(ytc_id):
     return db_session.scalar(
-        select(func.count(Mv_Video.extractor_data)).filter(Mv_Video.ytc_id == ytc_id)
+        select(func.count(MvVideo.extractor_data)).filter(MvVideo.ytc_id == ytc_id)
     )
 
 
 @cache.memoize(timeout=3600)
 def channeli_videos_newest(ytc_id, PER_PAGE, offset):
     return _exec_listing(
-        select(Mv_Video).filter(Mv_Video.ytc_id == ytc_id).order_by(Mv_Video.published.desc()),
+        select(MvVideo).filter(MvVideo.ytc_id == ytc_id).order_by(MvVideo.published.desc()),
         PER_PAGE, offset,
     )
 
@@ -504,7 +504,7 @@ def channeli_videos_newest(ytc_id, PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def channeli_videos_popular(ytc_id, PER_PAGE, offset):
     return _exec_listing(
-        select(Mv_Video).filter(Mv_Video.ytc_id == ytc_id).order_by(Mv_Video.yt_views.desc()),
+        select(MvVideo).filter(MvVideo.ytc_id == ytc_id).order_by(MvVideo.yt_views.desc()),
         PER_PAGE, offset,
     )
 
@@ -512,7 +512,7 @@ def channeli_videos_popular(ytc_id, PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def ytc_popular(ytc_id, PER_PAGE, offset):
     return _exec_listing(
-        select(Mv_Video).filter(Mv_Video.ytc_id == ytc_id).order_by(Mv_Video.yt_views.desc()),
+        select(MvVideo).filter(MvVideo.ytc_id == ytc_id).order_by(MvVideo.yt_views.desc()),
         PER_PAGE, offset,
     )
 
@@ -545,14 +545,14 @@ def playlisti(playlist):
 @cache.memoize(timeout=3600)
 def playlisti_videocount(playlist):
     return db_session.scalar(
-        select(func.count(Mv_Video.id)).filter(Mv_Video.extractor_data.in_(playlist.videos))
+        select(func.count(MvVideo.id)).filter(MvVideo.extractor_data.in_(playlist.videos))
     )
 
 
 @cache.memoize(timeout=3600)
 def playlisti_videos(playlist, ordering, PER_PAGE, offset):
     return _exec_listing(
-        select(Mv_Video).filter(Mv_Video.extractor_data.in_(playlist.videos)).order_by(ordering),
+        select(MvVideo).filter(MvVideo.extractor_data.in_(playlist.videos)).order_by(ordering),
         PER_PAGE, offset,
     )
 
@@ -582,22 +582,22 @@ def useri(username):
 
 @cache.cached(key_prefix="cache:videocount", timeout=3600)
 def videocount_cache():
-    return db_session.scalar(select(func.count(Mv_Video.extractor_data)))
+    return db_session.scalar(select(func.count(MvVideo.extractor_data)))
 
 
 @cache.cached(key_prefix="cache:channelcount", timeout=3600)
 def channelcount_cache():
-    return db_session.scalar(select(func.count(Mv_Channel.ytc_id)))
+    return db_session.scalar(select(func.count(MvChannel.ytc_id)))
 
 
 @cache.cached(key_prefix="cache:delchannelcount", timeout=3600)
 def delchannelcount_cache():
-    return db_session.scalar(select(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_deleted))
+    return db_session.scalar(select(func.count(MvChannel.ytc_id)).filter(MvChannel.ytc_deleted))
 
 
 @cache.cached(key_prefix="cache:archivechannelcount", timeout=3600)
 def archivechannelcount_cache():
-    return db_session.scalar(select(func.count(Mv_Channel.ytc_id)).filter(Mv_Channel.ytc_archive))
+    return db_session.scalar(select(func.count(MvChannel.ytc_id)).filter(MvChannel.ytc_archive))
 
 
 @cache.cached(key_prefix="cache:playlistcount", timeout=3600)

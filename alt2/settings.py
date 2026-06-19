@@ -9,7 +9,7 @@ from flask import (
 )
 from flask_babelplus import lazy_gettext
 from .database import db_session
-from .models import Translation, User, Playlist, Mv_Video
+from .models import Translation, User, Playlist, MvVideo
 from . import util
 from .util import (
     email_exists, validate_user_email, username_exists,
@@ -157,7 +157,7 @@ def update_user():
         user = db_session.get(User, session['user']['id'])
         playlist = Playlist.query.filter(Playlist.title == ffeatured_playlist).scalar()
         if playlist is not None and playlist.featured_video_id is not None:
-            fv = db_session.get(Mv_Video, playlist.featured_video_id)
+            fv = db_session.get(MvVideo, playlist.featured_video_id)
             user.featured_playlist = {
                 "pl_id": playlist.id,
                 "pl_title": playlist.title,

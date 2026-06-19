@@ -328,6 +328,12 @@ style="outline:none;
         }
       }
     })
+    setTimeout(function() {
+      fetch('/api/ping-view/{{ video_id }}', {
+        method: 'POST',
+        headers: {'X-CSRFToken': '{{ csrf_token() }}'}
+      });
+    }, 30000);
   })();
 </script>
 

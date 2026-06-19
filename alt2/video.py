@@ -333,10 +333,6 @@ def embed(video_id):
     playlist_hash = request.args.get('playlist', None)
     userlist = request.args.get('userlist', None)
 
-    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-    header = request.headers.get('User-Agent')
-    Thread(target=increment_video_counter, args=(video_id, ip, header)).start()
-
     video_url = _resolve_video_url(video, video_id)
 
     playlist = None
@@ -348,7 +344,15 @@ def embed(video_id):
     next_video = _get_next_video(video, playlist=playlist, userlist=userlist)
 
     return render_template('video/video_embed.html', video_url=video_url, next_video=next_video,
-                           playlist=playlist, userlist=userlist)
+                           playlist=playlist, userlist=userlist, video_id=video_id)
+
+
+@bp.route('/api/ping-view/<video_id>', methods=['POST'])
+def ping_view(video_id):
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    header = request.headers.get('User-Agent')
+    Thread(target=increment_video_counter, args=(video_id, ip, header)).start()
+    return '', 204
 
 
 @bp.route('/api/video-sources/<video_id>')

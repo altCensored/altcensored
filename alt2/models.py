@@ -3,7 +3,7 @@ from altcen_models.db import (
     Entity, Sources_to_Videos, Video, Source,
     Category, Language, Translation, Counter,
     User, Playlist, EmailList,
-    VpnNode, VpnConn, Crypto,
+    Crypto,
     MvVideo, MvChannel, MvCategory, MvPlaylist, MvAltcenUser,
 )
 from flask import current_app

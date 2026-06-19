@@ -15,7 +15,7 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.orm.attributes import flag_modified
 from .database import db_session
 from .models import Translation, Playlist, Mv_Channel, Mv_Video, User, \
-    Email_list, Channels, Channels_part, Entity, Source, Counter
+    Email_list, Entity, Source, Counter
 from . import config
 from .cache import cache
 
@@ -291,47 +291,6 @@ def title_exists(ftitle):
     ) is not None:
         return True
 
-
-def channel_partial_add(channel_id):
-    if db_session.scalar(select(Channels_part.ytc_id).filter(Channels_part.ytc_id == channel_id)) is not None:
-        return True
-    else:
-        channel_part = Channels_part(ytc_id=channel_id)
-        db_session.add(channel_part)
-        db_session.commit()
-
-
-def channel_full_add(channel_url):
-    if db_session.scalar(select(Channels.url).filter(Channels.url == channel_url)) is not None:
-        return True
-    else:
-        channel_full = Channels(url=channel_url)
-        db_session.add(channel_full)
-        db_session.commit()
-
-
-def channel_partial_remove(channel_id):
-    if db_session.scalar(select(Channels_part.ytc_id).filter(Channels_part.ytc_id == channel_id)) is not None:
-        channel_part = db_session.execute(
-            select(Channels_part).filter(Channels_part.ytc_id == channel_id)
-        ).scalars().first()
-        db_session.delete(channel_part)
-        db_session.commit()
-        return False
-    else:
-        return True
-
-
-def channel_full_remove(channel_url):
-    if db_session.scalar(select(Channels.url).filter(Channels.url == channel_url)) is not None:
-        channel_full = db_session.execute(
-            select(Channels).filter(Channels.url == channel_url)
-        ).scalars().first()
-        db_session.delete(channel_full)
-        db_session.commit()
-        return False
-    else:
-        return True
 
 
 def ssh_command(sys_name, commands, sys_user='root'):

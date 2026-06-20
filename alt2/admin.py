@@ -351,8 +351,6 @@ def update_channel():
         subscribercount = (request.form['subscribercount'])
         deleteddate = (request.form['deleteddate'])
 
-        print(archive_type)
-
         if delta:
             intdays = int(delta)
             delta = timedelta(days=intdays)

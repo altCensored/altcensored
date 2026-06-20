@@ -624,10 +624,6 @@ def navtabs_index_cache():
     return db_session.execute(select(Translation.varname, Translation.en)).all()
 
 
-def print_session():
-    for k, v in session.items():
-        print(k, v)
-
 
 def increment_video_counter(video_id, ip, header):
     try:

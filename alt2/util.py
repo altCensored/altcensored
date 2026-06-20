@@ -217,6 +217,8 @@ def str_to_bool(s) -> object:
     else:
         raise ValueError
 
+string_boolean = str_to_bool
+
 
 def contains_profanity(dirty_text):
     return profanity.contains_profanity(dirty_text)
@@ -302,29 +304,33 @@ def ssh_command(sys_name, commands, sys_user='root'):
         try:
             stdout, stderr = ssh.communicate(timeout=30)
             result = stdout.splitlines()
-            if not result:
-                flash(stderr.decode(errors='replace'), 'error')
+            if result:
+                flash(b'\n'.join(result).decode(errors='replace'), 'success')
             else:
-                flash(result, 'success')
+                error_msg = stderr.decode(errors='replace').strip()
+                if error_msg:
+                    flash(error_msg, 'error')
         except subprocess.TimeoutExpired:
             ssh.kill()
             ssh.communicate()
             flash('SSH command timed out', 'error')
 
 
-def local_command(commands):
+def local_command(commands, timeout=30):
     for command in commands:
         localcmd = subprocess.Popen(['/bin/bash', '-c', command],
                                 shell=False,
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE)
         try:
-            stdout, stderr = localcmd.communicate(timeout=30)
+            stdout, stderr = localcmd.communicate(timeout=timeout)
             result = stdout.splitlines()
-            if not result:
-                flash(stderr.decode(errors='replace'), 'error')
+            if result:
+                flash(b'\n'.join(result).decode(errors='replace'), 'success')
             else:
-                flash(result, 'success')
+                error_msg = stderr.decode(errors='replace').strip()
+                if error_msg:
+                    flash(error_msg, 'error')
         except subprocess.TimeoutExpired:
             localcmd.kill()
             localcmd.communicate()
@@ -693,6 +699,7 @@ def login_user_altcen(user):
     session['theme'] = newSettings['theme']
     session['autoplay'] = autoplayg
     session['playnext'] = newSettings['playnext']
+    session['looplist'] = newSettings.get('looplist', config.DEFAULT_LOOPLIST)
 
     session['navtabs']['navtab1'] = user.navtabs[0]
     session['navtabs']['navtab2'] = user.navtabs[1]
@@ -713,7 +720,8 @@ def logout_user_altcen():
         "theme": session['theme'],
         "locale": session['locale'],
         "autoplay": session['autoplay'],
-        "playnext": session['playnext']
+        "playnext": session['playnext'],
+        "looplist": session['looplist'],
     }
 
     user.navtabs = [session['navtabs']['navtab1'], session['navtabs']['navtab2'], session['navtabs']['navtab3']]

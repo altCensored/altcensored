@@ -383,7 +383,12 @@ def enable_channel():
 
         command = params1 + action + channel_url + params2
         commands = [command]
-        local_command(commands)
+        try:
+            local_command(commands)
+            flash(channel_id + ' enable dispatched', 'success')
+        except Exception:
+            logger.exception("local_command failed for enable_channel channel_id=%s", channel_id)
+            flash(channel_id + ' enable FAILED', 'error')
     return render_template('admin/admin_channels.html', title=title)
 
 
@@ -406,7 +411,12 @@ def disable_channel():
 
         command = params1 + action + channel_url + params2
         commands = [command]
-        local_command(commands)
+        try:
+            local_command(commands)
+            flash(ytc_id + ' disable dispatched', 'success')
+        except Exception:
+            logger.exception("local_command failed for disable_channel ytc_id=%s", ytc_id)
+            flash(ytc_id + ' disable FAILED', 'error')
     return render_template('admin/admin_channels.html', title=title)
 
 
@@ -427,7 +437,12 @@ def resync_channel():
 
         command = params1 + action + channel_url + params2
         commands = [command]
-        local_command(commands)
+        try:
+            local_command(commands)
+            flash(channel_id + ' resync dispatched', 'success')
+        except Exception:
+            logger.exception("local_command failed for resync_channel channel_id=%s", channel_id)
+            flash(channel_id + ' resync FAILED', 'error')
     return render_template('admin/admin_channels.html', title=title)
 
 
@@ -448,7 +463,12 @@ def remove_channel():
 
         command = params1 + action + channel_url + params2
         commands = [command]
-        local_command(commands)
+        try:
+            local_command(commands)
+            flash(channel_id + ' remove dispatched', 'success')
+        except Exception:
+            logger.exception("local_command failed for remove_channel channel_id=%s", channel_id)
+            flash(channel_id + ' remove FAILED', 'error')
 
     return render_template('admin/admin_channels.html', title=title)
 
@@ -464,6 +484,9 @@ def mirror_channel():
         if not _valid_channel_id(channel_id):
             flash('Invalid channel ID', 'error')
             return render_template('admin/admin_channels.html', title=title)
+        if not sys_name:
+            flash('AC_SSH_HOST not configured', 'error')
+            return render_template('admin/admin_channels.html', title=title)
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
         action = ' mirror '
         cookie = ' -cf $IA_COOKIES '
@@ -474,7 +497,12 @@ def mirror_channel():
 
         command = params1 + action + channel_url + cookie + resync + params2
         commands = [command]
-        ssh_command(sys_name, commands, s3_user)
+        try:
+            ssh_command(sys_name, commands, s3_user)
+            flash(channel_id + ' mirror dispatched', 'success')
+        except Exception:
+            logger.exception("ssh_command failed for mirror_channel channel_id=%s", channel_id)
+            flash(channel_id + ' mirror FAILED', 'error')
 
     return render_template('admin/admin_channels.html', title=title)
 
@@ -494,7 +522,7 @@ def status_channel():
 
         command = params1 + action + channel_url
         commands = [command]
-        local_command(commands)
+        local_command(commands, timeout=120)
 
         return render_template('admin/admin_messages.html')
 
@@ -708,7 +736,8 @@ def update_bounce():
                 for email in file:
                     email = (email.rstrip())
                     try:
-                        db_unsubscribe_email(email, action)
+                        tablename = 'User' if email_exists(email) else 'EmailList'
+                        db_unsubscribe_email(tablename, email, action)
                         flash(email)
                     except Exception:
                         logger.exception("db_unsubscribe_email failed for email=%s", email)

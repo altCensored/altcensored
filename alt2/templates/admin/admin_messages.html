@@ -20,11 +20,7 @@
                 {% if messages %}
                     {% for category, message in messages %}
                     <hr>
-                    <p class="{{ category }}">
-                        {% for line in message %}
-                            {{line}}<br>
-                            {% endfor %}
-                        </p>
+                    <pre class="{{ category }}">{{message}}</pre>
                     {% endfor %}
                 {% endif %}
             {% endwith %}

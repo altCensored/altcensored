@@ -633,10 +633,13 @@ def mass_email():
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            folder = current_app.root_path + config.UPLOAD_FOLDER
-            file.save(os.path.join(folder, filename))
+        if not (file and allowed_file(file.filename)):
+            flash('Invalid or missing file', 'error')
+            return redirect(request.url)
+
+        filename = secure_filename(file.filename)
+        folder = current_app.root_path + config.UPLOAD_FOLDER
+        file.save(os.path.join(folder, filename))
 
         service = (request.form['service'])
         recipients = (request.form['recipients'])
@@ -661,7 +664,7 @@ def mass_email():
                 order_by(func.random()). \
                 limit(sendlimit).all()
 
-        if recipients == 'subscribed':
+        elif recipients == 'subscribed':
             usercount = db_session.query(func.count(User.id)). \
                 filter((User.email_lastsent_date) < func.current_date() - dayslastsent). \
                 filter(User.settings['locale'].as_string() == language). \
@@ -674,7 +677,7 @@ def mass_email():
                 order_by(func.random()). \
                 limit(sendlimit).all()
 
-        if recipients == 'friends':
+        elif recipients == 'friends':
             usercount = db_session.query(func.count(EmailList.id)). \
                 filter((EmailList.email_lastsent_date) < func.current_date() - dayslastsent). \
                 filter(EmailList.email_subscribed). \
@@ -685,12 +688,15 @@ def mass_email():
                 order_by(func.random()). \
                 limit(sendlimit).all()
 
-        if recipients == 'admin':
-            usercount = '1'
+        elif recipients == 'admin':
             email = 'admin@altcensored.com'
             send_mass_email(email, sender, subject, filename, service)
             flash(email)
             return redirect(url_for('admin.index'))
+
+        else:
+            flash('Unknown recipients value: ' + recipients, 'error')
+            return redirect(request.url)
 
         flash(usercount)
         flash('test only : ' + testonly)

@@ -807,19 +807,23 @@ def aws_bounce():
         r = requests.get(js['SubscribeURL'])
 
     if hdr == 'Notification':
-        msg = js["Message"]
-        msgjs = json.loads(msg)
+        try:
+            msg = js["Message"]
+            msgjs = json.loads(msg)
+            email = msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"]
+            action = 'aws_bounce'
 
-        email = msgjs["bounce"]["bouncedRecipients"][0]["emailAddress"]
-        action = 'aws_bounce'  # unenforced code for aws bounce
+            if email_exists(email):
+                tablename = 'User'
+            elif email_list_exists(email):
+                tablename = 'EmailList'
+            else:
+                logger.warning("aws_bounce: email not found in either table: %s", email)
+                return 'OK\n'
 
-        if email_exists(email):
-            user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
-            tablename = 'User'
-        else:
-            tablename = 'EmailList'
-
-        db_unsubscribe_email(tablename, email, action)
+            db_unsubscribe_email(tablename, email, action)
+        except Exception:
+            logger.exception("aws_bounce: failed to process notification")
 
     return 'OK\n'
 
@@ -842,19 +846,23 @@ def aws_complaint():
         r = requests.get(js['SubscribeURL'])
 
     if hdr == 'Notification':
-        msg = js["Message"]
-        msgjs = json.loads(msg)
+        try:
+            msg = js["Message"]
+            msgjs = json.loads(msg)
+            email = msgjs["complaint"]["complainedRecipients"][0]["emailAddress"]
+            action = 'aws_complaint'
 
-        email = msgjs["complaint"]["complainedRecipients"][0]["emailAddress"]
-        action = 'aws_complaint'  # unenforced code for aws complaint
+            if email_exists(email):
+                tablename = 'User'
+            elif email_list_exists(email):
+                tablename = 'EmailList'
+            else:
+                logger.warning("aws_complaint: email not found in either table: %s", email)
+                return 'OK\n'
 
-        if email_exists(email):
-            user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
-            tablename = 'User'
-        else:
-            tablename = 'EmailList'
-
-        db_unsubscribe_email(tablename, email, action)
+            db_unsubscribe_email(tablename, email, action)
+        except Exception:
+            logger.exception("aws_complaint: failed to process notification")
 
     return 'OK\n'
 

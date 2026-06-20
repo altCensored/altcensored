@@ -526,23 +526,6 @@ def ytc_popular(ytc_id, PER_PAGE, offset):
     )
 
 
-@cache.memoize(timeout=3600)
-def playlists_newest(PER_PAGE, offset):
-    return _exec_listing(
-        select(Playlist).filter(Playlist.public, Playlist.featured_video_id.isnot(None))
-        .order_by(Playlist.updated.desc()),
-        PER_PAGE, offset,
-    )
-
-
-@cache.memoize(timeout=3600)
-def playlists_popular(PER_PAGE, offset):
-    return _exec_listing(
-        select(Playlist).filter(Playlist.public, Playlist.featured_video_id.isnot(None))
-        .order_by(Playlist.updated.desc()),
-        PER_PAGE, offset,
-    )
-
 
 @cache.memoize(timeout=3600)
 def playlisti(playlist):

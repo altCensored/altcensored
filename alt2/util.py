@@ -359,6 +359,10 @@ def channel_update(channel_id, delta=None, archive_type=None, deleted=None, view
             select(Source).filter(Source.ytc_id == channel_id)
         ).scalars().first()
 
+        if channel is None:
+            logger.warning("channel_update: channel_id=%s not found", channel_id)
+            return False
+
         if delta:
             channel.delta = delta
 

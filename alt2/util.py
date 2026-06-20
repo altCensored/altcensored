@@ -178,35 +178,24 @@ def set_session():
         )
 
     if 'navtabs' not in session:
-        row = db_session.execute(
-            select(Translation.varname, getattr(Translation, session['locale']))
-        ).all()
-        session['navtabs'] = dict(row)
+        session['navtabs'] = dict(navtabs_cache(session['locale']))
 
     if 'navtabs_index' not in session:
-        row = db_session.execute(select(Translation.varname, Translation.en)).all()
-        session['navtabs_index'] = dict(row)
+        session['navtabs_index'] = dict(navtabs_index_cache())
 
     if 'navtabs_perm' not in session:
-        row = db_session.execute(
-            select(Translation.varname, getattr(Translation, session['locale']))
-        ).all()
-        session['navtabs_perm'] = dict(row)
+        session['navtabs_perm'] = dict(navtabs_cache(session['locale']))
 
     if 'videocount' not in session:
-        session['videocount'] = db_session.scalar(select(func.count(MvVideo.extractor_data)))
+        session['videocount'] = videocount_cache()
     if 'usercount' not in session:
-        session['usercount'] = db_session.scalar(select(func.count(User.id)).filter(User.public))
+        session['usercount'] = usercount_cache()
     if 'playlistcount' not in session:
-        session['playlistcount'] = db_session.scalar(
-            select(func.count(Playlist.id)).filter(Playlist.public, Playlist.featured_video_id.isnot(None))
-        )
+        session['playlistcount'] = playlistcount_cache()
     if 'channelcount' not in session:
-        session['channelcount'] = db_session.scalar(select(func.count(MvChannel.ytc_id)))
+        session['channelcount'] = channelcount_cache()
     if 'delchannelcount' not in session:
-        session['delchannelcount'] = db_session.scalar(
-            select(func.count(MvChannel.ytc_id)).filter(MvChannel.ytc_deleted)
-        )
+        session['delchannelcount'] = delchannelcount_cache()
 
 
 def str_to_bool(s) -> object:

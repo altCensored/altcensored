@@ -518,13 +518,6 @@ def channeli_videos_popular(ytc_id, PER_PAGE, offset):
     )
 
 
-@cache.memoize(timeout=3600)
-def ytc_popular(ytc_id, PER_PAGE, offset):
-    return _exec_listing(
-        select(MvVideo).filter(MvVideo.ytc_id == ytc_id).order_by(MvVideo.yt_views.desc()),
-        PER_PAGE, offset,
-    )
-
 
 
 @cache.memoize(timeout=3600)

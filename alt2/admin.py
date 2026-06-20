@@ -65,6 +65,9 @@ _sns_cert_cache = {}
 def _valid_channel_id(channel_id):
     return bool(channel_id and _CHANNEL_ID_RE.match(channel_id))
 
+def _channel_playlist_url(channel_id):
+    return "https://www.youtube.com/playlist?list=UU" + channel_id[2:]
+
 def _valid_delta(delta):
     try:
         return int(delta) > 0
@@ -156,7 +159,6 @@ def db_add_email_list(email, email_source):
 
 
 @bp.route('/')
-@util.login_required
 @util.admin_login_required
 def index():
     return render_template('admin/admin_index.html')
@@ -338,7 +340,7 @@ def add_channel():
             flash('Invalid delta value', 'error')
             return render_template('admin/admin_channels.html', title=title, ddays=ddays)
         action = ' afs '
-        channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
+        channel_url = _channel_playlist_url(channel_id)
 
         params1 = ' yt-syncac '
         params2 = ' -delta '
@@ -399,7 +401,7 @@ def enable_channel():
         if not _valid_channel_id(channel_id):
             flash('Invalid channel ID', 'error')
             return render_template('admin/admin_channels.html', title=title)
-        channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
+        channel_url = _channel_playlist_url(channel_id)
         action = ' enable '
 
         params1 = ' yt-syncac '
@@ -427,7 +429,7 @@ def disable_channel():
         if not _valid_channel_id(ytc_id):
             flash('Invalid channel ID', 'error')
             return render_template('admin/admin_channels.html', title=title)
-        channel_url = "https://www.youtube.com/playlist?list=UU" + (ytc_id[2:])
+        channel_url = _channel_playlist_url(ytc_id)
         action = ' disable '
 
         params1 = ' yt-syncac '
@@ -453,7 +455,7 @@ def resync_channel():
         if not _valid_channel_id(channel_id):
             flash('Invalid channel ID', 'error')
             return render_template('admin/admin_channels.html', title=title)
-        channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
+        channel_url = _channel_playlist_url(channel_id)
         action = ' resync '
 
         params1 = ' yt-syncac '
@@ -479,7 +481,7 @@ def remove_channel():
         if not _valid_channel_id(channel_id):
             flash('Invalid channel ID', 'error')
             return render_template('admin/admin_channels.html', title=title)
-        channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
+        channel_url = _channel_playlist_url(channel_id)
         action = ' remove '
 
         params1 = ' yt-syncac '
@@ -511,7 +513,7 @@ def mirror_channel():
         if not sys_name:
             flash('AC_SSH_HOST not configured', 'error')
             return render_template('admin/admin_channels.html', title=title)
-        channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
+        channel_url = _channel_playlist_url(channel_id)
         action = 'mirror '
         cookie = '-cf $IA_COOKIES '
         resync = '-ur -i '
@@ -538,7 +540,7 @@ def status_channel():
         if not _valid_channel_id(channel_id):
             flash('Invalid channel ID', 'error')
             return render_template('admin/admin_channels.html', title=title)
-        channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
+        channel_url = _channel_playlist_url(channel_id)
         action = ' status '
         params1 = ' yt-syncac -q '
 

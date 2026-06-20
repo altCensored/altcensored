@@ -10,8 +10,6 @@ from .database import db_session
 from .models import User, MvVideo, Playlist, Counter
 from .pagination import Pagination
 from .util import login_required, get_usercount, users_newest, users_popular
-from . import config
-
 import datetime, json
 
 bp = Blueprint('user', __name__, url_prefix='/user' )
@@ -25,7 +23,6 @@ url_orig = 'original_url'
 def index(page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
-#    users = User.query.filter(User.public).order_by(User.id.desc()).limit(PER_PAGE).offset(offset)
     users = users_newest(PER_PAGE, offset)
     if not users and page != 1:
         abort(404)
@@ -39,7 +36,6 @@ def index(page):
 def popular(page):
     offset = ((int(page) - 1) * PER_PAGE)
     order = 'popular'
-#    users = User.query.filter(User.public).order_by(User.view_counter.desc()).limit(PER_PAGE).offset(offset)
     users = users_popular(PER_PAGE, offset)
     if not users and page != 1:
         abort(404)
@@ -51,7 +47,6 @@ def popular(page):
 @bp.route('/<username>')
 def item(username):
     user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
-#    user = useri(username)
     if user is None:
         flash(lazy_gettext('User unknown'), 'error')
         return redirect(request.args.get(url_orig, '/'))
@@ -213,7 +208,6 @@ def watchlater(page):
 @login_required
 def add_video_watchlater():
     video_id = request.args.get('v', None)
-#    video = MvVideo.query.get(video_id)
     user = User.query.filter(User.id == session['user']['id']).scalar()
 
     if user.watchlater is None:

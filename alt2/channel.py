@@ -112,9 +112,6 @@ def deleted(page):
 def deleted_feed(page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'deleted'
-#    channelcount = db_session.query(func.count(MvChannel.ytc_id)).filter(MvChannel.ytc_deleted).scalar()
-#    videocount = db_session.query(func.count(MvVideo.extractor_data)).scalar()
-#    channels = MvChannel.query.filter(MvChannel.ytc_deleted).order_by(MvChannel.ytc_deleteddate.desc(),MvChannel.ytc_id.desc()).limit(PER_PAGE).offset(offset)
     channels = channels_deleted(PER_PAGE, offset)
     if not channels and page != 1:
         abort(404)
@@ -200,7 +197,6 @@ def item_feed(ytc_id,page):
     order = 'newest'
     videocount = db_session.query(func.count(MvVideo.extractor_data)).filter_by(ytc_id=ytc_id).scalar()
     channel = db_session.get(MvChannel, ytc_id)
-#    videos = MvVideo.query.filter_by(ytc_id=ytc_id).order_by(MvVideo.published.desc())
     videos = channeli_videos_newest(ytc_id, PER_PAGE, offset)
     if not videos and page != 1:
         abort(404)

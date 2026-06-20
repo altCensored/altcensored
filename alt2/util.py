@@ -7,9 +7,8 @@ from captcha.image import ImageCaptcha
 from datetime import datetime, timezone, timedelta, date
 from email_validator import validate_email, EmailNotValidError
 from flask import (
-    session, request, redirect, render_template, url_for, current_app, flash, g
+    session, request, redirect, url_for, current_app, flash, g
 )
-from flask_babelplus import lazy_gettext
 from sqlalchemy import func, nullslast, select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.orm.attributes import flag_modified

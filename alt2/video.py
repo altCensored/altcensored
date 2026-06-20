@@ -66,8 +66,6 @@ def _resolve_video_url(video: MvVideo, video_id: str) -> str:
 @bp.route('/page/<int:page>')
 def index(page):
     offset = ((int(page) - 1) * PER_PAGE)
-#    order = 'trending'
-#    videos = videos_trending(PER_PAGE, offset)
     order = 'newest'
     videos = videos_newest(PER_PAGE, offset)
     if not videos and page != 1:
@@ -86,8 +84,6 @@ def index(page):
 @bp.route('/new/page/<int:page>')
 def new(page):
     offset = ((int(page) - 1) * PER_PAGE)
-#    order = 'newest'
-#    videos = videos_newest(PER_PAGE, offset)
     order = 'trending'
     videos = videos_trending(PER_PAGE, offset)
     if not videos and page != 1:

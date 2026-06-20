@@ -17,7 +17,7 @@ from flask import (
 from sqlalchemy import func, or_
 
 from .database import db_session
-from .models import MvChannel, User, Entity, Source, Sources_to_Videos, EmailList, Category
+from .models import MvChannel, User, Entity, Source, Sources_to_Videos, EmailList
 from datatables import ColumnDT, DataTables
 from threading import Thread
 
@@ -221,8 +221,6 @@ def channel_table_new():
 @bp.route('/channel_table_new_data')
 @util.admin_login_required
 def channel_table_new_data():
-#    query = db_session.query(MvChannel)
-#    query = db_session.query(MvChannel).filter(MvChannel.ytc_deleted)
     query = db_session.query(MvChannel).filter(MvChannel.ytc_deleted == False)
 
     # search filter
@@ -338,7 +336,6 @@ def add_channel():
 @util.admin_login_required
 def update_channel():
     title = request.args.get('title', 'Update')
-#    atype = request.args.get('atype', 'null')
     atype = request.args.get('atype', 'partial')
     ddays = request.args.get('ddays', '')
 
@@ -561,7 +558,6 @@ def system_commands():
             command = cmd_name
 
         commands = [command]
-#        ssh_command(sys_name, commands)
         local_command(commands)
 
         return render_template('admin/admin_messages.html')
@@ -573,7 +569,6 @@ def system_commands():
 @bp.route('/scraper_status')
 @util.admin_login_required
 def scraper_status():
-#    sys_name = 'web'
     commands = ["systemctl status 5080@sync_archivenone",
                 "systemctl status 5080@upload_archivelatest",
                 "systemctl status 5080@upload_archivepart",

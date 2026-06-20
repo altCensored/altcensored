@@ -10,7 +10,6 @@ FLASH_MSG = config.FLASH_MSG
 
 @bp.route('/')
 def index():
-#    archchancount = db_session.query(func.count(MvChannel.ytc_id)).filter(MvChannel.ytc_archive).scalar()
     archivechannelcount = get_archivechannelcount()
     channels = MvChannel.query.all()
 

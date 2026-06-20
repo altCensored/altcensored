@@ -35,6 +35,30 @@ bp = Blueprint('admin', __name__, url_prefix='/admin')
 ALLOWED_EXTENSIONS = {'htm', 'html', 'txt'}
 
 _CHANNEL_ID_RE = re.compile(r'^UC[A-Za-z0-9_-]{22}$')
+_SAFE_PARAM_RE = re.compile(r'^[A-Za-z0-9_-]{1,100}$')
+
+_ALLOWED_CMD_NAMES = {
+    'uptime', 'init 6', 'ls -lrt', 'df',
+    'apt update -y && apt upgrade -y && apt autoremove -y',
+    'backup', 'find', 'tubeup', 'systemctl',
+}
+_ALLOWED_ACTION_NAMES = {'status', 'stop', 'start', 'restart'}
+_ALLOWED_SUBSYS_NAMES = {
+    'archive_full', 'archive_full.timer', 'archive_full_run.timer',
+    'archive_part', 'archive_part.timer', 'archive_part_run.timer',
+    'archive_none', 'archive_none.timer', 'archive_none_run.timer',
+    'find_archive', 'find_archive.timer', 'find_archive_run.timer',
+    'channel_archive', 'channel_archive.timer', 'channel_archive_run.timer',
+    'channel_archive_second', 'channel_archive_second.timer', 'channel_archive_second_run.timer',
+    'channel_archive_third', 'channel_archive_third.timer', 'channel_archive_third_run.timer',
+    'channel_archive_fourth', 'channel_archive_fourth.timer', 'channel_archive_fourth_run.timer',
+    'channel_archive_part', 'channel_archive_part.timer', 'channel_archive_part_run.timer',
+    'channel_archive_part_second', 'channel_archive_part_second.timer', 'channel_archive_part_second_run.timer',
+    'channel_archive_part_third', 'channel_archive_part_third.timer', 'channel_archive_part_third_run.timer',
+    'channel_archive_part_fourth', 'channel_archive_part_fourth.timer', 'channel_archive_part_fourth_run.timer',
+    'pgsync', 'pgsync.timer', 'pgbackup', 'pgbackup.timer',
+    'nginx', 'gunicorn', 'postgresql', 'imageproxy',
+}
 _SNS_CERT_URL_RE = re.compile(r'^https://sns\.[a-z0-9-]+\.amazonaws\.com/.*\.pem$')
 _sns_cert_cache = {}
 
@@ -563,6 +587,20 @@ def system_commands():
         action_name = (request.form['action_name'])
         param_name = (request.form['param_name'])
         find_run = (request.form['find_run'])
+
+        if cmd_name not in _ALLOWED_CMD_NAMES:
+            flash('Invalid command', 'error')
+            return render_template('admin/admin_system_commands.html', title=title)
+        if cmd_name == 'systemctl':
+            if action_name not in _ALLOWED_ACTION_NAMES:
+                flash('Invalid action', 'error')
+                return render_template('admin/admin_system_commands.html', title=title)
+            if subsys_name not in _ALLOWED_SUBSYS_NAMES:
+                flash('Invalid subsystem', 'error')
+                return render_template('admin/admin_system_commands.html', title=title)
+        if cmd_name in ('find', 'tubeup') and param_name and not _SAFE_PARAM_RE.match(param_name):
+            flash('Invalid parameter — only alphanumeric, hyphens and underscores allowed', 'error')
+            return render_template('admin/admin_system_commands.html', title=title)
 
         find_cmd = '/opt/altcen/find_archive.py'
         bground_p1 = 'nohup '

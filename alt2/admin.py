@@ -127,9 +127,12 @@ def send_mass_email(email, sender, subject, filename, service):
 
 def db_unsubscribe_email(tablename, email, action):
     if tablename == 'User':
-        user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one()
+        user = db_session.query(User).filter(func.lower(User.email) == func.lower(email)).one_or_none()
     else:
-        user = db_session.query(EmailList).filter(func.lower(EmailList.email) == func.lower(email)).one()
+        user = db_session.query(EmailList).filter(func.lower(EmailList.email) == func.lower(email)).one_or_none()
+    if user is None:
+        logger.warning("db_unsubscribe_email: email not found in %s: %s", tablename, email)
+        return
     now = datetime.datetime.now(timezone.utc)
     user.email_subscribed = False
     user.email_action = action
@@ -542,7 +545,11 @@ def status_channel():
 
         command = params1 + action + channel_url
         commands = [command]
-        local_command(commands, timeout=120)
+        try:
+            local_command(commands, timeout=120)
+        except Exception:
+            logger.exception("local_command failed for status_channel channel_id=%s", channel_id)
+            flash(channel_id + ' status FAILED', 'error')
 
         return render_template('admin/admin_messages.html')
 
@@ -725,7 +732,7 @@ def mass_email():
                 limit(sendlimit).all()
 
         elif recipients == 'admin':
-            email = 'admin@altcensored.com'
+            email = config.ADMINS[1]
             send_mass_email(email, sender, subject, filename, service)
             flash(email)
             return redirect(url_for('admin.index'))

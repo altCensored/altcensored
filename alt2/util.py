@@ -248,11 +248,12 @@ def email_list_exists(email):
 
 
 def validate_user_email(email):
+    """Returns None if valid, or an EmailNotValidError if invalid."""
     try:
-        valid = validate_email(email)
-        email = valid.email
+        validate_email(email)
     except EmailNotValidError as e:
         return e
+    return None
 
 
 def username_exists(username):

@@ -493,7 +493,7 @@ def mirror_channel():
         resync = '-ur -i '
 
         inner = "yt-syncac " + action + channel_url + " " + cookie + resync + "-f"
-        command = "nohup bash -c '. /opt/altcen/altcensored.env && " + inner + "' > /root/nohup_ssh.out 2>&1 &"
+        command = "nohup bash -c 'set -a && . /opt/altcen/altcensored.env && set +a && " + inner + "' > /root/nohup_ssh.out 2>&1 &"
         commands = [command]
         try:
             ssh_command(sys_name, commands, s3_user)

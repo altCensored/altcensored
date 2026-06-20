@@ -488,14 +488,12 @@ def mirror_channel():
             flash('AC_SSH_HOST not configured', 'error')
             return render_template('admin/admin_channels.html', title=title)
         channel_url = "https://www.youtube.com/playlist?list=UU" + (channel_id[2:])
-        action = ' mirror '
-        cookie = ' -cf $IA_COOKIES '
-        resync = ' -ur -i '
+        action = 'mirror '
+        cookie = '-cf $IA_COOKIES '
+        resync = '-ur -i '
 
-        params1 = ' nohup yt-syncac '
-        params2 = ' -f > /root/nohup_ssh.out 2>&1 &'
-
-        command = params1 + action + channel_url + cookie + resync + params2
+        inner = "yt-syncac " + action + channel_url + " " + cookie + resync + "-f"
+        command = "nohup bash -c '. /opt/altcen/altcensored.env && " + inner + "' > /root/nohup_ssh.out 2>&1 &"
         commands = [command]
         try:
             ssh_command(sys_name, commands, s3_user)

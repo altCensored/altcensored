@@ -1,10 +1,8 @@
 import datetime
 import logging
 import os
-import pprint
 import re
 import requests
-import time
 import json
 import base64
 
@@ -293,11 +291,9 @@ def channel_table_new_data():
 @util.admin_login_required
 def update():
     data = request.get_json()
-    pprint.pp(data)
     if 'id' not in data:
         abort(400)
     source = db_session.get(Source, (data['id']))
-    pprint.pp(source)
     for field in ['ytc_title']:
         if field in data:
             setattr(source, field, data[field])
@@ -959,104 +955,3 @@ def add_email_list():
 
 
 
-@bp.route('/test2')
-@util.admin_login_required
-def test2():
-    now = datetime.datetime.now(timezone.utc)
-
-    recipientscount = db_session.query(func.count(User.id)). \
-        filter((User.email_lastsent_date) < func.current_date() - 28). \
-        filter(User.email_verified). \
-        filter(User.email_subscribed). \
-        scalar()
-
-    users = db_session.query(User). \
-        filter((User.email_lastsent_date) < func.current_date() - 28). \
-        filter(User.email_verified). \
-        filter(User.email_subscribed). \
-        limit(5).all()
-
-    flash(recipientscount)
-    for user in users:
-        flash(user.email)
-        time.sleep(1)
-
-    return render_template('admin/admin_index.html')
-
-
-def background(app, msg):
-    app.logger.debug(msg)
-
-
-def background2(app, msg):
-    with app.app_context():
-        app.logger.debug(msg)
-
-
-@bp.route('/test3')
-@util.admin_login_required
-def test3():
-    msg = 'yes'
-    app = current_app._get_current_object()
-    Thread(target=background, args=(app, msg)).start()
-    return 'Hello, World!'
-
-
-# works for single command (logger)
-
-
-@bp.route('/test4')
-@util.admin_login_required
-def test4():
-    msg = 'yes'
-    app = current_app._get_current_object()
-    Thread(target=background2, args=(app, msg)).start()
-    return 'Hello, World!'
-
-
-@bp.route('/test5')
-@util.admin_login_required
-def test5():
-    recipientscount = db_session.query(func.count(User.id)). \
-        filter((User.email_lastsent_date) < func.current_date() - 28). \
-        filter(User.email_verified). \
-        filter(User.email_subscribed). \
-        filter(User.settings['locale'].as_string() == "en"). \
-        scalar()
-
-    users = db_session.query(User). \
-        filter((User.email_lastsent_date) < func.current_date() - 28). \
-        filter(User.email_verified). \
-        filter(User.email_subscribed). \
-        filter(User.settings['locale'].as_string() == "en"). \
-        limit(5).all()
-
-    flash(recipientscount)
-    for user in users:
-        flash(user.email)
-
-    return render_template('admin/admin_index.html')
-
-
-@bp.route('/test6')
-@util.admin_login_required
-def test6():
-    sys_name = current_app.config['AC_SSH_HOST']
-    sys_user = current_app.config['AC_S3_USER']
-    commands = ["systemctl status allsync", "systemctl status find_archive", "ps -aef | grep -E 'channel|find|afs'", "df /dev/vda1"]
-    ssh_command(sys_name, commands, sys_user)
-
-    return render_template('admin/admin_messages.html')
-
-
-@bp.route('/test500')
-@util.admin_login_required
-def test500():
-    abort(500)
-
-@bp.route('/test7')
-@util.admin_login_required
-def test7():
-    a = request.remote_addr
-    #msg = (request.referrer)
-    return a

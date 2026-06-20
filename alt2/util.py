@@ -244,7 +244,7 @@ def admin_login_required(view):
 
 
 def email_exists(email):
-    if session.get('email') is not None:
+    if session.get('user') is not None:
         if email == session['user']['email']:
             return False
     if db_session.scalar(select(User.email).filter(func.lower(User.email) == func.lower(email))) is not None:

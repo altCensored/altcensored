@@ -82,35 +82,57 @@ def check_ac_object_exists(video_id: str) -> bool:
     return ac_object_exist(client, current_app.config['AC_S3_BUCKET'], video_id)
 
 
+# TTLs for the Redis cache on IA results.
+# Once a video is archived the metadata is immutable, so 30 days is safe.
+# "Not on IA yet" is retried hourly; timeouts are retried after 5 min.
+_CACHE_TTL_IA_HIT = 86400 * 30
+_CACHE_TTL_IA_MISS = 3600
+_CACHE_TTL_IA_FAIL = 300
+
+
 def get_ia_item(extractor_data):
     import requests
     IARCHIVEURL = current_app.config['IARCHIVEURL']
     VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
+    unavailable_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
+
+    cache_key = f'ia:{extractor_data}'
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return cached
+
     try:
         ia_item = get_item('youtube-' + extractor_data)
     except (requests.exceptions.ConnectionError, requests.exceptions.RetryError) as exc:
         logger.warning("archive.org unreachable for %s: %s", extractor_data, exc)
-        return f'{VIDEOSERVER_URL}unavailable/unavailable'
+        cache.set(cache_key, unavailable_url, timeout=_CACHE_TTL_IA_FAIL)
+        return unavailable_url
+
     entity_video = Entity.query.filter(Entity.extractor_data == extractor_data).scalar()
     if len(ia_item.item_metadata) != 0:
         videofile_full = get_video_files_2(ia_item)
         thumbnail_full = get_image_file(ia_item)
-        if thumbnail_full:
+        if thumbnail_full and entity_video:
             entity_video.thumbnail = thumbnail_full
-        if videofile_full:
+        if videofile_full and entity_video:
             root, ext = os.path.splitext(videofile_full)
             entity_video.videofile = root
             flag_modified(entity_video, "thumbnail")
             flag_modified(entity_video, "videofile")
             db_session.commit()
-            return IARCHIVEURL + extractor_data + "/" + root
+            result_url = IARCHIVEURL + extractor_data + "/" + root
+            cache.set(cache_key, result_url, timeout=_CACHE_TTL_IA_HIT)
+            return result_url
         else:
-            entity_video.novideo_ia = True
-            flag_modified(entity_video, "novideo_ia")
-            db_session.commit()
-            return f'{VIDEOSERVER_URL}unavailable/unavailable'
+            if entity_video:
+                entity_video.novideo_ia = True
+                flag_modified(entity_video, "novideo_ia")
+                db_session.commit()
+            cache.set(cache_key, unavailable_url, timeout=_CACHE_TTL_IA_MISS)
+            return unavailable_url
     else:
-        return f'{VIDEOSERVER_URL}unavailable/unavailable'
+        cache.set(cache_key, unavailable_url, timeout=_CACHE_TTL_IA_MISS)
+        return unavailable_url
 
 
 def site_is_online(url, timeout=1):

@@ -59,7 +59,7 @@ def login():
         if not next_page or urlsplit(next_page).netloc != '':
             next_page = url_for('video.index')
         response = make_response(redirect(url_for('video.index')))
-        response.set_cookie('loggedin', '1', httponly=True, samesite='Lax', secure=True, max_age=86400)  # Cookie expires in 24 hour
+        response.set_cookie('loggedin', secrets.token_hex(32), httponly=True, samesite='Lax', secure=True, max_age=86400)
         return response
     return render_template('auth/login.html', title=_('Log In'), form=form, cloudflare_site_key=cloudflare_site_key)
 
@@ -68,7 +68,9 @@ def login():
 def logout():
     logout_user()
     logout_user_altcen()
-    return redirect(url_for('video.index'))
+    response = make_response(redirect(url_for('video.index')))
+    response.delete_cookie('loggedin')
+    return response
 
 
 @bp.route('/register', methods=['GET', 'POST'])
@@ -310,5 +312,5 @@ def oauth2_callback(provider):
     login_user(user)
     login_user_altcen(user)
     response = make_response(redirect(url_for('video.index')))
-    response.set_cookie('loggedin', '1', httponly=True, samesite='Lax', secure=True, max_age=86400)
+    response.set_cookie('loggedin', secrets.token_hex(32), httponly=True, samesite='Lax', secure=True, max_age=86400)
     return response

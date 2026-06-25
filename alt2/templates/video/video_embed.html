@@ -106,7 +106,9 @@ style="outline:none;
     {% else %}
     var autoplayEnabled = false;
     {% endif %}
-    var player = videojs('video-player');
+    var player = videojs('video-player', {
+      controlBar: { skipButtons: { backward: 10 } }
+    });
 
     document.addEventListener('visibilitychange', function() {
       if (!document.hidden && !player.paused()) {

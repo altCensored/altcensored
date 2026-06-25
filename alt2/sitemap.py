@@ -38,8 +38,8 @@ def sitemap_channels():
     cached = cache.get(cache_key)
     if cached:
         return Response(cached, mimetype='application/xml')
-    channels = db_session.query(MvChannel.ytc_id)\
-        .order_by(MvChannel.ytc_id)\
+    channels = db_session.query(MvChannel.extractor_data)\
+        .order_by(MvChannel.extractor_data)\
         .all()
     xml = render_template('sitemap/sitemap_channels.xml', channels=channels)
     cache.set(cache_key, xml, timeout=86400)

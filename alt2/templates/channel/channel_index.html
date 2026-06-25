@@ -98,7 +98,7 @@
                     <div class="h-box">
                         <div class = "pure-g">
                             <div class="pure-u-1-2">
-                                <a href="{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}">
+                                <a href="{{ url_for('channel.item', ytc_id=channel['extractor_data']) }}">
                                     <div class="thumbnail">
                                         <left>
 <!--
@@ -107,7 +107,7 @@
                                             onerror="this.onerror=null;this.src='https://{{ config['MYSERVER_NAME'] }}/channel_unnamed.jpg';" >
 -->
                                               <img class="channel-thumb"
-                                                   src="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['ytc_thumbnail'] }}"
+                                                   src="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['thumbnail_ytdlp'] }}"
                                                    onerror="this.onerror=null;this.src='{{ config.CHANNEL_THUMB_ERROR_IMAGE }}';">
                                             </style>
                                             </left>
@@ -115,21 +115,21 @@
                                               </a>
                                                 </div>
                                                   <div class="pure-u-1-2" style="text-align:left">
-                                                  <a href="{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}">
+                                                  <a href="{{ url_for('channel.item', ytc_id=channel['extractor_data']) }}">
                                                   {{ gettext('Censored') }}: {{ channel['limited']|commafy }}
                                             </a>
                                               <br>
-                                             {% if not channel['ytc_deleted'] %}
+                                             {% if not channel['deleted'] %}
                                               {{ gettext('Archived') }}: {{ channel['archived']|commafy}}
                                               <br>
                                              {% endif %}
                                               {{ gettext('Total') }}: {{ channel['total']|commafy }}
                                             <br>
-                                             {{ gettext('Views') }}: {{ channel['ytc_viewcount'] | viewdisplay }}
+                                             {{ gettext('Views') }}: {{ channel['view_count'] | viewdisplay }}
                                             <br>
-                                             {{ gettext('Subs') }}: {{ channel['ytc_subscribercount'] | viewdisplay }}
+                                             {{ gettext('Subs') }}: {{ channel['channel_follower_count'] | viewdisplay }}
                                             <br>
-                                             {% if channel['ytc_deleted'] %}
+                                             {% if channel['deleted'] %}
                                                  <img class="deleted-x"
                                                  src="{{ url_for('static', filename='x.gif') }}">
                                              {% else %}
@@ -138,22 +138,22 @@
                                                      {% else %}{{ gettext('False') }}<br>
                                                  {% endif %}
                                                  {{ gettext('Archive') }}:
-                                                 {% if channel.ytc_archive %}{{ gettext('Full') }}<br>
-                                                 {% elif channel.ytc_partarchive %}{{ gettext('Part') }}<br>
-                                                 {% elif channel.ytc_latestarchive %}{{ gettext('Latest') }}<br>
+                                                 {% if channel.archive_full %}{{ gettext('Full') }}<br>
+                                                 {% elif channel.archive_part %}{{ gettext('Part') }}<br>
+                                                 {% elif channel.archive_latest %}{{ gettext('Latest') }}<br>
                                                  {% else %}{{ gettext('None') }}<br>
                                                  {% endif %}
                                              {% endif %}
                                     </div>
                             </div>
-                            <a href="{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}">
-                                <b>{{ channel['ytc_title'] }}</b>
+                            <a href="{{ url_for('channel.item', ytc_id=channel['extractor_data']) }}">
+                                <b>{{ channel['title'] }}</b>
                             </a>
                             <br>
-                            {{ gettext('Created') }}: {{ channel['ytc_publishedat'].strftime('%b %e, %G') if channel['ytc_publishedat'] else '' }}
+                            {{ gettext('Created') }}: {{ channel['published_at'].strftime('%b %e, %G') if channel['published_at'] else '' }}
                             <br>
-                            {% if channel['ytc_deleted'] %}
-                                <span style="color: red; ">{{ gettext('Deleted') }} {{ channel['ytc_deleteddate'].strftime('%b %e, %G') if channel['ytc_deleteddate'] else '' }}</span>
+                            {% if channel['deleted'] %}
+                                <span style="color: red; ">{{ gettext('Deleted') }} {{ channel['deleted_date'].strftime('%b %e, %G') if channel['deleted_date'] else '' }}</span>
                             {% else %}
                             {% endif %}
                             <br>

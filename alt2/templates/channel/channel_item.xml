@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:media="http://search.yahoo.com/mrss/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>{{ config['MYSERVER_NAME_SHORT'] }}:Channel:{{ channel['ytc_title'] }}</title>
-        <link>https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}</link>
-        <atom:link href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed" rel="self" type="application/rss+xml" />
-        <description>{{ videocount | viewdisplay }} Limited State/Deleted Videos, Channel: {{ channel['ytc_title'] }} </description>
+        <title>{{ config['MYSERVER_NAME_SHORT'] }}:Channel:{{ channel['title'] }}</title>
+        <link>https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['extractor_data'] }}</link>
+        <atom:link href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['extractor_data'] }}/feed" rel="self" type="application/rss+xml" />
+        <description>{{ videocount | viewdisplay }} Limited State/Deleted Videos, Channel: {{ channel['title'] }} </description>
           <image>
             <url>https://{{ config['MYSERVER_NAME'] }}/alt_favicon_140_140.jpg</url>
-            <title>{{ config['MYSERVER_NAME_SHORT'] }}:Channel:{{ channel['ytc_title'] }}</title>
-            <link>https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}</link>
+            <title>{{ config['MYSERVER_NAME_SHORT'] }}:Channel:{{ channel['title'] }}</title>
+            <link>https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['extractor_data'] }}</link>
           </image>
           {% for video in videos %}
             <item>
@@ -26,7 +26,7 @@
                 {% endif %}]]>
               </description>
               <pubDate>{{ video['published'].strftime('%a, %d %b %Y %T') if video['published'] else '' }} EST</pubDate>
-              <category>{{ video['ytc_title'] }}</category>
+              <category>{{ video['source_title'] }}</category>
               <enclosure type="application/x-bittorrent" length="0" url="{{ config.IARCHIVEURL ~ video['extractor_data'] ~ '/youtube-' ~ video['extractor_data'] ~ '_archive.torrent' }}">
               </enclosure>         
             </item>

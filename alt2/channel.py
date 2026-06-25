@@ -1,6 +1,6 @@
 from flask import (Blueprint, render_template, session, make_response, request, jsonify, abort, flash)
 from markupsafe import Markup
-from sqlalchemy import func
+from sqlalchemy import func, select
 from .database import db_session
 from .models import MvVideo, MvChannel
 from .pagination import Pagination
@@ -47,18 +47,18 @@ def table():
 @bp.route('/data_all')
 def data_all():
     columns = [
-        ColumnDT(MvChannel.ytc_title),
-        ColumnDT(MvChannel.ytc_id),
-        ColumnDT(MvChannel.ytc_subscribercount),
-        ColumnDT(MvChannel.ytc_viewcount),
+        ColumnDT(MvChannel.title),
+        ColumnDT(MvChannel.extractor_data),
+        ColumnDT(MvChannel.channel_follower_count),
+        ColumnDT(MvChannel.view_count),
         ColumnDT(MvChannel.total),
         ColumnDT(MvChannel.limited),
-        ColumnDT(MvChannel.archive),
+        ColumnDT(MvChannel.archive_full),
         ColumnDT(MvChannel.allow),
         ColumnDT(func.to_char(MvChannel.delta,'dd')),
-        ColumnDT(func.to_char(MvChannel.ytc_publishedat,'YYYY-mm-dd')),
-        ColumnDT(func.to_char(MvChannel.ytc_deleteddate,'YYYY-mm-dd')),
-        ColumnDT(func.to_char(MvChannel.ytc_addeddate, 'YYYY-mm-dd')),
+        ColumnDT(func.to_char(MvChannel.published_at,'YYYY-mm-dd')),
+        ColumnDT(func.to_char(MvChannel.deleted_date,'YYYY-mm-dd')),
+        ColumnDT(func.to_char(MvChannel.added_date, 'YYYY-mm-dd')),
     ]
 
     query = db_session.query().select_from(MvChannel)
@@ -70,21 +70,21 @@ def data_all():
 @bp.route('/data_deleted')
 def data_deleted():
     columns = [
-        ColumnDT(MvChannel.ytc_title),
-        ColumnDT(MvChannel.ytc_id),
-        ColumnDT(MvChannel.ytc_subscribercount),
-        ColumnDT(MvChannel.ytc_viewcount),
+        ColumnDT(MvChannel.title),
+        ColumnDT(MvChannel.extractor_data),
+        ColumnDT(MvChannel.channel_follower_count),
+        ColumnDT(MvChannel.view_count),
         ColumnDT(MvChannel.total),
         ColumnDT(MvChannel.limited),
-        ColumnDT(MvChannel.archive),
+        ColumnDT(MvChannel.archive_full),
         ColumnDT(MvChannel.allow),
         ColumnDT(func.to_char(MvChannel.delta, 'dd')),
-        ColumnDT(func.to_char(MvChannel.ytc_publishedat,'YYYY-mm-dd')),
-        ColumnDT(func.to_char(MvChannel.ytc_deleteddate,'YYYY-mm-dd')),
-        ColumnDT(func.to_char(MvChannel.ytc_addeddate, 'YYYY-mm-dd')),
+        ColumnDT(func.to_char(MvChannel.published_at,'YYYY-mm-dd')),
+        ColumnDT(func.to_char(MvChannel.deleted_date,'YYYY-mm-dd')),
+        ColumnDT(func.to_char(MvChannel.added_date, 'YYYY-mm-dd')),
     ]
 
-    query = db_session.query().select_from(MvChannel).filter(MvChannel.ytc_deleted)
+    query = db_session.query().select_from(MvChannel).filter(MvChannel.deleted)
     params = request.args.to_dict()
     rowTable = DataTables(params, query, columns)
     return jsonify(rowTable.output_result())
@@ -195,8 +195,8 @@ def item_popular(ytc_id,page):
 def item_feed(ytc_id,page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
-    videocount = db_session.query(func.count(MvVideo.extractor_data)).filter_by(ytc_id=ytc_id).scalar()
-    channel = db_session.get(MvChannel, ytc_id)
+    videocount = db_session.query(func.count(MvVideo.extractor_data)).filter_by(source_extractor_data=ytc_id).scalar()
+    channel = db_session.execute(select(MvChannel).filter(MvChannel.extractor_data == ytc_id)).scalar_one_or_none()
     videos = channeli_videos_newest(ytc_id, PER_PAGE, offset)
     if not videos and page != 1:
         abort(404)

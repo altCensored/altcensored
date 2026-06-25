@@ -9,7 +9,7 @@ from sqlalchemy.orm.attributes import flag_modified
 
 from ..cache import cache
 from ..database import db_session
-from ..models import Entity
+from ..models import Video
 
 logger = logging.getLogger(__name__)
 
@@ -108,16 +108,16 @@ def get_ia_item(extractor_data):
         cache.set(cache_key, unavailable_url, timeout=_CACHE_TTL_IA_FAIL)
         return unavailable_url
 
-    entity_video = Entity.query.filter(Entity.extractor_data == extractor_data).scalar()
+    entity_video = Video.query.filter(Video.extractor_data == extractor_data).scalar()
     if len(ia_item.item_metadata) != 0:
         videofile_full = get_video_files_2(ia_item)
         thumbnail_full = get_image_file(ia_item)
         if thumbnail_full and entity_video:
-            entity_video.thumbnail = thumbnail_full
+            entity_video.thumbnail_ytdlp = thumbnail_full
         if videofile_full and entity_video:
             root, ext = os.path.splitext(videofile_full)
             entity_video.videofile = root
-            flag_modified(entity_video, "thumbnail")
+            flag_modified(entity_video, "thumbnail_ytdlp")
             flag_modified(entity_video, "videofile")
             db_session.commit()
             result_url = IARCHIVEURL + extractor_data + "/" + root
@@ -125,8 +125,8 @@ def get_ia_item(extractor_data):
             return result_url
         else:
             if entity_video:
-                entity_video.novideo_ia = True
-                flag_modified(entity_video, "novideo_ia")
+                entity_video.ia_novideo = True
+                flag_modified(entity_video, "ia_novideo")
                 db_session.commit()
             cache.set(cache_key, unavailable_url, timeout=_CACHE_TTL_IA_MISS)
             return unavailable_url

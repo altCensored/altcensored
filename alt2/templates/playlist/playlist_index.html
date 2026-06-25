@@ -63,10 +63,10 @@
                                 {% set fv = featured_videos.get(playlist.featured_video_id) if playlist.featured_video_id else none %}
                                 {% if fv %}
                                     <div class="thumbnail">
-                                    {% if fv.exists_ac %}
+                                    {% if fv.ac_exists %}
                                         <img class="thumbnail" loading="lazy" src="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ fv.extractor_data ~ '/' ~ fv.thumbnail_ac }}" onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
-                                    {% elif fv.thumbnail and not fv.thumbnail.startswith('http') %}
-                                        <img class="thumbnail" loading="lazy" src="{{ config.IPROXYHUGE ~ config.IARCHIVEURL ~ fv.extractor_data ~ '/' ~ fv.thumbnail }}" onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
+                                    {% elif fv.thumbnail_ytdlp and not fv.thumbnail_ytdlp.startswith('http') %}
+                                        <img class="thumbnail" loading="lazy" src="{{ config.IPROXYHUGE ~ config.IARCHIVEURL ~ fv.extractor_data ~ '/' ~ fv.thumbnail_ytdlp }}" onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
                                     {% else %}
                                         <img class="thumbnail" loading="lazy" src="{{ config.VIDEO_THUMB_ERROR_IMAGE }}">
                                     {% endif %}

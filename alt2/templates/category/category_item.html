@@ -32,24 +32,24 @@
             <div class="pure-g h-box">
                 <div class="pure-u-16-24">
                     <div class="pure-u-1 pure-md-1-2">
-                        <b>{{ category['cat_name'] }}</b>
+                        <b>{{ category['name'] }}</b>
                     </div>
                     <div class="pure-u-1 pure-md-1-2">
-                        <i class="{{ category['cat_image'] }}"  style="font-size: 24px"></i>
-                        <b>{{ category['cat_count']|commafy }}</b>
+                        <i class="{{ category['icon'] }}"  style="font-size: 24px"></i>
+                        <b>{{ category['video_count']|commafy }}</b>
                     </div>
                 </div>
                 <div class="pure-u-8-24" style="text-align:right;">
                     <div class="pure-u-1 pure-md-1-3">
-                        <a href="{{ url_for('category.item', cat_id=category['cat_id']) }}" class="pure-menu-item {{'selected' if order == 'latest' }}">
+                        <a href="{{ url_for('category.item', cat_id=category['id']) }}" class="pure-menu-item {{'selected' if order == 'latest' }}">
                             {{ gettext('latest') }}</a>
                     </div>
                     <div class="pure-u-1 pure-md-1-3">
-                        <a href="{{ url_for('category.item_new', cat_id=category['cat_id']) }}"  class="pure-menu-item {{'selected' if order == 'newest' }}">
+                        <a href="{{ url_for('category.item_new', cat_id=category['id']) }}"  class="pure-menu-item {{'selected' if order == 'newest' }}">
                             {{ gettext('newest') }}</a>
                     </div>
                     <div class="pure-u-1 pure-md-1-3">
-                        <a href="{{ url_for('category.item_popular', cat_id=category['cat_id']) }}"  class="pure-menu-item {{'selected' if order == 'popular' }}">
+                        <a href="{{ url_for('category.item_popular', cat_id=category['id']) }}"  class="pure-menu-item {{'selected' if order == 'popular' }}">
                             {{ gettext('popular') }}</a>
                     </div>
                 </div>

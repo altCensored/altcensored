@@ -27,7 +27,7 @@
   </url>
   {% for category in categories %}
   <url>
-    <loc>https://altcensored.com/category/{{ category.cat_id }}</loc>
+    <loc>https://altcensored.com/category/{{ category.id }}</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>

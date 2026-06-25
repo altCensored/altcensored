@@ -24,62 +24,57 @@
       {% endif %}
           {% for channel in channels %}
             <item>
-              <title>{{ channel['ytc_title']  }}</title>
-              <link>https://{{ config['MYSERVER_NAME'] }}{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}</link>
-              <guid>https://{{ config['MYSERVER_NAME'] }}{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}</guid>
+              <title>{{ channel['title']  }}</title>
+              <link>https://{{ config['MYSERVER_NAME'] }}{{ url_for('channel.item', ytc_id=channel['extractor_data']) }}</link>
+              <guid>https://{{ config['MYSERVER_NAME'] }}{{ url_for('channel.item', ytc_id=channel['extractor_data']) }}</guid>
               <description>
                 <![CDATA[
-                <a href="https://{{ config['MYSERVER_NAME'] }}{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}">
-<<<<<<< HEAD
-                  <img 
-=======
+                <a href="https://{{ config['MYSERVER_NAME'] }}{{ url_for('channel.item', ytc_id=channel['extractor_data']) }}">
                   <img
->>>>>>> new_dev2
-                   src="{{ channel['ytc_thumbnailurl'] | reverse | replace('88','671', 1) | reverse  }}" >
+                   src="{{ channel['thumbnail_ytapi'] | reverse | replace('88','671', 1) | reverse  }}" >
                   </style>
                 </a>
                 <p>
                 <b>Total Videos: {{ channel['total'] }}</b><br>
                 <b>Limited/Removed Videos: {{ channel['limited'] }}</b><br>
-                <b>Views:</b> {{ channel['ytc_viewcount'] }}<br>
-                <b>Subscribers:</b> {{ channel['ytc_subscribercount'] }}<br>
-                <b>Created Date:</b> {{ channel['ytc_publishedat'].strftime('%Y-%m-%d') if channel['ytc_publishedat'] else '' }}<br>
-              {% if channel['ytc_deleted'] %}
-                <b>Deleted Date:</b>{{ channel['ytc_deleteddate'].strftime('%Y-%m-%d') if channel['ytc_deleteddate'] else '' }}<br>
+                <b>Views:</b> {{ channel['view_count'] }}<br>
+                <b>Subscribers:</b> {{ channel['channel_follower_count'] }}<br>
+                <b>Created Date:</b> {{ channel['published_at'].strftime('%Y-%m-%d') if channel['published_at'] else '' }}<br>
+              {% if channel['deleted'] %}
+                <b>Deleted Date:</b>{{ channel['deleted_date'].strftime('%Y-%m-%d') if channel['deleted_date'] else '' }}<br>
               {% endif %}
-              {% if channel['ytc_addeddate'] %}
-                 <b>Added to altCensored Date:</b> {{ channel['ytc_addeddate'].strftime('%Y-%m-%d') }}<br>
+              {% if channel['added_date'] %}
+                 <b>Added to altCensored Date:</b> {{ channel['added_date'].strftime('%Y-%m-%d') }}<br>
               {% endif %}
-                <b>YouTube Channel ID:</b> {{ channel['ytc_id'] }}<br>
-                <b>YouTube Channel URL:</b> https://www.youtube.com/channel/{{ channel['ytc_id'] }}
+                <b>YouTube Channel ID:</b> {{ channel['extractor_data'] }}<br>
+                <b>YouTube Channel URL:</b> https://www.youtube.com/channel/{{ channel['extractor_data'] }}
                 <p>
-              {% if channel['ytc_description'] %}
-                {{ channel['ytc_description'] | linkify | safe | nl2br | truncate (1200) }}
+              {% if channel['description'] %}
+                {{ channel['description'] | linkify | safe | nl2br | truncate (1200) }}
               {% endif %}
                 ]]>
               </description>
               <altcen:Total_Videos>{{ channel['total'] }}</altcen:Total_Videos>
               <altcen:Limited_Removed_Videos>{{ channel['limited'] }}</altcen:Limited_Removed_Videos>
-              <altcen:Views>{{ channel['ytc_viewcount'] }}</altcen:Views>
-              <altcen:Subscribers>{{ channel['ytc_subscribercount'] }}</altcen:Subscribers>
-              <altcen:Created_Date>{{ channel['ytc_publishedat'] }}</altcen:Created_Date>
-              <altcen:Deleted_Date>{{ channel['ytc_deleteddate'] }}</altcen:Deleted_Date>
-              <altcen:Added_to_altCen_Date>{{ channel['ytc_addeddate'] }}</altcen:Added_to_altCen_Date>
-              <altcen:YouTube_Channel_ID>{{ channel['ytc_id'] }}</altcen:YouTube_Channel_ID>
-              <altcen:YouTube_Channel_URL>https://www.youtube.com/channel/{{ channel['ytc_id'] }}</altcen:YouTube_Channel_URL>
-              <altcen:SocialBlade_Channel_URL>https://socialblade.com/youtube/channel/{{ channel['ytc_id'] }}</altcen:SocialBlade_Channel_URL>
-              {% if channel['ytc_description'] %}
-                <altcen:Short_Description> <![CDATA[ {{ channel['ytc_description'] | linkify | safe | nl2br | truncate (35) }} ]]> </altcen:Short_Description>
+              <altcen:Views>{{ channel['view_count'] }}</altcen:Views>
+              <altcen:Subscribers>{{ channel['channel_follower_count'] }}</altcen:Subscribers>
+              <altcen:Created_Date>{{ channel['published_at'] }}</altcen:Created_Date>
+              <altcen:Deleted_Date>{{ channel['deleted_date'] }}</altcen:Deleted_Date>
+              <altcen:Added_to_altCen_Date>{{ channel['added_date'] }}</altcen:Added_to_altCen_Date>
+              <altcen:YouTube_Channel_ID>{{ channel['extractor_data'] }}</altcen:YouTube_Channel_ID>
+              <altcen:YouTube_Channel_URL>https://www.youtube.com/channel/{{ channel['extractor_data'] }}</altcen:YouTube_Channel_URL>
+              <altcen:SocialBlade_Channel_URL>https://socialblade.com/youtube/channel/{{ channel['extractor_data'] }}</altcen:SocialBlade_Channel_URL>
+              {% if channel['description'] %}
+                <altcen:Short_Description> <![CDATA[ {{ channel['description'] | linkify | safe | nl2br | truncate (35) }} ]]> </altcen:Short_Description>
               {% else %}
-                <altcen:Short_Description> <![CDATA[ {{ channel['ytc_description'] }} ]]> </altcen:Short_Description>
+                <altcen:Short_Description> <![CDATA[ {{ channel['description'] }} ]]> </altcen:Short_Description>
               {% endif %}
-              {% if channel['ytc_deleted'] %}
-              <pubDate>{{ channel['ytc_deleteddate'].strftime('%a, %d %b %Y %T') if channel['ytc_deleteddate'] else '' }} EST</pubDate>
+              {% if channel['deleted'] %}
+              <pubDate>{{ channel['deleted_date'].strftime('%a, %d %b %Y %T') if channel['deleted_date'] else '' }} EST</pubDate>
               {% else %}
-              <pubDate>{{ channel['ytc_addeddate'].strftime('%a, %d %b %Y %T') if channel['ytc_addeddate'] else '' }} EST</pubDate>
+              <pubDate>{{ channel['added_date'].strftime('%a, %d %b %Y %T') if channel['added_date'] else '' }} EST</pubDate>
               {% endif %}
             </item>
           {% endfor %}
     </channel>
 </rss>
-

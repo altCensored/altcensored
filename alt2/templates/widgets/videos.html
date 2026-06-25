@@ -16,11 +16,11 @@
             <div class="thumbnail">
 
 
-          {% if  video['exists_ac'] %}
+          {% if  video['ac_exists'] %}
               <img class="thumbnail" loading="lazy" src="{{ config.ACIPROXYHUGE~ config.VIDEOSERVER_URL ~ video['extractor_data'] ~ '/' ~ video['thumbnail_ac'] }}"
                    onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
-          {% elif video['thumbnail'] and not video['thumbnail'].startswith('http') %}
-              <img class="thumbnail" loading="lazy" src="{{ config.IPROXYHUGE~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['thumbnail'] }}"
+          {% elif video['thumbnail_ytdlp'] and not video['thumbnail_ytdlp'].startswith('http') %}
+              <img class="thumbnail" loading="lazy" src="{{ config.IPROXYHUGE~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['thumbnail_ytdlp'] }}"
                    onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
           {% else %}
               <img class="thumbnail" loading="lazy" src="{{ config.VIDEO_THUMB_ERROR_IMAGE }}">
@@ -95,8 +95,8 @@
           </p>
           {% if not hide_channel %}
           <p>
-            <b><a style="width:100%;" href="{{ url_for('channel.item', ytc_id=video['ytc_id']) }}">
-            {{ video['ytc_title'] }}</a></b>
+            <b><a style="width:100%;" href="{{ url_for('channel.item', ytc_id=video['source_extractor_data']) }}">
+            {{ video['source_title'] }}</a></b>
           </p>
           {% endif %}
           <h5 class="pure-g" style="margin-top: 0.4em;">
@@ -104,7 +104,7 @@
               {% if video['published'] %}{{ video['published'].strftime('%b %e, %G') }}{% endif %}
             </div>
             <div class="pure-u-1-3" style="text-align:right">
-              {% if video['yt_views'] %}{{ video['yt_views']|viewdisplay }} {{ gettext('views') }}{% endif %}
+              {% if video['view_count'] %}{{ video['view_count']|viewdisplay }} {{ gettext('views') }}{% endif %}
             </div>
           </h5>
         </div>

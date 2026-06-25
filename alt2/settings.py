@@ -157,15 +157,18 @@ def update_user():
         user = db_session.get(User, session['user']['id'])
         playlist = Playlist.query.filter(Playlist.title == ffeatured_playlist).scalar()
         if playlist is not None and playlist.featured_video_id is not None:
-            fv = db_session.get(MvVideo, playlist.featured_video_id)
+            from sqlalchemy import select as sa_select
+            fv = db_session.execute(
+                sa_select(MvVideo).filter(MvVideo.extractor_data == playlist.featured_video_id)
+            ).scalar_one_or_none()
             user.featured_playlist = {
                 "pl_id": playlist.id,
                 "pl_title": playlist.title,
                 "extractor_data": playlist.featured_video_id,
-                "thumbnail": fv.thumbnail if fv else None,
+                "thumbnail": fv.thumbnail_ytdlp if fv else None,
                 "thumbnail_ac": fv.thumbnail_ac if fv else None,
-                "exists_ac": bool(fv.exists_ac) if fv else False,
-                "exists_ia": bool(fv.exists_ia) if fv else False,
+                "exists_ac": bool(fv.ac_exists) if fv else False,
+                "exists_ia": bool(fv.ia_exists) if fv else False,
             }
         elif playlist is not None and playlist.featured_video_id is None:
             flash(lazy_gettext('Playlist has no featured video — add a video to the playlist first'), 'error')

@@ -15,11 +15,11 @@
 <meta property="og:type" content="article">
 
 {% if featured_video %}
-    {% if featured_video.exists_ac %}
+    {% if featured_video.ac_exists %}
         {% set og_thumb = config.ACIPROXY ~ config.VIDEOSERVER_URL ~ featured_video.extractor_data ~ '/' ~ featured_video.thumbnail_ac %}
-    {% elif featured_video.thumbnail %}
-        {% set og_thumb = config.IPROXYBIG ~ config.IARCHIVEURL ~ featured_video.extractor_data ~ '/' ~ featured_video.thumbnail %}
-    {% elif featured_video.exists_ia %}
+    {% elif featured_video.thumbnail_ytdlp %}
+        {% set og_thumb = config.IPROXYBIG ~ config.IARCHIVEURL ~ featured_video.extractor_data ~ '/' ~ featured_video.thumbnail_ytdlp %}
+    {% elif featured_video.ia_exists %}
         {% set og_thumb = config.IPROXY ~ config.IARCHIVEURL ~ featured_video.extractor_data ~ '/__ia_thumb.jpg' %}
     {% else %}
         {% set og_thumb = 'https://' ~ config['MYSERVER_NAME'] ~ '/logo_clip.png' %}

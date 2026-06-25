@@ -14,7 +14,7 @@ PER_PAGE = 24
 def index(page):
 #    set_session()
     offset = ((int(page)-1) * PER_PAGE)
-    categorycount = db_session.query(func.count(MvCategory.cat_id)).scalar()
+    categorycount = db_session.query(func.count(MvCategory.id)).scalar()
     categories = MvCategory.query.limit(PER_PAGE).offset(offset)
     if not categories and page != 1:
         abort(404)
@@ -33,10 +33,10 @@ def item(cat_id,page):
         abort(404)
     offset = ((int(page)-1) * PER_PAGE)
     order = 'latest'
-    category = db_session.get(MvCategory, cat_id)
+    category = db_session.get(MvCategory, int(cat_id))
     if category is None:
         abort(404)
-    cat_name = category.cat_name
+    cat_name = category.name
     videocount = db_session.query(func.count(MvVideo.extractor_data)).filter_by(category=cat_name).scalar()
     videos = MvVideo.query.filter_by(category=cat_name).order_by(MvVideo.id.desc()).limit(PER_PAGE).offset(offset)
     if not videos and page != 1:
@@ -48,7 +48,7 @@ def item(cat_id,page):
         if user.watchlater:
             watchlater = user.watchlater
 
-    return render_template('category/category_item.html', 
+    return render_template('category/category_item.html',
         pagination=pagination, category=category, videos=videos, videocount=videocount, order=order, watchlater=watchlater)
 
 
@@ -59,10 +59,10 @@ def item_new(cat_id,page):
         abort(404)
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
-    category = db_session.get(MvCategory, cat_id)
+    category = db_session.get(MvCategory, int(cat_id))
     if category is None:
         abort(404)
-    cat_name = category.cat_name
+    cat_name = category.name
     videocount = db_session.query(func.count(MvVideo.extractor_data)).filter_by(category=cat_name).scalar()
     videos = MvVideo.query.filter_by(category=cat_name).order_by(MvVideo.published.desc()).limit(PER_PAGE).offset(offset)
     if not videos and page != 1:
@@ -74,7 +74,7 @@ def item_new(cat_id,page):
         if user.watchlater:
             watchlater = user.watchlater
 
-    return render_template('category/category_item.html', 
+    return render_template('category/category_item.html',
         pagination=pagination, category=category, videos=videos, videocount=videocount, order=order)
 
 
@@ -85,12 +85,12 @@ def item_popular(cat_id,page):
         abort(404)
     offset = ((int(page)-1) * PER_PAGE)
     order = 'popular'
-    category = db_session.get(MvCategory, cat_id)
+    category = db_session.get(MvCategory, int(cat_id))
     if category is None:
         abort(404)
-    cat_name = category.cat_name
+    cat_name = category.name
     videocount = db_session.query(func.count(MvVideo.extractor_data)).filter_by(category=cat_name).scalar()
-    videos = MvVideo.query.filter_by(category=cat_name).order_by(MvVideo.yt_views.desc()).limit(PER_PAGE).offset(offset)
+    videos = MvVideo.query.filter_by(category=cat_name).order_by(MvVideo.view_count.desc()).limit(PER_PAGE).offset(offset)
     if not videos and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)

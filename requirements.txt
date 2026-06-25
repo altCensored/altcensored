@@ -59,7 +59,7 @@ schema
 sendgrid
 sentry-sdk[flask]
 six
-altcen-models @ git+https://github.com/altCensored/altcen-models.git
+ytac @ git+https://github.com/altCensored/ytac.git
 SQLAlchemy>=2.0,<3.0
 sqlalchemy-datatables
 starkbank-ecdsa

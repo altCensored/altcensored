@@ -15,7 +15,7 @@ from flask import (
 from sqlalchemy import func, or_
 
 from .database import db_session
-from .models import MvChannel, User, Entity, Source, Sources_to_Videos, EmailList
+from .models import MvChannel, User, Video, Source, content_table, EmailList
 from datatables import ColumnDT, DataTables
 from threading import Thread
 
@@ -176,20 +176,20 @@ def channel_table():
 @util.admin_login_required
 def channel_data_all():
     columns = [
-        ColumnDT(MvChannel.ytc_title),
-        ColumnDT(MvChannel.ytc_id),
-        ColumnDT(MvChannel.ytc_subscribercount),
-        ColumnDT(MvChannel.ytc_viewcount),
+        ColumnDT(MvChannel.title),
+        ColumnDT(MvChannel.extractor_data),
+        ColumnDT(MvChannel.channel_follower_count),
+        ColumnDT(MvChannel.view_count),
         ColumnDT(MvChannel.total),
         ColumnDT(MvChannel.limited),
-        ColumnDT(MvChannel.archive),
+        ColumnDT(MvChannel.archive_full),
         ColumnDT(MvChannel.allow),
-        ColumnDT(MvChannel.was_full),
+        ColumnDT(MvChannel.archive_full_was),
         ColumnDT(func.to_char(MvChannel.delta,'dd')),
         ColumnDT(func.to_char(MvChannel.newest_video,'YYYY-mm-dd')),
-        ColumnDT(func.to_char(MvChannel.ytc_publishedat,'YYYY-mm-dd')),
-        ColumnDT(func.to_char(MvChannel.ytc_deleteddate,'YYYY-mm-dd')),
-        ColumnDT(func.to_char(MvChannel.ytc_addeddate, 'YYYY-mm-dd')),
+        ColumnDT(func.to_char(MvChannel.published_at,'YYYY-mm-dd')),
+        ColumnDT(func.to_char(MvChannel.deleted_date,'YYYY-mm-dd')),
+        ColumnDT(func.to_char(MvChannel.added_date, 'YYYY-mm-dd')),
     ]
 
     query = db_session.query().select_from(MvChannel)
@@ -211,28 +211,25 @@ def video_data():
     ytc_id = request.args.get('ytc_id', 'None')
 
     columns = [
-        ColumnDT(Entity.extractor_data),
-        ColumnDT(Entity.title),
-        ColumnDT(Entity.views),
-        ColumnDT(Entity.likes),
-        ColumnDT(Entity.dislikes),
-        ColumnDT(Entity.allow),
-        ColumnDT(Entity.sync_ia),
-        ColumnDT(Entity.exists_ia),
-        ColumnDT(Entity.yt_deleted),
-        ColumnDT(func.to_char(Entity.sync_iadate, 'YYYY-mm-dd')),
-        ColumnDT(func.to_char(Entity.addeddate, 'YYYY-mm-dd')),
+        ColumnDT(Video.extractor_data),
+        ColumnDT(Video.title),
+        ColumnDT(Video.view_count),
+        ColumnDT(Video.allow),
+        ColumnDT(Video.ia_exists),
+        ColumnDT(Video.deleted),
+        ColumnDT(func.to_char(Video.maint_ia_last, 'YYYY-mm-dd')),
+        ColumnDT(func.to_char(Video.added_date, 'YYYY-mm-dd')),
     ]
 
     if ytc_id == "all":
-        query = db_session.query().select_from(Entity)
+        query = db_session.query().select_from(Video)
 
     else:
         query = db_session.query(). \
-            select_from(Entity). \
-            join(Sources_to_Videos). \
-            join(Source). \
-            filter(Source.ytc_id == ytc_id)
+            select_from(Video). \
+            join(content_table, content_table.c.video_id == Video.id). \
+            join(Source, content_table.c.source_id == Source.id). \
+            filter(Source.extractor_data == ytc_id)
 
     params = request.args.to_dict()
     rowTable = DataTables(params, query, columns)
@@ -248,14 +245,14 @@ def channel_table_new():
 @bp.route('/channel_table_new_data')
 @util.admin_login_required
 def channel_table_new_data():
-    query = db_session.query(MvChannel).filter(MvChannel.ytc_deleted == False)
+    query = db_session.query(MvChannel).filter(MvChannel.deleted == False)
 
     # search filter
     search = request.args.get('search')
     if search:
         query = query.filter(or_(
-            MvChannel.ytc_id.ilike(f'%{search}%'),
-            MvChannel.ytc_title.ilike(f'%{search}%')
+            MvChannel.extractor_data.ilike(f'%{search}%'),
+            MvChannel.title.ilike(f'%{search}%')
         ))
 
     total = query.count()
@@ -267,8 +264,8 @@ def channel_table_new_data():
         for s in sort.split(','):
             direction = s[0]
             name = s[1:]
-            if name not in ['ytc_videocount', 'total', 'archived', 'limited', 'newest', 'updated',
-                            'delta', 'allow', 'ytc_archive', 'ytc_partarchive', 'was_full', 'was_part']:
+            if name not in ['video_count', 'total', 'archived', 'limited', 'newest_video',
+                            'delta', 'allow', 'archive_full', 'archive_part', 'archive_full_was', 'archive_part_was']:
                 name = 'name'
             col = getattr(MvChannel, name)
             if direction == '-':
@@ -283,9 +280,26 @@ def channel_table_new_data():
     if start != -1 and length != -1:
         query = query.offset(start).limit(length)
 
-    # response
+    def _channel_dict(s):
+        return {
+            'id': s.id,
+            'extractor_data': s.extractor_data,
+            'title': s.title,
+            'video_count': s.video_count,
+            'total': s.total,
+            'archived': s.archived,
+            'limited': s.limited,
+            'newest_video': str(s.newest_video) if s.newest_video else None,
+            'delta': s.delta.days if s.delta else None,
+            'allow': str(s.allow)[0],
+            'archive_full': str(s.archive_full)[0],
+            'archive_part': str(s.archive_part)[0],
+            'archive_full_was': str(s.archive_full_was)[0],
+            'archive_part_was': str(s.archive_part_was)[0],
+        }
+
     return {
-        'data': [source.to_dict() for source in query],
+        'data': [_channel_dict(source) for source in query],
         'total': total,
     }
 
@@ -297,13 +311,13 @@ def update():
     if 'id' not in data:
         abort(400)
     source = db_session.get(Source, (data['id']))
-    for field in ['ytc_title']:
+    for field in ['title']:
         if field in data:
             setattr(source, field, data[field])
     #
     # boolean fields must be converted from text to string
     #
-    for field in ['allow', 'ytc_archive', 'ytc_partarchive']:
+    for field in ['allow', 'archive_full', 'archive_part']:
         if field in data:
             bool_field = util.string_boolean(data[field])
             setattr(source, field, bool_field)

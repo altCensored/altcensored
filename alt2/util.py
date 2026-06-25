@@ -14,7 +14,7 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.orm.attributes import flag_modified
 from .database import db_session
 from .models import Translation, Playlist, MvChannel, MvVideo, User, \
-    EmailList, Entity, Source, Counter
+    EmailList, Video, Source, Counter
 from . import config
 from .cache import cache
 
@@ -330,12 +330,12 @@ def local_command(commands, timeout=30):
 def video_toggle_allow(video_id, bool_allow=None, bool_deleted=None):
     try:
         video = db_session.execute(
-            select(Entity).filter(Entity.extractor_data == video_id)
+            select(Video).filter(Video.extractor_data == video_id)
         ).scalars().first()
         if bool_allow is not None:
             video.allow = bool_allow
         if bool_deleted is not None:
-            video.yt_deleted = bool_deleted
+            video.deleted = bool_deleted
         db_session.commit()
         return True
     except Exception:
@@ -346,7 +346,7 @@ def video_toggle_allow(video_id, bool_allow=None, bool_deleted=None):
 def channel_update(channel_id, delta=None, archive_type=None, deleted=None, viewcount=None, subscribercount=None, deleteddate=None):
     try:
         channel = db_session.execute(
-            select(Source).filter(Source.ytc_id == channel_id)
+            select(Source).filter(Source.extractor_data == channel_id)
         ).scalars().first()
 
         if channel is None:
@@ -358,30 +358,30 @@ def channel_update(channel_id, delta=None, archive_type=None, deleted=None, view
 
         if archive_type:
             if archive_type == 'none':
-                channel.ytc_archive = False
-                channel.ytc_partarchive = False
-                channel.ytc_latestarchive = False
+                channel.archive_full = False
+                channel.archive_part = False
+                channel.archive_latest = False
             elif archive_type == 'partial':
-                channel.ytc_archive = False
-                channel.ytc_partarchive = True
-                channel.ytc_latestarchive = False
+                channel.archive_full = False
+                channel.archive_part = True
+                channel.archive_latest = False
             elif archive_type == 'full':
-                channel.ytc_archive = True
-                channel.ytc_partarchive = False
-                channel.ytc_latestarchive = False
+                channel.archive_full = True
+                channel.archive_part = False
+                channel.archive_latest = False
             elif archive_type == 'latest':
-                channel.ytc_archive = False
-                channel.ytc_partarchive = False
-                channel.ytc_latestarchive = True
+                channel.archive_full = False
+                channel.archive_part = False
+                channel.archive_latest = True
 
         if deleted is True or deleted is False:
-            channel.ytc_deleted = deleted
+            channel.deleted = deleted
         if viewcount:
-            channel.ytc_viewcount = viewcount
+            channel.view_count = viewcount
         if subscribercount:
-            channel.ytc_subscribercount = subscribercount
+            channel.channel_follower_count = subscribercount
         if deleteddate:
-            channel.ytc_deleteddate = deleteddate
+            channel.deleted_date = deleteddate
         db_session.commit()
         return True
     except Exception:
@@ -397,7 +397,7 @@ def _exec_listing(stmt, per_page, offset):
 @cache.memoize(timeout=3600)
 def videos_trending(PER_PAGE, offset):
     return _exec_listing(
-        select(MvVideo).order_by(nullslast(MvVideo.ac_views.desc())),
+        select(MvVideo).order_by(nullslast(MvVideo.view_count_ac.desc())),
         PER_PAGE, offset,
     )
 
@@ -405,7 +405,7 @@ def videos_trending(PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def videos_latest(PER_PAGE, offset):
     return _exec_listing(
-        select(MvVideo).order_by(nullslast(MvVideo.yt_deleted_date.desc())),
+        select(MvVideo).order_by(nullslast(MvVideo.deleted_date.desc())),
         PER_PAGE, offset,
     )
 
@@ -421,7 +421,7 @@ def videos_newest(PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def videos_popular(PER_PAGE, offset):
     return _exec_listing(
-        select(MvVideo).order_by(MvVideo.yt_views.desc()),
+        select(MvVideo).order_by(MvVideo.view_count.desc()),
         PER_PAGE, offset,
     )
 
@@ -437,7 +437,7 @@ def channels_latest(PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def channels_newest(PER_PAGE, offset):
     return _exec_listing(
-        select(MvChannel).order_by(MvChannel.ytc_publishedat.desc(), MvChannel.ytc_id.desc()),
+        select(MvChannel).order_by(MvChannel.published_at.desc(), MvChannel.extractor_data.desc()),
         PER_PAGE, offset,
     )
 
@@ -445,7 +445,7 @@ def channels_newest(PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def channels_popular(PER_PAGE, offset):
     return _exec_listing(
-        select(MvChannel).order_by(MvChannel.ytc_viewcount.desc()),
+        select(MvChannel).order_by(MvChannel.view_count.desc()),
         PER_PAGE, offset,
     )
 
@@ -453,8 +453,8 @@ def channels_popular(PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def channels_deleted(PER_PAGE, offset):
     return _exec_listing(
-        select(MvChannel).filter(MvChannel.ytc_deleted)
-        .order_by(MvChannel.ytc_deleteddate.desc(), MvChannel.ytc_id.desc()),
+        select(MvChannel).filter(MvChannel.deleted)
+        .order_by(MvChannel.deleted_date.desc(), MvChannel.extractor_data.desc()),
         PER_PAGE, offset,
     )
 
@@ -462,7 +462,7 @@ def channels_deleted(PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def channels_limited(PER_PAGE, offset):
     return _exec_listing(
-        select(MvChannel).order_by(MvChannel.limited.desc(), MvChannel.ytc_id.desc()),
+        select(MvChannel).order_by(MvChannel.limited.desc(), MvChannel.extractor_data.desc()),
         PER_PAGE, offset,
     )
 
@@ -470,17 +470,19 @@ def channels_limited(PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def channels_archived(PER_PAGE, offset):
     return _exec_listing(
-        select(MvChannel).filter(MvChannel.ytc_archive),
+        select(MvChannel).filter(MvChannel.archive_full),
         PER_PAGE, offset,
     )
 
 
 @cache.memoize(timeout=3600)
 def channeli(ytc_id):
-    channel = db_session.get(MvChannel, ytc_id)
+    channel = db_session.execute(
+        select(MvChannel).filter(MvChannel.extractor_data == ytc_id)
+    ).scalar_one_or_none()
     if channel is None:
         channel = db_session.execute(
-            select(MvChannel).filter(func.lower(MvChannel.ytc_id) == func.lower(ytc_id))
+            select(MvChannel).filter(func.lower(MvChannel.extractor_data) == func.lower(ytc_id))
         ).scalar_one_or_none()
     return channel
 
@@ -488,14 +490,14 @@ def channeli(ytc_id):
 @cache.memoize(timeout=3600)
 def channeli_videocount(ytc_id):
     return db_session.scalar(
-        select(func.count(MvVideo.extractor_data)).filter(MvVideo.ytc_id == ytc_id)
+        select(func.count(MvVideo.extractor_data)).filter(MvVideo.source_extractor_data == ytc_id)
     )
 
 
 @cache.memoize(timeout=3600)
 def channeli_videos_newest(ytc_id, PER_PAGE, offset):
     return _exec_listing(
-        select(MvVideo).filter(MvVideo.ytc_id == ytc_id).order_by(MvVideo.published.desc()),
+        select(MvVideo).filter(MvVideo.source_extractor_data == ytc_id).order_by(MvVideo.published.desc()),
         PER_PAGE, offset,
     )
 
@@ -503,7 +505,7 @@ def channeli_videos_newest(ytc_id, PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def channeli_videos_popular(ytc_id, PER_PAGE, offset):
     return _exec_listing(
-        select(MvVideo).filter(MvVideo.ytc_id == ytc_id).order_by(MvVideo.yt_views.desc()),
+        select(MvVideo).filter(MvVideo.source_extractor_data == ytc_id).order_by(MvVideo.view_count.desc()),
         PER_PAGE, offset,
     )
 
@@ -562,17 +564,17 @@ def videocount_cache():
 
 @cache.cached(key_prefix="cache:channelcount", timeout=3600)
 def channelcount_cache():
-    return db_session.scalar(select(func.count(MvChannel.ytc_id)))
+    return db_session.scalar(select(func.count(MvChannel.extractor_data)))
 
 
 @cache.cached(key_prefix="cache:delchannelcount", timeout=3600)
 def delchannelcount_cache():
-    return db_session.scalar(select(func.count(MvChannel.ytc_id)).filter(MvChannel.ytc_deleted))
+    return db_session.scalar(select(func.count(MvChannel.extractor_data)).filter(MvChannel.deleted))
 
 
 @cache.cached(key_prefix="cache:archivechannelcount", timeout=3600)
 def archivechannelcount_cache():
-    return db_session.scalar(select(func.count(MvChannel.ytc_id)).filter(MvChannel.ytc_archive))
+    return db_session.scalar(select(func.count(MvChannel.extractor_data)).filter(MvChannel.archive_full))
 
 
 @cache.cached(key_prefix="cache:playlistcount", timeout=3600)
@@ -602,21 +604,21 @@ def navtabs_index_cache():
 
 def increment_video_counter(video_id, ip, header):
     try:
-        entity_video = db_session.execute(
-            select(Entity).filter(Entity.extractor_data == video_id)
+        video_row = db_session.execute(
+            select(Video).filter(Video.extractor_data == video_id)
         ).scalar_one_or_none()
         today = str(date.today())
         myhash = int(hashlib.sha256(
-            (ip + header + today + str(entity_video.extractor_data)).encode()
+            (ip + header + today + str(video_row.extractor_data)).encode()
         ).hexdigest(), 16) % (2 ** 63)
         result = db_session.execute(
             pg_insert(Counter).values(hash=myhash).on_conflict_do_nothing(index_elements=['hash'])
         )
         if result.rowcount == 1:
-            if entity_video.ac_views is None:
-                entity_video.ac_views = 0
-            entity_video.ac_views = entity_video.ac_views + 1
-            flag_modified(entity_video, "ac_views")
+            if video_row.view_count_ac is None:
+                video_row.view_count_ac = 0
+            video_row.view_count_ac = video_row.view_count_ac + 1
+            flag_modified(video_row, "view_count_ac")
             db_session.commit()
     except Exception:
         logger.exception("increment_video_counter failed for video_id=%s", video_id)

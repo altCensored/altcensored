@@ -30,9 +30,9 @@ def _resolve_video_url(video: MvVideo, video_id: str) -> str:
     VIDEOSERVER_URL = current_app.config['VIDEOSERVER_URL']
     unavailable_url = f'{VIDEOSERVER_URL}unavailable/unavailable'
 
-    # Only hit S3 when exists_ac is truthy — None and False both skip the round-trip.
-    # The scraper sets exists_ac=True on upload, so None reliably means "never in S3".
-    if video.exists_ac:
+    # Only hit S3 when ac_exists is truthy — None and False both skip the round-trip.
+    # The scraper sets ac_exists=True on upload, so None reliably means "never in S3".
+    if video.ac_exists:
         try:
             s3_exists = check_ac_object_exists(video_id)
         except Exception:
@@ -40,7 +40,7 @@ def _resolve_video_url(video: MvVideo, video_id: str) -> str:
         if s3_exists:
             return VIDEOSERVER_URL + video_id + "/" + video_id
 
-    if video.dark_ia or video.restricted_ia or video.loggedin_ia or video.novideo_ia:
+    if video.ia_dark or video.ia_restricted or video.ia_loggedin or video.ia_novideo:
         return unavailable_url
 
     if video.videofile:
@@ -48,15 +48,15 @@ def _resolve_video_url(video: MvVideo, video_id: str) -> str:
         return IARCHIVEURL + video_id + "/" + root
 
     if (
-        video.thumbnail
-        and 'maxresdefault' not in video.thumbnail
-        and not video.thumbnail.startswith('http')
+        video.thumbnail_ytdlp
+        and 'maxresdefault' not in video.thumbnail_ytdlp
+        and not video.thumbnail_ytdlp.startswith('http')
     ):
-        root, _ext = os.path.splitext(video.thumbnail)
+        root, _ext = os.path.splitext(video.thumbnail_ytdlp)
         return IARCHIVEURL + video_id + "/" + root
 
     # is False (identity) — None means unknown, must still try get_ia_item().
-    if video.exists_ia is False:
+    if video.ia_exists is False:
         return unavailable_url
 
     return get_ia_item(video.extractor_data)
@@ -175,11 +175,11 @@ def watch():
         tags = None
 
     try:
-        category = MvCategory.query.filter_by(cat_name=cat_name).first()
-        cat_id = category.cat_id
+        category = MvCategory.query.filter_by(name=cat_name).first()
+        cat_id = category.id
     except Exception:
         cat_id = 25
-    channel = db_session.execute(select(MvChannel).filter(MvChannel.ytc_id == video.ytc_id)).scalar()
+    channel = db_session.execute(select(MvChannel).filter(MvChannel.extractor_data == video.source_extractor_data)).scalar()
 
     if playlist:
         playlist = db_session.execute(select(Playlist).filter(Playlist.hashid == playlist)).scalar()
@@ -206,7 +206,7 @@ def watch():
         videos = MvVideo.query.filter(MvVideo.extractor_data.in_(get_current_user().watchlater)).order_by(ordering)
 
     else:
-        vid_filter = [MvVideo.ytc_id == video.ytc_id, MvVideo.extractor_data != video_id]
+        vid_filter = [MvVideo.source_extractor_data == video.source_extractor_data, MvVideo.extractor_data != video_id]
         if video.published is not None:
             vid_filter.append(MvVideo.published <= video.published)
         videos = db_session.query(MvVideo).filter(*vid_filter) \
@@ -295,7 +295,7 @@ def _get_next_video(video, playlist=None, userlist=None):
 
     else:
         first_vid_pub = session.get('first_vid_pub')
-        q = db_session.query(MvVideo.extractor_data).filter(MvVideo.ytc_id == video.ytc_id)
+        q = db_session.query(MvVideo.extractor_data).filter(MvVideo.source_extractor_data == video.source_extractor_data)
         if first_vid_pub is not None:
             q = q.filter(MvVideo.published <= first_vid_pub)
         channel_vids = q.order_by(MvVideo.published.desc(), MvVideo.extractor_data.desc()).limit(PER_PAGE)
@@ -415,7 +415,7 @@ def _search_impl(rawsearch, video_order, order_label, page):
         .order_by(rank_u).limit(PER_PAGE).offset(offset).params(search=term).all()
 
     videocount = db_session.query(func.count(MvVideo.extractor_data)).filter(tsv).params(search=term).scalar()
-    channcount = db_session.query(func.count(MvChannel.ytc_id)).filter(tsc).params(search=term).scalar()
+    channcount = db_session.query(func.count(MvChannel.extractor_data)).filter(tsc).params(search=term).scalar()
     searchplaylistcount = db_session.query(func.count(MvPlaylist.id)).filter(tsp).params(search=term).scalar()
     usercount = db_session.query(func.count(MvAltcenUser.id)).filter(MvAltcenUser.public, tsu) \
         .params(search=term).scalar()
@@ -470,7 +470,7 @@ def search_new(page):
 @bp.route("/search/popular", defaults={'page': 1})
 @bp.route('/search/popular/page/<int:page>')
 def search_popular(page):
-    return _search_impl(request.args.get('q'), MvVideo.yt_views.desc(), 'popular', page)
+    return _search_impl(request.args.get('q'), MvVideo.view_count.desc(), 'popular', page)
 
 
 @bp.route('/play-next', methods=['GET', 'POST'])

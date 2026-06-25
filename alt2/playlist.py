@@ -123,7 +123,10 @@ def item(playlist,page):
 
     featured_video = None
     if playlist.featured_video_id:
-        featured_video = db_session.get(MvVideo, playlist.featured_video_id)
+        from sqlalchemy import select as sa_select
+        featured_video = db_session.execute(
+            sa_select(MvVideo).filter(MvVideo.extractor_data == playlist.featured_video_id)
+        ).scalar_one_or_none()
         if featured_video is None and playlist.videos:
             existing = {r[0] for r in db_session.query(MvVideo.extractor_data)
                         .filter(MvVideo.extractor_data.in_(playlist.videos))}
@@ -134,7 +137,9 @@ def item(playlist,page):
             except Exception:
                 db_session.rollback()
             if new_fv_id:
-                featured_video = db_session.get(MvVideo, new_fv_id)
+                featured_video = db_session.execute(
+                    sa_select(MvVideo).filter(MvVideo.extractor_data == new_fv_id)
+                ).scalar_one_or_none()
 
     return render_template('playlist/playlist_item.html', playlist=playlist, timediff=timediff, \
                            videos=videos, videocount=videocount, pagination=pagination, watchlater=watchlater,

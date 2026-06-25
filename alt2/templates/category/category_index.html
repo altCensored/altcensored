@@ -34,12 +34,12 @@
               <div class="h-box">
 
                 <center>
-                  <a href="{{ url_for('category.item', cat_id=category['cat_id']) }}">
-                    <i class="{{ category['cat_image'] }}"  style="font-size: 64px"></i>
+                  <a href="{{ url_for('category.item', cat_id=category['id']) }}">
+                    <i class="{{ category['icon'] }}"  style="font-size: 64px"></i>
                     <br>
-                    <b> {{ category['cat_name'] }}</b>
+                    <b> {{ category['name'] }}</b>
                     <br>
-                        {{ category['cat_count']|commafy }}
+                        {{ category['video_count']|commafy }}
                     <br>
                   </a>
                   <br>

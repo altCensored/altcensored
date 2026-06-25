@@ -150,11 +150,11 @@
                         {% set fv = featured_videos.get(playlist.featured_video_id) if playlist.featured_video_id else none %}
                         {% if fv %}
                             <div class="thumbnail">
-                            {% if fv.exists_ac %}
+                            {% if fv.ac_exists %}
                                 <img class="thumbnail" src="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ fv.extractor_data ~ '/' ~ fv.thumbnail_ac }}" onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
-                            {% elif fv.thumbnail %}
-                                <img class="thumbnail" src="{{ config.IPROXYHUGE ~ config.IARCHIVEURL ~ fv.extractor_data ~ '/' ~ fv.thumbnail }}" onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
-                            {% elif fv.exists_ia %}
+                            {% elif fv.thumbnail_ytdlp %}
+                                <img class="thumbnail" src="{{ config.IPROXYHUGE ~ config.IARCHIVEURL ~ fv.extractor_data ~ '/' ~ fv.thumbnail_ytdlp }}" onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
+                            {% elif fv.ia_exists %}
                                 <img class="thumbnail" src="{{ config.IPROXY ~ config.IARCHIVEURL ~ fv.extractor_data ~ '/__ia_thumb.jpg' }}" onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
                             {% else %}
                                 <img class="thumbnail" src="{{ config.VIDEO_THUMB_ERROR_IMAGE }}">

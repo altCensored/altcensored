@@ -26,7 +26,7 @@
                 {% endif %}]]>
               </description>
               <pubDate>{{ video['published'].strftime('%a, %d %b %Y %T') if video['published'] else '' }} EST</pubDate>
-              <category>{{ video['ytc_title'] }}</category>
+              <category>{{ video['source_title'] }}</category>
               <enclosure type="application/x-bittorrent" length="0" url="{{ config.IARCHIVEURL ~ video['extractor_data'] ~ '/youtube-' ~ video['extractor_data'] ~ '_archive.torrent' }}">
               </enclosure>
               <media:thumbnail url="{{ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' }}">

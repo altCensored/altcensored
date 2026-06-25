@@ -15,7 +15,7 @@ PER_PAGE = 24
 def index(page):
 #    set_session()
     offset = ((int(page)-1) * PER_PAGE)
-    languagecount = db_session.query(func.count(Language.lang_id)).scalar()
+    languagecount = db_session.query(func.count(Language.id)).scalar()
     languages = Language.query.limit(PER_PAGE).offset(offset)
     if not languages and page != 1:
         abort(404)
@@ -31,8 +31,8 @@ def item(lang_code,page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'latest'
 
-    language = Language.query.filter_by(lang_code=lang_code).first()
-    rawsearch = language.lang_tagstring
+    language = Language.query.filter_by(code=lang_code).first()
+    rawsearch = language.tag_filter
     rawsearch_str = ''.join(rawsearch)
     search = rawsearch.replace(',','|')
 
@@ -54,7 +54,7 @@ def item(lang_code,page):
 
     videocount = db_session.query(func.count(MvVideo.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
     channelcount = db_session.query(func.count(MvChannel.id)).filter(my_to_tsquery_channel).params(search=search).scalar()
-    pagination = Pagination(page, PER_PAGE, videocount)   
+    pagination = Pagination(page, PER_PAGE, videocount)
 
     if videos is None:
         videos = MvVideo.query.limit(24).all()
@@ -69,8 +69,8 @@ def item_new(lang_code,page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
 
-    language = Language.query.filter_by(lang_code=lang_code).first()
-    rawsearch = language.lang_tagstring
+    language = Language.query.filter_by(code=lang_code).first()
+    rawsearch = language.tag_filter
     rawsearch_str = ''.join(rawsearch)
     search = rawsearch.replace(',','|')
 
@@ -92,7 +92,7 @@ def item_new(lang_code,page):
 
     videocount = db_session.query(func.count(MvVideo.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
     channelcount = db_session.query(func.count(MvChannel.id)).filter(my_to_tsquery_channel).params(search=search).scalar()
-    pagination = Pagination(page, PER_PAGE, videocount)   
+    pagination = Pagination(page, PER_PAGE, videocount)
 
     if videos is None:
         videos = MvVideo.query.limit(24).all()
@@ -107,8 +107,8 @@ def item_old(lang_code,page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'oldest'
 
-    language = Language.query.filter_by(lang_code=lang_code).first()
-    rawsearch = language.lang_tagstring
+    language = Language.query.filter_by(code=lang_code).first()
+    rawsearch = language.tag_filter
     rawsearch_str = ''.join(rawsearch)
     search = rawsearch.replace(',','|')
 
@@ -130,7 +130,7 @@ def item_old(lang_code,page):
 
     videocount = db_session.query(func.count(MvVideo.extractor_data)).filter(my_to_tsquery_video).params(search=search).scalar()
     channelcount = db_session.query(func.count(MvChannel.id)).filter(my_to_tsquery_channel).params(search=search).scalar()
-    pagination = Pagination(page, PER_PAGE, videocount)   
+    pagination = Pagination(page, PER_PAGE, videocount)
 
     if videos is None:
         videos = MvVideo.query.limit(24).all()
@@ -145,8 +145,8 @@ def item_popular(lang_code,page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'popular'
 
-    language = Language.query.filter_by(lang_code=lang_code).first()
-    rawsearch = language.lang_tagstring
+    language = Language.query.filter_by(code=lang_code).first()
+    rawsearch = language.tag_filter
     rawsearch_str = ''.join(rawsearch)
     search = rawsearch.replace(',','|')
 
@@ -154,7 +154,7 @@ def item_popular(lang_code,page):
     my_ts_rank_video = text("ts_rank(mv_video.document, websearch_to_tsquery(:search)) DESC")
     videos = db_session.query(MvVideo).\
         filter(my_to_tsquery_video).\
-        order_by(MvVideo.yt_views.desc()).\
+        order_by(MvVideo.view_count.desc()).\
         limit(PER_PAGE).offset(offset).\
         params(search=search).all()
 

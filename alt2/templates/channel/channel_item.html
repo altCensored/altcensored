@@ -1,25 +1,25 @@
 {% extends 'base.html' %}
 {% block head %}
 
-<link rel="alternate" type="application/rss+xml" title="{{ config['MYSERVER_NAME_SHORT'] }}:Channels:{{ channel['ytc_title'] }}" \
-href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed">
+<link rel="alternate" type="application/rss+xml" title="{{ config['MYSERVER_NAME_SHORT'] }}:Channels:{{ channel['title'] }}" \
+href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['extractor_data'] }}/feed">
 
 <meta name="twitter:card" content="summary">
 <meta name="twitter:site" content="@altcensored">
-<meta name="twitter:title" content="{{ channel['ytc_title'] ~ ' Channel ' ~ '(' ~ channel['limited'] ~' Censored Videos' ~ ')' }}">
-<meta name="twitter:description" content="{{ channel['ytc_description'] }}">
-<meta name="twitter:image" content="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['ytc_thumbnail']  }}">
+<meta name="twitter:title" content="{{ channel['title'] ~ ' Channel ' ~ '(' ~ channel['limited'] ~' Censored Videos' ~ ')' }}">
+<meta name="twitter:description" content="{{ channel['description'] }}">
+<meta name="twitter:image" content="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['thumbnail_ytdlp']  }}">
 
 <meta property="og:site_name" content="{{ config['MYSERVER_NAME'] }}">
-<meta property="og:url" content="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}">
-<meta property="og:title" content="{{ channel['ytc_title'] ~ ' Channel ' ~ '(' ~ channel['limited'] ~' Censored Videos' ~ ')' }}">
-<meta property="og:description" content="{{ channel['ytc_description'] | safe | truncate (140) }}">
+<meta property="og:url" content="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['extractor_data'] }}">
+<meta property="og:title" content="{{ channel['title'] ~ ' Channel ' ~ '(' ~ channel['limited'] ~' Censored Videos' ~ ')' }}">
+<meta property="og:description" content="{{ channel['description'] | safe | truncate (140) }}">
 <meta property="og:type" content="article">
-<meta property="og:image" content="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['ytc_thumbnail'] }}">
-<meta property="og:image:secure_url" content="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['ytc_thumbnail']  }}">
+<meta property="og:image" content="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['thumbnail_ytdlp'] }}">
+<meta property="og:image:secure_url" content="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['thumbnail_ytdlp']  }}">
 
-<meta name="altcen_title" content="{% block title %}{{ channel['ytc_title'] | striptags | truncate(length=56,killwords=False,end='',leeway=0) }}{% endblock %}">
-<meta name="altcen_meta_description" content="{% block description %}Limited Censored YouTube Video Channel: {{ channel['ytc_title'] }}: {{ channel['ytc_description'] }} (Created on {{ channel['ytc_publishedat'].strftime('%b %e, %G') if channel['ytc_publishedat'] else '' }}){% endblock %}">
+<meta name="altcen_title" content="{% block title %}{{ channel['title'] | striptags | truncate(length=56,killwords=False,end='',leeway=0) }}{% endblock %}">
+<meta name="altcen_meta_description" content="{% block description %}Limited Censored YouTube Video Channel: {{ channel['title'] }}: {{ channel['description'] }} (Created on {{ channel['published_at'].strftime('%b %e, %G') if channel['published_at'] else '' }}){% endblock %}">
 
 {% endblock %}
 
@@ -41,7 +41,7 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
                       <img class="thumbnail" src="{{ channel['ytc_thumbnailurl'] | reverse | replace('88','671', 1) | reverse  }}"
                       onerror="this.onerror=null;this.src='https://{{ config['MYSERVER_NAME'] }}/channel_unnamed.jpg';" >
 -->
-                      <img class="channel-thumb" src="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['ytc_thumbnail'] }}"
+                      <img class="channel-thumb" src="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['thumbnail_ytdlp'] }}"
                            onerror="this.onerror=null;this.src='{{ config.CHANNEL_THUMB_ERROR_IMAGE }}';">
                   </div>
                 </div>
@@ -49,24 +49,24 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
                   <div class=header_left>
                     <b>
                     &nbsp;{{ gettext('Censored') }}: {{ channel['limited']|commafy }}</b><br>
-                     {% if not channel['ytc_deleted'] %}
+                     {% if not channel['deleted'] %}
                       &nbsp;{{ gettext('Archived') }}: {{ channel['archived']|commafy }}<br>
                      {% endif %}
                       &nbsp;{{ gettext('Total') }}: {{ channel['total']|commafy }}<br>
-                    &nbsp;{{ gettext('Views') }}: {{ channel['ytc_viewcount']|commafy }}<br>
-                    &nbsp;{{ gettext('Subscribers') }}: {{ channel['ytc_subscribercount']|commafy }}<br>
-                    {% if channel['ytc_deleted'] %}
+                    &nbsp;{{ gettext('Views') }}: {{ channel['view_count']|commafy }}<br>
+                    &nbsp;{{ gettext('Subscribers') }}: {{ channel['channel_follower_count']|commafy }}<br>
+                    {% if channel['deleted'] %}
                     {% else %}
 
                     {% endif %}
-                    &nbsp;<b><a style="width:100%;" href="https://youtube.com/channel/{{ channel['ytc_id'] }}" target="_blank">YouTube {{ gettext('Channel') }}</a></b><br>
-                    &nbsp;<b><a style="width:100%;" href="https://socialblade.com/youtube/channel/{{ channel['ytc_id'] }}" target="_blank">SocialBlade {{ gettext('Stats') }}</a></b>
+                    &nbsp;<b><a style="width:100%;" href="https://youtube.com/channel/{{ channel['extractor_data'] }}" target="_blank">YouTube {{ gettext('Channel') }}</a></b><br>
+                    &nbsp;<b><a style="width:100%;" href="https://socialblade.com/youtube/channel/{{ channel['extractor_data'] }}" target="_blank">SocialBlade {{ gettext('Stats') }}</a></b>
                   <p></p>
-                      <b>&nbsp;{{ gettext('Created:') }} {{ channel['ytc_publishedat'].strftime('%b %e, %G') if channel['ytc_publishedat'] else '' }}</b><br>
-                      &nbsp;{{ gettext('Added') }}: {{ channel['ytc_addeddate'].strftime('%b %e, %G') if channel['ytc_addeddate'] else '' }}<br>
-                       {% if channel['ytc_deleted'] %}
+                      <b>&nbsp;{{ gettext('Created:') }} {{ channel['published_at'].strftime('%b %e, %G') if channel['published_at'] else '' }}</b><br>
+                      &nbsp;{{ gettext('Added') }}: {{ channel['added_date'].strftime('%b %e, %G') if channel['added_date'] else '' }}<br>
+                       {% if channel['deleted'] %}
                          <span style="color: red; ">
-                             <b>&nbsp;{{ gettext('Deleted:') }} {{ channel['ytc_deleteddate'].strftime('%b %e, %G') if channel['ytc_deleteddate'] else '' }}</span></b>
+                             <b>&nbsp;{{ gettext('Deleted:') }} {{ channel['deleted_date'].strftime('%b %e, %G') if channel['deleted_date'] else '' }}</span></b>
                        {% endif %}
                   </div>
                 </div>
@@ -75,19 +75,19 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
           </div>
         <div class="pure-u-1 pure-u-md-1-1">
             <div class="h-box">
-            <a href="{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}">
-                <h3>{{ channel['ytc_title'] }}</h3></a>
-            {% if channel['ytc_deleted'] %}
-            <div class="shareon" data-url="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}"
-                 data-title="YouTube Channel {{channel['ytc_title']|truncate(60,False,'')|pprint}} TERMINATED {{channel['ytc_deleteddate'].strftime('%m/%d/%y') if channel['ytc_deleteddate'] else ''}}; {{channel['limited']}} Censored Videos #RemovedFromYouTube #FreeSpeech
+            <a href="{{ url_for('channel.item', ytc_id=channel['extractor_data']) }}">
+                <h3>{{ channel['title'] }}</h3></a>
+            {% if channel['deleted'] %}
+            <div class="shareon" data-url="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['extractor_data'] }}"
+                 data-title="YouTube Channel {{channel['title']|truncate(60,False,'')|pprint}} TERMINATED {{channel['deleted_date'].strftime('%m/%d/%y') if channel['deleted_date'] else ''}}; {{channel['limited']}} Censored Videos #RemovedFromYouTube #FreeSpeech
 (Watch/Share #Censored videos: together we show what they hide)">
             {% elif channel['limited'] %}
-            <div class="shareon" data-url="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}"
-                 data-title="YouTube Channel {{channel['ytc_title']|truncate(60,False,'')|pprint}} being Archived in case of Removal; {{channel['limited']}} #Censored Videos
+            <div class="shareon" data-url="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['extractor_data'] }}"
+                 data-title="YouTube Channel {{channel['title']|truncate(60,False,'')|pprint}} being Archived in case of Removal; {{channel['limited']}} #Censored Videos
 (Videos Appear if #RemovedFromYouTube: we show what they hide) #FreeSpeech">
             {% else %}
-            <div class="shareon" data-url="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}"
-                 data-title="YouTube Channel {{channel['ytc_title']|truncate(60,False,'')|pprint}} being Archived in case of Removal
+            <div class="shareon" data-url="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['extractor_data'] }}"
+                 data-title="YouTube Channel {{channel['title']|truncate(60,False,'')|pprint}} being Archived in case of Removal
 (Videos Appear if #RemovedFromYouTube: we show what they hide) #FreeSpeech">
             {% endif %}
               <a class="facebook" data-fb-app-id="225377455209362" data-hashtags="RemovedFromYouTube"></a>
@@ -98,8 +98,8 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
               <a class="email"></a>
             </div>
 
-                  {% if channel['ytc_description']  is not none %}
-                      {{ channel['ytc_description'] | linkify | safe | nl2br | truncate (1000) }}
+                  {% if channel['description']  is not none %}
+                      {{ channel['description'] | linkify | safe | nl2br | truncate (1000) }}
                   {% endif %}
             </div>
         <div class="pure-g h-box">
@@ -108,7 +108,7 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
                 </div>
                 <div class="pure-u-1 pure-md-1-2">
                     <i class='ion-logo-youtube'  style="font-size: 24px"></i>
-                    <a href="{{ url_for('channel.item', ytc_id=channel['ytc_id']) ~ '/feed' }}">
+                    <a href="{{ url_for('channel.item', ytc_id=channel['extractor_data']) ~ '/feed' }}">
                         <i class='ion-logo-rss' style="font-size: 21px"></i>
                     </a>
                     <b>&nbsp;{{ videocount | commafy }}</b>
@@ -120,11 +120,11 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
             </div>
             <div class="pure-u-10-24" style="text-align:right;">
                 <div class="pure-u-1 pure-md-1-2">
-                    <a href="{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}" class="pure-menu-item {{'selected' if order == 'newest' }}">
+                    <a href="{{ url_for('channel.item', ytc_id=channel['extractor_data']) }}" class="pure-menu-item {{'selected' if order == 'newest' }}">
                         {{ gettext('newest') }}</a>
                 </div>
                 <div class="pure-u-1 pure-md-1-2">
-                    <a href="{{ url_for('channel.item_popular', ytc_id=channel['ytc_id']) }}" class="pure-menu-item {{'selected' if order == 'popular' }}">
+                    <a href="{{ url_for('channel.item_popular', ytc_id=channel['extractor_data']) }}" class="pure-menu-item {{'selected' if order == 'popular' }}">
                         {{ gettext('popular') }}</a>
                 </div>
             </div>

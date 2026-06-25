@@ -53,22 +53,21 @@
       new gridjs.Grid({
         columns: [
           { id: 'id', 'hidden': true },
-          { id: 'ytc_id', 'hidden': true },
-          { id: 'ytc_title', name: 'Channel', sort: false, formatter: (cell, row) => {
+          { id: 'extractor_data', 'hidden': true },
+          { id: 'title', name: 'Channel', sort: false, formatter: (cell, row) => {
             return gridjs.html('<a href="{{ url_for('channel.index') }}' + row.cells[1].data + '" target="_blank">' + cell + '</a>');
           }},
-          { id: 'ytc_videocount', name: 'YT', width: '6%' },
+          { id: 'video_count', name: 'YT', width: '6%' },
           { id: 'total', name: 'T', width: '6%' },
           { id: 'archived', name: 'A', width: '6%' },
           { id: 'limited', name: 'C', width: '6%' },
-          { id: 'newest', name: 'Newest', width: '9%' },
-          { id: 'updated', name: 'Updated', width: '9%' },
+          { id: 'newest_video', name: 'Newest', width: '9%' },
           { id: 'delta', name:  '\u0394', 'attributes': editableCellAttributes, width: '6%' },
           { id: 'allow', name: 'E', 'attributes': editableCellAttributes, width: '5%' },
-          { id: 'ytc_archive', name: 'AF', 'attributes': editableCellAttributes, width: '6%' },
-          { id: 'ytc_partarchive', name: 'AP', 'attributes': editableCellAttributes, width: '6%' },
-          { id: 'was_full', name: 'WF', width: '6%' },
-          { id: 'was_part', name: 'WP', width: '6%' },
+          { id: 'archive_full', name: 'AF', 'attributes': editableCellAttributes, width: '6%' },
+          { id: 'archive_part', name: 'AP', 'attributes': editableCellAttributes, width: '6%' },
+          { id: 'archive_full_was', name: 'WF', width: '6%' },
+          { id: 'archive_part_was', name: 'WP', width: '6%' },
         ],
         search: {
           enabled: true,
@@ -88,8 +87,8 @@
           multiColumn: true,
           server: {
             url: (prev, columns) => {
-              const columnIds = ['id', 'ytc_id', 'ytc_title', 'ytc_videocount', 'total', 'archived', 'limited', 'newest',
-                 'updated', 'delta', 'allow', 'ytc_archive', 'ytc_partarchive', 'was_full', 'was_part'];
+              const columnIds = ['id', 'extractor_data', 'title', 'video_count', 'total', 'archived', 'limited', 'newest_video',
+                 'delta', 'allow', 'archive_full', 'archive_part', 'archive_full_was', 'archive_part_was'];
               const sort = columns.map(col => (col.direction === 1 ? '+' : '-') + columnIds[col.index]);
               return updateUrl(prev, {sort});
             },

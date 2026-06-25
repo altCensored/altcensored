@@ -9,3 +9,6 @@ alt2/static/captcha_tmp.png
 DEEP_CODE_REVIEW*.md
 altcensored_review.md
 altcensored_security_permissisons_scrapers.md
+.claude/
+IA_CACHING.md
+VIDEOFILE.md

@@ -131,12 +131,12 @@ def item(playlist,page):
             existing = {r[0] for r in db_session.query(MvVideo.extractor_data)
                         .filter(MvVideo.extractor_data.in_(playlist.videos))}
             new_fv_id = next((v for v in playlist.videos if v in existing), None)
-            playlist.featured_video_id = new_fv_id
-            try:
-                db_session.commit()
-            except Exception:
-                db_session.rollback()
             if new_fv_id:
+                playlist.featured_video_id = new_fv_id
+                try:
+                    db_session.commit()
+                except Exception:
+                    db_session.rollback()
                 featured_video = db_session.execute(
                     sa_select(MvVideo).filter(MvVideo.extractor_data == new_fv_id)
                 ).scalar_one_or_none()

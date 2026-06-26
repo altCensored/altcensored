@@ -8,7 +8,6 @@ from jinja2 import pass_eval_context
 from flask_babelplus import Babel, lazy_gettext as _l
 from flask_mail import Mail
 from urllib.parse import quote_plus
-from flask_login import LoginManager
 from flask_qrcode import QRcode
 from flask_wtf.csrf import CSRFProtect
 from markupsafe import escape, Markup
@@ -21,7 +20,6 @@ import math
 from . import util
 from .cache import cache
 from .database import db_session
-from .models import User
 from psycogreen.gevent import patch_psycopg
 from flask_talisman import Talisman
 
@@ -83,9 +81,6 @@ csp = {
 }
 
 mail = Mail()
-login = LoginManager()
-login.login_view = 'video.index'
-login.login_message = _l('Please log in to access this page.')
 limiter = Limiter(key_func=get_remote_address, default_limits=[])
 
 def create_app(test_config=None):
@@ -123,7 +118,6 @@ def create_app(test_config=None):
     cache.init_app(app)
     Talisman(app, content_security_policy=csp, content_security_policy_nonce_in=['script-src'])
     mail.init_app(app)
-    login.init_app(app)
     csrf.init_app(app)  # ← add this line
     limiter.init_app(app)
 
@@ -191,10 +185,6 @@ def create_app(test_config=None):
             delchannelcount=delchannelcount,
             url_orig='original_url'
         )
-
-    @login.user_loader
-    def load_user(id):
-        return db_session.get(User, int(id))
 
     @app.template_filter('viewdisplay')
     def viewdisplay(views):

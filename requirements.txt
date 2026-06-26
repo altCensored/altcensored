@@ -18,7 +18,6 @@ docopt
 email-validator>=2.2,<3.0
 Flask>=3.0,<4.0
 Flask-BabelPlus>=2.2,<3.0
-Flask-Login>=0.6,<1.0
 Flask-QRcode
 Flask-SeaSurf
 Flask-WTF>=1.2,<2.0

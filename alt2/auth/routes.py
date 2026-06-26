@@ -1,7 +1,6 @@
 import logging
 from datetime import datetime, timezone
 from flask import render_template, redirect, url_for, flash, request, session, make_response, abort
-from flask_login import login_user, logout_user, current_user
 from flask_babelplus import gettext as _, lazy_gettext as _l
 from urllib.parse import urlsplit
 import requests
@@ -35,7 +34,7 @@ cloudflare_secret_key = config.CLOUDFLARE_SECRET_KEY
 @bp.route('/login', methods=['GET', 'POST'])
 @limiter.limit("5 per minute")
 def login():
-    if current_user.is_authenticated:
+    if session.get('user') is not None:
         return redirect(url_for('video.index'))
     form = LoginForm()
     if form.validate_on_submit():
@@ -49,7 +48,7 @@ def login():
             invalid_username_password = _('Invalid username or password')
             flash(invalid_username_password, 'error')
             return redirect(url_for('auth.login'))
-        login_user(user, remember=form.remember_me.data)
+        session.permanent = form.remember_me.data
         login_user_altcen(user)
         if not user.email_verified:
             send_welcome_email(user)
@@ -66,7 +65,6 @@ def login():
 
 @bp.route('/logout')
 def logout():
-    logout_user()
     logout_user_altcen()
     response = make_response(redirect(url_for('video.index')))
     response.delete_cookie('loggedin')
@@ -75,7 +73,7 @@ def logout():
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
-    if current_user.is_authenticated:
+    if session.get('user') is not None:
         return redirect(url_for('video.index'))
     form = RegistrationForm()
     if form.validate_on_submit():
@@ -101,7 +99,7 @@ def register():
 @bp.route('/reset_password_request', methods=['GET', 'POST'])
 @limiter.limit("5 per minute")
 def reset_password_request():
-    if current_user.is_authenticated:
+    if session.get('user') is not None:
         return redirect(url_for('video.index'))
     form = ResetPasswordRequestForm()
     if form.validate_on_submit():
@@ -202,7 +200,7 @@ def delete():
 
 @bp.route('/authorize/<provider>')
 def oauth2_authorize(provider):
-    if not current_user.is_anonymous:
+    if session.get('user') is not None:
         return redirect(url_for('video.index'))
 
     provider_data = config.OAUTH2_PROVIDERS.get(provider)
@@ -228,7 +226,7 @@ def oauth2_authorize(provider):
 
 @bp.route('/callback/<provider>')
 def oauth2_callback(provider):
-    if not current_user.is_anonymous:
+    if session.get('user') is not None:
         return redirect(url_for('video.index'))
 
     provider_data = config.OAUTH2_PROVIDERS.get(provider)
@@ -309,7 +307,6 @@ def oauth2_callback(provider):
         db_session.commit()
 
     # log the user in
-    login_user(user)
     login_user_altcen(user)
     response = make_response(redirect(url_for('video.index')))
     response.set_cookie('loggedin', secrets.token_hex(32), httponly=True, samesite='Lax', secure=True, max_age=86400)

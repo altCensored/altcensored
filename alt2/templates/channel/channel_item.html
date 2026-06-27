@@ -13,7 +13,7 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['extractor_data']
 <meta property="og:site_name" content="{{ config['MYSERVER_NAME'] }}">
 <meta property="og:url" content="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['extractor_data'] }}">
 <meta property="og:title" content="{{ channel['title'] ~ ' Channel ' ~ '(' ~ channel['limited'] ~' Censored Videos' ~ ')' }}">
-<meta property="og:description" content="{{ channel['description'] | safe | truncate (140) }}">
+<meta property="og:description" content="{{ channel['description'] | truncate(140) | e }}">
 <meta property="og:type" content="article">
 <meta property="og:image" content="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['thumbnail_ytdlp'] }}">
 <meta property="og:image:secure_url" content="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['thumbnail_ytdlp']  }}">
@@ -99,7 +99,7 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['extractor_data']
             </div>
 
                   {% if channel['description']  is not none %}
-                      {{ channel['description'] | linkify | safe | nl2br | truncate (1000) }}
+                      {{ channel['description'] | truncate(1000) | linkify | safe | nl2br }}
                   {% endif %}
             </div>
         <div class="pure-g h-box">

@@ -54,7 +54,7 @@
                 <b>YouTube Channel URL:</b> https://www.youtube.com/channel/{{ channel['ytc_id'] }}
                 <p>
               {% if channel['ytc_description'] %}
-                {{ channel['ytc_description'] | linkify | safe | nl2br | truncate (1200) }}
+                {{ channel['ytc_description'] | truncate(1200) | linkify | safe | nl2br }}
               {% endif %}
                 ]]>
               </description>
@@ -69,7 +69,7 @@
               <altcen:YouTube_Channel_URL>https://www.youtube.com/channel/{{ channel['ytc_id'] }}</altcen:YouTube_Channel_URL>
               <altcen:SocialBlade_Channel_URL>https://socialblade.com/youtube/channel/{{ channel['ytc_id'] }}</altcen:SocialBlade_Channel_URL>
               {% if channel['ytc_description'] %}
-                <altcen:Short_Description> <![CDATA[ {{ channel['ytc_description'] | linkify | safe | nl2br | truncate (35) }} ]]> </altcen:Short_Description>
+                <altcen:Short_Description> <![CDATA[ {{ channel['ytc_description'] | truncate(35) }} ]]> </altcen:Short_Description>
               {% else %}
                 <altcen:Short_Description> <![CDATA[ {{ channel['ytc_description'] }} ]]> </altcen:Short_Description>
               {% endif %}

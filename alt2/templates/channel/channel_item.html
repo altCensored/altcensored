@@ -13,7 +13,7 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
 <meta property="og:site_name" content="{{ config['MYSERVER_NAME'] }}">
 <meta property="og:url" content="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}">
 <meta property="og:title" content="{{ channel['ytc_title'] ~ ' Channel ' ~ '(' ~ channel['limited'] ~' Censored Videos' ~ ')' }}">
-<meta property="og:description" content="{{ channel['ytc_description'] | safe | truncate (140) }}">
+<meta property="og:description" content="{{ channel['ytc_description'] | truncate(140) | e }}">
 <meta property="og:type" content="article">
 <meta property="og:image" content="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['ytc_thumbnail'] }}">
 <meta property="og:image:secure_url" content="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['ytc_thumbnail']  }}">
@@ -99,7 +99,7 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
             </div>
 
                   {% if channel['ytc_description']  is not none %}
-                      {{ channel['ytc_description'] | linkify | safe | nl2br | truncate (1000) }}
+                      {{ channel['ytc_description'] | truncate(1000) | linkify | safe | nl2br }}
                   {% endif %}
             </div>
         <div class="pure-g h-box">

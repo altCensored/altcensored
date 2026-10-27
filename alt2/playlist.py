@@ -264,6 +264,7 @@ def add_video_playlist():
 
     now = datetime.datetime.now(timezone.utc)
     playlist.updated = now
+    playlist.video_count = len(playlist.videos)
     flag_modified(playlist, "videos")
     try:
         db_session.commit()
@@ -296,6 +297,7 @@ def add_video_playlist_post():
 
         now = datetime.datetime.now(timezone.utc)
         playlist.updated = now
+        playlist.video_count = len(playlist.videos)
         flag_modified(playlist, "videos")
         try:
             db_session.commit()
@@ -323,6 +325,7 @@ def remove_video_playlist():
 
         now = datetime.datetime.now(timezone.utc)
         playlist.updated = now
+        playlist.video_count = len(playlist.videos)
         flag_modified(playlist, "videos")
         try:
             db_session.commit()

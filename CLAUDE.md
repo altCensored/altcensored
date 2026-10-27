@@ -23,7 +23,14 @@ Key env vars at minimum:
 - `CACHE_REDIS_HOST` — e.g. `localhost`
 - `RANDOM_VALUE` — any string (used as an anti-scraping token in templates)
 
-Production runs as gunicorn behind nginx (no Docker). The `docker-compose.yml` is for local dev only.
+Production runs as gunicorn behind nginx (no Docker) on www, from the checkout at `/opt/altcen/altcensored` (its venv is `venv/`, not `.venv/`). The `docker-compose.yml` is for local dev only.
+
+Deploying to production (after merge + push):
+
+```bash
+cd /opt/altcen/altcensored && sudo git pull --ff-only origin master
+sudo systemctl reload gunicorn   # graceful SIGHUP: workers re-spawn with the new code
+```
 
 ## Development workflow
 
@@ -59,11 +66,11 @@ There are no tests. Manual testing against the database is the only option.
 
 `alt2/database.py` creates a raw SQLAlchemy engine with a scoped session (`db_session`). There is **no Flask-SQLAlchemy** — all queries use `db_session` directly or via `Model.query`.
 
-`alt2/models.py` defines all models:
+Models live in the external `altcen-models` package (`altcen_models.db`); `alt2/models.py` re-exports them and adds app-side helpers. A `before_flush` guard there makes writes to materialized-view models a hard error.
 - `Entity` — polymorphic base table; `Video` and `Source` both inherit from it via joined-table inheritance
 - `Source` — a YouTube channel (has `ytc_id`, archive flags, sync scheduling via `delta`/`next`)
 - `Video` — a single video; linked to `Source` via the `content` join table (`Sources_to_Videos`)
-- `Mv_Video`, `Mv_Channel`, `Mv_Category`, `Mv_Playlist`, `Mv_Altcen_user` — **PostgreSQL materialized views**, modeled as read-only ORM classes. Use these for all reads; never write to them directly. They are refreshed externally by a separate scraper process.
+- `MvVideo`, `MvChannel`, `MvCategory`, `MvPlaylist`, `MvAltcenUser` — **PostgreSQL materialized views**, modeled as read-only ORM classes. Use these for all reads; never write to them directly. They are refreshed externally by a separate scraper process.
 - `User` — site users; stores settings/preferences as JSON, watched/watchlater as `ARRAY(String)`
 - `Playlist`, `Vpn_conn`, `Vpn_node`, `Crypto`, `Email_list`, etc. — supporting tables
 
@@ -98,7 +105,7 @@ pybabel compile -d alt2/translations
 
 ### Internet Archive integration
 
-Videos that are deleted on YouTube may be archived at `archive.org/details/youtube-<video_id>`. `util.get_ia_item()` fetches IA metadata and populates `videofile`/`thumbnail` on the `Entity` row. The `exists_ia` / `exists_ac` flags on `Entity` / `Mv_Video` control which player is shown.
+Videos that are deleted on YouTube may be archived at `archive.org/details/youtube-<video_id>`. `util.get_ia_item()` fetches IA metadata and populates `videofile`/`thumbnail` on the `Entity` row. The `exists_ia` / `exists_ac` flags on `Entity` / `MvVideo` control which player is shown.
 
 ### Custom image proxying
 

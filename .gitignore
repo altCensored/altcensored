@@ -1,14 +1,46 @@
-*.pyc
-.idea/
-altcen.db
-.env
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Virtualenvs
 venv/
-alt2/static/captcha_tmp.png
-.run/
+.venv/
+
+# Secrets / local config
+.env
+.env.*
+!.env.example
+
+# Local data
+*.db
+*.sqlite3
+*.dump
+*.sql.gz
 .yt-dlp-cache/
+alt2/static/captcha_tmp.png
+
+# Tool caches / logs
+*.log
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+
+# Editors / OS
+.idea/
+.vscode/
+.run/
+*.swp
+.DS_Store
+
+# Claude / local notes
+.claude/
+notes/
 DEEP_CODE_REVIEW*.md
 altcensored_review.md
 altcensored_security_permissisons_scrapers.md
-.claude/
 IA_CACHING.md
 VIDEOFILE.md

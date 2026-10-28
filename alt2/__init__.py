@@ -3,7 +3,7 @@ import urllib3
 from minio import Minio
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from flask import Flask, request, url_for, render_template, g, has_request_context, flash, redirect
+from flask import Flask, request, session, url_for, render_template, g, has_request_context, flash, redirect
 from jinja2 import pass_eval_context
 from flask_babelplus import Babel, lazy_gettext as _l
 from flask_mail import Mail
@@ -148,6 +148,22 @@ def create_app(test_config=None):
         if user is not None:
             return user.timezone
         return None
+
+    # nginx caches these and ignores Set-Cookie, so a refreshed loggedin cookie could be served to everyone
+    LOGGEDIN_NO_REFRESH = ('/feed', '/sitemap', '/ip/', '/acip/')
+
+    @app.after_request
+    def refresh_loggedin_cookie(response):
+        # reissue the signed cookie for sessions that outlive it or still carry an old unsigned one
+        if (app.config.get('LOGGEDIN_SECRET')
+                and session.get('user')
+                and response.mimetype == 'text/html'
+                and not response.is_streamed
+                and not request.path.startswith(LOGGEDIN_NO_REFRESH)
+                and not any(c.startswith('loggedin=') for c in response.headers.getlist('Set-Cookie'))
+                and not util.loggedin_cookie_valid(request.cookies.get('loggedin'), min_remaining=43200)):
+            util.set_loggedin_cookie(response)
+        return response
 
     @app.context_processor
     def inject_context():

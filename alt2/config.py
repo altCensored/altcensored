@@ -1,6 +1,8 @@
 import os
 
 SECRET_KEY=os.getenv('ALTC_SECRET_KEY')
+# shared with nginx (secure_link_md5) to verify the 'loggedin' cookie
+LOGGEDIN_SECRET=os.getenv('ALTC_LOGGEDIN_SECRET')
 SQLALCHEMY_DATABASE_URI=os.getenv('ALTC_DATABASE_URL')
 SENDGRID_API_KEY=os.getenv('SENDGRID_API_KEY')
 SECURITY_PASSWORD_SALT=os.getenv('SECURITY_PASSWORD_SALT')

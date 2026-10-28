@@ -22,6 +22,7 @@ Key env vars at minimum:
 - `ALTC_SECRET_KEY` — any string
 - `CACHE_REDIS_HOST` — e.g. `localhost`
 - `RANDOM_VALUE` — any string (used as an anti-scraping token in templates)
+- `ALTC_LOGGEDIN_SECRET` — signs the `loggedin` cookie (`<expires>.<base64url md5("<expires> <secret>")>`, nginx `secure_link` format). Must match the secret in nginx's `secure_link_md5` include, which exempts logged-in users from anon rate limits. If unset, the old unsigned random cookie is issued.
 
 Production runs as gunicorn behind nginx (no Docker) on www, from the checkout at `/opt/altcen/altcensored` (its venv is `venv/`, not `.venv/`). The `docker-compose.yml` is for local dev only.
 

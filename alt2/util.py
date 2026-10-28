@@ -1,4 +1,4 @@
-import functools, hashlib, os, string, random, subprocess, requests, logging
+import base64, functools, hashlib, hmac, os, secrets, string, random, subprocess, requests, logging, time
 
 logger = logging.getLogger(__name__)
 
@@ -699,6 +699,40 @@ def logout_user_altcen():
     db_session.commit()
 
     session['user'] = None
+
+
+LOGGEDIN_MAX_AGE = 86400
+
+
+def _loggedin_sig(expires):
+    # nginx secure_link format: base64url(md5("<expires> <secret>")), no padding
+    digest = hashlib.md5(f"{expires} {config.LOGGEDIN_SECRET}".encode()).digest()
+    return base64.urlsafe_b64encode(digest).decode().rstrip('=')
+
+
+def make_loggedin_cookie():
+    """Value for the 'loggedin' cookie that nginx uses to exempt logged-in users from anon limits."""
+    if not config.LOGGEDIN_SECRET:
+        logger.warning("ALTC_LOGGEDIN_SECRET unset, issuing unsigned loggedin cookie")
+        return secrets.token_hex(32)
+    expires = int(time.time()) + LOGGEDIN_MAX_AGE
+    return f"{expires}.{_loggedin_sig(expires)}"
+
+
+def loggedin_cookie_valid(value, min_remaining=0):
+    if not config.LOGGEDIN_SECRET or not value:
+        return False
+    expires, _, sig = value.partition('.')
+    if not (len(expires) == 10 and expires.isdigit()):
+        return False
+    if not hmac.compare_digest(sig, _loggedin_sig(expires)):
+        return False
+    return int(expires) > time.time() + min_remaining
+
+
+def set_loggedin_cookie(response):
+    response.set_cookie('loggedin', make_loggedin_cookie(), httponly=True, samesite='Lax', secure=True,
+                        max_age=LOGGEDIN_MAX_AGE)
 
 
 def verify_turnstile_token(token, secret_key):

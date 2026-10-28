@@ -117,7 +117,11 @@ def send_mass_email(email, sender, subject, filename, service):
         user = db_session.query(EmailList).filter(func.lower(EmailList.email) == func.lower(email)).one()
 
     now = datetime.datetime.now(timezone.utc)
-    user.email_lastsent_date = now
+    # AltcenUser kept the email_* names; ytac's EmailList renamed them
+    if isinstance(user, EmailList):
+        user.last_sent = now
+    else:
+        user.email_lastsent_date = now
     db_session.add(user)
     try:
         db_session.commit()
@@ -134,8 +138,12 @@ def db_unsubscribe_email(tablename, email, action):
         logger.warning("db_unsubscribe_email: email not found in %s: %s", tablename, email)
         return
     now = datetime.datetime.now(timezone.utc)
-    user.email_subscribed = False
-    user.email_action = action
+    if isinstance(user, EmailList):
+        user.subscribed = False
+        user.action = action
+    else:
+        user.email_subscribed = False
+        user.email_action = action
     user.updated = now
     db_session.add(user)
     try:
@@ -146,11 +154,11 @@ def db_unsubscribe_email(tablename, email, action):
 
 def db_add_email_list(email, email_source):
     now = datetime.datetime.now(timezone.utc)
-    email_lastsent_date = datetime.datetime.now(timezone.utc) - datetime.timedelta(30)
+    last_sent = datetime.datetime.now(timezone.utc) - datetime.timedelta(30)
     username = email.split("@")[0]
     user = EmailList(
-        email=email.lower(), username=username, email_source=email_source, \
-        created_date=now, updated=now, email_lastsent_date=email_lastsent_date, \
+        email=email.lower(), username=username, source=email_source, \
+        created=now, updated=now, last_sent=last_sent, \
         )
     db_session.add(user)
     try:
@@ -736,12 +744,12 @@ def mass_email():
 
         elif recipients == 'friends':
             usercount = db_session.query(func.count(EmailList.id)). \
-                filter((EmailList.email_lastsent_date) < func.current_date() - dayslastsent). \
-                filter(EmailList.email_subscribed). \
+                filter((EmailList.last_sent) < func.current_date() - dayslastsent). \
+                filter(EmailList.subscribed). \
                 scalar()
             users = db_session.query(EmailList). \
-                filter((EmailList.email_lastsent_date) < func.current_date() - dayslastsent). \
-                filter(EmailList.email_subscribed). \
+                filter((EmailList.last_sent) < func.current_date() - dayslastsent). \
+                filter(EmailList.subscribed). \
                 order_by(func.random()). \
                 limit(sendlimit).all()
 
@@ -826,7 +834,8 @@ def unsubscribe_email(token):
         else:
             user = db_session.query(EmailList).filter(func.lower(EmailList.email) == func.lower(email)).one()
 
-        if not user.email_subscribed:
+        subscribed = user.subscribed if isinstance(user, EmailList) else user.email_subscribed
+        if not subscribed:
             conf = item_quoted + ' ' + lazy_gettext('has already been unsubscribed')
             flash(conf, 'error')
             return redirect(url_for('video.index'))

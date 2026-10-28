@@ -48,7 +48,6 @@ def get_video_files_2(ia_item):
 def get_image_file(ia_item):
     files_list = ia_item.item_metadata.get('files', [])
     image_extensions = ('.jpg', '.webp', '.png')
-    allowed_formats = {'JPEG', 'WebP', 'PNG'}
 
     video_id = ia_item.identifier.replace('youtube-', '', 1)
     for ext in image_extensions:
@@ -56,10 +55,13 @@ def get_image_file(ia_item):
             if x['name'] == video_id + ext:
                 return x['name']
 
+    # Match by extension, not format: IA labels many uploaded .webp files "Unknown".
+    # Same rule as ytac-archive's upload.ia_image.
     for x in files_list:
-        if (x['source'] == 'original'
-                and x.get('format') in allowed_formats
-                and x['name'].endswith(image_extensions)):
+        fmt = x.get('format') or ''
+        if (x.get('source') == 'original'
+                and x['name'].lower().endswith(image_extensions)
+                and fmt != 'Item Tile' and 'Thumb' not in fmt):
             return x['name']
 
     for x in files_list:

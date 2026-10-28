@@ -30,11 +30,7 @@
               <description>
                 <![CDATA[
                 <a href="https://{{ config['MYSERVER_NAME'] }}{{ url_for('channel.item', ytc_id=channel['ytc_id']) }}">
-<<<<<<< HEAD
-                  <img 
-=======
                   <img
->>>>>>> new_dev2
                    src="{{ channel['ytc_thumbnailurl'] | reverse | replace('88','671', 1) | reverse  }}" >
                   </style>
                 </a>

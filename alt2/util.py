@@ -376,11 +376,14 @@ def channel_update(channel_id, delta=None, archive_type=None, deleted=None, view
 
         if deleted is True or deleted is False:
             channel.ytc_deleted = deleted
+        if deleted is False:
+            # same as yt-syncac toggle_source(): an undeleted channel has no deleted date
+            channel.ytc_deleteddate = None
         if viewcount:
             channel.ytc_viewcount = viewcount
         if subscribercount:
             channel.ytc_subscribercount = subscribercount
-        if deleteddate:
+        if deleteddate and deleted is not False:
             channel.ytc_deleteddate = deleteddate
         db_session.commit()
         return True

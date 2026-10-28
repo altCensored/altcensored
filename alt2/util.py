@@ -681,10 +681,17 @@ def login_user_altcen(user):
 
 
 def logout_user_altcen():
+    # /auth/logout can be hit without a login (bots, expired session)
+    if not session.get('user'):
+        session['user'] = None
+        return
     now = datetime.now(timezone.utc)
     user = db_session.execute(
         select(User).filter(User.id == session['user']['id'])
     ).scalar_one_or_none()
+    if user is None:
+        session['user'] = None
+        return
     user.updated = now
     user.settings = {
         "theme": session['theme'],

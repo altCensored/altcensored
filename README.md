@@ -6,7 +6,7 @@ Production runs behind an nginx server with the included gunicorn as the Flask a
 
 
 System Requirements:
-- local or remote Postgresql database 'altcen'. see al2/models for database layouts.
+- local or remote Postgresql database 'altcen'. see the `altcen-models` package (`altcen_models/db.py`) for database layouts.
 - redis server installed with defaults
 
 

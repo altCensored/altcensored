@@ -8,10 +8,12 @@ altCensored.com — a Flask/PostgreSQL website that archives YouTube videos that
 
 ## Running the development server
 
+For a dev machine with its own database. There is no dev server in this stack: the clone at `/home/lc/src/altcensored` lives on prod www and has no `.venv`. There, use prod's interpreter (`/opt/altcen/altcensored/venv/bin/python`) for offline checks such as importing modules or the Flask test client, and don't point a dev server at the prod DB.
+
 Requires a local or remote PostgreSQL database named `altcen` and a Redis server running with defaults. Set required environment variables (see `alt2/config.py` for the full list), then:
 
 ```bash
-. .venv/bin/activate
+. .venv/bin/activate   # your own virtualenv with requirements.txt installed
 export FLASK_APP=alt2
 export FLASK_DEBUG=1
 flask run --host=0.0.0.0 --port=5000
@@ -22,14 +24,27 @@ Key env vars at minimum:
 - `ALTC_SECRET_KEY` — any string
 - `CACHE_REDIS_HOST` — e.g. `localhost`
 - `RANDOM_VALUE` — any string (used as an anti-scraping token in templates)
+- `ALTC_LOGGEDIN_SECRET` — signs the `loggedin` cookie (`<expires>.<base64url md5("<expires> <secret>")>`, nginx `secure_link` format). Must match the secret in nginx's `secure_link_md5` include, which exempts logged-in users from anon rate limits. If unset, the old unsigned random cookie is issued.
 
-Production runs as gunicorn behind nginx (no Docker). The `docker-compose.yml` is for local dev only.
+Production runs as gunicorn behind nginx (no Docker) on www, from the checkout at `/opt/altcen/altcensored` (its venv is `venv/`, not `.venv/`). The `docker-compose.yml` is for local dev only.
+
+Deploying to production (after merge + push):
+
+```bash
+sudo -n git -c safe.directory=/opt/altcen/altcensored -C /opt/altcen/altcensored status --short   # must be clean
+sudo -n git -c safe.directory=/opt/altcen/altcensored -C /opt/altcen/altcensored pull --ff-only origin master
+sudo -n systemctl reload gunicorn   # graceful SIGHUP: workers re-spawn with the new code
+```
+
+These exact forms are pre-approved for Claude in the gitignored `.claude/settings.local.json` on www; other spellings prompt. Then smoke-test over the socket: `curl --unix-socket /run/gunicorn.sock -H 'Host: altcensored.com' -H 'X-Forwarded-Proto: https' http://localhost/...` (without the proto header the app redirects to https).
+
+A reload does not pick up changes to `/opt/altcen/altcensored.env`: the workers inherit the master's environment. After adding or changing an env var, use `sudo systemctl restart gunicorn`.
 
 ## Development workflow
 
 1. **Before making any changes**, create a new local branch: `git checkout -b <short-descriptive-name>`
 2. **Make all changes and commit on that branch.** Never commit directly to `master` or `main`.
-3. **Wait** — do not push the branch or merge to master. The user tests locally against the running Flask dev server.
+3. **Wait** — do not push the branch or merge to master until the user has tested it.
 4. **When the user says "tested, now merge push commit"** (or equivalent confirmation), merge the branch into master and push to all three remotes:
    ```bash
    git checkout master
@@ -39,6 +54,7 @@ Production runs as gunicorn behind nginx (no Docker). The `docker-compose.yml` i
    git push codeberg HEAD
    ```
 5. Do not merge or push until the user explicitly confirms testing is done.
+6. **Deploying is a separate step.** "Merge push commit" does not include it. Deploy (see "Deploying to production" above) when the user asks for it, e.g. "deploy" or "tested, do it".
 
 The three remotes are:
 - `github` — git@github.com:altCensored/altcensored.git
@@ -59,13 +75,13 @@ There are no tests. Manual testing against the database is the only option.
 
 `alt2/database.py` creates a raw SQLAlchemy engine with a scoped session (`db_session`). There is **no Flask-SQLAlchemy** — all queries use `db_session` directly or via `Model.query`.
 
-`alt2/models.py` defines all models:
+Models live in the external `altcen-models` package (`altcen_models.db`); `alt2/models.py` re-exports them and adds app-side helpers. A `before_flush` guard in `altcen_models/db.py` makes writes to materialized-view models a hard error.
 - `Entity` — polymorphic base table; `Video` and `Source` both inherit from it via joined-table inheritance
 - `Source` — a YouTube channel (has `ytc_id`, archive flags, sync scheduling via `delta`/`next`)
 - `Video` — a single video; linked to `Source` via the `content` join table (`Sources_to_Videos`)
-- `Mv_Video`, `Mv_Channel`, `Mv_Category`, `Mv_Playlist`, `Mv_Altcen_user` — **PostgreSQL materialized views**, modeled as read-only ORM classes. Use these for all reads; never write to them directly. They are refreshed externally by a separate scraper process.
+- `MvVideo`, `MvChannel`, `MvCategory`, `MvPlaylist`, `MvAltcenUser` — **PostgreSQL materialized views**, modeled as read-only ORM classes. Use these for all reads; never write to them directly. They are refreshed externally by a separate scraper process.
 - `User` — site users; stores settings/preferences as JSON, watched/watchlater as `ARRAY(String)`
-- `Playlist`, `Vpn_conn`, `Vpn_node`, `Crypto`, `Email_list`, etc. — supporting tables
+- `Playlist`, `VpnConn`, `VpnNode`, `Crypto`, `EmailList`, `Category`, `Language`, `Translation`, `Counter` — supporting tables (`VpnConn`/`VpnNode` are defined in `altcen_models` but not re-exported by `alt2/models.py`)
 
 ### Blueprint layout
 
@@ -98,7 +114,7 @@ pybabel compile -d alt2/translations
 
 ### Internet Archive integration
 
-Videos that are deleted on YouTube may be archived at `archive.org/details/youtube-<video_id>`. `util.get_ia_item()` fetches IA metadata and populates `videofile`/`thumbnail` on the `Entity` row. The `exists_ia` / `exists_ac` flags on `Entity` / `Mv_Video` control which player is shown.
+Videos that are deleted on YouTube may be archived at `archive.org/details/youtube-<video_id>`. `util.get_ia_item()` fetches IA metadata and populates `videofile`/`thumbnail` on the `Entity` row. The `exists_ia` / `exists_ac` flags on `Entity` / `MvVideo` control which player is shown.
 
 ### Custom image proxying
 

@@ -18,7 +18,7 @@ from alt2.auth.forms import LoginForm, RegistrationForm, \
     ResetPasswordRequestForm, ResetPasswordForm
 from alt2.models import User
 from alt2.auth.email import send_password_reset_email, send_welcome_email
-from alt2.util import create_user_altcen, login_user_altcen, logout_user_altcen, login_required, verify_turnstile_token, confirm_token
+from alt2.util import create_user_altcen, login_user_altcen, logout_user_altcen, login_required, verify_turnstile_token, confirm_token, set_loggedin_cookie
 
 url_orig = 'original_url'
 
@@ -58,7 +58,7 @@ def login():
         if not next_page or urlsplit(next_page).netloc != '':
             next_page = url_for('video.index')
         response = make_response(redirect(url_for('video.index')))
-        response.set_cookie('loggedin', secrets.token_hex(32), httponly=True, samesite='Lax', secure=True, max_age=86400)
+        set_loggedin_cookie(response)
         return response
     return render_template('auth/login.html', title=_('Log In'), form=form, cloudflare_site_key=cloudflare_site_key)
 
@@ -309,5 +309,5 @@ def oauth2_callback(provider):
     # log the user in
     login_user_altcen(user)
     response = make_response(redirect(url_for('video.index')))
-    response.set_cookie('loggedin', secrets.token_hex(32), httponly=True, samesite='Lax', secure=True, max_age=86400)
+    set_loggedin_cookie(response)
     return response

@@ -34,9 +34,6 @@ Disallow:/
 User-agent: barkrowler
 Disallow:/
 
-User-agent: DataForSeoBot
-Disallow:/
-
 User-agent: FriendlyCrawler
 Disallow:/
 
@@ -83,6 +80,7 @@ Disallow: /newsletter
 Disallow: /translations
 Disallow: /donate
 Disallow: /user
+Disallow: /theme/toggle
 Crawl-delay: 1
 
 User-agent: DuckDuckBot
@@ -95,6 +93,7 @@ Disallow: /newsletter
 Disallow: /translations
 Disallow: /donate
 Disallow: /user
+Disallow: /theme/toggle
 Crawl-delay: 1
 
 User-agent: Applebot
@@ -107,6 +106,7 @@ Disallow: /newsletter
 Disallow: /translations
 Disallow: /donate
 Disallow: /user
+Disallow: /theme/toggle
 Crawl-delay: 8
 
 User-agent: *
@@ -119,6 +119,7 @@ Disallow: /newsletter
 Disallow: /translations
 Disallow: /donate
 Disallow: /user
+Disallow: /theme/toggle
 Crawl-delay: 6
 
 Sitemap: https://altcensored.com/sitemap.xml

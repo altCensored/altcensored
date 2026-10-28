@@ -7,7 +7,6 @@ from ytac.db import (
     MvVideo, MvChannel, MvCategory, MvPlaylist, MvAltcenUser,
 )
 from flask import current_app
-from sqlalchemy.orm import relationship, foreign
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 from .database import db_session
@@ -44,6 +43,3 @@ User.set_password = _set_password
 User.check_password = _check_password
 User.get_reset_password_token = _get_reset_password_token
 User.verify_reset_password_token = staticmethod(_verify_reset_password_token)
-
-# the pre-ytac MvPlaylist had .user; search and playlist templates use playlist.user.*
-MvPlaylist.user = relationship(User, primaryjoin=foreign(MvPlaylist.user_id) == User.id, viewonly=True)

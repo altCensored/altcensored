@@ -33,6 +33,8 @@ cd /opt/altcen/altcensored && sudo git pull --ff-only origin master
 sudo systemctl reload gunicorn   # graceful SIGHUP: workers re-spawn with the new code
 ```
 
+A reload does not pick up changes to `/opt/altcen/altcensored.env`: the workers inherit the master's environment. After adding or changing an env var, use `sudo systemctl restart gunicorn`.
+
 ## Development workflow
 
 1. **Before making any changes**, create a new local branch: `git checkout -b <short-descriptive-name>`

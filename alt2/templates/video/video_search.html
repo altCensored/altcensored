@@ -119,7 +119,7 @@
                                 {% set fv = featured_search_videos.get(searchplaylist.featured_video_id) if searchplaylist.featured_video_id else none %}
                                 {% if fv %}
                                     <div class="thumbnail">
-                                    {% if fv.exists_ac %}
+                                    {% if fv.exists_ac and fv.thumbnail_ac %}
                                         <img class="thumbnail" src="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ fv.extractor_data ~ '/' ~ fv.thumbnail_ac }}" onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
                                     {% elif fv.thumbnail %}
                                         <img class="thumbnail" src="{{ config.IPROXYHUGE ~ config.IARCHIVEURL ~ fv.extractor_data ~ '/' ~ fv.thumbnail }}" onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
@@ -177,7 +177,7 @@
                                 {% if altcen_user.featured_playlist and altcen_user.featured_playlist.pl_title %}
                                     {% set fp = altcen_user.featured_playlist %}
                                     <div class="thumbnail">
-                                        {% if fp.exists_ac %}
+                                        {% if fp.exists_ac and fp.thumbnail_ac %}
                                             <img class="thumbnail" src="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ fp.extractor_data ~ '/' ~ fp.thumbnail_ac }}" onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
                                         {% elif fp.thumbnail %}
                                             <img class="thumbnail" src="{{ config.IPROXYHUGE ~ config.IARCHIVEURL ~ fp.extractor_data ~ '/' ~ fp.thumbnail }}" onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">

@@ -8,7 +8,9 @@ altCensored.com — a Flask/PostgreSQL website that archives YouTube videos that
 
 ## Running the development server
 
-For a dev machine with its own database. There is no dev server in this stack: the clone at `/home/lc/src/altcensored` lives on prod www and has no `.venv`. There, use prod's interpreter (`/opt/altcen/altcensored/venv/bin/python`) for offline checks such as importing modules or the Flask test client, and don't point a dev server at the prod DB.
+**The clone at `/home/lc/src/altcensored` lives on prod www and has no `.venv`; there is no dev server in this stack.** Don't point a dev server at the prod DB. Use prod's interpreter (`/opt/altcen/altcensored/venv/bin/python`) for offline checks such as importing modules or the Flask test client.
+
+For a separate dev machine with its own database:
 
 Requires a local or remote PostgreSQL database named `altcen` and a Redis server running with defaults. Set required environment variables (see `alt2/config.py` for the full list), then:
 
@@ -63,26 +65,19 @@ The three remotes are:
 
 ## `ytac-cutover` branch (planned deploy by ~2027-04)
 
-A long-lived branch, on all three remotes, that moves the app from `altcen-models` to the private `ytac` package. The new schema renames columns: `ytc_deleted` → `deleted`, `ytc_deleteddate` → `deleted_date`, `ytc_subscribercount` → `channel_follower_count`, `ytc_id` → `extractor_data`, and so on. There is no `Entity`, `User` is `AltcenUser`, and flask-login is removed. Keep it current with master:
+A long-lived branch, on all three remotes, that moves the app from `altcen-models` to the private `ytac` package (renamed columns, no `Entity`, `User` is `AltcenUser`, flask-login removed). Details, the column mapping and the ytac pin rules are in `docs/ytac-cutover.md`; read it before touching that branch. The short version:
 
-- **After every master deploy**, merge master into it in the worktree `~/src/altcensored-ytac`: `git merge master`. Always merge, never rebase or force-push. `rerere` is enabled, so resolved conflicts are reapplied.
-- A change that merges cleanly can still be wrong there. Translate any new `ytc_*` column access, `Entity` use or flask-login call to the ytac names.
-- Run `~/src/altcensored-ytac/.claude/check_ytac.sh`. It must say PASS. It compiles the code, flags new altcen-models leftovers and conflict markers, and runs the test client against orcl's `ytac` DB as read-only `claude_ro`, with an in-memory cache, so prod Redis and data are untouched. Known pre-existing failures are listed in `.claude/known_bad_pages.txt` and `.claude/leftovers_baseline.txt` there.
-- Commit the merge and push the branch to all three remotes. Never merge it into master or deploy it as part of a sync; the cutover is its own decision.
+- **After every master deploy**, merge master into it in the worktree `~/src/altcensored-ytac` (`git merge master`; never rebase or force-push), translate any new `ytc_*`/`Entity`/flask-login use to the ytac names, run `~/src/altcensored-ytac/.claude/check_ytac.sh` (must say PASS), then commit and push to all three remotes.
+- Never merge it into master or deploy it as part of a sync; the cutover is its own decision.
+- Scope: this session covers altcensored branches only. The `ytac` and `ytac-archive` repos belong to a separate session; reading them is fine, changing them is not.
 
-**Scope:** work in this repo covers altcensored branches only (`master`, `ytac-cutover`, and working branches off them). The `ytac` and `ytac-archive` repos are handled by a separate Claude session, so don't change them from here. Reading ytac files (below) is fine.
+## Testing
 
-**ytac version:** `ytac-cutover`'s `requirements.txt` pins ytac to a git tag; read the current pin with `git show ytac-cutover:requirements.txt | grep ytac` rather than trusting any copy here. ytac uses date versions (`YYYY.M.D.N`) and auto-tags every push, so a newer tag is **not** a reason to upgrade. Move the pin only when the ytac session asks for it in its handover reply (`~/src/ytac/.claude/HANDOVER-altcensored.md`) and the user agrees. Do it on a working branch: change the pin, `pip install -U` in `~/src/altcensored-ytac/.venv`, and run the check script.
-
-References in the private `altCensored/ytac` repo. Read them with `gh api repos/altCensored/ytac/contents/<path> -H 'Accept: application/vnd.github.raw'`; links won't work for public readers.
-- `YTAC_CUTOVER.md` has the old → new column mapping for every materialized view, plus the `email_list` renames. `EmailList` uses `subscribed`, `last_sent`, `source`, `action` and `created`, while `AltcenUser` keeps its `email_*` names, so code that touches both must branch on the model. ytac itself provides `MvPlaylist.user` and the materialized-view write guard (since v2026.6.23.6); don't re-add them in `alt2/models.py`.
-- `tests/` is ytac's own pytest suite. It covers the ytac package (config, sources, videos, yt-dlp handling), not this app's pages. The integration tests in `tests/integration/` run only when `YTAC_TEST_DATABASE_URL` is set, and they create and **drop every table** in that database. Never point them at a real database.
-
-## No test suite
-
-This repo has no tests; manual testing against the database is the only option. The `ytac` package has its own suite (see above), and the `ytac-cutover` branch has the check script.
+This repo has no tests; manual testing against the database is the only option. The `ytac-cutover` branch has the check script (see above). The `ytac` package has its own pytest suite in the private `altCensored/ytac` repo, covering that package and not this app's pages. Its integration tests in `tests/integration/` run only when `YTAC_TEST_DATABASE_URL` is set and they create and **drop every table** in that database, so never point them at a real database.
 
 ## Architecture
+
+Describes `master`. On `ytac-cutover` the model layer differs (see `docs/ytac-cutover.md`).
 
 ### Application factory
 

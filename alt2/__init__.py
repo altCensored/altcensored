@@ -396,7 +396,7 @@ def create_app(test_config=None):
 
     app.jinja_env.globals['channel_thumb_url'] = channel_thumb_url
 
-    def video_thumb_url(video, ac_proxy='ACIPROXY', ia_proxy='IPROXYHUGE'):
+    def video_thumb_url(video, ac_proxy='ACIPROXY', ia_proxy='IPROXYHUGE', ia_guess=True):
         # video is an MvVideo row or a stored featured-video dict (same keys); first usable source wins.
         cfg = app.config
         get = lambda key: app.jinja_env.getattr(video, key)
@@ -407,7 +407,7 @@ def create_app(test_config=None):
         if thumb and not thumb.startswith('http'):
             return f"{cfg[ia_proxy]}{cfg['IARCHIVEURL']}{video_id}/{thumb}"
         # only an explicit False means "not on IA"; None/missing (older stored dicts) is unknown, so try it
-        if get('exists_ia') is not False:
+        if ia_guess and get('exists_ia') is not False:
             return f"{cfg['IPROXY']}{cfg['IARCHIVEURL']}{video_id}/__ia_thumb.jpg"
         return cfg['VIDEO_THUMB_ERROR_IMAGE']
 

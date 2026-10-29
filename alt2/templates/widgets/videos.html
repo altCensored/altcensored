@@ -17,7 +17,7 @@
             <div class="thumbnail">
 
 
-          {{ video_thumb(video, ac_proxy='ACIPROXYHUGE', lazy=true) }}
+          {{ video_thumb(video, ac_proxy='ACIPROXYHUGE', lazy=true, ia_guess=false) }}
 
               {% if video['duration']  is not none %}
                 <p class="length">{{ video['duration'] | hourminsec }}</p>

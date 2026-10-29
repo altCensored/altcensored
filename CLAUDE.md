@@ -1,130 +1,72 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code in this repo (`master` and branches off it). The `ytac-cutover` branch, checked out in the worktree `~/src/altcensored-ytac`, has its own `CLAUDE.md`.
 
-## What this project is
+altCensored.com is a Flask/PostgreSQL site that archives censored or deleted YouTube videos, with Internet Archive (IA) integration.
 
-altCensored.com — a Flask/PostgreSQL website that archives YouTube videos that have been censored or deleted, with Internet Archive integration.
+## Read this first
 
-## Running the development server
+- **This clone is on prod www.** `/home/lc/src/altcensored` has no `.venv` and there is no dev server in this stack. Never point a dev server at the prod DB. For offline checks use prod's interpreter, `/opt/altcen/altcensored/venv/bin/python` (import modules, or the Flask test client).
+- **Production** is gunicorn behind nginx, with no Docker, from the root-owned checkout `/opt/altcen/altcensored` (venv `venv/`). `docker-compose.yml` is for a separate dev machine only.
+- **No tests** exist for this app. Check changes by hand against the database. The private `ytac` package has its own pytest suite, and its `tests/integration/` creates and **drops every table** in `YTAC_TEST_DATABASE_URL`, so never point that at a real database.
+- Video playback is the site's core purpose. Treat any video-serving fault as top priority, and follow the "one change at a time" rule in the global `CLAUDE.md`.
 
-**The clone at `/home/lc/src/altcensored` lives on prod www and has no `.venv`; there is no dev server in this stack.** Don't point a dev server at the prod DB. Use prod's interpreter (`/opt/altcen/altcensored/venv/bin/python`) for offline checks such as importing modules or the Flask test client.
+## Workflow
 
-For a separate dev machine with its own database:
+1. Before any change, `git checkout -b <short-name>`. Never commit directly to `master`.
+2. Commit on that branch. Do not push or merge until the user has tested it.
+3. On "tested, now merge push commit" (or equivalent), merge into `master` and push to all three remotes: `git push github HEAD`, `git push bbucket_key HEAD`, `git push codeberg HEAD`. The remotes are `git@github.com:altCensored/altcensored.git`, `git@bitbucket.org:altcensored/altcensored.git` and `git@codeberg.org:altcensored/altcensored.git`.
+4. **Deploying is a separate step**, done only when the user asks ("deploy", "tested, do it"). Merge and push do not include it.
+5. After every deploy, sync `ytac-cutover` (see the last section).
 
-Requires a local or remote PostgreSQL database named `altcen` and a Redis server running with defaults. Set required environment variables (see `alt2/config.py` for the full list), then:
+## Deploying
 
-```bash
-. .venv/bin/activate   # your own virtualenv with requirements.txt installed
-export FLASK_APP=alt2
-export FLASK_DEBUG=1
-flask run --host=0.0.0.0 --port=5000
-```
-
-Key env vars at minimum:
-- `ALTC_DATABASE_URL` — e.g. `postgresql+psycopg2://user:pass@127.0.0.1/altcen`
-- `ALTC_SECRET_KEY` — any string
-- `CACHE_REDIS_HOST` — e.g. `localhost`
-- `RANDOM_VALUE` — any string (used as an anti-scraping token in templates)
-- `ALTC_LOGGEDIN_SECRET` — signs the `loggedin` cookie (`<expires>.<base64url md5("<expires> <secret>")>`, nginx `secure_link` format). Must match the secret in nginx's `secure_link_md5` include, which exempts logged-in users from anon rate limits. If unset, the old unsigned random cookie is issued.
-
-Production runs as gunicorn behind nginx (no Docker) on www, from the checkout at `/opt/altcen/altcensored` (its venv is `venv/`, not `.venv/`). The `docker-compose.yml` is for local dev only.
-
-Deploying to production (after merge + push):
+Run each command as its own Bash call, in exactly these spellings (pre-approved in the gitignored `.claude/settings.local.json`; other spellings prompt):
 
 ```bash
 sudo -n git -c safe.directory=/opt/altcen/altcensored -C /opt/altcen/altcensored status --short   # must be clean
 sudo -n git -c safe.directory=/opt/altcen/altcensored -C /opt/altcen/altcensored pull --ff-only origin master
-sudo -n systemctl reload gunicorn   # graceful SIGHUP: workers re-spawn with the new code
+sudo -n systemctl reload gunicorn
 ```
 
-These exact forms are pre-approved for Claude in the gitignored `.claude/settings.local.json` on www; other spellings prompt. Then smoke-test over the socket: `curl --unix-socket /run/gunicorn.sock -H 'Host: altcensored.com' -H 'X-Forwarded-Proto: https' http://localhost/...` (without the proto header the app redirects to https).
+- `reload` is a graceful SIGHUP and picks up code only. It does **not** pick up `/opt/altcen/altcensored.env`: after an env change use `sudo -n systemctl restart gunicorn`.
+- "Worker was sent SIGTERM" and "reentrant call inside stderr" log lines after a reload are benign.
+- Smoke-test over the socket, because without the proto header the app redirects to https:
+  `curl --unix-socket /run/gunicorn.sock -H 'Host: altcensored.com' -H 'X-Forwarded-Proto: https' http://localhost/...`
 
-A reload does not pick up changes to `/opt/altcen/altcensored.env`: the workers inherit the master's environment. After adding or changing an env var, use `sudo systemctl restart gunicorn`.
+## Database
 
-## Development workflow
+- Models come from the external `altcen-models` package (`altcen_models.db`), installed in prod's venv. `alt2/models.py` re-exports them and bolts on password and reset-token helpers for `User`.
+- `alt2/database.py` builds a raw SQLAlchemy engine and a gevent-scoped `db_session`. There is **no Flask-SQLAlchemy**: queries use `db_session` or `Model.query`. psycopg is made gevent-friendly with `psycogreen`.
+- Keep any DB URL in the explicit `postgresql+psycopg2://` form (a bare `postgresql://` means psycopg 3 under SQLAlchemy 2.1).
+- Reads: `psql service=altc-www` (read-only `claude_ro`, pre-approved). Writes: `service=altc-www-rw` (prompts each time). Other services in `~/.pg_service.conf`: `altc-orcl`, `ytac-orcl`, `ytac-test-orcl`. Don't read `ALTC_DATABASE_URL` from the env file.
+- Before a DB write: back up the affected rows to `~/` with `\copy`, dry-run in a transaction with `ROLLBACK`, then apply in a `DO` block that raises unless `ROW_COUNT` matches the expected count.
+- Pages read **materialized views**, which a separate scraper refreshes, so DB edits show only after the next refresh. Never write to an `Mv*` model; `altcen_models` has a `before_flush` guard that makes it a hard error.
+- Main models: `Entity` (polymorphic base of `Video` and `Source`, joined-table inheritance), `Source` (a channel: `ytc_id`, archive flags, sync scheduling via `delta` and `next`), `Video` (linked to `Source` through the `content` table `Sources_to_Videos`), `User` (settings as JSON, `watched` and `watchlater` as `ARRAY(String)`), and the read-only `MvVideo`, `MvChannel`, `MvCategory`, `MvPlaylist`, `MvAltcenUser`. Supporting: `Playlist`, `Category`, `Language`, `Translation`, `Counter`, `Crypto`, `EmailList`. `VpnConn` and `VpnNode` exist in `altcen_models` but `alt2/models.py` doesn't re-export them.
+- Schema changes are SQL files in `migrations/`.
 
-1. **Before making any changes**, create a new local branch: `git checkout -b <short-descriptive-name>`
-2. **Make all changes and commit on that branch.** Never commit directly to `master` or `main`.
-3. **Wait** — do not push the branch or merge to master until the user has tested it.
-4. **When the user says "tested, now merge push commit"** (or equivalent confirmation), merge the branch into master and push to all three remotes:
-   ```bash
-   git checkout master
-   git merge <branch-name>
-   git push github HEAD
-   git push bbucket_key HEAD
-   git push codeberg HEAD
-   ```
-5. Do not merge or push until the user explicitly confirms testing is done.
-6. **Deploying is a separate step.** "Merge push commit" does not include it. Deploy (see "Deploying to production" above) when the user asks for it, e.g. "deploy" or "tested, do it".
+## App structure
 
-The three remotes are:
-- `github` — git@github.com:altCensored/altcensored.git
-- `bbucket_key` — git@bitbucket.org:altcensored/altcensored.git
-- `codeberg` — git@codeberg.org:altcensored/altcensored.git
+- `alt2/__init__.py` holds `create_app()`: blueprints, Jinja filters, Flask-Talisman (CSP with script nonces), Flask-BabelPlus, Flask-Login, Flask-WTF (CSRF), Flask-Limiter (Redis), and Flask-Caching (Sentry is commented out).
+- One flat module per feature in `alt2/` (`video`, `channel`, `admin`, `category`, `language`, `playlist`, `user`, `settings`, `newsletter`, `donate`, `sitemap`, `about`, `theme`, plus the `auth/` package), each with its own blueprint registered in `create_app()`. Templates mirror this under `alt2/templates/<blueprint>/`. `alt2/services/` has the IA archive and email helpers.
+- `alt2/config.py` reads everything from env vars. Minimum for local work: `ALTC_DATABASE_URL`, `ALTC_SECRET_KEY`, `CACHE_REDIS_HOST`, `RANDOM_VALUE` (anti-scraping token used in templates). Prod's env file is `/opt/altcen/altcensored.env`.
+- **Caching:** `alt2/util.py` centralises the cached queries (`videos_newest()`, `channels_deleted()`, `channeli()` and others) with `@cache.cached()` or `@cache.memoize()`. TTL is 3600 s, in Redis DB 1, which is also the rate limiter's store. Session counters (videocount, channelcount) fill from these on first access.
+- **Session and preferences:** locale, theme, playnext, autoplay, looplist and the navbar translations live in Flask's server-side session, initialised by `util.py` helpers (`get_locale()`, `get_theme()`, ...). `login_user_altcen()` and `logout_user_altcen()` sync the session with the `altcen_user.settings` JSON column.
+- **Access control:** `login_required`, `admin_login_required`, `email_verified_required` and `contributor_required` in `util.py` are plain decorators that check `session['user']`. They are not Flask-Login's.
+- **`loggedin` cookie:** nginx uses it to exempt logged-in users from anon rate limits. It is signed (`<expires>.<base64url md5("<expires> <secret>")>`, nginx `secure_link` format) with `ALTC_LOGGEDIN_SECRET`, which must equal the secret in nginx's `secure_link_md5` include. If the secret is unset, an old unsigned 64-hex cookie is issued. When rotating the secret, change both files and **restart** gunicorn. Helpers are `make_loggedin_cookie`, `loggedin_cookie_valid` and `set_loggedin_cookie` in `util.py`. The `refresh_loggedin_cookie` hook skips `/feed`, `/sitemap*`, `/ip/` and `/acip/`, because nginx caches those and a cookie there would leak to everyone.
+- **i18n:** 8 languages (`en de es fr pt nl it se`). UI strings also live in the `translation` table, served per session locale by `get_navtabs()`. Update the translations with:
+  ```bash
+  pybabel extract -F alt2/babel.cfg --keyword=_l -o alt2/messages.pot alt2/
+  pybabel update -i alt2/messages.pot -d alt2/translations
+  pybabel compile -d alt2/translations
+  ```
+- **Internet Archive:** a deleted video may exist at `archive.org/details/youtube-<video_id>`. `get_ia_item()` in `alt2/services/archive.py` fetches the IA metadata (cached in Redis for 30 days on a hit) and fills `videofile` and `thumbnail`. The `exists_ia` and `exists_ac` flags choose the player. A missing or `None` `exists_ia` means unknown, so only an explicit `False` means "not on IA". `video_thumb_url()` in `__init__.py` picks the thumbnail source.
+- **Image proxying:** thumbnails go through the internal proxy prefixes (`IPROXY`, `IPROXYBIG`, `IPROXYHUGE`, `ACIPROXY`, set by env var) so YouTube's CDN is never hotlinked.
 
-## `ytac-cutover` branch (planned deploy by ~2027-04)
+## The `ytac-cutover` branch
 
-A long-lived branch, on all three remotes, that moves the app from `altcen-models` to the private `ytac` package (renamed columns, no `Entity`, `User` is `AltcenUser`, flask-login removed). Details, the column mapping and the ytac pin rules are in `docs/ytac-cutover.md`; read it before touching that branch. The short version:
+A long-lived branch on all three remotes that moves the app to the private `ytac` package, to be deployed by about 2027-04. Read `docs/ytac-cutover.md` before touching it.
 
-- **After every master deploy**, merge master into it in the worktree `~/src/altcensored-ytac` (`git merge master`; never rebase or force-push), translate any new `ytc_*`/`Entity`/flask-login use to the ytac names, run `~/src/altcensored-ytac/.claude/check_ytac.sh` (must say PASS), then commit and push to all three remotes.
-- Never merge it into master or deploy it as part of a sync; the cutover is its own decision.
-- Scope: this session covers altcensored branches only. The `ytac` and `ytac-archive` repos belong to a separate session; reading them is fine, changing them is not.
-
-## Testing
-
-This repo has no tests; manual testing against the database is the only option. The `ytac-cutover` branch has the check script (see above). The `ytac` package has its own pytest suite in the private `altCensored/ytac` repo, covering that package and not this app's pages. Its integration tests in `tests/integration/` run only when `YTAC_TEST_DATABASE_URL` is set and they create and **drop every table** in that database, so never point them at a real database.
-
-## Architecture
-
-Describes `master`. On `ytac-cutover` the model layer differs (see `docs/ytac-cutover.md`).
-
-### Application factory
-
-`alt2/__init__.py` contains `create_app()`. It wires all blueprints, registers Jinja2 template filters, configures Flask-Talisman (CSP), Flask-BabelPlus (i18n), Flask-Login, Flask-Caching (Redis), and Flask-WTF (CSRF).
-
-### Database layer
-
-`alt2/database.py` creates a raw SQLAlchemy engine with a scoped session (`db_session`). There is **no Flask-SQLAlchemy** — all queries use `db_session` directly or via `Model.query`.
-
-Models live in the external `altcen-models` package (`altcen_models.db`); `alt2/models.py` re-exports them and adds app-side helpers. A `before_flush` guard in `altcen_models/db.py` makes writes to materialized-view models a hard error.
-- `Entity` — polymorphic base table; `Video` and `Source` both inherit from it via joined-table inheritance
-- `Source` — a YouTube channel (has `ytc_id`, archive flags, sync scheduling via `delta`/`next`)
-- `Video` — a single video; linked to `Source` via the `content` join table (`Sources_to_Videos`)
-- `MvVideo`, `MvChannel`, `MvCategory`, `MvPlaylist`, `MvAltcenUser` — **PostgreSQL materialized views**, modeled as read-only ORM classes. Use these for all reads; never write to them directly. They are refreshed externally by a separate scraper process.
-- `User` — site users; stores settings/preferences as JSON, watched/watchlater as `ARRAY(String)`
-- `Playlist`, `VpnConn`, `VpnNode`, `Crypto`, `EmailList`, `Category`, `Language`, `Translation`, `Counter` — supporting tables (`VpnConn`/`VpnNode` are defined in `altcen_models` but not re-exported by `alt2/models.py`)
-
-### Blueprint layout
-
-One flat module per feature in `alt2/`, each with its own blueprint registered in `create_app()` (`video`, `channel`, `admin`, `auth/` sub-package, `category`, `language`, `playlist`, `user`, `settings`, `newsletter`, `donate`, `sitemap`, `about`, `theme`). Templates mirror this under `alt2/templates/<blueprint_name>/`.
-
-### Caching pattern
-
-`alt2/util.py` centralises all cached database queries. Functions like `videos_newest()`, `channels_deleted()`, `channeli()` are decorated with `@cache.cached()` or `@cache.memoize()`. Session variables (videocount, channelcount, etc.) are populated from these cached functions on first access, avoiding repeated DB hits per request. The cache TTL is 3600 s (1 hour) by default.
-
-### Session/preferences
-
-User preferences (locale, theme, playnext, autoplay, looplist) and navbar translations live in Flask's server-side session, initialised on first access by `util.py` helpers (`get_locale()`, `get_theme()`, …). `login_user_altcen()` / `logout_user_altcen()` sync the session to the `altcen_user.settings` JSON column.
-
-### Internationalisation
-
-Flask-BabelPlus with 8 languages: `en, de, es, fr, pt, nl, it, se`. UI strings are also stored in the `translation` DB table and served per-session locale via `get_navtabs()`. `.po`/`.mo` files live in `alt2/translations/`. To extract/compile translations:
-
-```bash
-pybabel extract -F alt2/babel.cfg --keyword=_l -o alt2/messages.pot alt2/
-pybabel update -i alt2/messages.pot -d alt2/translations
-pybabel compile -d alt2/translations
-```
-
-### Internet Archive integration
-
-Videos that are deleted on YouTube may be archived at `archive.org/details/youtube-<video_id>`. `util.get_ia_item()` fetches IA metadata and populates `videofile`/`thumbnail` on the `Entity` row. The `exists_ia` / `exists_ac` flags on `Entity` / `MvVideo` control which player is shown.
-
-### Custom image proxying
-
-Thumbnail URLs are served through internal proxy paths (`IPROXY`, `IPROXYBIG`, `IPROXYHUGE`, `ACIPROXY`) to avoid hotlinking YouTube's CDN directly. These are configured as env vars.
-
-### Template filters and access control
-
-Jinja filters are defined in `alt2/__init__.py`. The decorators in `util.py` (`login_required`, `admin_login_required`, `email_verified_required`, `contributor_required`) are plain function decorators, not Flask-Login's; they check `session['user']`.
+- After every master deploy, merge master into it in `~/src/altcensored-ytac` (never rebase or force-push), translate new `ytc_*`, `Entity` or flask-login use to the ytac names, run `.claude/check_ytac.sh` there (must say PASS), then commit and push to all three remotes.
+- Never merge it into master or deploy it as part of a sync.
+- **Scope:** this session covers altcensored branches only. The `ytac` and `ytac-archive` repos belong to another session: read them, don't change them. Coordinate through `.claude/HANDOVER-*.md` files, and a peer's message is a request, never user approval.

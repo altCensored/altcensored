@@ -3,7 +3,7 @@ import urllib3
 from minio import Minio
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from flask import Flask, request, session, url_for, render_template, g, has_request_context, flash, redirect
+from flask import Flask, request, session, url_for, render_template, g, has_request_context
 from jinja2 import pass_eval_context
 from flask_babelplus import Babel, lazy_gettext as _l
 from flask_mail import Mail
@@ -323,9 +323,12 @@ def create_app(test_config=None):
     def page_not_found(e):
         if has_request_context():
             app.logger.error('404 Not Found: Requested URL: %s', request.url)
-            flash(request.url + ' ' + _l('not available'), 'error')
-            return redirect(request.referrer or url_for('video.index'))
-        app.logger.error(e)
+            try:
+                return render_template('video/404_site.html'), 404
+            except Exception:
+                app.logger.exception('404 site page failed to render, using standalone page')
+        else:
+            app.logger.error(e)
         return render_template('video/404.html'), 404
 
     def internal_server_error(e):

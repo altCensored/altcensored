@@ -4,7 +4,7 @@ A long-lived branch, on all three remotes, that moves the app from `altcen-model
 
 - **After every master deploy**, merge master into it in the worktree `~/src/altcensored-ytac`: `git merge master`. Always merge, never rebase or force-push. `rerere` is enabled, so resolved conflicts are reapplied.
 - A change that merges cleanly can still be wrong there. Translate any new `ytc_*` column access, `Entity` use or flask-login call to the ytac names.
-- Run `~/src/altcensored-ytac/.claude/check_ytac.sh`. It must say PASS. It compiles the code, flags new altcen-models leftovers and conflict markers, and runs the test client against orcl's `ytac` DB as read-only `claude_ro`, with an in-memory cache, so prod Redis and data are untouched. Known pre-existing failures are listed in `.claude/known_bad_pages.txt` and `.claude/leftovers_baseline.txt` there.
+- Run `~/src/altcensored-ytac/scripts/check_ytac.sh`. It must say PASS. It compiles the code, flags new altcen-models leftovers and conflict markers, and runs the test client against orcl's `ytac` DB as read-only `claude_ro`, with an in-memory cache, so prod Redis and data are untouched. Known pre-existing failures are listed in `scripts/ytac_check/known_bad_pages.txt` and `scripts/ytac_check/leftovers_baseline.txt` there.
 - Commit the merge and push the branch to all three remotes. Never merge it into master or deploy it as part of a sync; the cutover is its own decision.
 
 **Scope:** work in this repo covers altcensored branches only (`master`, `ytac-cutover`, and working branches off them). The `ytac` and `ytac-archive` repos are handled by a separate Claude session, so don't change them from here. Reading ytac files (below) is fine.

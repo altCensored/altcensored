@@ -17,7 +17,7 @@ Guidance for Claude Code in the `ytac-cutover` worktree, `~/src/altcensored-ytac
 ## Safety
 
 - **Never run the branch app against prod Redis or the prod DB.** `alt2/config.py` hardcodes Redis DB 1, the same DB production uses for its cache and rate limiter.
-- The only supported run is `.claude/check_ytac.sh`, which uses orcl's `ytac` DB as read-only `claude_ro` (`service=ytac-orcl`), an in-memory cache and an unreachable Redis host (`127.0.0.2`), and refuses to run on any other cache backend.
+- The only supported run is `scripts/check_ytac.sh`, which uses orcl's `ytac` DB as read-only `claude_ro` (`service=ytac-orcl`), an in-memory cache and an unreachable Redis host (`127.0.0.2`), and refuses to run on any other cache backend.
 - ytac's `tests/integration/` creates and **drops every table** in `YTAC_TEST_DATABASE_URL`. Only ever point it at a throwaway DB such as `ytac_test_migration`.
 - Keep DB URLs in the explicit `postgresql+psycopg2://` form. Under the SQLAlchemy 2.1 this venv uses, a bare `postgresql://` means psycopg 3.
 
@@ -27,10 +27,10 @@ After every master deploy:
 
 1. In this worktree, `git merge master`. Always merge; never rebase or force-push. `rerere` is on, so resolved conflicts are reapplied.
 2. A clean textual merge can still be wrong here. Translate any new `ytc_*` column access, `Entity` use or flask-login call to the ytac names.
-3. Run `.claude/check_ytac.sh`. It must say PASS. It compiles the code, looks for conflict markers and new altcen-models leftovers, loads 12 pages through the Flask test client, scans every `Model.attribute` against the ytac models, and exercises the email helpers on real `EmailList` and `AltcenUser` objects.
+3. Run `scripts/check_ytac.sh`. It must say PASS. It compiles the code, looks for conflict markers and new altcen-models leftovers, loads 12 pages through the Flask test client, scans every `Model.attribute` against the ytac models, and exercises the email helpers on real `EmailList` and `AltcenUser` objects.
 4. Commit the merge and push to all three remotes (`github`, `bbucket_key`, `codeberg`).
 
-The check script keeps two baselines in `.claude/`. `leftovers_baseline.txt` holds 9 known dead-code lines that are identical on master, so leave them matching master. `known_bad_pages.txt` is empty. Don't rebaseline to hide a new failure.
+The check script keeps two baselines in `scripts/ytac_check/`. `leftovers_baseline.txt` holds 9 known dead-code lines that are identical on master, so leave them matching master. `known_bad_pages.txt` is empty. Don't rebaseline to hide a new failure.
 
 `CLAUDE.md` itself is tracked on both branches, so a master change to it conflicts here. Resolve it by keeping this file's version and folding in anything that is new on master.
 

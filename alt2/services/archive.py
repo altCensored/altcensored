@@ -1,7 +1,7 @@
 import logging
 import os
 from http.client import HTTPSConnection
-from urllib.parse import urlparse
+from urllib.parse import quote, urlparse
 
 from flask import current_app
 from internetarchive import get_item
@@ -115,7 +115,7 @@ def get_ia_item(extractor_data):
         videofile_full = get_video_files_2(ia_item)
         thumbnail_full = get_image_file(ia_item)
         if thumbnail_full and entity_video:
-            entity_video.thumbnail = thumbnail_full
+            entity_video.thumbnail = quote(thumbnail_full)
         if videofile_full and entity_video:
             root, ext = os.path.splitext(videofile_full)
             entity_video.videofile = root

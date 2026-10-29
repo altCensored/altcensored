@@ -58,7 +58,7 @@
 <img class="{{ css_class }}" src="{{ channel_thumb_url(channel) }}"{% if channel['thumbnail_ytdlp'] %} onerror="this.onerror=null;this.src='{{ config.CHANNEL_THUMB_ERROR_IMAGE }}';"{% endif %}>
 {% endmacro %}
 
-{% macro video_thumb(video, ac_proxy='ACIPROXY', ia_proxy='IPROXYHUGE', lazy=false) %}
-{% set url = video_thumb_url(video, ac_proxy, ia_proxy) %}
+{% macro video_thumb(video, ac_proxy='ACIPROXY', ia_proxy='IPROXYHUGE', lazy=false, ia_guess=true) %}
+{% set url = video_thumb_url(video, ac_proxy, ia_proxy, ia_guess) %}
 <img class="thumbnail"{% if lazy %} loading="lazy"{% endif %} src="{{ url }}"{% if url != config.VIDEO_THUMB_ERROR_IMAGE %} onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';"{% endif %}>
 {% endmacro %}

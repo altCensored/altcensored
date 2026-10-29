@@ -16,8 +16,7 @@
   <div class="pure-u-1 pure-u-md-20-24">
     <div class="h-box" style="text-align:center;">
       <h1>{{ gettext('Page not found') }} <small>404</small></h1>
-      <p>{{ request.path }} {{ gettext('is not available') }}.</p>
-      <p><a href="{{ url_for('video.index') }}">{{ config['MYSERVER_NAME'] }}</a></p>
+      <p>{{ request.url | truncate(200) }} {{ gettext('is not available') }}.</p>
     </div>
   </div>
 </div>

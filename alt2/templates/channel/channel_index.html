@@ -93,6 +93,7 @@
         <div class="pure-u-1 pure-u-md-2-24"></div>
         <div class="pure-u-1 pure-u-md-20-24">
             <div class="pure-g">
+                {% from "_helpers.html" import channel_thumb %}
                 {% for channel in channels %}
                     <div class="pure-u-1 pure-u-md-1-4">
                     <div class="h-box">
@@ -101,13 +102,7 @@
                                 <a href="{{ url_for('channel.item', ytc_id=channel['extractor_data']) }}">
                                     <div class="thumbnail">
                                         <left>
-                                              {% if channel['thumbnail_ytdlp'] %}
-                                              <img class="channel-thumb"
-                                                   src="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['thumbnail_ytdlp'] }}"
-                                                   onerror="this.onerror=null;this.src='{{ config.CHANNEL_THUMB_ERROR_IMAGE }}';">
-                                              {% else %}
-                                              <img class="channel-thumb" src="{{ config.CHANNEL_THUMB_ERROR_IMAGE }}">
-                                              {% endif %}
+                                              {{ channel_thumb(channel) }}
                                             </style>
                                             </left>
                                             </div>

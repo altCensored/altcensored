@@ -38,7 +38,7 @@
                                 <a href="{{ url_for('channel.item', ytc_id=channel['extractor_data']) }}">
                                     <div class="thumbnail">
                                         <img style="width:95%"
-                                             src="{{ (config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['thumbnail_ytdlp']) if channel['thumbnail_ytdlp'] else config.CHANNEL_THUMB_ERROR_IMAGE }}"
+                                             src="{{ channel_thumb_url(channel) }}"
                                              onerror="this.onerror=null;this.src='{{ config.CHANNEL_THUMB_ERROR_IMAGE }}';">
                                     </div>
                                 </a>
@@ -119,15 +119,8 @@
                                 {% set fv = featured_search_videos.get(searchplaylist.featured_video_id) if searchplaylist.featured_video_id else none %}
                                 {% if fv %}
                                     <div class="thumbnail">
-                                    {% if fv.ac_exists and fv.thumbnail_ac %}
-                                        <img class="thumbnail" src="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ fv.extractor_data ~ '/' ~ fv.thumbnail_ac }}" onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
-                                    {% elif fv.thumbnail_ytdlp %}
-                                        <img class="thumbnail" src="{{ config.IPROXYHUGE ~ config.IARCHIVEURL ~ fv.extractor_data ~ '/' ~ fv.thumbnail_ytdlp }}" onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
-                                    {% elif fv.ia_exists %}
-                                        <img class="thumbnail" src="{{ config.IPROXY ~ config.IARCHIVEURL ~ fv.extractor_data ~ '/__ia_thumb.jpg' }}" onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
-                                    {% else %}
-                                        <img class="thumbnail" src="{{ config.VIDEO_THUMB_ERROR_IMAGE }}">
-                                    {% endif %}
+                                    {% from "_helpers.html" import video_thumb %}
+                                    {{ video_thumb(fv) }}
                                     </div>
                                 {% endif %}
                                 <p>
@@ -177,13 +170,8 @@
                                 {% if altcen_user.featured_playlist and altcen_user.featured_playlist.pl_title %}
                                     {% set fp = altcen_user.featured_playlist %}
                                     <div class="thumbnail">
-                                        {% if fp.ac_exists and fp.thumbnail_ac %}
-                                            <img class="thumbnail" src="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ fp.extractor_data ~ '/' ~ fp.thumbnail_ac }}" onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
-                                        {% elif fp.thumbnail %}
-                                            <img class="thumbnail" src="{{ config.IPROXYHUGE ~ config.IARCHIVEURL ~ fp.extractor_data ~ '/' ~ fp.thumbnail }}" onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
-                                        {% else %}
-                                            <img class="thumbnail" src="{{ config.IPROXY ~ config.IARCHIVEURL ~ fp.extractor_data ~ '/__ia_thumb.jpg' }}" onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
-                                        {% endif %}
+                                        {% from "_helpers.html" import video_thumb %}
+                                        {{ video_thumb(fp) }}
                                     </div>
                                 {% endif %}
                                 <i class='ion-ios-contact' style="font-size: 24px"></i>

@@ -4,7 +4,7 @@ from minio import Minio
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask import Flask, request, session, url_for, render_template, g, has_request_context
-from jinja2 import pass_eval_context
+from jinja2 import Undefined, pass_eval_context
 from flask_babelplus import Babel, lazy_gettext as _l
 from flask_mail import Mail
 from urllib.parse import quote_plus
@@ -377,5 +377,37 @@ def create_app(test_config=None):
         return url_for(request.endpoint, after=cursor, p=page, **args)
 
     app.jinja_env.globals['url_for_cursor_page'] = url_for_cursor_page
+
+    def channel_thumb_url(channel):
+        thumb = app.jinja_env.getattr(channel, 'thumbnail_ytdlp')
+        if thumb:
+            return f"{app.config['ACIPROXY']}{app.config['VIDEOSERVER_URL']}{thumb}"
+        return app.config['CHANNEL_THUMB_ERROR_IMAGE']
+
+    app.jinja_env.globals['channel_thumb_url'] = channel_thumb_url
+
+    def video_thumb_url(video, ac_proxy='ACIPROXY', ia_proxy='IPROXYHUGE'):
+        # video is an MvVideo row or a stored featured-video dict (legacy keys); first usable source wins.
+        cfg = app.config
+
+        def get(*keys):
+            for key in keys:
+                value = app.jinja_env.getattr(video, key)
+                if not isinstance(value, Undefined):
+                    return value
+            return None
+
+        video_id = get('extractor_data')
+        if get('ac_exists', 'exists_ac') and get('thumbnail_ac'):
+            return f"{cfg[ac_proxy]}{cfg['VIDEOSERVER_URL']}{video_id}/{get('thumbnail_ac')}"
+        thumb = get('thumbnail_ytdlp', 'thumbnail')
+        if thumb and not thumb.startswith('http'):
+            return f"{cfg[ia_proxy]}{cfg['IARCHIVEURL']}{video_id}/{thumb}"
+        # only an explicit False means "not on IA"; None/missing (older stored dicts) is unknown, so try it
+        if get('ia_exists', 'exists_ia') is not False:
+            return f"{cfg['IPROXY']}{cfg['IARCHIVEURL']}{video_id}/__ia_thumb.jpg"
+        return cfg['VIDEO_THUMB_ERROR_IMAGE']
+
+    app.jinja_env.globals['video_thumb_url'] = video_thumb_url
 
     return app

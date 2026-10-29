@@ -8,15 +8,15 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['extractor_data']
 <meta name="twitter:site" content="@altcensored">
 <meta name="twitter:title" content="{{ channel['title'] ~ ' Channel ' ~ '(' ~ channel['limited'] ~' Censored Videos' ~ ')' }}">
 <meta name="twitter:description" content="{{ channel['description'] | default('', true) }}">
-<meta name="twitter:image" content="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['thumbnail_ytdlp']  }}">
+<meta name="twitter:image" content="{{ channel_thumb_url(channel) }}">
 
 <meta property="og:site_name" content="{{ config['MYSERVER_NAME'] }}">
 <meta property="og:url" content="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['extractor_data'] }}">
 <meta property="og:title" content="{{ channel['title'] ~ ' Channel ' ~ '(' ~ channel['limited'] ~' Censored Videos' ~ ')' }}">
 <meta property="og:description" content="{{ channel['description'] | default('', true) | truncate(140) | e }}">
 <meta property="og:type" content="article">
-<meta property="og:image" content="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['thumbnail_ytdlp'] }}">
-<meta property="og:image:secure_url" content="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['thumbnail_ytdlp']  }}">
+<meta property="og:image" content="{{ channel_thumb_url(channel) }}">
+<meta property="og:image:secure_url" content="{{ channel_thumb_url(channel) }}">
 
 <meta name="altcen_title" content="{% block title %}{{ channel['title'] | striptags | truncate(length=56,killwords=False,end='',leeway=0) }}{% endblock %}">
 <meta name="altcen_meta_description" content="{% block description %}Limited Censored YouTube Video Channel: {{ channel['title'] }}: {{ channel['description'] | default('', true) }} (Created on {{ channel['published_at'].strftime('%b %e, %G') if channel['published_at'] else '' }}){% endblock %}">
@@ -37,12 +37,8 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['extractor_data']
               <div class="pure-g">
                 <div class="pure-u-1-2">
                   <div class="thumbnail">
-                      {% if channel['thumbnail_ytdlp'] %}
-                      <img class="channel-thumb" src="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['thumbnail_ytdlp'] }}"
-                           onerror="this.onerror=null;this.src='{{ config.CHANNEL_THUMB_ERROR_IMAGE }}';">
-                      {% else %}
-                      <img class="channel-thumb" src="{{ config.CHANNEL_THUMB_ERROR_IMAGE }}">
-                      {% endif %}
+                      {% from "_helpers.html" import channel_thumb %}
+                      {{ channel_thumb(channel) }}
                   </div>
                 </div>
                 <div class="pure-u-1-2">

@@ -1,15 +1,7 @@
 {% extends 'base.html' %}
 {% block head %}
 
-{% if video['ac_exists'] %}
-  {% set thumb_url = config.ACIPROXYHUGE ~ config.VIDEOSERVER_URL ~ video['extractor_data'] ~ '/' ~ video['thumbnail_ac'] %}
-{% elif video['thumbnail_ytdlp'] %}
-  {% set thumb_url = config.IPROXYHUGE ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['thumbnail_ytdlp'] %}
-{% elif video['ia_exists'] %}
-  {% set thumb_url = config.IPROXY ~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/__ia_thumb.jpg' %}
-{% else %}
-  {% set thumb_url = config.VIDEO_THUMB_ERROR_IMAGE %}
-{% endif %}
+{% set thumb_url = video_thumb_url(video, ac_proxy='ACIPROXYHUGE') %}
 
 <meta name="thumbnail" content="{{ thumb_url }}">
 <meta name="keywords" content="{{ video['tags'] }}">
@@ -195,7 +187,7 @@
           <div class="pure-u-1 pure-u-md-3-5 watch-center">
             <div class="h-box">
               <a href="{{ url_for('channel.item', ytc_id=video['source_extractor_data']) }}">
-                <img src="{{ (config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['thumbnail_ytdlp']) if channel['thumbnail_ytdlp'] else config.CHANNEL_THUMB_ERROR_IMAGE }}" height="35" width="35"
+                <img src="{{ channel_thumb_url(channel) }}" height="35" width="35"
                 onerror="this.onerror=null;this.src='{{ config.CHANNEL_THUMB_ERROR_IMAGE }}';">
               </a>&nbsp; &nbsp;
                 <h3 style="display:inline"><a href="{{ url_for('channel.item', ytc_id=video['source_extractor_data']) }}">{{ video['source_title'] }}
@@ -237,15 +229,8 @@
               <div class="thumbnail">
 
 
-          {% if  video['ac_exists'] %}
-              <img class="thumbnail" loading="lazy" src="{{ config.ACIPROXYHUGE~ config.VIDEOSERVER_URL ~ video['extractor_data'] ~ '/' ~ video['thumbnail_ac'] }}"
-                   onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
-          {% elif video['thumbnail_ytdlp'] and not video['thumbnail_ytdlp'].startswith('http') %}
-              <img class="thumbnail" loading="lazy" src="{{ config.IPROXYHUGE~ config.IARCHIVEURL ~ video['extractor_data'] ~ '/' ~ video['thumbnail_ytdlp'] }}"
-                   onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
-          {% else %}
-              <img class="thumbnail" loading="lazy" src="{{ config.VIDEO_THUMB_ERROR_IMAGE }}">
-          {% endif %}
+          {% from "_helpers.html" import video_thumb %}
+          {{ video_thumb(video, ac_proxy='ACIPROXYHUGE', lazy=true) }}
 
                 {% if video['duration']  is not none %}
                 <p class="length">{{ video['duration'] | hourminsec }}</p>

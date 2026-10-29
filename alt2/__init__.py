@@ -406,7 +406,8 @@ def create_app(test_config=None):
         thumb = get('thumbnail')
         if thumb and not thumb.startswith('http'):
             return f"{cfg[ia_proxy]}{cfg['IARCHIVEURL']}{video_id}/{thumb}"
-        if get('exists_ia'):
+        # only an explicit False means "not on IA"; None/missing (older stored dicts) is unknown, so try it
+        if get('exists_ia') is not False:
             return f"{cfg['IPROXY']}{cfg['IARCHIVEURL']}{video_id}/__ia_thumb.jpg"
         return cfg['VIDEO_THUMB_ERROR_IMAGE']
 

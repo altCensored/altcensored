@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}{{ gettext('Page not found') }}{% endblock %}
+{% block head %}
+<meta name="robots" content="noindex">
+{% endblock %}
+{% block content %}
+
+{% with active_nav='404' %}
+    {% include "widgets/navtabs.html" %}
+{% endwith %}
+
+<br>
+
+<div class="pure-g">
+  <div class="pure-u-1 pure-u-md-2-24"></div>
+  <div class="pure-u-1 pure-u-md-20-24">
+    <div class="h-box" style="text-align:center;">
+      <h1>{{ gettext('Page not found') }} <small>404</small></h1>
+      <p>{{ request.path }} {{ gettext('is not available') }}.</p>
+      <p><a href="{{ url_for('video.index') }}">{{ config['MYSERVER_NAME'] }}</a></p>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

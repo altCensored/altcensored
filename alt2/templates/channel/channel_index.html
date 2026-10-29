@@ -101,9 +101,13 @@
                                 <a href="{{ url_for('channel.item', ytc_id=channel['extractor_data']) }}">
                                     <div class="thumbnail">
                                         <left>
+                                              {% if channel['thumbnail_ytdlp'] %}
                                               <img class="channel-thumb"
                                                    src="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['thumbnail_ytdlp'] }}"
                                                    onerror="this.onerror=null;this.src='{{ config.CHANNEL_THUMB_ERROR_IMAGE }}';">
+                                              {% else %}
+                                              <img class="channel-thumb" src="{{ config.CHANNEL_THUMB_ERROR_IMAGE }}">
+                                              {% endif %}
                                             </style>
                                             </left>
                                             </div>

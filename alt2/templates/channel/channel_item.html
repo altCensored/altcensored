@@ -7,19 +7,19 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['extractor_data']
 <meta name="twitter:card" content="summary">
 <meta name="twitter:site" content="@altcensored">
 <meta name="twitter:title" content="{{ channel['title'] ~ ' Channel ' ~ '(' ~ channel['limited'] ~' Censored Videos' ~ ')' }}">
-<meta name="twitter:description" content="{{ channel['description'] }}">
+<meta name="twitter:description" content="{{ channel['description'] | default('', true) }}">
 <meta name="twitter:image" content="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['thumbnail_ytdlp']  }}">
 
 <meta property="og:site_name" content="{{ config['MYSERVER_NAME'] }}">
 <meta property="og:url" content="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['extractor_data'] }}">
 <meta property="og:title" content="{{ channel['title'] ~ ' Channel ' ~ '(' ~ channel['limited'] ~' Censored Videos' ~ ')' }}">
-<meta property="og:description" content="{{ channel['description'] | truncate(140) | e }}">
+<meta property="og:description" content="{{ channel['description'] | default('', true) | truncate(140) | e }}">
 <meta property="og:type" content="article">
 <meta property="og:image" content="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['thumbnail_ytdlp'] }}">
 <meta property="og:image:secure_url" content="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['thumbnail_ytdlp']  }}">
 
 <meta name="altcen_title" content="{% block title %}{{ channel['title'] | striptags | truncate(length=56,killwords=False,end='',leeway=0) }}{% endblock %}">
-<meta name="altcen_meta_description" content="{% block description %}Limited Censored YouTube Video Channel: {{ channel['title'] }}: {{ channel['description'] }} (Created on {{ channel['published_at'].strftime('%b %e, %G') if channel['published_at'] else '' }}){% endblock %}">
+<meta name="altcen_meta_description" content="{% block description %}Limited Censored YouTube Video Channel: {{ channel['title'] }}: {{ channel['description'] | default('', true) }} (Created on {{ channel['published_at'].strftime('%b %e, %G') if channel['published_at'] else '' }}){% endblock %}">
 
 {% endblock %}
 

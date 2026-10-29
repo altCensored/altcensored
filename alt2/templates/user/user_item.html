@@ -14,12 +14,9 @@
 
 {% if user.featured_playlist and user.featured_playlist.pl_title %}
     {% set fp = user.featured_playlist %}
-    {% if fp.exists_ac %}
-        {% set og_img = config.ACIPROXY ~ config.VIDEOSERVER_URL ~ fp.extractor_data ~ '/' ~ fp.thumbnail_ac %}
-    {% elif fp.thumbnail %}
-        {% set og_img = config.IPROXYHUGE ~ config.IARCHIVEURL ~ fp.extractor_data ~ '/' ~ fp.thumbnail %}
-    {% else %}
-        {% set og_img = config.IPROXY ~ config.IARCHIVEURL ~ fp.extractor_data ~ '/__ia_thumb.jpg' %}
+    {% set og_img = video_thumb_url(fp) %}
+    {% if og_img == config.VIDEO_THUMB_ERROR_IMAGE %}
+        {% set og_img = 'https://' ~ config['MYSERVER_NAME'] ~ '/logo_clip.png' %}
     {% endif %}
     <meta property="og:image" content="{{ og_img }}">
     <meta property="og:image:secure_url" content="{{ og_img }}">
@@ -150,15 +147,8 @@
                         {% set fv = featured_videos.get(playlist.featured_video_id) if playlist.featured_video_id else none %}
                         {% if fv %}
                             <div class="thumbnail">
-                            {% if fv.exists_ac %}
-                                <img class="thumbnail" src="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ fv.extractor_data ~ '/' ~ fv.thumbnail_ac }}" onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
-                            {% elif fv.thumbnail %}
-                                <img class="thumbnail" src="{{ config.IPROXYHUGE ~ config.IARCHIVEURL ~ fv.extractor_data ~ '/' ~ fv.thumbnail }}" onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
-                            {% elif fv.exists_ia %}
-                                <img class="thumbnail" src="{{ config.IPROXY ~ config.IARCHIVEURL ~ fv.extractor_data ~ '/__ia_thumb.jpg' }}" onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
-                            {% else %}
-                                <img class="thumbnail" src="{{ config.VIDEO_THUMB_ERROR_IMAGE }}">
-                            {% endif %}
+                            {% from "_helpers.html" import video_thumb %}
+                            {{ video_thumb(fv) }}
                             </div>
                         {% endif %}
                         <i class='ion-md-list'  style="font-size: 24px"></i>

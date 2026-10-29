@@ -37,12 +37,12 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['extractor_data']
               <div class="pure-g">
                 <div class="pure-u-1-2">
                   <div class="thumbnail">
-<!--
-                      <img class="thumbnail" src="{{ channel['ytc_thumbnailurl'] | reverse | replace('88','671', 1) | reverse  }}"
-                      onerror="this.onerror=null;this.src='https://{{ config['MYSERVER_NAME'] }}/channel_unnamed.jpg';" >
--->
+                      {% if channel['thumbnail_ytdlp'] %}
                       <img class="channel-thumb" src="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['thumbnail_ytdlp'] }}"
                            onerror="this.onerror=null;this.src='{{ config.CHANNEL_THUMB_ERROR_IMAGE }}';">
+                      {% else %}
+                      <img class="channel-thumb" src="{{ config.CHANNEL_THUMB_ERROR_IMAGE }}">
+                      {% endif %}
                   </div>
                 </div>
                 <div class="pure-u-1-2">

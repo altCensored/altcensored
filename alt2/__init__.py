@@ -388,4 +388,12 @@ def create_app(test_config=None):
 
     app.jinja_env.globals['url_for_cursor_page'] = url_for_cursor_page
 
+    def channel_thumb_url(channel):
+        thumb = app.jinja_env.getattr(channel, 'ytc_thumbnail')
+        if thumb:
+            return f"{app.config['ACIPROXY']}{app.config['VIDEOSERVER_URL']}{thumb}"
+        return app.config['CHANNEL_THUMB_ERROR_IMAGE']
+
+    app.jinja_env.globals['channel_thumb_url'] = channel_thumb_url
+
     return app

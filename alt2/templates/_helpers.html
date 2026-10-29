@@ -54,5 +54,6 @@
 </center></h3>
 {% endmacro %}
 
-
-
+{% macro channel_thumb(channel, css_class='channel-thumb') %}
+<img class="{{ css_class }}" src="{{ channel_thumb_url(channel) }}"{% if channel['ytc_thumbnail'] %} onerror="this.onerror=null;this.src='{{ config.CHANNEL_THUMB_ERROR_IMAGE }}';"{% endif %}>
+{% endmacro %}

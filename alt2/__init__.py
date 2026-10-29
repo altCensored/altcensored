@@ -396,4 +396,20 @@ def create_app(test_config=None):
 
     app.jinja_env.globals['channel_thumb_url'] = channel_thumb_url
 
+    def video_thumb_url(video, ac_proxy='ACIPROXY', ia_proxy='IPROXYHUGE'):
+        # video is an MvVideo row or a stored featured-video dict (same keys); first usable source wins.
+        cfg = app.config
+        get = lambda key: app.jinja_env.getattr(video, key)
+        video_id = get('extractor_data')
+        if get('exists_ac') and get('thumbnail_ac'):
+            return f"{cfg[ac_proxy]}{cfg['VIDEOSERVER_URL']}{video_id}/{get('thumbnail_ac')}"
+        thumb = get('thumbnail')
+        if thumb and not thumb.startswith('http'):
+            return f"{cfg[ia_proxy]}{cfg['IARCHIVEURL']}{video_id}/{thumb}"
+        if get('exists_ia'):
+            return f"{cfg['IPROXY']}{cfg['IARCHIVEURL']}{video_id}/__ia_thumb.jpg"
+        return cfg['VIDEO_THUMB_ERROR_IMAGE']
+
+    app.jinja_env.globals['video_thumb_url'] = video_thumb_url
+
     return app

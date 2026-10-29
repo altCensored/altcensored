@@ -37,8 +37,12 @@ href="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}/feed
               <div class="pure-g">
                 <div class="pure-u-1-2">
                   <div class="thumbnail">
+                      {% if channel['ytc_thumbnail'] %}
                       <img class="channel-thumb" src="{{ config.ACIPROXY ~ config.VIDEOSERVER_URL ~ channel['ytc_thumbnail'] }}"
                            onerror="this.onerror=null;this.src='{{ config.CHANNEL_THUMB_ERROR_IMAGE }}';">
+                      {% else %}
+                      <img class="channel-thumb" src="{{ config.CHANNEL_THUMB_ERROR_IMAGE }}">
+                      {% endif %}
                   </div>
                 </div>
                 <div class="pure-u-1-2">

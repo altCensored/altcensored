@@ -1,7 +1,7 @@
 from altcen_models.db import (
     Base, MaterializedView,
     Entity, Sources_to_Videos, Video, Source,
-    Category, Language, Translation, Counter,
+    Category, Translation, Counter,
     User, Playlist, EmailList,
     Crypto,
     MvVideo, MvChannel, MvCategory, MvPlaylist, MvAltcenUser,

@@ -1,7 +1,7 @@
 from flask import ( Blueprint, render_template, session, abort )
 from sqlalchemy import func
 from .database import db_session
-from .models import MvVideo, MvCategory, Language, User
+from .models import MvVideo, MvCategory, User
 from .pagination import Pagination
 from .util import set_session
 
@@ -19,8 +19,6 @@ def index(page):
     if not categories and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, categorycount)
-
-    languages = Language.query.limit(PER_PAGE).offset(offset)
 
     return render_template('category/category_index.html', 
         pagination=pagination, categories=categories, categorycount=categorycount)

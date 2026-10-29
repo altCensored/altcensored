@@ -50,7 +50,7 @@ def _resolve_video_url(video: MvVideo, video_id: str) -> str:
     if (
         video.thumbnail
         and 'maxresdefault' not in video.thumbnail
-        and not video.thumbnail.startswith('http')
+        and not video.thumbnail.startswith(('http://', 'https://'))
     ):
         root, _ext = os.path.splitext(video.thumbnail)
         return IARCHIVEURL + video_id + "/" + root

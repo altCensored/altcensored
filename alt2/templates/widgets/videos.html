@@ -16,7 +16,7 @@
             <div class="thumbnail">
 
 
-          {% if  video['ac_exists'] %}
+          {% if video['ac_exists'] and video['thumbnail_ac'] %}
               <img class="thumbnail" loading="lazy" src="{{ config.ACIPROXYHUGE~ config.VIDEOSERVER_URL ~ video['extractor_data'] ~ '/' ~ video['thumbnail_ac'] }}"
                    onerror="this.onerror=null;this.src='{{ config.VIDEO_THUMB_ERROR_IMAGE }}';">
           {% elif video['thumbnail_ytdlp'] and not video['thumbnail_ytdlp'].startswith('http') %}

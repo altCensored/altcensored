@@ -401,7 +401,7 @@ def create_app(test_config=None):
         if get('ac_exists', 'exists_ac') and get('thumbnail_ac'):
             return f"{cfg[ac_proxy]}{cfg['VIDEOSERVER_URL']}{video_id}/{get('thumbnail_ac')}"
         thumb = get('thumbnail_ytdlp', 'thumbnail')
-        if thumb and not thumb.startswith('http'):
+        if thumb and not thumb.startswith(('http://', 'https://')):
             return f"{cfg[ia_proxy]}{cfg['IARCHIVEURL']}{video_id}/{thumb}"
         # only an explicit False means "not on IA"; None/missing (older stored dicts) is unknown, so try it
         if ia_guess and get('ia_exists', 'exists_ia') is not False:

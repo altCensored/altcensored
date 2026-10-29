@@ -72,7 +72,7 @@ A long-lived branch, on all three remotes, that moves the app from `altcen-model
 
 **Scope:** work in this repo covers altcensored branches only (`master`, `ytac-cutover`, and working branches off them). The `ytac` and `ytac-archive` repos are handled by a separate Claude session, so don't change them from here. Reading ytac files (below) is fine.
 
-**ytac version:** `ytac-cutover`'s `requirements.txt` pins `ytac @ git+https://github.com/altCensored/ytac.git@v2026.10.29.3`. ytac uses date versions (`YYYY.M.D.N`) and auto-tags every push, so a newer tag is **not** a reason to upgrade. Move the pin only when the ytac session asks for it in its handover reply (`~/src/ytac/.claude/HANDOVER-altcensored.md`) and the user agrees. Do it on a working branch: change the pin, `pip install -U` in `~/src/altcensored-ytac/.venv`, and run the check script.
+**ytac version:** `ytac-cutover`'s `requirements.txt` pins ytac to a git tag; read the current pin with `git show ytac-cutover:requirements.txt | grep ytac` rather than trusting any copy here. ytac uses date versions (`YYYY.M.D.N`) and auto-tags every push, so a newer tag is **not** a reason to upgrade. Move the pin only when the ytac session asks for it in its handover reply (`~/src/ytac/.claude/HANDOVER-altcensored.md`) and the user agrees. Do it on a working branch: change the pin, `pip install -U` in `~/src/altcensored-ytac/.venv`, and run the check script.
 
 References in the private `altCensored/ytac` repo. Read them with `gh api repos/altCensored/ytac/contents/<path> -H 'Accept: application/vnd.github.raw'`; links won't work for public readers.
 - `YTAC_CUTOVER.md` has the old → new column mapping for every materialized view, plus the `email_list` renames. `EmailList` uses `subscribed`, `last_sent`, `source`, `action` and `created`, while `AltcenUser` keeps its `email_*` names, so code that touches both must branch on the model. ytac itself provides `MvPlaylist.user` and the materialized-view write guard (since v2026.6.23.6); don't re-add them in `alt2/models.py`.
@@ -102,14 +102,7 @@ Models live in the external `altcen-models` package (`altcen_models.db`); `alt2/
 
 ### Blueprint layout
 
-Each feature is a flat module in `alt2/` with its own blueprint, registered in `create_app()`:
-- `video.bp` — home page, video player, search (`/`, `/channel/<id>/video/<id>`, etc.)
-- `channel.bp` — channel listings and individual channel pages (`/channel/...`)
-- `admin.bp` — admin panel at `/admin`
-- `auth/` (sub-package) — login/register/OAuth at `/auth`
-- `category`, `language`, `playlist`, `user`, `settings`, `newsletter`, `donate`, `sitemap`, `about`, `theme` — each a separate blueprint
-
-Templates mirror this structure under `alt2/templates/<blueprint_name>/`.
+One flat module per feature in `alt2/`, each with its own blueprint registered in `create_app()` (`video`, `channel`, `admin`, `auth/` sub-package, `category`, `language`, `playlist`, `user`, `settings`, `newsletter`, `donate`, `sitemap`, `about`, `theme`). Templates mirror this under `alt2/templates/<blueprint_name>/`.
 
 ### Caching pattern
 
@@ -117,7 +110,7 @@ Templates mirror this structure under `alt2/templates/<blueprint_name>/`.
 
 ### Session/preferences
 
-User preferences (locale, theme, playnext, autoplay, looplist) and navbar translations are stored in Flask's server-side session. `util.py` helpers (`get_locale()`, `get_theme()`, etc.) initialise session keys on first access. On login/logout, `login_user_altcen()` / `logout_user_altcen()` sync the session to the `altcen_user.settings` JSON column.
+User preferences (locale, theme, playnext, autoplay, looplist) and navbar translations live in Flask's server-side session, initialised on first access by `util.py` helpers (`get_locale()`, `get_theme()`, …). `login_user_altcen()` / `logout_user_altcen()` sync the session to the `altcen_user.settings` JSON column.
 
 ### Internationalisation
 
@@ -137,10 +130,6 @@ Videos that are deleted on YouTube may be archived at `archive.org/details/youtu
 
 Thumbnail URLs are served through internal proxy paths (`IPROXY`, `IPROXYBIG`, `IPROXYHUGE`, `ACIPROXY`) to avoid hotlinking YouTube's CDN directly. These are configured as env vars.
 
-### Jinja2 template filters
+### Template filters and access control
 
-Defined in `alt2/__init__.py`: `viewdisplay` (compact K/M/B), `commafy`, `hourminsec`, `datetimeformat`, `ia_fname` (IA-safe filename), `linkify`, `nl2br`, `time_diff`, `iso8601duration`.
-
-### Access control decorators
-
-Defined in `util.py`: `login_required`, `admin_login_required`, `email_verified_required`, `contributor_required` — all are plain function decorators (not Flask-Login's), checking `session['user']`.
+Jinja filters are defined in `alt2/__init__.py`. The decorators in `util.py` (`login_required`, `admin_login_required`, `email_verified_required`, `contributor_required`) are plain function decorators, not Flask-Login's; they check `session['user']`.

@@ -31,7 +31,7 @@
                 <![CDATA[
                 <a href="https://{{ config['MYSERVER_NAME'] }}{{ url_for('channel.item', ytc_id=channel['extractor_data']) }}">
                   <img
-                   src="{{ channel['thumbnail_ytapi'] | reverse | replace('88','671', 1) | reverse  }}" >
+                   src="{{ (channel['thumbnail_ytapi'] | reverse | replace('88','671', 1) | reverse) if channel['thumbnail_ytapi'] else config.CHANNEL_THUMB_ERROR_IMAGE }}" >
                   </style>
                 </a>
                 <p>

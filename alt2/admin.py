@@ -63,8 +63,17 @@ _sns_cert_cache = {}
 def _valid_channel_id(channel_id):
     return bool(channel_id and _CHANNEL_ID_RE.match(channel_id))
 
-def _channel_playlist_url(channel_id):
-    return "https://www.youtube.com/playlist?list=UU" + channel_id[2:]
+def _channel_url(channel_id):
+    return "https://www.youtube.com/channel/" + channel_id
+
+# A non-interactive shell doesn't read /etc/profile.d: ytac needs ytac.env, ytac-archive both files
+_YTAC_ENV = 'set -a && . /opt/altcen/ytac.env && . /opt/altcen/altcensored.env && set +a && '
+_BACKGROUND = ' > $HOME/nohup_ssh.out 2>&1 &'
+
+def _ytac_command(inner, background=True):
+    if background:
+        return '(' + _YTAC_ENV + inner + ')' + _BACKGROUND
+    return _YTAC_ENV + inner
 
 def _valid_delta(delta):
     try:
@@ -360,21 +369,15 @@ def add_channel():
         if not _valid_delta(delta):
             flash('Invalid delta value', 'error')
             return render_template('admin/admin_channels.html', title=title, ddays=ddays)
-        action = ' afs '
-        channel_url = _channel_playlist_url(channel_id)
-
-        params1 = ' yt-syncac '
-        params2 = ' -delta '
-        params3 = ' > $HOME/nohup_ssh.out 2>&1 &'
-
-        command = params1 + action + channel_url + params2 + delta + params3
-        commands = [command]
+        inner = ('ytac channel add ' + _channel_url(channel_id) + ' --delta ' + delta
+                 + ' && ytac sync ' + channel_id)
+        commands = [_ytac_command(inner)]
         try:
             local_command(commands)
-            flash(channel_id + " added using afs")
+            flash(channel_id + " add + sync dispatched")
         except Exception:
             logger.exception("local_command failed for add_channel channel_id=%s", channel_id)
-            flash(channel_id + " NOT added using afs")
+            flash(channel_id + " NOT added")
 
     return render_template('admin/admin_channels.html', title=title, ddays=ddays)
 
@@ -422,14 +425,7 @@ def enable_channel():
         if not _valid_channel_id(channel_id):
             flash('Invalid channel ID', 'error')
             return render_template('admin/admin_channels.html', title=title)
-        channel_url = _channel_playlist_url(channel_id)
-        action = ' enable '
-
-        params1 = ' yt-syncac '
-        params2 = ' > $HOME/nohup_ssh.out 2>&1 &'
-
-        command = params1 + action + channel_url + params2
-        commands = [command]
+        commands = [_ytac_command('ytac channel enable ' + channel_id)]
         try:
             local_command(commands)
             flash(channel_id + ' enable dispatched', 'success')
@@ -450,14 +446,7 @@ def disable_channel():
         if not _valid_channel_id(ytc_id):
             flash('Invalid channel ID', 'error')
             return render_template('admin/admin_channels.html', title=title)
-        channel_url = _channel_playlist_url(ytc_id)
-        action = ' disable '
-
-        params1 = ' yt-syncac '
-        params2 = ' > $HOME/nohup_ssh.out 2>&1 &'
-
-        command = params1 + action + channel_url + params2
-        commands = [command]
+        commands = [_ytac_command('ytac channel disable ' + ytc_id)]
         try:
             local_command(commands)
             flash(ytc_id + ' disable dispatched', 'success')
@@ -476,14 +465,7 @@ def resync_channel():
         if not _valid_channel_id(channel_id):
             flash('Invalid channel ID', 'error')
             return render_template('admin/admin_channels.html', title=title)
-        channel_url = _channel_playlist_url(channel_id)
-        action = ' resync '
-
-        params1 = ' yt-syncac '
-        params2 = ' > $HOME/nohup_ssh.out 2>&1 &'
-
-        command = params1 + action + channel_url + params2
-        commands = [command]
+        commands = [_ytac_command('ytac-archive resync ' + channel_id)]
         try:
             local_command(commands)
             flash(channel_id + ' resync dispatched', 'success')
@@ -502,14 +484,7 @@ def remove_channel():
         if not _valid_channel_id(channel_id):
             flash('Invalid channel ID', 'error')
             return render_template('admin/admin_channels.html', title=title)
-        channel_url = _channel_playlist_url(channel_id)
-        action = ' remove '
-
-        params1 = ' yt-syncac '
-        params2 = ' > $HOME/nohup_ssh.out 2>&1 &'
-
-        command = params1 + action + channel_url + params2
-        commands = [command]
+        commands = [_ytac_command('ytac channel remove ' + channel_id)]
         try:
             local_command(commands)
             flash(channel_id + ' remove dispatched', 'success')
@@ -534,13 +509,9 @@ def mirror_channel():
         if not sys_name:
             flash('AC_SSH_HOST not configured', 'error')
             return render_template('admin/admin_channels.html', title=title)
-        channel_url = _channel_playlist_url(channel_id)
-        action = 'mirror '
-        cookie = '-cf $IA_COOKIES '
-        resync = '-ur -i '
-
-        inner = "yt-syncac " + action + channel_url + " " + cookie + resync + "-f"
-        command = "nohup bash -c 'set -a && . /opt/altcen/altcensored.env && set +a && " + inner + "' > /root/nohup_ssh.out 2>&1 &"
+        # ytac-archive mirror always checks each IA item (no -ur) and has no schedule (no -f)
+        inner = 'ytac-archive --cookies "$IA_COOKIES" mirror ' + channel_id + ' -i'
+        command = "nohup bash -c '" + _ytac_command(inner, background=False) + "' > /root/nohup_ssh.out 2>&1 &"
         commands = [command]
         try:
             ssh_command(sys_name, commands, s3_user)
@@ -561,12 +532,7 @@ def status_channel():
         if not _valid_channel_id(channel_id):
             flash('Invalid channel ID', 'error')
             return render_template('admin/admin_channels.html', title=title)
-        channel_url = _channel_playlist_url(channel_id)
-        action = ' status '
-        params1 = ' yt-syncac -q '
-
-        command = params1 + action + channel_url
-        commands = [command]
+        commands = [_ytac_command('ytac channel status ' + channel_id, background=False)]
         try:
             local_command(commands, timeout=120)
         except Exception:

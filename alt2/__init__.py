@@ -344,7 +344,7 @@ def create_app(test_config=None):
             db_session.rollback()
         db_session.remove()
 
-    from . import video, channel, about, category, language, settings, admin, playlist, theme, user, newsletter, donate, sitemap
+    from . import video, channel, about, category, settings, admin, playlist, theme, user, newsletter, donate, sitemap
 
     from alt2.auth import bp as auth_bp
     app.register_blueprint(auth_bp, url_prefix='/auth')
@@ -353,7 +353,6 @@ def create_app(test_config=None):
     app.register_blueprint(channel.bp)
     app.register_blueprint(about.bp)
     app.register_blueprint(category.bp)
-    app.register_blueprint(language.bp)
     app.register_blueprint(settings.bp)
     app.register_blueprint(admin.bp)
     app.register_blueprint(playlist.bp)

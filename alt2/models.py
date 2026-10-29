@@ -1,7 +1,7 @@
 from ytac.db import (
     Base, MaterializedView,
     Video, Source, content_table,
-    Category, Language, Translation, Counter,
+    Category, Translation, Counter,
     AltcenUser as User, Playlist, EmailList,
     Crypto,
     MvVideo, MvChannel, MvCategory, MvPlaylist, MvAltcenUser,

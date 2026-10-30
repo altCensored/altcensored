@@ -177,5 +177,27 @@ Preserving deleted channels, restricted content and suppressed political speech 
   });
 </script>
 
+<script type="text/javascript" nonce="{{ csp_nonce() }}">
+  // The CSP forbids inline onerror/onchange attributes, so images carry
+  // data-fallback and the AutoPlay checkbox carries data-playnext-toggle.
+  // 'error' does not bubble, hence the capture-phase listener.
+  function useFallback(img) {
+    var fb = img.dataset.fallback;
+    if (fb && img.getAttribute('src') !== fb) img.src = fb;
+  }
+  document.addEventListener('error', function(e) {
+    if (e.target.tagName === 'IMG') useFallback(e.target);
+  }, true);
+  window.addEventListener('DOMContentLoaded', function() {
+    // images that failed before this script ran
+    document.querySelectorAll('img[data-fallback]').forEach(function(img) {
+      if (img.complete && img.naturalWidth === 0) useFallback(img);
+    });
+  });
+  document.addEventListener('change', function(e) {
+    if (e.target.matches('[data-playnext-toggle]')) togglePlayNext(e);
+  });
+</script>
+
 </body>
 </html>

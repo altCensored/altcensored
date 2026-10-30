@@ -39,7 +39,7 @@
                                     <div class="thumbnail">
                                         <img style="width:95%"
                                              src="{{ channel_thumb_url(channel) }}"
-                                             onerror="this.onerror=null;this.src='{{ config.CHANNEL_THUMB_ERROR_IMAGE }}';">
+                                             data-fallback="{{ config.CHANNEL_THUMB_ERROR_IMAGE }}">
                                     </div>
                                 </a>
                                                 </div>

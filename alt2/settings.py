@@ -39,8 +39,8 @@ def update_site():
             abort(400)
 
         if session['locale'] != form_locale:
-            row = db_session.query(Translation).with_entities(getattr(Translation, session['locale']),
-                                                              getattr(Translation, form_locale)).all()
+            row = db_session.query(Translation).with_entities(util.translation_column(session['locale']),
+                                                              util.translation_column(form_locale)).all()
             rowtuple = tuple(row)
             navtabs_change_locale = dict(rowtuple)
 
@@ -50,7 +50,7 @@ def update_site():
 
         session['locale'] = form_locale
 
-        row = db_session.query(Translation).with_entities(getattr(Translation, session['locale']), Translation.en).all()
+        row = db_session.query(Translation).with_entities(util.translation_column(session['locale']), Translation.en).all()
         rowtuple = tuple(row)
         navtabs_build_index = dict(rowtuple)
 
@@ -95,7 +95,7 @@ def update_site():
     themes.remove(session['theme'])
 
     session['navtabs'] = util.get_navtabs()
-    navtab_values = db_session.query(Translation).with_entities(getattr(Translation, session['locale'])).all()
+    navtab_values = db_session.query(Translation).with_entities(util.translation_column(session['locale'])).all()
     navtab_values = [r[0] for r in navtab_values]
 
 

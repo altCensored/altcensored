@@ -132,6 +132,22 @@ def admin_client(client):
     return client
 
 
+@pytest.fixture(autouse=True)
+def shell(monkeypatch):
+    """The admin views shell out (local_command, ssh_command). Record the
+    commands instead of running them, on every test, so nothing here can touch
+    the host."""
+    ran = []
+    import alt2.admin
+    import alt2.util
+    for mod in (alt2.admin, alt2.util):
+        monkeypatch.setattr(mod, "local_command",
+                            lambda cmds, timeout=30: ran.extend(cmds))
+        monkeypatch.setattr(mod, "ssh_command",
+                            lambda host, cmds, user="root": ran.extend(cmds))
+    return ran
+
+
 @pytest.fixture()
 def sql(engine):
     """sql("select ...", k=v) -> list of row tuples, for asserting DB state."""

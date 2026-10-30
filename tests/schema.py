@@ -11,6 +11,7 @@ if BACKEND == "legacy":
     CHANNEL_TITLE_COL = "ytc_title"
     VIDEO_TABLE = "entity"
     VIDEO_DELETED = "yt_deleted"
+    AC_VIEWS = "ac_views"          # views counted on our own player
 else:
     CHANNEL_WHERE = "extractor_data = :c"
     CHANNEL_FLAGS = "archive_full, archive_part, archive_latest, deleted"
@@ -19,6 +20,7 @@ else:
     CHANNEL_TITLE_COL = "title"
     VIDEO_TABLE = "video"
     VIDEO_DELETED = "deleted"
+    AC_VIEWS = "view_count_ac"
 
 if BACKEND == "legacy":
     # yt-syncac gets the channel's uploads-playlist URL (UC.. becomes UU..)

@@ -314,12 +314,11 @@ msgid ""
 " be intentionally shared with anyone or anything"
 msgstr ""
 "Los datos que proporcione al sitio web para el propósito de su "
-"funcionamiento (p. ej., un nombre de cuenta, contraseña o lista de "
-"reproducción) se almacenarán en la base de datos del sitio web hasta que "
+"funcionamiento (p. ej., un nombre de cuenta, contraseña o playlist) se almacenarán en la base de datos del sitio web hasta que "
 "el usuario decida eliminarlos. Estos datos no se compartirán "
 "intencionalmente con nadie.Los datos que proporcione al sitio web con el "
 "fin de su funcionamiento (por ejemplo, un nombre de cuenta o una "
-"contraseña, o una lista de reproducción) se almacenarán en la base de "
+"contraseña, o una playlist) se almacenarán en la base de "
 "datos de los sitios web hasta que el usuario decida eliminarlos. Estos "
 "datos no se compartirse intencionalmente con cualquier persona o cosa"
 
@@ -333,9 +332,8 @@ msgid ""
 "hashed password"
 msgstr ""
 "un ID de usuario (para almacenamiento persistente de preferencias y "
-"listas de reproducción) y contraseña cifradauna identificación de usuario"
-" (para el almacenamiento permanente de preferencias y listas de "
-"reproducción) y una contraseña con hash"
+"playlists) y contraseña cifradauna identificación de usuario"
+" (para el almacenamiento permanente de preferencias y playlists) y una contraseña con hash"
 
 #: alt2/templates/about/about_index.html:91
 msgid "a json object containing user preferences"
@@ -851,7 +849,7 @@ msgstr ""
 #: alt2/templates/video/video_search.html:111
 #: alt2/templates/widgets/settings_subnav.html:18
 msgid "Playlist"
-msgstr "Lista de reproducción"
+msgstr "Playlist"
 
 #: alt2/templates/playlist/playlist_item_create_edit.html:41
 #: alt2/templates/playlist/playlist_item_create_edit.html:45
@@ -904,7 +902,7 @@ msgstr "Preferencias de idioma, tema y reproducción"
 #: alt2/templates/settings/settings_index.html:45
 #: alt2/templates/widgets/settings_subnav.html:19
 msgid "Create and manage your playlists"
-msgstr "Crear y gestionar sus listas de reproducción"
+msgstr "Crear y gestionar sus playlists"
 
 #: alt2/templates/settings/settings_index.html:52
 #: alt2/templates/settings/settings_user_update.html:39
@@ -1126,11 +1124,11 @@ msgstr "Admin"
 
 #: alt2/templates/widgets/playlist.html:26
 msgid "Edit playlist"
-msgstr "Editar lista de reproducción"
+msgstr "Editar playlist"
 
 #: alt2/templates/widgets/playlist.html:31
 msgid "Delete playlist"
-msgstr "Eliminar lista de reproducción"
+msgstr "Eliminar playlist"
 
 #: alt2/templates/widgets/playlist.html:48
 msgid "Done adding videos"

@@ -33,6 +33,16 @@ def pytest_configure(config):
     os.environ["VIDEOSERVER_URL"] = "https://videos.test/"
 
 
+def pytest_collection_modifyitems(config, items):
+    """One run covers one schema: skip tests marked for the other backend."""
+    from tests.seed import BACKEND
+    other = "ytac" if BACKEND == "legacy" else "legacy"
+    skip = pytest.mark.skip(reason=f"{other}-only test, backend is {BACKEND}")
+    for item in items:
+        if other in item.keywords:
+            item.add_marker(skip)
+
+
 @pytest.fixture(scope="session")
 def engine():
     from alt2 import models  # noqa: F401  registers every table on Base

@@ -85,3 +85,48 @@ def no_network(monkeypatch):
     import alt2.video
     monkeypatch.setattr(alt2.video, "check_ac_object_exists", boom)
     monkeypatch.setattr(alt2.video, "get_ia_item", boom)
+
+
+@pytest.fixture(autouse=True)
+def outbox(monkeypatch):
+    """Capture outgoing mail instead of sending it. Tests read it as a list of
+    (args, kwargs) calls to send_email."""
+    sent = []
+    import alt2.auth.email
+    monkeypatch.setattr(alt2.auth.email, "send_email",
+                        lambda *a, **k: sent.append((a, k)))
+    return sent
+
+
+@pytest.fixture(autouse=True)
+def _reseed_after_writes(request):
+    """Tests marked ``writes`` get a pristine database again afterwards. A
+    re-seed costs about a second, which is cheaper than being clever."""
+    yield
+    if request.node.get_closest_marker("writes"):
+        from tests import seed
+        seed.setup(request.getfixturevalue("engine"))
+
+
+def login(client, username="alice", password=None, **extra):
+    """Log in through the real /auth/login form, so the session is built by the
+    app's own code on either schema. The GET comes first because
+    login_user_altcen needs the session['navtabs'] a rendered page creates; a
+    cold POST raises KeyError (browsers never send one)."""
+    from tests.seed import PASSWORD
+    client.get("/auth/login")
+    return client.post("/auth/login",
+                       data=dict(username=username,
+                                 password=password or PASSWORD, **extra))
+
+
+@pytest.fixture()
+def user_client(client):
+    assert login(client, "alice").status_code == 302
+    return client
+
+
+@pytest.fixture()
+def admin_client(client):
+    assert login(client, "admin").status_code == 302
+    return client

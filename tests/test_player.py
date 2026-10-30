@@ -8,11 +8,20 @@ IAURL = "https://archive.org/download/youtube-"
 UNAVAILABLE = SERVER + "unavailable/unavailable"
 
 
+# legacy attribute -> ytac attribute; kwargs use the legacy names
+RENAMED = {"exists_ac": "ac_exists", "exists_ia": "ia_exists", "dark_ia": "ia_dark",
+           "restricted_ia": "ia_restricted", "loggedin_ia": "ia_loggedin",
+           "novideo_ia": "ia_novideo", "thumbnail": "thumbnail_ytdlp"}
+
+
 def video(**kw):
+    """A fake MvVideo that answers to both schemas' attribute names."""
     base = dict(exists_ac=None, exists_ia=None, dark_ia=None, restricted_ia=None,
                 loggedin_ia=None, novideo_ia=None, videofile=None, thumbnail=None,
                 extractor_data="abc")
-    return SimpleNamespace(**{**base, **kw})
+    base.update(kw)
+    base.update({new: base[old] for old, new in RENAMED.items()})
+    return SimpleNamespace(**base)
 
 
 @pytest.fixture()

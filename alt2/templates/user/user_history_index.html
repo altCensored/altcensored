@@ -44,7 +44,9 @@
       <div class="pure-u-6-24">
         <div class="pure-g" style="text-align:right">
           <div class="pure-u-1 pure-md-1-1">
-            {% if not playlist %}
+            {% if playlist %}
+            <a class="pure-button pure-button-primary" href="{{ url_for('playlist.item', playlist=playlist.hashid) }}">{{ gettext('Done') }}</a>
+            {% else %}
             <span class="nav-tooltip flip">
                 <a href="{{ url_for('user.clear_history') }}">
                 <i class='ion-md-trash' style="font-size: 24px"></i></a>
@@ -71,4 +73,5 @@
   {% endwith %}
 {% endif %}
 
+{% include "widgets/playlist_done_bar.html" %}
 {% endblock %}

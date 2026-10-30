@@ -132,6 +132,12 @@
         if (!res.ok) throw new Error(res.status);
         icon.className = 'ion-md-checkmark';
         if (tooltip) tooltip.style.display = 'none';
+        // add-to-playlist mode: count this page's adds in the Done bar (see playlist_done_bar.html)
+        var count = document.getElementById('ac-added-count');
+        if (count && btn.classList.contains('js-add-playlist')) {
+          count.textContent = parseInt(count.textContent, 10) + 1;
+          document.getElementById('ac-added').hidden = false;
+        }
       }).catch(function(){
         icon.className = 'ion-md-close';
         setTimeout(function(){ icon.className = before; delete btn.dataset.busy; }, 2000);

@@ -1,6 +1,6 @@
 import logging
 from flask import (
-    Blueprint, session, render_template, request, flash, redirect, url_for, abort
+    Blueprint, session, render_template, request, flash, redirect, url_for, abort, jsonify
 )
 
 logger = logging.getLogger(__name__)
@@ -9,7 +9,7 @@ from sqlalchemy import case
 from sqlalchemy.orm.attributes import flag_modified
 from hashids import Hashids
 from flask_babelplus import lazy_gettext
-import random, timeago, datetime, json
+import random, timeago, datetime
 from datetime import timezone
 from .database import db_session
 from .models import User, Playlist, MvVideo, Counter
@@ -22,6 +22,7 @@ bp = Blueprint('playlist', __name__, url_prefix='/playlist')
 
 no_profanity = lazy_gettext('Profanity forbidden')
 title_exist = lazy_gettext('Title exists')
+list_full = lazy_gettext('List is full')
 
 PER_PAGE = 24
 FLASH_MSG = config.FLASH_MSG
@@ -231,6 +232,16 @@ def edit(playlist):
     return render_template('playlist/playlist_item_create_edit.html', playlist=playlist)
 
 
+def _commit_or_flash(message):
+    try:
+        db_session.commit()
+        return True
+    except Exception:
+        db_session.rollback()
+        flash(message, 'error')
+        return False
+
+
 @bp.route('/add_video_playlist', methods=['GET', 'POST'])
 @login_required
 def add_video_playlist():
@@ -244,19 +255,13 @@ def add_video_playlist():
         playlist_ident = request.args.get('playlist', None)
         playlist = Playlist.query.filter(Playlist.hashid == playlist_ident).scalar()
 
+    if not util.valid_video_id(video_id):
+        abort(400)
+
     if playlist_ident == 'add_to_watchlater':
-        user = db_session.get(User, session['user']['id'])
-        if user.watchlater is None:
-            user.watchlater = [video_id]
-        elif video_id not in user.watchlater:
-            user.watchlater.append(video_id)
-        user.updated = datetime.datetime.now(timezone.utc)
-        flag_modified(user, "watchlater")
-        try:
-            db_session.commit()
-        except Exception:
-            db_session.rollback()
-            flash(lazy_gettext('Error updating watchlater'), 'error')
+        result = util.add_to_watchlater(session['user']['id'], video_id)
+        if _commit_or_flash(lazy_gettext('Error updating watchlater')) and result == 'full':
+            flash(list_full, 'error')
         return redirect(url_for('video.watch', v=video_id))
 
     if playlist is None:
@@ -264,23 +269,9 @@ def add_video_playlist():
     if playlist.user_id != session['user']['id']:
         abort(403)
 
-    if playlist.videos is None:
-        playlist.videos = [video_id]
-    elif video_id not in playlist.videos:
-        playlist.videos.append(video_id)
-
-    if not playlist.featured_video_id:
-        playlist.featured_video_id = video_id
-
-    now = datetime.datetime.now(timezone.utc)
-    playlist.updated = now
-    playlist.video_count = len(playlist.videos)
-    flag_modified(playlist, "videos")
-    try:
-        db_session.commit()
-    except Exception:
-        db_session.rollback()
-        flash(lazy_gettext('Error updating playlist'), 'error')
+    result = util.add_to_playlist(playlist.id, video_id)
+    if _commit_or_flash(lazy_gettext('Error updating playlist')) and result == 'full':
+        flash(list_full, 'error')
 
     if request.method == 'POST':
         return redirect(url_for('video.watch', v=video_id))
@@ -292,36 +283,29 @@ def add_video_playlist():
 @login_required
 def add_video_playlist_post():
     if request.method == 'POST':
-        data = json.loads(request.data)
+        data = request.get_json(silent=True)
+        if not isinstance(data, dict) or not util.valid_video_id(data.get('v')) \
+                or not isinstance(data.get('p'), str):
+            return jsonify(error='bad request'), 400
         v = data['v']
-        p = data['p']
-        playlist = Playlist.query.filter(Playlist.hashid == p).scalar()
+        playlist = Playlist.query.filter(Playlist.hashid == data['p']).scalar()
 
         if playlist is None:
-            return json.dumps({'error': 'not found'}), 404
+            return jsonify(error='not found'), 404
         if playlist.user_id != session['user']['id']:
-            return json.dumps({'error': 'forbidden'}), 403
+            return jsonify(error='forbidden'), 403
 
-        if playlist.videos is None:
-            playlist.videos = [v]
-        elif v not in playlist.videos:
-            playlist.videos.append(v)
-
-        if not playlist.featured_video_id:
-            playlist.featured_video_id = v
-
-        now = datetime.datetime.now(timezone.utc)
-        playlist.updated = now
-        playlist.video_count = len(playlist.videos)
-        flag_modified(playlist, "videos")
+        result = util.add_to_playlist(playlist.id, v)
         try:
             db_session.commit()
-            return json.dumps({'v': v})
         except Exception:
             db_session.rollback()
-            return json.dumps({'error': 'db error'}), 500
+            return jsonify(error='db error'), 500
+        if result == 'full':
+            return jsonify(error='list full'), 409
+        return jsonify(v=v)
     else:
-        return json.dumps({})
+        return jsonify()
 
 
 @bp.route('/remove_video_playlist')

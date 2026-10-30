@@ -241,7 +241,7 @@ def watch():
         plists = db_session.query(Playlist).filter(Playlist.user_id == user.id)
 
         for plist in plists:
-            if video_id not in plist.videos:
+            if video_id not in (plist.videos or []):
                 playlist_titles.append(plist.title)
 
     #    if FLASH_MSG is not None:

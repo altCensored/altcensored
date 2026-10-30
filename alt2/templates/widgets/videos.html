@@ -109,55 +109,45 @@
 
 
 <script type="application/javascript" nonce="{{ csp_nonce() }}">
-  function add_video_WatchLater(vid){
-    fetch('{{ url_for('user.add_video_watchlater_post') }}', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': '{{ csrf_token() }}'
-      },
-      body: JSON.stringify({
-        'v': vid
-      })
-    });
-    var ttip = "ttip"
-    var ttipid = ttip.concat(vid);
-    var watchlaterIcon = document.getElementById(vid);
-    watchlaterIcon.className="ion-md-checkmark";
-    var tooltip = watchlaterIcon.parentNode.parentNode.querySelector('.tooltip');
-    tooltip.style.display = 'none';
-  }
-
-  function add_video_PlayList(vid, plist){
-    fetch('{{ url_for('playlist.add_video_playlist_post') }}', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': '{{ csrf_token() }}'
-      },
-      body: JSON.stringify({
-        'v': vid,
-        'p': plist
-      })
-    });
-    var ttip = "ttip"
-    var ttipid = ttip.concat(vid);
-    var playlistIcon = document.getElementById(vid);
-    playlistIcon.className="ion-md-checkmark";
-    var tooltip = playlistIcon.parentNode.parentNode.querySelector('.tooltip');
-    tooltip.style.display = 'none';
-  }
-
   // The CSP forbids inline onclick attributes, so the buttons carry data-* hooks.
   // The buttons sit inside the thumbnail's <a href>; stop the click navigating away.
-  document.addEventListener('click', function(e){
-    var pl = e.target.closest('.js-add-playlist');
-    var wl = e.target.closest('.js-add-watchlater');
-    if (!pl && !wl) return;
-    e.preventDefault();
-    e.stopPropagation();
-    if (pl) add_video_PlayList(pl.dataset.v, pl.dataset.p);
-    else add_video_WatchLater(wl.dataset.v);
-  });
+  // This file can be included more than once per page; register the listener once.
+  if (!window.acAddButtons) {
+    window.acAddButtons = true;
+    var AC_WATCHLATER_URL = '{{ url_for('user.add_video_watchlater_post') }}';
+    var AC_PLAYLIST_URL = '{{ url_for('playlist.add_video_playlist_post') }}';
+    var AC_CSRF = '{{ csrf_token() }}';
 
+    // Switch the icon to a check mark only once the server confirms; show a cross on failure.
+    function acAdd(btn, url, payload){
+      var icon = btn.querySelector('i');
+      var before = icon.className;
+      var tooltip = btn.querySelector('.tooltip');
+      btn.dataset.busy = '1';
+      fetch(url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'X-CSRFToken': AC_CSRF},
+        body: JSON.stringify(payload)
+      }).then(function(res){
+        if (!res.ok) throw new Error(res.status);
+        icon.className = 'ion-md-checkmark';
+        if (tooltip) tooltip.style.display = 'none';
+      }).catch(function(){
+        icon.className = 'ion-md-close';
+        setTimeout(function(){ icon.className = before; delete btn.dataset.busy; }, 2000);
+      });
+    }
+
+    document.addEventListener('click', function(e){
+      var btn = e.target.closest('.js-add-playlist, .js-add-watchlater');
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if (btn.dataset.busy) return;
+      if (btn.classList.contains('js-add-playlist'))
+        acAdd(btn, AC_PLAYLIST_URL, {v: btn.dataset.v, p: btn.dataset.p});
+      else
+        acAdd(btn, AC_WATCHLATER_URL, {v: btn.dataset.v});
+    });
+  }
 </script>

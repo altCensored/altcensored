@@ -1,6 +1,6 @@
 import logging
 from flask import (
-    Blueprint, session, render_template, flash, redirect, request, url_for, abort)
+    Blueprint, session, render_template, flash, redirect, request, url_for, abort, jsonify)
 
 logger = logging.getLogger(__name__)
 from sqlalchemy import func, case, update
@@ -11,7 +11,7 @@ from .models import User, MvVideo, Playlist, Counter
 from .pagination import Pagination
 from . import util
 from .util import login_required, get_usercount, users_newest, users_popular
-import datetime, json
+import datetime
 
 bp = Blueprint('user', __name__, url_prefix='/user' )
 
@@ -209,19 +209,17 @@ def watchlater(page):
 @login_required
 def add_video_watchlater():
     video_id = request.args.get('v', None)
-    user = User.query.filter(User.id == session['user']['id']).scalar()
-
-    if user.watchlater is None:
-        user.watchlater = [video_id]
-    elif video_id not in user.watchlater:
-        user.watchlater.append(video_id)
-    user.updated = datetime.datetime.now(datetime.timezone.utc)
-    flag_modified(user, "watchlater")
+    if not util.valid_video_id(video_id):
+        abort(400)
+    result = util.add_to_watchlater(session['user']['id'], video_id)
     try:
         db_session.commit()
     except Exception:
         db_session.rollback()
         flash(lazy_gettext('Error updating watchlater'), 'error')
+    else:
+        if result == 'full':
+            flash(lazy_gettext('List is full'), 'error')
     return redirect(util.safe_next())
 
 
@@ -229,22 +227,20 @@ def add_video_watchlater():
 @login_required
 def add_video_watchlater_post():
     if request.method == 'POST':
-        data = json.loads(request.data)
+        data = request.get_json(silent=True)
+        if not isinstance(data, dict) or not util.valid_video_id(data.get('v')):
+            return jsonify(error='bad request'), 400
         v = data['v']
-        user = User.query.filter(User.id == session['user']['id']).scalar()
-        if user.watchlater is None:
-            user.watchlater = [v]
-        elif v not in user.watchlater:
-            user.watchlater.append(v)
-        user.updated = datetime.datetime.now(datetime.timezone.utc)
-        flag_modified(user, "watchlater")
+        result = util.add_to_watchlater(session['user']['id'], v)
         try:
             db_session.commit()
-            return json.dumps({'v': v})
         except Exception:
             db_session.rollback()
-            return json.dumps({'error': 'db error'}), 500
-    return json.dumps({})
+            return jsonify(error='db error'), 500
+        if result == 'full':
+            return jsonify(error='list full'), 409
+        return jsonify(v=v)
+    return jsonify()
 
 
 @bp.route('/remove_video_watchlater')

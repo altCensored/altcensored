@@ -188,7 +188,7 @@
             <div class="h-box">
               <a href="{{ url_for('channel.item', ytc_id=video['ytc_id']) }}">
                 <img src="{{ channel_thumb_url(channel) }}" height="35" width="35"
-                onerror="this.onerror=null;this.src='{{ config.CHANNEL_THUMB_ERROR_IMAGE }}';">
+                data-fallback="{{ config.CHANNEL_THUMB_ERROR_IMAGE }}">
               </a>&nbsp; &nbsp;
                 <h3 style="display:inline"><a href="{{ url_for('channel.item', ytc_id=video['ytc_id']) }}">{{ video['ytc_title'] }}
               </a></h3>&nbsp;
@@ -209,10 +209,10 @@
                 <form method="post" action="">
                     {% if playnext %}
                           <input type="checkbox" id="playnext" name="playnext" value="True" form="addtoplaylist" \
-                            checked onchange="togglePlayNext(event);"
+                            checked data-playnext-toggle>
                     {% else %}
                           <input type="checkbox" id="playnext" name="playnext" value="False" form="addtoplaylist" \
-                            onchange="togglePlayNext(event);">
+                            data-playnext-toggle>
                     {% endif %}
                     <label for playnext>&nbsp;&nbsp;{{ gettext('AutoPlay Next Video') }} </label>
                 </form>

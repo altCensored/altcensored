@@ -8,7 +8,7 @@ altCensored.com is a Flask/PostgreSQL site that archives censored or deleted You
 
 - **This clone is on prod www.** `/home/lc/src/altcensored` has no `.venv` and there is no dev server in this stack. Never point a dev server at the prod DB. For offline checks use prod's interpreter, `/opt/altcen/altcensored/venv/bin/python` (import modules, or the Flask test client).
 - **Production** is gunicorn behind nginx, with no Docker, from the root-owned checkout `/opt/altcen/altcensored` (venv `venv/`). `docker-compose.yml` is for a separate dev machine only.
-- **No tests** exist for this app. Check changes by hand against the database. The private `ytac` package has its own pytest suite, and its `tests/integration/` creates and **drops every table** in `YTAC_TEST_DATABASE_URL`, so never point that at a real database.
+- **Tests** live in `tests/` (pytest, a real app against a seeded PostgreSQL). They run on **www2**, never here: they need a dedicated database whose name ends in `_test` and **drop every table** in it. See `tests/README.md` for the command. The same suite runs on master and on `ytac-cutover`. They cover the main pages, the player-source logic and the cookie/locale helpers; logged-in flows, playlists and admin are untested, so check those by hand. `scripts/parity_player.py` compares playback data between the legacy and ytac databases. The private `ytac` package has its own suite, and its `tests/integration/` also **drops every table** in `YTAC_TEST_DATABASE_URL`, so never point that at a real database.
 - Video playback is the site's core purpose. Treat any video-serving fault as top priority, and follow the "one change at a time" rule in the global `CLAUDE.md`.
 
 ## Workflow

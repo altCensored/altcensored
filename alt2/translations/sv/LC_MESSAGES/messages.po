@@ -33,9 +33,8 @@ msgid "altCensored.com Reset Your Password"
 msgstr "altCensored.com Återställ ditt lösenord"
 
 #: alt2/auth/forms.py:11
-#, fuzzy
 msgid "Email / Username"
-msgstr "Användarnamn"
+msgstr "E-post / Användarnamn"
 
 #: alt2/auth/forms.py:12 alt2/auth/forms.py:20 alt2/auth/forms.py:22
 #: alt2/auth/forms.py:23 alt2/auth/forms.py:41 alt2/auth/forms.py:45
@@ -82,19 +81,16 @@ msgid "Please use a different email address."
 msgstr "Använd en annan e-postadress."
 
 #: alt2/auth/forms.py:40
-#, fuzzy
 msgid "Email or Username"
-msgstr "Användarnamn"
+msgstr "E-post eller användarnamn"
 
 #: alt2/auth/forms.py:41 alt2/auth/forms.py:49
-#, fuzzy
 msgid "Request Password Reset"
-msgstr "Återställ lösenord"
+msgstr "Begär återställning av lösenord"
 
 #: alt2/auth/forms.py:47
-#, fuzzy
 msgid "Repeat Password"
-msgstr "Återställ lösenord"
+msgstr "Upprepa lösenord"
 
 #: alt2/auth/routes.py:49
 msgid "Invalid username or password"
@@ -137,9 +133,8 @@ msgid "Thank-you for confirming your account"
 msgstr "Tack för att du bekräftade ditt konto"
 
 #: alt2/auth/routes.py:177
-#, fuzzy
 msgid "Delete User"
-msgstr "Uppdatera användare"
+msgstr "Ta bort användare"
 
 #: alt2/templates/base.html:61 alt2/templates/base_nomessages.html:63
 #: alt2/templates/widgets/playlist.html:116
@@ -287,9 +282,8 @@ msgid "Email new channel suggestions to"
 msgstr "E-posta nya kanalförslag till"
 
 #: alt2/templates/about/about_index.html:76
-#, fuzzy
 msgid " together we <b>show what they hide</b>."
-msgstr "(tillsammans visar vi vad de döljer)"
+msgstr " tillsammans visar vi <b>vad de döljer</b>."
 
 #: alt2/templates/about/about_index.html:81
 msgid "Privacy Policy"
@@ -527,9 +521,8 @@ msgid "Download videos with \"right mouse button click\" inside the video window
 msgstr "Ladda ner videor med \"högerklick\" i videofönstret"
 
 #: alt2/templates/about/about_index.html:234
-#, fuzzy
 msgid "Creator Guide"
-msgstr "Skapad"
+msgstr "Guide för skapare"
 
 #: alt2/templates/about/about_index.html:236
 msgid "Press Kit"
@@ -638,9 +631,8 @@ msgstr "Censurerad"
 #: alt2/templates/channel/channel_index.html:117
 #: alt2/templates/channel/channel_item.html:49
 #: alt2/templates/video/video_search.html:52
-#, fuzzy
 msgid "Archived"
-msgstr "Arkiv"
+msgstr "Arkiverade"
 
 #: alt2/templates/channel/channel_index.html:120
 #: alt2/templates/channel/channel_item.html:51
@@ -706,9 +698,8 @@ msgstr "Del"
 
 #: alt2/templates/channel/channel_index.html:137
 #: alt2/templates/video/video_search.html:73
-#, fuzzy
 msgid "Latest"
-msgstr "senaste"
+msgstr "Senaste"
 
 #: alt2/templates/channel/channel_index.html:138
 #: alt2/templates/video/video_search.html:74
@@ -734,18 +725,16 @@ msgid "Stats"
 msgstr "Statistik"
 
 #: alt2/templates/channel/channel_item.html:61
-#, fuzzy
 msgid "Created:"
-msgstr "Skapad"
+msgstr "Skapad:"
 
 #: alt2/templates/channel/channel_item.html:62
 msgid "Added"
 msgstr "Tillagd"
 
 #: alt2/templates/channel/channel_item.html:65
-#, fuzzy
 msgid "Deleted:"
-msgstr "Borttagen"
+msgstr "Borttagen:"
 
 #: alt2/templates/donate/donate_index.html:29
 msgid "Expenses Increase 2024"

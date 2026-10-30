@@ -129,10 +129,12 @@ def history(page):
                            videos=videos, videocount=videocount, playlist=playlist, watchlater=user.watchlater)
 
 
-@bp.route('/remove_video_history')
+@bp.route('/remove_video_history', methods=['POST'])
 @login_required
 def remove_video_history():
-    video_id = request.args.get('v', None)
+    video_id = request.form.get('v')
+    if not util.valid_video_id(video_id):
+        abort(400)
     try:
         db_session.execute(
             update(User)
@@ -205,10 +207,10 @@ def watchlater(page):
                            videos=videos, videocount=videocount, playlist=playlist, watchlater=user.watchlater)
 
 
-@bp.route('/add_video_watchlater')
+@bp.route('/add_video_watchlater', methods=['POST'])
 @login_required
 def add_video_watchlater():
-    video_id = request.args.get('v', None)
+    video_id = request.form.get('v')
     if not util.valid_video_id(video_id):
         abort(400)
     result = util.add_to_watchlater(session['user']['id'], video_id)
@@ -223,30 +225,30 @@ def add_video_watchlater():
     return redirect(util.safe_next())
 
 
-@bp.route('/add_video_watchlater_post', methods=['GET', 'POST'])
+@bp.route('/add_video_watchlater_post', methods=['POST'])
 @login_required
 def add_video_watchlater_post():
-    if request.method == 'POST':
-        data = request.get_json(silent=True)
-        if not isinstance(data, dict) or not util.valid_video_id(data.get('v')):
-            return jsonify(error='bad request'), 400
-        v = data['v']
-        result = util.add_to_watchlater(session['user']['id'], v)
-        try:
-            db_session.commit()
-        except Exception:
-            db_session.rollback()
-            return jsonify(error='db error'), 500
-        if result == 'full':
-            return jsonify(error='list full'), 409
-        return jsonify(v=v)
-    return jsonify()
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict) or not util.valid_video_id(data.get('v')):
+        return jsonify(error='bad request'), 400
+    v = data['v']
+    result = util.add_to_watchlater(session['user']['id'], v)
+    try:
+        db_session.commit()
+    except Exception:
+        db_session.rollback()
+        return jsonify(error='db error'), 500
+    if result == 'full':
+        return jsonify(error='list full'), 409
+    return jsonify(v=v)
 
 
-@bp.route('/remove_video_watchlater')
+@bp.route('/remove_video_watchlater', methods=['POST'])
 @login_required
 def remove_video_watchlater():
-    video_id = request.args.get('v', None)
+    video_id = request.form.get('v')
+    if not util.valid_video_id(video_id):
+        abort(400)
     try:
         db_session.execute(
             update(User)

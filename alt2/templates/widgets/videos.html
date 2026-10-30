@@ -36,7 +36,7 @@
                         </a>
                       {% endif %}
                     {% else %}
-                      <a class="action" href="{{ url_for('playlist.remove_video_playlist')}}?v={{video.extractor_data}}&playlist={{playlist.hashid}}&{{url_orig}}={{ current_url }}">
+                      <a class="action js-post" href="#" data-action="{{ url_for('playlist.remove_video_playlist') }}" data-v="{{ video.extractor_data }}" data-playlist="{{ playlist.hashid }}">
                         <p class="watched"> <i class='ion-md-trash' style="font-size: 30px"></p></i>
                       </a>
                     {% endif %}
@@ -57,11 +57,11 @@
                         <p id="ttip{{ video.extractor_data }}" class="tooltip">{{ gettext('Add to WatchLater') }}</p>
                     </a>
                   {% endif %}
-                  <a class="action" href="{{ url_for('user.remove_video_history')}}?v={{video.extractor_data}}&{{url_orig}}={{ current_url }}">
+                  <a class="action js-post" href="#" data-action="{{ url_for('user.remove_video_history') }}" data-v="{{ video.extractor_data }}">
                     <p class="watched"> <i class='ion-md-trash' style="font-size: 30px"></p></i>
                   </a>
                 {% elif userlist == 'watchlater' %}
-                  <a class="action" href="{{ url_for('user.remove_video_watchlater')}}?v={{video.extractor_data}}&{{url_orig}}={{ current_url }}">
+                  <a class="action js-post" href="#" data-action="{{ url_for('user.remove_video_watchlater') }}" data-v="{{ video.extractor_data }}">
                     <p class="watched"> <i class='ion-md-trash' style="font-size: 30px"></p></i>
                   </a>
                 {% else%}
@@ -138,7 +138,30 @@
       });
     }
 
+    // Data-changing links are POST-only with a CSRF token: build and submit a form.
+    function acPost(a){
+      var f = document.createElement('form');
+      f.method = 'POST';
+      f.action = a.dataset.action;
+      var fields = {csrf_token: AC_CSRF, original_url: location.href, v: a.dataset.v};
+      if (a.dataset.playlist) fields.playlist = a.dataset.playlist;
+      Object.keys(fields).forEach(function(k){
+        var i = document.createElement('input');
+        i.type = 'hidden'; i.name = k; i.value = fields[k];
+        f.appendChild(i);
+      });
+      document.body.appendChild(f);
+      f.submit();
+    }
+
     document.addEventListener('click', function(e){
+      var post = e.target.closest('.js-post');
+      if (post) {
+        e.preventDefault();
+        e.stopPropagation();
+        acPost(post);
+        return;
+      }
       var btn = e.target.closest('.js-add-playlist, .js-add-watchlater');
       if (!btn) return;
       e.preventDefault();

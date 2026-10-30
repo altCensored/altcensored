@@ -12,6 +12,8 @@ if BACKEND == "legacy":
     VIDEO_TABLE = "entity"
     VIDEO_DELETED = "yt_deleted"
     AC_VIEWS = "ac_views"          # views counted on our own player
+    IA_THUMB = "thumbnail"         # get_ia_item stores the IA image filename here
+    IA_NOVIDEO = "novideo_ia"
 else:
     CHANNEL_WHERE = "extractor_data = :c"
     CHANNEL_FLAGS = "archive_full, archive_part, archive_latest, deleted"
@@ -21,6 +23,8 @@ else:
     VIDEO_TABLE = "video"
     VIDEO_DELETED = "deleted"
     AC_VIEWS = "view_count_ac"
+    IA_THUMB = "thumbnail_ytdlp"
+    IA_NOVIDEO = "ia_novideo"
 
 if BACKEND == "legacy":
     # yt-syncac gets the channel's uploads-playlist URL (UC.. becomes UU..)

@@ -130,3 +130,20 @@ def user_client(client):
 def admin_client(client):
     assert login(client, "admin").status_code == 302
     return client
+
+
+@pytest.fixture()
+def sql(engine):
+    """sql("select ...", k=v) -> list of row tuples, for asserting DB state."""
+    from sqlalchemy import text
+
+    def run(query, **params):
+        with engine.connect() as c:
+            return [tuple(r) for r in c.execute(text(query), params)]
+    return run
+
+
+def flashes(client):
+    """Flash messages queued in the session as (category, message) pairs."""
+    with client.session_transaction() as s:
+        return [tuple(f) for f in s.get("_flashes", [])]

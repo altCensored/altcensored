@@ -56,6 +56,7 @@ def setup(engine):
         real = [t for n, t in Base.metadata.tables.items()
                 if not n.startswith("mv_")]
         Base.metadata.create_all(engine, tables=real)
+        _match_prod_account_timestamps(engine)
         with engine.begin() as conn:
             conn.exec_driver_sql((FIXTURES / "matviews.sql").read_text())
         _load_legacy(engine)
@@ -69,6 +70,23 @@ def setup(engine):
     _load_accounts(engine)
     _load_ui_text(engine)
     refresh_matviews(engine)
+
+
+def _match_prod_account_timestamps(engine):
+    """altcen_models declares naive DATETIME, but prod's account tables are
+    timestamptz (migrations/*_add_user_accounts.sql). Without this the playlist
+    page 500s on a naive/aware subtraction here and never in prod."""
+    with engine.begin() as conn:
+        for table in ("altcen_user", "playlist", "email_list"):
+            cols = conn.exec_driver_sql(
+                "SELECT column_name FROM information_schema.columns "
+                "WHERE table_schema='public' AND table_name=%s "
+                "AND data_type='timestamp without time zone'", (table,)
+            ).scalars().all()
+            for col in cols:
+                conn.exec_driver_sql(
+                    f'ALTER TABLE {table} ALTER COLUMN "{col}" '
+                    f'TYPE timestamptz USING "{col}" AT TIME ZONE \'UTC\'')
 
 
 def wipe(engine):

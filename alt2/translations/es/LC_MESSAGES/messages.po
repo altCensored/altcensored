@@ -1140,7 +1140,7 @@ msgstr "Añadir videos a la lista"
 
 #: alt2/templates/widgets/playlist_done_bar.html:14
 msgid "added"
-msgstr "añadidos"
+msgstr "agregados"
 
 #: alt2/templates/widgets/videos.html:48 alt2/templates/widgets/videos.html:57
 #: alt2/templates/widgets/videos.html:72

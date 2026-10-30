@@ -31,9 +31,8 @@ msgid "altCensored.com Reset Your Password"
 msgstr "altCensored.com Reimposta la tua password"
 
 #: alt2/auth/forms.py:11
-#, fuzzy
 msgid "Email / Username"
-msgstr "Nome utente"
+msgstr "Email / Nome utente"
 
 #: alt2/auth/forms.py:12 alt2/auth/forms.py:20 alt2/auth/forms.py:22
 #: alt2/auth/forms.py:23 alt2/auth/forms.py:41 alt2/auth/forms.py:45
@@ -80,19 +79,16 @@ msgid "Please use a different email address."
 msgstr "Utilizza un indirizzo email diverso."
 
 #: alt2/auth/forms.py:40
-#, fuzzy
 msgid "Email or Username"
-msgstr "Nome utente"
+msgstr "Email o nome utente"
 
 #: alt2/auth/forms.py:41 alt2/auth/forms.py:49
-#, fuzzy
 msgid "Request Password Reset"
-msgstr "Reimposta password"
+msgstr "Richiedi la reimpostazione della password"
 
 #: alt2/auth/forms.py:47
-#, fuzzy
 msgid "Repeat Password"
-msgstr "Reimposta password"
+msgstr "Ripeti la password"
 
 #: alt2/auth/routes.py:49
 msgid "Invalid username or password"
@@ -119,9 +115,8 @@ msgid "The password reset link is invalid or has expired."
 msgstr "Il link per reimpostare la password non è valido o è scaduto."
 
 #: alt2/auth/routes.py:132
-#, fuzzy
 msgid "Your password has been reset."
-msgstr "La password è stata aggiornata"
+msgstr "La password è stata reimpostata."
 
 #: alt2/auth/routes.py:142 alt2/auth/routes.py:148
 msgid "The confirmation link is invalid or has expired"
@@ -136,9 +131,8 @@ msgid "Thank-you for confirming your account"
 msgstr "Grazie per aver confermato il tuo account"
 
 #: alt2/auth/routes.py:177
-#, fuzzy
 msgid "Delete User"
-msgstr "Aggiorna utente"
+msgstr "Elimina utente"
 
 #: alt2/templates/base.html:61 alt2/templates/base_nomessages.html:63
 #: alt2/templates/widgets/playlist.html:116
@@ -289,9 +283,8 @@ msgid "Email new channel suggestions to"
 msgstr "Invia suggerimenti per nuovi canali via e-mail a"
 
 #: alt2/templates/about/about_index.html:76
-#, fuzzy
 msgid " together we <b>show what they hide</b>."
-msgstr "(insieme mostriamo ciò che nascondono)"
+msgstr " insieme mostriamo <b>ciò che nascondono</b>."
 
 #: alt2/templates/about/about_index.html:81
 msgid "Privacy Policy"
@@ -573,9 +566,8 @@ msgstr ""
 "Torrent\" link"
 
 #: alt2/templates/about/about_index.html:234
-#, fuzzy
 msgid "Creator Guide"
-msgstr "Creato"
+msgstr "Guida per i creatori"
 
 #: alt2/templates/about/about_index.html:236
 msgid "Press Kit"
@@ -684,9 +676,8 @@ msgstr "Censurato"
 #: alt2/templates/channel/channel_index.html:117
 #: alt2/templates/channel/channel_item.html:49
 #: alt2/templates/video/video_search.html:52
-#, fuzzy
 msgid "Archived"
-msgstr "Archivio"
+msgstr "Archiviati"
 
 #: alt2/templates/channel/channel_index.html:120
 #: alt2/templates/channel/channel_item.html:51
@@ -752,9 +743,8 @@ msgstr "Parte"
 
 #: alt2/templates/channel/channel_index.html:137
 #: alt2/templates/video/video_search.html:73
-#, fuzzy
 msgid "Latest"
-msgstr "ultimo"
+msgstr "Ultimo"
 
 #: alt2/templates/channel/channel_index.html:138
 #: alt2/templates/video/video_search.html:74
@@ -780,18 +770,16 @@ msgid "Stats"
 msgstr "Statistiche"
 
 #: alt2/templates/channel/channel_item.html:61
-#, fuzzy
 msgid "Created:"
-msgstr "Creato"
+msgstr "Creato:"
 
 #: alt2/templates/channel/channel_item.html:62
 msgid "Added"
 msgstr "Aggiunto"
 
 #: alt2/templates/channel/channel_item.html:65
-#, fuzzy
 msgid "Deleted:"
-msgstr "Cancellato"
+msgstr "Cancellato:"
 
 #: alt2/templates/donate/donate_index.html:29
 msgid "Expenses Increase 2024"
@@ -929,9 +917,8 @@ msgid "Select the colour theme for the site."
 msgstr "Seleziona il tema colore del sito."
 
 #: alt2/templates/settings/settings_site.html:49
-#, fuzzy
 msgid "Auto Play"
-msgstr "Aggiungi alla playlist"
+msgstr "Riproduzione automatica"
 
 #: alt2/templates/settings/settings_site.html:49
 msgid "Automatically start playing a video when its page loads."
@@ -1090,9 +1077,8 @@ msgid "censored"
 msgstr "censurato"
 
 #: alt2/templates/video/video_item.html:128
-#, fuzzy
 msgid "Status on"
-msgstr "Statistiche"
+msgstr "Stato su"
 
 #: alt2/templates/video/video_item.html:159
 #: alt2/templates/widgets/videos.html:35

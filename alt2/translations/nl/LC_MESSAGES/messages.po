@@ -31,9 +31,8 @@ msgid "altCensored.com Reset Your Password"
 msgstr "altCensored.com Wachtwoord opnieuw instellen"
 
 #: alt2/auth/forms.py:11
-#, fuzzy
 msgid "Email / Username"
-msgstr "Gebruikersnaam"
+msgstr "E-mail / Gebruikersnaam"
 
 #: alt2/auth/forms.py:12 alt2/auth/forms.py:20 alt2/auth/forms.py:22
 #: alt2/auth/forms.py:23 alt2/auth/forms.py:41 alt2/auth/forms.py:45
@@ -80,19 +79,16 @@ msgid "Please use a different email address."
 msgstr "Gebruik een ander e-mailadres."
 
 #: alt2/auth/forms.py:40
-#, fuzzy
 msgid "Email or Username"
-msgstr "Gebruikersnaam"
+msgstr "E-mail of gebruikersnaam"
 
 #: alt2/auth/forms.py:41 alt2/auth/forms.py:49
-#, fuzzy
 msgid "Request Password Reset"
-msgstr "Wachtwoord opnieuw instellen"
+msgstr "Wachtwoord opnieuw instellen aanvragen"
 
 #: alt2/auth/forms.py:47
-#, fuzzy
 msgid "Repeat Password"
-msgstr "Wachtwoord opnieuw instellen"
+msgstr "Herhaal wachtwoord"
 
 #: alt2/auth/routes.py:49
 msgid "Invalid username or password"
@@ -137,9 +133,8 @@ msgid "Thank-you for confirming your account"
 msgstr "Bedankt voor het bevestigen van uw account"
 
 #: alt2/auth/routes.py:177
-#, fuzzy
 msgid "Delete User"
-msgstr "Gebruiker bijwerken"
+msgstr "Gebruiker verwijderen"
 
 #: alt2/templates/base.html:61 alt2/templates/base_nomessages.html:63
 #: alt2/templates/widgets/playlist.html:116
@@ -289,9 +284,8 @@ msgid "Email new channel suggestions to"
 msgstr "E-mail nieuwe kanaalsuggesties naar"
 
 #: alt2/templates/about/about_index.html:76
-#, fuzzy
 msgid " together we <b>show what they hide</b>."
-msgstr "\"samen laten we zien wat ze verbergen\""
+msgstr " samen laten we <b>zien wat ze verbergen</b>."
 
 #: alt2/templates/about/about_index.html:81
 msgid "Privacy Policy"
@@ -535,9 +529,8 @@ msgstr ""
 "videovenster"
 
 #: alt2/templates/about/about_index.html:234
-#, fuzzy
 msgid "Creator Guide"
-msgstr "Gemaakt"
+msgstr "Handleiding voor makers"
 
 #: alt2/templates/about/about_index.html:236
 msgid "Press Kit"
@@ -646,9 +639,8 @@ msgstr "Gecensureerd"
 #: alt2/templates/channel/channel_index.html:117
 #: alt2/templates/channel/channel_item.html:49
 #: alt2/templates/video/video_search.html:52
-#, fuzzy
 msgid "Archived"
-msgstr "Archief"
+msgstr "Gearchiveerd"
 
 #: alt2/templates/channel/channel_index.html:120
 #: alt2/templates/channel/channel_item.html:51
@@ -714,9 +706,8 @@ msgstr "Deel"
 
 #: alt2/templates/channel/channel_index.html:137
 #: alt2/templates/video/video_search.html:73
-#, fuzzy
 msgid "Latest"
-msgstr "recentste"
+msgstr "Recentste"
 
 #: alt2/templates/channel/channel_index.html:138
 #: alt2/templates/video/video_search.html:74
@@ -742,18 +733,16 @@ msgid "Stats"
 msgstr "Statistieken"
 
 #: alt2/templates/channel/channel_item.html:61
-#, fuzzy
 msgid "Created:"
-msgstr "Gemaakt"
+msgstr "Gemaakt:"
 
 #: alt2/templates/channel/channel_item.html:62
 msgid "Added"
 msgstr "Toegevoegd"
 
 #: alt2/templates/channel/channel_item.html:65
-#, fuzzy
 msgid "Deleted:"
-msgstr "Verwijderd"
+msgstr "Verwijderd:"
 
 #: alt2/templates/donate/donate_index.html:29
 msgid "Expenses Increase 2024"
@@ -1047,9 +1036,8 @@ msgid "censored"
 msgstr "gecensureerd"
 
 #: alt2/templates/video/video_item.html:128
-#, fuzzy
 msgid "Status on"
-msgstr "Statistieken"
+msgstr "Status op"
 
 #: alt2/templates/video/video_item.html:159
 #: alt2/templates/widgets/videos.html:35

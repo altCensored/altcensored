@@ -33,9 +33,8 @@ msgid "altCensored.com Reset Your Password"
 msgstr "altCensored.com Restablece tu contraseña"
 
 #: alt2/auth/forms.py:11
-#, fuzzy
 msgid "Email / Username"
-msgstr "Nombre de usuario"
+msgstr "Correo electrónico / Nombre de usuario"
 
 #: alt2/auth/forms.py:12 alt2/auth/forms.py:20 alt2/auth/forms.py:22
 #: alt2/auth/forms.py:23 alt2/auth/forms.py:41 alt2/auth/forms.py:45
@@ -82,19 +81,16 @@ msgid "Please use a different email address."
 msgstr "Por favor usa una dirección de correo electrónico diferente."
 
 #: alt2/auth/forms.py:40
-#, fuzzy
 msgid "Email or Username"
-msgstr "Nombre de usuario"
+msgstr "Correo electrónico o nombre de usuario"
 
 #: alt2/auth/forms.py:41 alt2/auth/forms.py:49
-#, fuzzy
 msgid "Request Password Reset"
-msgstr "Restablecer la contraseña"
+msgstr "Solicitar restablecimiento de contraseña"
 
 #: alt2/auth/forms.py:47
-#, fuzzy
 msgid "Repeat Password"
-msgstr "Restablecer la contraseña"
+msgstr "Repetir contraseña"
 
 #: alt2/auth/routes.py:49
 msgid "Invalid username or password"
@@ -121,9 +117,8 @@ msgid "The password reset link is invalid or has expired."
 msgstr "El enlace para restablecer la contraseña no es válido o ha caducado."
 
 #: alt2/auth/routes.py:132
-#, fuzzy
 msgid "Your password has been reset."
-msgstr "La contraseña ha sido actualizada"
+msgstr "Tu contraseña se ha restablecido."
 
 #: alt2/auth/routes.py:142 alt2/auth/routes.py:148
 msgid "The confirmation link is invalid or has expired"
@@ -138,9 +133,8 @@ msgid "Thank-you for confirming your account"
 msgstr "Gracias por confirmar tu cuenta"
 
 #: alt2/auth/routes.py:177
-#, fuzzy
 msgid "Delete User"
-msgstr "Actualizar Usuario"
+msgstr "Eliminar usuario"
 
 #: alt2/templates/base.html:61 alt2/templates/base_nomessages.html:63
 #: alt2/templates/widgets/playlist.html:116
@@ -294,9 +288,8 @@ msgid "Email new channel suggestions to"
 msgstr "Enviar sugerencias de canales nuevos a"
 
 #: alt2/templates/about/about_index.html:76
-#, fuzzy
 msgid " together we <b>show what they hide</b>."
-msgstr "(juntos mostramos lo que esconden)"
+msgstr " juntos mostramos <b>lo que esconden</b>."
 
 #: alt2/templates/about/about_index.html:81
 msgid "Privacy Policy"
@@ -314,13 +307,14 @@ msgid ""
 " be intentionally shared with anyone or anything"
 msgstr ""
 "Los datos que proporcione al sitio web para el propósito de su "
-"funcionamiento (p. ej., un nombre de cuenta, contraseña o playlist) se almacenarán en la base de datos del sitio web hasta que "
-"el usuario decida eliminarlos. Estos datos no se compartirán "
-"intencionalmente con nadie.Los datos que proporcione al sitio web con el "
-"fin de su funcionamiento (por ejemplo, un nombre de cuenta o una "
-"contraseña, o una playlist) se almacenarán en la base de "
-"datos de los sitios web hasta que el usuario decida eliminarlos. Estos "
-"datos no se compartirse intencionalmente con cualquier persona o cosa"
+"funcionamiento (p. ej., un nombre de cuenta, contraseña o playlist) se "
+"almacenarán en la base de datos del sitio web hasta que el usuario decida"
+" eliminarlos. Estos datos no se compartirán intencionalmente con "
+"nadie.Los datos que proporcione al sitio web con el fin de su "
+"funcionamiento (por ejemplo, un nombre de cuenta o una contraseña, o una "
+"playlist) se almacenarán en la base de datos de los sitios web hasta que "
+"el usuario decida eliminarlos. Estos datos no se compartirse "
+"intencionalmente con cualquier persona o cosa"
 
 #: alt2/templates/about/about_index.html:88
 msgid "Information stored about a registered user is limited to"
@@ -332,8 +326,9 @@ msgid ""
 "hashed password"
 msgstr ""
 "un ID de usuario (para almacenamiento persistente de preferencias y "
-"playlists) y contraseña cifradauna identificación de usuario"
-" (para el almacenamiento permanente de preferencias y playlists) y una contraseña con hash"
+"playlists) y contraseña cifradauna identificación de usuario (para el "
+"almacenamiento permanente de preferencias y playlists) y una contraseña "
+"con hash"
 
 #: alt2/templates/about/about_index.html:91
 msgid "a json object containing user preferences"
@@ -573,9 +568,8 @@ msgstr ""
 "de la ventana de video o usa el enlace\" Descargar Torrent \\ "
 
 #: alt2/templates/about/about_index.html:234
-#, fuzzy
 msgid "Creator Guide"
-msgstr "Creado"
+msgstr "Guía para creadores"
 
 #: alt2/templates/about/about_index.html:236
 msgid "Press Kit"
@@ -598,9 +592,8 @@ msgid "Table All"
 msgstr "Tabla Todos"
 
 #: alt2/templates/auth/reset_password_request.html:12
-#, fuzzy
 msgid "Reset"
-msgstr "Registrarse"
+msgstr "Restablecer"
 
 #: alt2/templates/auth_old/auth_index.html:39
 msgid "Captcha"
@@ -685,9 +678,8 @@ msgstr "Censurado"
 #: alt2/templates/channel/channel_index.html:117
 #: alt2/templates/channel/channel_item.html:49
 #: alt2/templates/video/video_search.html:52
-#, fuzzy
 msgid "Archived"
-msgstr "Archivar"
+msgstr "Archivados"
 
 #: alt2/templates/channel/channel_index.html:120
 #: alt2/templates/channel/channel_item.html:51
@@ -753,9 +745,8 @@ msgstr "Parte"
 
 #: alt2/templates/channel/channel_index.html:137
 #: alt2/templates/video/video_search.html:73
-#, fuzzy
 msgid "Latest"
-msgstr "último"
+msgstr "Último"
 
 #: alt2/templates/channel/channel_index.html:138
 #: alt2/templates/video/video_search.html:74
@@ -781,18 +772,16 @@ msgid "Stats"
 msgstr "Estadísticas"
 
 #: alt2/templates/channel/channel_item.html:61
-#, fuzzy
 msgid "Created:"
-msgstr "Creado"
+msgstr "Creado:"
 
 #: alt2/templates/channel/channel_item.html:62
 msgid "Added"
 msgstr "Añadido"
 
 #: alt2/templates/channel/channel_item.html:65
-#, fuzzy
 msgid "Deleted:"
-msgstr "Eliminado"
+msgstr "Eliminado:"
 
 #: alt2/templates/donate/donate_index.html:29
 msgid "Expenses Increase 2024"
@@ -935,18 +924,16 @@ msgid "Select the colour theme for the site."
 msgstr "Seleccione el tema de color del sitio."
 
 #: alt2/templates/settings/settings_site.html:49
-#, fuzzy
 msgid "Auto Play"
-msgstr "Añadir a Playlist"
+msgstr "Reproducción automática"
 
 #: alt2/templates/settings/settings_site.html:49
 msgid "Automatically start playing a video when its page loads."
 msgstr "Reproducir un vídeo automáticamente cuando se carga su página."
 
 #: alt2/templates/settings/settings_site.html:59
-#, fuzzy
 msgid "Play Next"
-msgstr "AutoPlay Siguiente Video"
+msgstr "Reproducir siguiente"
 
 #: alt2/templates/settings/settings_site.html:59
 msgid "After a video ends, automatically navigate to the next one in the list."

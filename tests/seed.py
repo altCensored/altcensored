@@ -66,6 +66,7 @@ def setup(engine):
         with Session(engine) as s:
             views.create_all(s)
         _load_ytac(engine)
+    _load_accounts(engine)
     _load_ui_text(engine)
     refresh_matviews(engine)
 
@@ -156,6 +157,49 @@ def _load_ytac(engine):
             )
             v.sources.append(sources[ch])
             s.add(v)
+        s.commit()
+
+
+PASSWORD = "test-password"
+# username, email, verified. "admin" is special: admin_login_required checks it.
+USERS = [
+    ("admin", "admin@example.test", True),
+    ("alice", "alice@example.test", True),
+    ("newbie", "newbie@example.test", False),
+]
+CATEGORIES = ["Music", "News"]
+PLAYLIST = dict(hashid="plAliceOne01", title="Alice list",
+                videos=["vid_ia_00002", "vid_ac_00003"])
+
+
+def _load_accounts(engine):
+    """Users (all share PASSWORD), two categories and one public playlist owned
+    by alice. User and Playlist have the same columns on both schemas;
+    Category was renamed by ytac, hence the branch."""
+    from alt2.models import Category, Playlist, User
+    with Session(engine) as s:
+        users = {}
+        for name, email, verified in USERS:
+            u = User(username=name, email=email, email_verified=verified,
+                     description="", view_counter=0, watched=[], watchlater=[],
+                     created_date=NOW, updated=NOW,
+                     email_lastsent_date=NOW - timedelta(days=30),
+                     settings=dict(theme="light", locale="en", autoplay="True",
+                                   playnext="True", looplist="True"),
+                     navtabs=["video", "channel", "playlist"],
+                     navtabs_index=["video", "channel", "playlist"])
+            u.set_password(PASSWORD)
+            s.add(u)
+            users[name] = u
+        s.flush()
+        for n, name in enumerate(CATEGORIES, start=1):
+            if BACKEND == "legacy":
+                s.add(Category(cat_id=n, cat_name=name, cat_image=f"{name}.png"))
+            else:
+                s.add(Category(id=n, name=name, icon=f"{name}.png"))
+        s.add(Playlist(user_id=users["alice"].id, public=True, view_counter=0,
+                       video_count=len(PLAYLIST["videos"]), created=NOW,
+                       updated=NOW, **PLAYLIST))
         s.commit()
 
 

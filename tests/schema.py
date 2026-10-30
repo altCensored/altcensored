@@ -1,6 +1,6 @@
 """Column and field names that differ between the legacy and ytac schemas, so
 tests can assert on database state without branching inline."""
-from tests.seed import BACKEND
+from tests.seed import BACKEND  # noqa: F401  (re-exported for tests)
 
 if BACKEND == "legacy":
     # source is joined to entity: ytc_id lives on source, extractor_data on entity

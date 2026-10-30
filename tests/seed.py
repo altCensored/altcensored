@@ -137,7 +137,7 @@ def _load_legacy(engine):
             v = Video(
                 extractor_key="Youtube", extractor_data=vid, title=title,
                 prev=NOW, published=NOW - timedelta(days=30 - n),
-                yt_deleted=deleted,
+                yt_deleted=deleted, category=VIDEO_CATEGORY.get(vid),
                 yt_deleted_date=NOW if deleted else None,
                 exists_ia=ia, exists_ac=ac, duration=120 + n,
                 yt_views=100 * (n + 1),
@@ -170,6 +170,7 @@ def _load_ytac(engine):
                 extractor_data=vid, title=title,
                 published=(NOW - timedelta(days=30 - n)).date(),
                 deleted=deleted, deleted_date=NOW.date() if deleted else None,
+                category=VIDEO_CATEGORY.get(vid),
                 ia_exists=bool(ia), ac_exists=bool(ac), duration=120 + n,
                 view_count=100 * (n + 1),
             )
@@ -179,12 +180,14 @@ def _load_ytac(engine):
 
 
 PASSWORD = "test-password"
-# username, email, verified. "admin" is special: admin_login_required checks it.
+# username, email, verified, public. "admin" is special: admin_login_required checks it.
 USERS = [
-    ("admin", "admin@example.test", True),
-    ("alice", "alice@example.test", True),
-    ("newbie", "newbie@example.test", False),
+    ("admin", "admin@example.test", True, False),
+    ("alice", "alice@example.test", True, True),    # only public users are listed
+    ("newbie", "newbie@example.test", False, False),
 ]
+# mv_category only lists categories that have archived videos
+VIDEO_CATEGORY = {"vid_ia_00002": "Music"}
 CATEGORIES = ["Music", "News"]
 PLAYLIST = dict(hashid="plAliceOne01", title="Alice list",
                 videos=["vid_ia_00002", "vid_ac_00003"])
@@ -197,8 +200,9 @@ def _load_accounts(engine):
     from alt2.models import Category, Playlist, User
     with Session(engine) as s:
         users = {}
-        for name, email, verified in USERS:
+        for name, email, verified, public in USERS:
             u = User(username=name, email=email, email_verified=verified,
+                     public=public,
                      description="", view_counter=0, watched=[], watchlater=[],
                      created_date=NOW, updated=NOW,
                      email_lastsent_date=NOW - timedelta(days=30),

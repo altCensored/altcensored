@@ -29,7 +29,7 @@
                   {% if session.user.id == playlist.user_id %}
                     {% if userlist  %}
                       {% if userlist and (video.extractor_data not in playlist.videos) %}
-                        <a class="action has-tooltip" onclick="add_video_PlayList('{{ video.extractor_data }}','{{ playlist.hashid }}');">
+                        <a class="action has-tooltip js-add-playlist" data-v="{{ video.extractor_data }}" data-p="{{ playlist.hashid }}">
                             <p class="watchlater">
                                 <i id="{{ video.extractor_data }}" class="ion-md-add" style="font-size: 30px"></i></p>
                             <p id="ttip{{ playlist.hashid }}" class="tooltip">{{ gettext('Add to Playlist') }}</p>
@@ -42,7 +42,7 @@
                     {% endif %}
                   {% else %}
                       {% if not watchlater or (watchlater and video.extractor_data not in watchlater) %}
-                        <a class="action has-tooltip" onclick="add_video_WatchLater('{{ video.extractor_data }}');">
+                        <a class="action has-tooltip js-add-watchlater" data-v="{{ video.extractor_data }}">
                             <p class="watchlater">
                                 <i id="{{ video.extractor_data }}" class="ion-md-time" style="font-size: 30px"></i></p>
                             <p id="ttip{{ video.extractor_data }}" class="tooltip">{{ gettext('Add to WatchLater') }}</p>
@@ -51,7 +51,7 @@
                   {% endif %}
                 {% elif userlist == 'history' %}
                   {% if not watchlater or (watchlater and video.extractor_data not in watchlater) %}
-                    <a class="action has-tooltip" onclick="add_video_WatchLater('{{ video.extractor_data }}');">
+                    <a class="action has-tooltip js-add-watchlater" data-v="{{ video.extractor_data }}">
                         <p class="watchlater">
                             <i id="{{ video.extractor_data }}" class="ion-md-time" style="font-size: 30px"></i></p>
                         <p id="ttip{{ video.extractor_data }}" class="tooltip">{{ gettext('Add to WatchLater') }}</p>
@@ -66,7 +66,7 @@
                   </a>
                 {% else%}
                   {% if not watchlater or (watchlater and video.extractor_data not in watchlater) %}
-                    <a class="action has-tooltip" onclick="add_video_WatchLater('{{ video.extractor_data }}');">
+                    <a class="action has-tooltip js-add-watchlater" data-v="{{ video.extractor_data }}">
                         <p class="watchlater">
                             <i id="{{ video.extractor_data }}" class="ion-md-time" style="font-size: 30px"></i></p>
                         <p id="ttip{{ video.extractor_data }}" class="tooltip">{{ gettext('Add to WatchLater') }}</p>
@@ -147,5 +147,17 @@
     var tooltip = playlistIcon.parentNode.parentNode.querySelector('.tooltip');
     tooltip.style.display = 'none';
   }
+
+  // The CSP forbids inline onclick attributes, so the buttons carry data-* hooks.
+  // The buttons sit inside the thumbnail's <a href>; stop the click navigating away.
+  document.addEventListener('click', function(e){
+    var pl = e.target.closest('.js-add-playlist');
+    var wl = e.target.closest('.js-add-watchlater');
+    if (!pl && !wl) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (pl) add_video_PlayList(pl.dataset.v, pl.dataset.p);
+    else add_video_WatchLater(wl.dataset.v);
+  });
 
 </script>

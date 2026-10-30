@@ -1,0 +1,17 @@
+{# Add-to-playlist mode (History / Watch Later opened with ?playlist=): a fixed bar with a Done link
+   back to the playlist and a count of videos added on this page. videos.html updates #ac-added-count. #}
+{% if playlist and session.user and session.user.id == playlist.user_id %}
+<style>
+  .ac-done-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; text-align: center;
+                 padding: 0.6em 1em; background: rgba(128, 128, 128, 0.22);
+                 -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+                 border-top: 1px solid rgba(128, 128, 128, 0.45); }
+  .ac-done-spacer { height: 4em; }
+</style>
+<div class="ac-done-spacer"></div>
+<div class="ac-done-bar">
+  <a class="pure-button pure-button-primary" href="{{ url_for('playlist.item', playlist=playlist.hashid) }}">
+    {{ gettext('Done') }}<span id="ac-added" hidden>&nbsp;(<span id="ac-added-count">0</span>&nbsp;{{ gettext('added') }})</span>
+  </a>
+</div>
+{% endif %}

@@ -242,18 +242,12 @@ def _commit_or_flash(message):
         return False
 
 
-@bp.route('/add_video_playlist', methods=['GET', 'POST'])
+@bp.route('/add_video_playlist', methods=['POST'])
 @login_required
 def add_video_playlist():
-    if request.method == 'POST':
-        video_id = request.form['v']
-        playlist_ident = request.form['playlist_title']
-        playlist = Playlist.query.filter((Playlist.user_id == session['user']['id']), Playlist.title == playlist_ident).scalar()
-
-    else:
-        video_id = request.args.get('v', None)
-        playlist_ident = request.args.get('playlist', None)
-        playlist = Playlist.query.filter(Playlist.hashid == playlist_ident).scalar()
+    video_id = request.form['v']
+    playlist_ident = request.form['playlist_title']
+    playlist = Playlist.query.filter((Playlist.user_id == session['user']['id']), Playlist.title == playlist_ident).scalar()
 
     if not util.valid_video_id(video_id):
         abort(400)
@@ -273,46 +267,42 @@ def add_video_playlist():
     if _commit_or_flash(lazy_gettext('Error updating playlist')) and result == 'full':
         flash(list_full, 'error')
 
-    if request.method == 'POST':
-        return redirect(url_for('video.watch', v=video_id))
-
-    return redirect(util.safe_next())
+    return redirect(url_for('video.watch', v=video_id))
 
 
-@bp.route('/add_video_playlist_post', methods=['GET', 'POST'])
+@bp.route('/add_video_playlist_post', methods=['POST'])
 @login_required
 def add_video_playlist_post():
-    if request.method == 'POST':
-        data = request.get_json(silent=True)
-        if not isinstance(data, dict) or not util.valid_video_id(data.get('v')) \
-                or not isinstance(data.get('p'), str):
-            return jsonify(error='bad request'), 400
-        v = data['v']
-        playlist = Playlist.query.filter(Playlist.hashid == data['p']).scalar()
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict) or not util.valid_video_id(data.get('v')) \
+            or not isinstance(data.get('p'), str):
+        return jsonify(error='bad request'), 400
+    v = data['v']
+    playlist = Playlist.query.filter(Playlist.hashid == data['p']).scalar()
 
-        if playlist is None:
-            return jsonify(error='not found'), 404
-        if playlist.user_id != session['user']['id']:
-            return jsonify(error='forbidden'), 403
+    if playlist is None:
+        return jsonify(error='not found'), 404
+    if playlist.user_id != session['user']['id']:
+        return jsonify(error='forbidden'), 403
 
-        result = util.add_to_playlist(playlist.id, v)
-        try:
-            db_session.commit()
-        except Exception:
-            db_session.rollback()
-            return jsonify(error='db error'), 500
-        if result == 'full':
-            return jsonify(error='list full'), 409
-        return jsonify(v=v)
-    else:
-        return jsonify()
+    result = util.add_to_playlist(playlist.id, v)
+    try:
+        db_session.commit()
+    except Exception:
+        db_session.rollback()
+        return jsonify(error='db error'), 500
+    if result == 'full':
+        return jsonify(error='list full'), 409
+    return jsonify(v=v)
 
 
-@bp.route('/remove_video_playlist')
+@bp.route('/remove_video_playlist', methods=['POST'])
 @login_required
 def remove_video_playlist():
-    playlist_hashid = request.args.get('playlist', None)
-    video_ext = request.args.get('v', None)
+    playlist_hashid = request.form.get('playlist')
+    video_ext = request.form.get('v')
+    if not util.valid_video_id(video_ext):
+        abort(400)
     playlist = Playlist.query.filter(Playlist.hashid == playlist_hashid).scalar()
     if playlist is None:
         abort(404)

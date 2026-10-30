@@ -338,7 +338,7 @@ def safe_next(default='/'):
     Templates pass current_url as an absolute URL, so accept our own host and
     reduce it to path?query; anything pointing elsewhere falls back to default.
     """
-    raw = request.args.get(url_orig)
+    raw = request.values.get(url_orig)
     if not raw:
         return default
     try:

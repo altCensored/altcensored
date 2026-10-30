@@ -54,10 +54,10 @@ sudo -n systemctl reload gunicorn
 - **Session and preferences:** locale, theme, playnext, autoplay, looplist and the navbar translations live in Flask's server-side session, initialised by `util.py` helpers (`get_locale()`, `get_theme()`, ...). `login_user_altcen()` and `logout_user_altcen()` sync the session with the `altcen_user.settings` JSON column.
 - **Access control:** `login_required`, `admin_login_required`, `email_verified_required` and `contributor_required` in `util.py` are plain decorators that check `session['user']`. They are not Flask-Login's.
 - **`loggedin` cookie:** nginx uses it to exempt logged-in users from anon rate limits. It is signed (`<expires>.<base64url md5("<expires> <secret>")>`, nginx `secure_link` format) with `ALTC_LOGGEDIN_SECRET`, which must equal the secret in nginx's `secure_link_md5` include. If the secret is unset, an old unsigned 64-hex cookie is issued. When rotating the secret, change both files and **restart** gunicorn. Helpers are `make_loggedin_cookie`, `loggedin_cookie_valid` and `set_loggedin_cookie` in `util.py`. The `refresh_loggedin_cookie` hook skips `/feed`, `/sitemap*`, `/ip/` and `/acip/`, because nginx caches those and a cookie there would leak to everyone.
-- **i18n:** 8 languages (`en de es fr pt nl it se`). UI strings also live in the `translation` table, served per session locale by `get_navtabs()`. Update the translations with:
+- **i18n:** 8 languages (`en de es fr pt nl it sv`). UI strings also live in the `translation` table, served per session locale by `get_navtabs()`. The table's Swedish column is still named `se` (altcen-models, ytac), so `util.translation_column()` maps `sv` to it, and a stored or session `se` is read as `sv`. Update the translations with:
   ```bash
   pybabel extract -F alt2/babel.cfg --keyword=_l -o alt2/messages.pot alt2/
-  pybabel update -i alt2/messages.pot -d alt2/translations
+  pybabel update --no-fuzzy-matching -i alt2/messages.pot -d alt2/translations
   pybabel compile -d alt2/translations
   ```
 - **Internet Archive:** a deleted video may exist at `archive.org/details/youtube-<video_id>`. `get_ia_item()` in `alt2/services/archive.py` fetches the IA metadata (cached in Redis for 30 days on a hit) and fills `videofile` and `thumbnail`. The `exists_ia` and `exists_ac` flags choose the player. A missing or `None` `exists_ia` means unknown, so only an explicit `False` means "not on IA". `video_thumb_url()` in `__init__.py` picks the thumbnail source.

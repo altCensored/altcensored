@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-30 15:38+0000\n"
+"POT-Creation-Date: 2026-10-30 16:22+0000\n"
 "PO-Revision-Date: 2020-06-24 13:44+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -38,11 +38,10 @@ msgstr "E-mail / Nom d'utilisateur"
 
 #: alt2/auth/forms.py:12 alt2/auth/forms.py:20 alt2/auth/forms.py:22
 #: alt2/auth/forms.py:23 alt2/auth/forms.py:41 alt2/auth/forms.py:45
-#: alt2/templates/auth/reset_password_request.html:12
 #: alt2/templates/auth_old/auth_index.html:26
 #: alt2/templates/auth_old/auth_index.html:27
 #: alt2/templates/auth_old/auth_index.html:53
-#: alt2/templates/auth_old/auth_index.html:54 alt2/templates/base_login.html:64
+#: alt2/templates/auth_old/auth_index.html:54
 msgid "Password"
 msgstr "mot de passe"
 
@@ -110,7 +109,8 @@ msgstr ""
 "Vérifiez votre e-mail pour les instructions de réinitialisation du mot de"
 " passe"
 
-#: alt2/auth/routes.py:119 alt2/templates/auth_old/auth_index.html:58
+#: alt2/auth/routes.py:119 alt2/templates/auth/reset_password_request.html:12
+#: alt2/templates/auth_old/auth_index.html:58 alt2/templates/base_login.html:64
 msgid "Reset Password"
 msgstr "Réinitialiser le mot de passe"
 
@@ -597,10 +597,6 @@ msgstr "Tableau Supprimés"
 #: alt2/templates/channel/channel_table.html:47
 msgid "Table All"
 msgstr "Tableau Tous"
-
-#: alt2/templates/auth/reset_password_request.html:12
-msgid "Reset"
-msgstr "Réinitialiser"
 
 #: alt2/templates/auth_old/auth_index.html:39
 msgid "Captcha"
@@ -1412,4 +1408,7 @@ msgstr "Non"
 
 #~ msgid "Published"
 #~ msgstr "Publié"
+
+#~ msgid "Reset"
+#~ msgstr "Réinitialiser"
 

@@ -28,6 +28,8 @@ which package the venv has. A failure on one stack only is a cutover regression.
 | `test_app.py` | locale, error pages, headers, loggedin cookie hook, template filters |
 | `test_cache_limits.py` | real cache and rate limiter (a second app, see its docstring) |
 | `test_i18n.py` | translation catalogs vs. the strings in the code |
+| `test_cutover_divergences.py` | legacy-vs-ytac differences pinned on purpose (NULL `exists_ia`, feed thumbnail) |
+| `test_parity_player.py`, `test_parity_views.py` | the comparison logic of `scripts/parity_player.py` and `scripts/parity_views.py` |
 
 ## Conventions
 

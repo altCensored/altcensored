@@ -10,11 +10,11 @@ rc=0
 for d in altcensored-master altcensored; do
   rsync -a --delete --exclude __pycache__ tests/ "$HOST:/opt/altcen/$d/tests/"
   rsync -a pytest.ini "$HOST:/opt/altcen/$d/"
-  extra=""
-  # the cutover branch lacks scripts/parity_player.py until master is merged in
-  [ "$d" = altcensored ] && ssh "$HOST" "test -f /opt/altcen/$d/scripts/parity_player.py" \
-    || { [ "$d" = altcensored ] && extra="--ignore=tests/test_parity_player.py"; }
+  # the parity scripts are tested too; the cutover checkout only gets them this way
+  # until master is merged into it (no --delete: its own scripts/ stays untouched)
+  ssh "$HOST" "mkdir -p /opt/altcen/$d/scripts"
+  rsync -a scripts/parity_*.py "$HOST:/opt/altcen/$d/scripts/"
   echo "=== $d"
-  ssh "$HOST" "cd /opt/altcen/$d && ALTC_TEST_DATABASE_URL='$URL' venv/bin/python -m pytest -q $extra $* 2>&1 | tail -60" || rc=1
+  ssh "$HOST" "cd /opt/altcen/$d && ALTC_TEST_DATABASE_URL='$URL' venv/bin/python -m pytest -q $* 2>&1 | tail -60" || rc=1
 done
 exit $rc

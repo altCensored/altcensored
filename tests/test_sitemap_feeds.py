@@ -54,6 +54,9 @@ def test_sitemap_static_lists_categories(client):
 @pytest.mark.parametrize("path", ["/sitemap.xml", "/sitemap-channels.xml",
                                   "/feed", "/channel/deleted/feed"])
 def test_cached_paths_never_set_loggedin_cookie(user_client, path):
+    # without the cookie the hook would reissue one on an ordinary page, so its
+    # absence here proves the nginx-cached prefixes are exempt
+    user_client.delete_cookie("loggedin")
     r = user_client.get(path)
     assert r.status_code == 200
     assert not any(c.startswith("loggedin=") for c in r.headers.getlist("Set-Cookie"))

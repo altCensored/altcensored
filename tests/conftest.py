@@ -26,10 +26,11 @@ def pytest_configure(config):
             f"refusing to run: database {name!r} does not end in '_test'")
     # config.py reads these at import time, so set them before alt2 loads
     os.environ["ALTC_DATABASE_URL"] = TEST_URL
-    os.environ.setdefault("ALTC_SECRET_KEY", "test-secret-key")
-    os.environ.setdefault("ALTC_LOGGEDIN_SECRET", "test-loggedin-secret")
-    os.environ.setdefault("RANDOM_VALUE", "testvalue")
-    os.environ.setdefault("CACHE_REDIS_HOST", "localhost")
+    os.environ["ALTC_SECRET_KEY"] = "test-secret-key"
+    os.environ["ALTC_LOGGEDIN_SECRET"] = "test-loggedin-secret"
+    os.environ["RANDOM_VALUE"] = "testvalue"
+    os.environ["CACHE_REDIS_HOST"] = "localhost"
+    os.environ["VIDEOSERVER_URL"] = "https://videos.test/"
 
 
 @pytest.fixture(scope="session")
@@ -77,3 +78,14 @@ def client(app):
     c.environ_base["HTTP_X_FORWARDED_PROTO"] = "https"
     c.environ_base["HTTP_HOST"] = "altcensored.com"
     return c
+
+
+@pytest.fixture(autouse=True)
+def no_network(monkeypatch):
+    """The player logic calls S3 and archive.org. Fail loudly instead of going
+    out; a test that needs either stubs it (monkeypatch.setattr again)."""
+    def boom(*a, **k):
+        raise AssertionError("unexpected network call in test")
+    import alt2.video
+    monkeypatch.setattr(alt2.video, "check_ac_object_exists", boom)
+    monkeypatch.setattr(alt2.video, "get_ia_item", boom)

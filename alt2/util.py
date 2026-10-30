@@ -1,4 +1,4 @@
-import base64, functools, hashlib, hmac, os, secrets, string, random, subprocess, requests, logging, time
+import re, base64, functools, hashlib, hmac, os, secrets, string, random, subprocess, requests, logging, time
 
 logger = logging.getLogger(__name__)
 
@@ -10,7 +10,7 @@ from urllib.parse import urlsplit
 from flask import (
     session, request, redirect, url_for, current_app, flash, g
 )
-from sqlalchemy import func, nullslast, select
+from sqlalchemy import any_, func, literal, not_, nullslast, select, text, update
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.orm.attributes import flag_modified
 from .database import db_session
@@ -283,6 +283,53 @@ def title_exists(ftitle):
     ) is not None:
         return True
 
+
+
+VIDEO_ID_RE = re.compile(r'^[A-Za-z0-9_-]{1,24}$')
+MAX_LIST_VIDEOS = 2000
+_EMPTY_ARRAY = text("'{}'::text[]")
+
+
+def valid_video_id(v):
+    """extractor_data values are 1-24 chars of [A-Za-z0-9_-] (11 for videos, 24 for channels)."""
+    return isinstance(v, str) and VIDEO_ID_RE.match(v) is not None
+
+
+def _append_to_array(model, where_id, column, v, extra_values=None):
+    """Append v to an ARRAY(text) column in one UPDATE, so concurrent adds cannot overwrite each other.
+
+    Returns 'added', 'exists' (already in the list) or 'full' (MAX_LIST_VIDEOS reached).
+    The caller commits.
+    """
+    col = getattr(model, column)
+    arr = func.coalesce(col, _EMPTY_ARRAY)
+    values = {column: func.array_append(arr, v), 'updated': func.now()}
+    values.update(extra_values(arr) if extra_values else {})
+    res = db_session.execute(
+        update(model)
+        .where(model.id == where_id,
+               not_(literal(v) == any_(arr)),
+               func.cardinality(arr) < MAX_LIST_VIDEOS)
+        .values(**values)
+        .execution_options(synchronize_session=False)
+    )
+    if res.rowcount:
+        return 'added'
+    current = db_session.execute(select(col).where(model.id == where_id)).scalar() or []
+    return 'exists' if v in current else 'full'
+
+
+def add_to_watchlater(user_id, v):
+    return _append_to_array(User, user_id, 'watchlater', v)
+
+
+def add_to_playlist(playlist_id, v):
+    return _append_to_array(
+        Playlist, playlist_id, 'videos', v,
+        extra_values=lambda arr: {
+            'video_count': func.cardinality(arr) + 1,
+            'featured_video_id': func.coalesce(func.nullif(Playlist.featured_video_id, ''), v),
+        })
 
 
 def safe_next(default='/'):

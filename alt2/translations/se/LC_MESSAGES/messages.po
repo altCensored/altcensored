@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-06-16 06:47-0300\n"
+"POT-Creation-Date: 2026-10-30 15:38+0000\n"
 "PO-Revision-Date: 2020-07-28 20:05+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: se\n"
@@ -20,11 +20,7 @@ msgstr ""
 
 #: alt2/__init__.py:88
 msgid "Please log in to access this page."
-msgstr ""
-
-#: alt2/__init__.py:310
-msgid "not available"
-msgstr "inte tillgänglig"
+msgstr "Logga in för att komma åt den här sidan."
 
 #: alt2/auth/email.py:8
 msgid "Welcome to altCensored.com! Confirm your Email for Full Access"
@@ -53,7 +49,7 @@ msgstr "Lösenord"
 
 #: alt2/auth/forms.py:13
 msgid "Remember Me"
-msgstr ""
+msgstr "Kom ihåg mig"
 
 #: alt2/auth/forms.py:14 alt2/auth/routes.py:64 alt2/templates/base.html:95
 #: alt2/templates/base_nomessages.html:97
@@ -72,7 +68,7 @@ msgstr "Användarnamn"
 msgid "Email"
 msgstr "E-post"
 
-#: alt2/auth/forms.py:24 alt2/auth/routes.py:95
+#: alt2/auth/forms.py:24 alt2/auth/routes.py:97
 #: alt2/templates/auth_old/auth_index.html:44 alt2/templates/base_login.html:61
 msgid "Register"
 msgstr "Registrera"
@@ -104,43 +100,43 @@ msgstr "Återställ lösenord"
 msgid "Invalid username or password"
 msgstr "Ogiltigt användarnamn eller lösenord"
 
-#: alt2/auth/routes.py:56 alt2/auth/routes.py:87
+#: alt2/auth/routes.py:56 alt2/auth/routes.py:89
 msgid "Confirmation email sent"
-msgstr ""
+msgstr "Bekräftelsemejl skickat"
 
-#: alt2/auth/routes.py:91
+#: alt2/auth/routes.py:93
 msgid "Cloudflare Turnstile Captcha Failed"
 msgstr "Cloudflare Turnstile Captcha misslyckades"
 
-#: alt2/auth/routes.py:113
+#: alt2/auth/routes.py:115
 msgid "Check your email for password reset instructions"
 msgstr "Kontrollera din e-post för instruktioner om lösenordsåterställning"
 
-#: alt2/auth/routes.py:117 alt2/templates/auth_old/auth_index.html:58
+#: alt2/auth/routes.py:119 alt2/templates/auth_old/auth_index.html:58
 msgid "Reset Password"
 msgstr "Återställ lösenord"
 
-#: alt2/auth/routes.py:124
+#: alt2/auth/routes.py:126
 msgid "The password reset link is invalid or has expired."
-msgstr ""
+msgstr "Länken för att återställa lösenordet är ogiltig eller har gått ut."
 
-#: alt2/auth/routes.py:130
+#: alt2/auth/routes.py:132
 msgid "Your password has been reset."
 msgstr "Ditt lösenord har återställts."
 
-#: alt2/auth/routes.py:140 alt2/auth/routes.py:146
+#: alt2/auth/routes.py:142 alt2/auth/routes.py:148
 msgid "The confirmation link is invalid or has expired"
-msgstr ""
+msgstr "Bekräftelselänken är ogiltig eller har gått ut"
 
-#: alt2/auth/routes.py:153
+#: alt2/auth/routes.py:155
 msgid "Account already confirmed. Please login"
-msgstr ""
+msgstr "Kontot är redan bekräftat. Logga in"
 
-#: alt2/auth/routes.py:165
+#: alt2/auth/routes.py:167
 msgid "Thank-you for confirming your account"
-msgstr ""
+msgstr "Tack för att du bekräftade ditt konto"
 
-#: alt2/auth/routes.py:175
+#: alt2/auth/routes.py:177
 #, fuzzy
 msgid "Delete User"
 msgstr "Uppdatera användare"
@@ -576,13 +572,13 @@ msgid "Video"
 msgstr "Video"
 
 #: alt2/templates/auth_old/auth_reset_password.html:21
-#: alt2/templates/channel/channel_item.html:62
+#: alt2/templates/channel/channel_item.html:58
 #: alt2/templates/video/video_search.html:29
 msgid "Channel"
 msgstr "Kanal"
 
 #: alt2/templates/auth_old/auth_reset_password.html:26
-#: alt2/templates/video/video_item.html:142
+#: alt2/templates/video/video_item.html:134
 #: alt2/templates/widgets/navtabs.html:77
 msgid "Category"
 msgstr "Kategori"
@@ -597,43 +593,31 @@ msgstr "Uppdatera lösenord"
 
 #: alt2/templates/category/category_item.html:45
 #: alt2/templates/channel/channel_index.html:74
-#: alt2/templates/language/language_item.html:111
-#: alt2/templates/language/language_item.html:125
-#: alt2/templates/language/language_item.html:139
-#: alt2/templates/language/language_item.html:154
-#: alt2/templates/video/video_search.html:235
-#: alt2/templates/video/video_search.html:250
+#: alt2/templates/video/video_search.html:223
+#: alt2/templates/video/video_search.html:238
 msgid "latest"
 msgstr "senaste"
 
 #: alt2/templates/category/category_item.html:49
 #: alt2/templates/channel/channel_index.html:78
-#: alt2/templates/channel/channel_item.html:124
-#: alt2/templates/language/language_item.html:114
-#: alt2/templates/language/language_item.html:128
-#: alt2/templates/language/language_item.html:142
-#: alt2/templates/language/language_item.html:157
+#: alt2/templates/channel/channel_item.html:120
 #: alt2/templates/playlist/playlist_index.html:42
 #: alt2/templates/user/user_index.html:30
 #: alt2/templates/user/user_playlist_index.html:49
-#: alt2/templates/video/video_search.html:239
-#: alt2/templates/video/video_search.html:254
+#: alt2/templates/video/video_search.html:227
+#: alt2/templates/video/video_search.html:242
 msgid "newest"
 msgstr "nyaste"
 
 #: alt2/templates/category/category_item.html:53
 #: alt2/templates/channel/channel_index.html:82
-#: alt2/templates/channel/channel_item.html:128
-#: alt2/templates/language/language_item.html:120
-#: alt2/templates/language/language_item.html:134
-#: alt2/templates/language/language_item.html:148
-#: alt2/templates/language/language_item.html:163
+#: alt2/templates/channel/channel_item.html:124
 #: alt2/templates/playlist/playlist_index.html:46
 #: alt2/templates/user/user_index.html:34
 #: alt2/templates/user/user_playlist_index.html:53
 #: alt2/templates/video/video_index.html:84
-#: alt2/templates/video/video_search.html:243
-#: alt2/templates/video/video_search.html:258
+#: alt2/templates/video/video_search.html:231
+#: alt2/templates/video/video_search.html:246
 msgid "popular"
 msgstr "populär"
 
@@ -645,49 +629,43 @@ msgstr "utgår"
 msgid "most limited"
 msgstr "mest begränsad"
 
-#: alt2/templates/channel/channel_index.html:119
-#: alt2/templates/channel/channel_item.html:51
+#: alt2/templates/channel/channel_index.html:113
+#: alt2/templates/channel/channel_item.html:47
 #: alt2/templates/video/video_search.html:48
 msgid "Censored"
 msgstr "Censurerad"
 
-#: alt2/templates/channel/channel_index.html:123
-#: alt2/templates/channel/channel_item.html:53
+#: alt2/templates/channel/channel_index.html:117
+#: alt2/templates/channel/channel_item.html:49
 #: alt2/templates/video/video_search.html:52
 #, fuzzy
 msgid "Archived"
 msgstr "Arkiv"
 
-#: alt2/templates/channel/channel_index.html:126
-#: alt2/templates/channel/channel_item.html:55
-#: alt2/templates/language/language_item.html:57
+#: alt2/templates/channel/channel_index.html:120
+#: alt2/templates/channel/channel_item.html:51
 #: alt2/templates/video/video_search.html:55
 msgid "Total"
 msgstr "Totalt"
 
-#: alt2/templates/channel/channel_index.html:128
-#: alt2/templates/channel/channel_item.html:56
-#: alt2/templates/language/language_item.html:58
-#: alt2/templates/video/video_item.html:141
+#: alt2/templates/channel/channel_index.html:122
+#: alt2/templates/channel/channel_item.html:52
+#: alt2/templates/video/video_item.html:133
 #: alt2/templates/video/video_search.html:57
 msgid "Views"
 msgstr "Vyer"
 
-#: alt2/templates/channel/channel_index.html:130
-#: alt2/templates/language/language_item.html:59
+#: alt2/templates/channel/channel_index.html:124
 #: alt2/templates/video/video_search.html:59
 msgid "Subs"
 msgstr "Prenumeranter"
 
-#: alt2/templates/channel/channel_index.html:136
-#: alt2/templates/language/language_item.html:67
+#: alt2/templates/channel/channel_index.html:130
 #: alt2/templates/video/video_search.html:66
 msgid "Monitor"
 msgstr "Bildskärm"
 
-#: alt2/templates/channel/channel_index.html:137
-#: alt2/templates/language/language_item.html:68
-#: alt2/templates/language/language_item.html:72
+#: alt2/templates/channel/channel_index.html:131
 #: alt2/templates/playlist/playlist_item_create_edit.html:61
 #: alt2/templates/playlist/playlist_item_create_edit.html:63
 #: alt2/templates/settings/settings_site.html:55
@@ -699,9 +677,7 @@ msgstr "Bildskärm"
 msgid "True"
 msgstr "Sant"
 
-#: alt2/templates/channel/channel_index.html:138
-#: alt2/templates/language/language_item.html:69
-#: alt2/templates/language/language_item.html:73
+#: alt2/templates/channel/channel_index.html:132
 #: alt2/templates/playlist/playlist_item_create_edit.html:60
 #: alt2/templates/playlist/playlist_item_create_edit.html:64
 #: alt2/templates/settings/settings_site.html:53
@@ -713,62 +689,60 @@ msgstr "Sant"
 msgid "False"
 msgstr "Fel"
 
-#: alt2/templates/channel/channel_index.html:140
-#: alt2/templates/language/language_item.html:71
+#: alt2/templates/channel/channel_index.html:134
 #: alt2/templates/video/video_search.html:70
 msgid "Archive"
 msgstr "Arkiv"
 
-#: alt2/templates/channel/channel_index.html:141
+#: alt2/templates/channel/channel_index.html:135
 #: alt2/templates/video/video_search.html:71
 msgid "Full"
 msgstr "Full"
 
-#: alt2/templates/channel/channel_index.html:142
+#: alt2/templates/channel/channel_index.html:136
 #: alt2/templates/video/video_search.html:72
 msgid "Part"
 msgstr "Del"
 
-#: alt2/templates/channel/channel_index.html:143
+#: alt2/templates/channel/channel_index.html:137
 #: alt2/templates/video/video_search.html:73
 #, fuzzy
 msgid "Latest"
 msgstr "senaste"
 
-#: alt2/templates/channel/channel_index.html:144
+#: alt2/templates/channel/channel_index.html:138
 #: alt2/templates/video/video_search.html:74
 msgid "None"
 msgstr "Ingen"
 
-#: alt2/templates/channel/channel_index.html:153
-#: alt2/templates/language/language_item.html:83
+#: alt2/templates/channel/channel_index.html:147
 #: alt2/templates/video/video_search.html:85
 msgid "Created"
 msgstr "Skapad"
 
-#: alt2/templates/channel/channel_index.html:156
+#: alt2/templates/channel/channel_index.html:150
 #: alt2/templates/video/video_search.html:88
 msgid "Deleted"
 msgstr "Borttagen"
 
-#: alt2/templates/channel/channel_item.html:57
+#: alt2/templates/channel/channel_item.html:53
 msgid "Subscribers"
 msgstr "Abonnenter"
 
-#: alt2/templates/channel/channel_item.html:63
+#: alt2/templates/channel/channel_item.html:59
 msgid "Stats"
 msgstr "Statistik"
 
-#: alt2/templates/channel/channel_item.html:65
+#: alt2/templates/channel/channel_item.html:61
 #, fuzzy
 msgid "Created:"
 msgstr "Skapad"
 
-#: alt2/templates/channel/channel_item.html:66
+#: alt2/templates/channel/channel_item.html:62
 msgid "Added"
 msgstr "Tillagd"
 
-#: alt2/templates/channel/channel_item.html:69
+#: alt2/templates/channel/channel_item.html:65
 #, fuzzy
 msgid "Deleted:"
 msgstr "Borttagen"
@@ -815,27 +789,6 @@ msgstr "Tack Brave Browser/BAT-användare, ert generösa stöd gör en skillnad"
 msgid "Request additional cryptocurrency addresses via email to"
 msgstr "Begär ytterligare kryptovalutaadresser via e-post till"
 
-#: alt2/templates/language/language_item.html:55
-msgid "Limited"
-msgstr "Begränsad"
-
-#: alt2/templates/language/language_item.html:117
-#: alt2/templates/language/language_item.html:131
-#: alt2/templates/language/language_item.html:145
-#: alt2/templates/language/language_item.html:160
-msgid "oldest"
-msgstr "äldst"
-
-#: alt2/templates/language/language_item.html:199
-msgid "Published"
-msgstr "Publicerad"
-
-#: alt2/templates/language/language_item.html:202
-#: alt2/templates/video/video_item.html:270
-#: alt2/templates/widgets/videos.html:107
-msgid "views"
-msgstr "vyer"
-
 #: alt2/templates/playlist/playlist_item_create_edit.html:30
 #: alt2/templates/settings/settings_index.html:44
 #: alt2/templates/user/user_playlist_index.html:29
@@ -864,8 +817,8 @@ msgid "A short summary shown under the playlist title. Max 50 characters."
 msgstr "En kort sammanfattning under spellistans titel. Max 50 tecken."
 
 #: alt2/templates/playlist/playlist_item_create_edit.html:57
-#: alt2/templates/user/user_item.html:127
-#: alt2/templates/user/user_playlist_index.html:101
+#: alt2/templates/user/user_item.html:124
+#: alt2/templates/user/user_playlist_index.html:94
 #: alt2/templates/widgets/playlist.html:75
 msgid "Public"
 msgstr "Offentlig"
@@ -899,7 +852,7 @@ msgstr "Skapa och hantera dina spellistor"
 
 #: alt2/templates/settings/settings_index.html:52
 #: alt2/templates/settings/settings_user_update.html:39
-#: alt2/templates/video/video_search.html:169
+#: alt2/templates/video/video_search.html:162
 #: alt2/templates/widgets/navtabs.html:61
 #: alt2/templates/widgets/settings_subnav.html:26
 msgid "User"
@@ -1000,7 +953,7 @@ msgid "The playlist shown at the top of your public profile page."
 msgstr "Spellistan som visas längst upp på din offentliga profilsida."
 
 #: alt2/templates/settings/settings_user_update.html:103
-#: alt2/templates/video/video_item.html:156
+#: alt2/templates/video/video_item.html:148
 msgid "Select Playlist"
 msgstr "Välj spellista"
 
@@ -1012,40 +965,46 @@ msgstr "Uppdatera användare"
 msgid "history"
 msgstr "historik"
 
-#: alt2/templates/user/user_history_index.html:51
+#: alt2/templates/user/user_history_index.html:48
+#: alt2/templates/user/user_watchlater_index.html:48
+#: alt2/templates/widgets/playlist_done_bar.html:14
+msgid "Done"
+msgstr "Klar"
+
+#: alt2/templates/user/user_history_index.html:53
 msgid "Clear history"
 msgstr "Rensa historik"
 
-#: alt2/templates/user/user_item.html:73
+#: alt2/templates/user/user_item.html:70
 msgid "Edit profile settings"
 msgstr "Redigera profilinställningar"
 
-#: alt2/templates/user/user_item.html:79
+#: alt2/templates/user/user_item.html:76
 msgid "Delete your account"
 msgstr "sidan radera mitt konto</u></a></b>"
 
-#: alt2/templates/user/user_item.html:96
+#: alt2/templates/user/user_item.html:93
 #: alt2/templates/widgets/playlist.html:104
 msgid "History"
 msgstr "Historik"
 
-#: alt2/templates/user/user_item.html:97
+#: alt2/templates/user/user_item.html:94
 msgid "Videos you have recently watched"
 msgstr "Videor du nyligen har sett"
 
-#: alt2/templates/user/user_item.html:110
+#: alt2/templates/user/user_item.html:107
 #: alt2/templates/user/user_watchlater_index.html:39
-#: alt2/templates/video/video_item.html:161
+#: alt2/templates/video/video_item.html:153
 #: alt2/templates/widgets/playlist.html:110
 msgid "WatchLater"
 msgstr "Titta senare"
 
-#: alt2/templates/user/user_item.html:111
+#: alt2/templates/user/user_item.html:108
 msgid "Videos you have saved to watch later"
 msgstr "Videor du har sparat för att titta på senare"
 
-#: alt2/templates/user/user_item.html:130
-#: alt2/templates/user/user_playlist_index.html:104
+#: alt2/templates/user/user_item.html:127
+#: alt2/templates/user/user_playlist_index.html:97
 msgid "Private"
 msgstr "Privat"
 
@@ -1053,9 +1012,17 @@ msgstr "Privat"
 msgid "Create a new playlist"
 msgstr "Skapa spellista"
 
-#: alt2/templates/user/user_watchlater_index.html:51
+#: alt2/templates/user/user_watchlater_index.html:53
 msgid "Clear watch later"
 msgstr "Rensa se senare"
+
+#: alt2/templates/video/404_site.html:2 alt2/templates/video/404_site.html:18
+msgid "Page not found"
+msgstr "Sidan hittades inte"
+
+#: alt2/templates/video/404_site.html:19
+msgid "is not available"
+msgstr "är inte tillgänglig"
 
 #: alt2/templates/video/video_index.html:60
 msgid "trending"
@@ -1069,22 +1036,27 @@ msgstr "uppladdad"
 msgid "censored"
 msgstr "censurerad"
 
-#: alt2/templates/video/video_item.html:136
+#: alt2/templates/video/video_item.html:128
 msgid "Status on"
 msgstr "Status på"
 
-#: alt2/templates/video/video_item.html:167
-#: alt2/templates/widgets/videos.html:42
+#: alt2/templates/video/video_item.html:159
+#: alt2/templates/widgets/videos.html:35
 msgid "Add to Playlist"
 msgstr "Lägg till i spellista"
 
-#: alt2/templates/video/video_item.html:208
+#: alt2/templates/video/video_item.html:200
 msgid "Published on"
 msgstr "Publicerad den"
 
-#: alt2/templates/video/video_item.html:225
+#: alt2/templates/video/video_item.html:217
 msgid "AutoPlay Next Video"
 msgstr "Automatisk uppspelning av nästa video"
+
+#: alt2/templates/video/video_item.html:255
+#: alt2/templates/widgets/videos.html:100
+msgid "views"
+msgstr "vyer"
 
 #: alt2/templates/widgets/navtabs.html:45
 msgid "Settings"
@@ -1110,8 +1082,12 @@ msgstr "Klar med att lägga till"
 msgid "Add videos to playlist"
 msgstr "Lägg till videor i spellistan"
 
-#: alt2/templates/widgets/videos.html:55 alt2/templates/widgets/videos.html:64
-#: alt2/templates/widgets/videos.html:79
+#: alt2/templates/widgets/playlist_done_bar.html:14
+msgid "added"
+msgstr "tillagda"
+
+#: alt2/templates/widgets/videos.html:48 alt2/templates/widgets/videos.html:57
+#: alt2/templates/widgets/videos.html:72
 msgid "Add to WatchLater"
 msgstr "Lägg till i Titta senare"
 
@@ -1373,4 +1349,13 @@ msgstr "Nej"
 
 #~ msgid "Create New Connection"
 #~ msgstr "Skapa ny anslutning"
+
+#~ msgid "Limited"
+#~ msgstr "Begränsad"
+
+#~ msgid "oldest"
+#~ msgstr "äldst"
+
+#~ msgid "Published"
+#~ msgstr "Publicerad"
 

@@ -35,24 +35,10 @@ def pytest_configure(config):
 
 @pytest.fixture(scope="session")
 def engine():
-    from altcen_models.db import Base
     from alt2 import models  # noqa: F401  registers every table on Base
     eng = create_engine(TEST_URL)
     from tests import seed
-    with eng.begin() as conn:
-        for mv in reversed(seed.MATVIEWS):  # a leftover may be a table or a view
-            conn.exec_driver_sql(
-                f"DO $$ BEGIN "
-                f"IF to_regclass('{mv}') IS NOT NULL THEN "
-                f"IF (SELECT relkind FROM pg_class WHERE oid = '{mv}'::regclass) = 'm' "
-                f"THEN DROP MATERIALIZED VIEW {mv}; ELSE DROP TABLE {mv}; END IF; "
-                f"END IF; END $$")
-    Base.metadata.drop_all(eng)
-    # the mv_* ORM models are only mappings; the real views come from prod's DDL
-    real = [t for n, t in Base.metadata.tables.items() if not n.startswith("mv_")]
-    Base.metadata.create_all(eng, tables=real)
-    seed.create_matviews(eng)
-    seed.load(eng)
+    seed.setup(eng)
     yield eng
     eng.dispose()
 

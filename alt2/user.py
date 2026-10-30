@@ -9,6 +9,7 @@ from flask_babelplus import lazy_gettext
 from .database import db_session
 from .models import User, MvVideo, Playlist, Counter
 from .pagination import Pagination
+from . import util
 from .util import login_required, get_usercount, users_newest, users_popular
 import datetime, json
 
@@ -49,7 +50,7 @@ def item(username):
     user = User.query.filter(func.lower(User.username) == func.lower(username)).scalar()
     if user is None:
         flash(lazy_gettext('User unknown'), 'error')
-        return redirect(request.args.get(url_orig, '/'))
+        return redirect(util.safe_next())
 
     if session.get('user') is not None and username == session['user']['username']:
         playlists = Playlist.query.filter((Playlist.public),(Playlist.user_id == user.id)) \
@@ -115,7 +116,7 @@ def history(page):
     if not user.watched:
         hist_empty = lazy_gettext('History Empty')
         flash(hist_empty, 'success')
-        return redirect(request.args.get(url_orig, '/'))
+        return redirect(util.safe_next())
 
     ordering = case(
         {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(user.watched))))},
@@ -145,7 +146,7 @@ def remove_video_history():
     except Exception:
         db_session.rollback()
         flash(lazy_gettext('Error removing video from history'), 'error')
-    return redirect(request.args.get(url_orig, '/'))
+    return redirect(util.safe_next())
 
 
 @bp.route('/clear_history', methods=['GET', 'POST'])
@@ -155,7 +156,7 @@ def clear_history():
     if not user.watched:
         hist_empty = lazy_gettext('History Empty')
         flash(hist_empty, 'success')
-        return redirect(request.args.get(url_orig, '/'))
+        return redirect(util.safe_next())
     l_msg = lazy_gettext('Clear History')
     message = l_msg + ' ?'
     if request.method == 'POST':
@@ -191,7 +192,7 @@ def watchlater(page):
     if not user.watchlater:
         no_watch = lazy_gettext('WatchLater Empty')
         flash(no_watch, 'success')
-        return redirect(request.args.get(url_orig, '/'))
+        return redirect(util.safe_next())
 
     ordering = case(
         {extractor_data: index for index, extractor_data in reversed(list(enumerate(reversed(user.watchlater))))},
@@ -221,7 +222,7 @@ def add_video_watchlater():
     except Exception:
         db_session.rollback()
         flash(lazy_gettext('Error updating watchlater'), 'error')
-    return redirect(request.args.get(url_orig, '/'))
+    return redirect(util.safe_next())
 
 
 @bp.route('/add_video_watchlater_post', methods=['GET', 'POST'])
@@ -263,7 +264,7 @@ def remove_video_watchlater():
     except Exception:
         db_session.rollback()
         flash(lazy_gettext('Error updating watchlater'), 'error')
-    return redirect(request.args.get(url_orig, '/'))
+    return redirect(util.safe_next())
 
 
 @bp.route('/clear_watchlater', methods=['GET', 'POST'])
@@ -273,7 +274,7 @@ def clear_watchlater():
     if not user.watchlater:
         watch_empty = lazy_gettext('WatchLater Empty')
         flash(watch_empty, 'success')
-        return redirect(request.args.get(url_orig, '/'))
+        return redirect(util.safe_next())
     l_msg = lazy_gettext('Clear WatchLater')
     message = l_msg + ' ?'
     if request.method == 'POST':

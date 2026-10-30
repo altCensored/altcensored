@@ -259,6 +259,11 @@ def add_video_playlist():
             flash(lazy_gettext('Error updating watchlater'), 'error')
         return redirect(url_for('video.watch', v=video_id))
 
+    if playlist is None:
+        abort(404)
+    if playlist.user_id != session['user']['id']:
+        abort(403)
+
     if playlist.videos is None:
         playlist.videos = [video_id]
     elif video_id not in playlist.videos:
@@ -280,7 +285,7 @@ def add_video_playlist():
     if request.method == 'POST':
         return redirect(url_for('video.watch', v=video_id))
 
-    return redirect(request.args.get(url_orig, '/'))
+    return redirect(util.safe_next())
 
 
 @bp.route('/add_video_playlist_post', methods=['GET', 'POST'])
@@ -291,6 +296,11 @@ def add_video_playlist_post():
         v = data['v']
         p = data['p']
         playlist = Playlist.query.filter(Playlist.hashid == p).scalar()
+
+        if playlist is None:
+            return json.dumps({'error': 'not found'}), 404
+        if playlist.user_id != session['user']['id']:
+            return json.dumps({'error': 'forbidden'}), 403
 
         if playlist.videos is None:
             playlist.videos = [v]
@@ -320,6 +330,10 @@ def remove_video_playlist():
     playlist_hashid = request.args.get('playlist', None)
     video_ext = request.args.get('v', None)
     playlist = Playlist.query.filter(Playlist.hashid == playlist_hashid).scalar()
+    if playlist is None:
+        abort(404)
+    if playlist.user_id != session['user']['id']:
+        abort(403)
 
     if playlist.videos and video_ext in playlist.videos:
         playlist.videos = list(dict.fromkeys(playlist.videos))
@@ -338,7 +352,7 @@ def remove_video_playlist():
             db_session.rollback()
             flash(lazy_gettext('Error updating playlist'), 'error')
 
-    return redirect(request.args.get(url_orig, '/'))
+    return redirect(util.safe_next())
 
 
 @bp.route('/delete/<playlist>', methods=['GET', 'POST'])

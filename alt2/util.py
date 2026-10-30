@@ -6,6 +6,7 @@ from better_profanity import profanity
 from captcha.image import ImageCaptcha
 from datetime import datetime, timezone, timedelta, date
 from email_validator import validate_email, EmailNotValidError
+from urllib.parse import urlsplit
 from flask import (
     session, request, redirect, url_for, current_app, flash, g
 )
@@ -282,6 +283,31 @@ def title_exists(ftitle):
     ) is not None:
         return True
 
+
+
+def safe_next(default='/'):
+    """Return the ?original_url= target as a same-site relative path, else default.
+
+    Templates pass current_url as an absolute URL, so accept our own host and
+    reduce it to path?query; anything pointing elsewhere falls back to default.
+    """
+    raw = request.args.get(url_orig)
+    if not raw:
+        return default
+    try:
+        parts = urlsplit(raw)
+    except ValueError:
+        return default
+    if parts.scheme not in ('', 'http', 'https'):
+        return default
+    if parts.netloc:
+        hosts = {request.host.lower(), config.MYSERVER_NAME.lower()}
+        if parts.netloc.lower() not in hosts:
+            return default
+    path = parts.path or '/'
+    if not path.startswith('/') or path.startswith('//') or '\\' in path:
+        return default
+    return path + ('?' + parts.query if parts.query else '')
 
 
 def ssh_command(sys_name, commands, sys_user='root'):

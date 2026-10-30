@@ -56,8 +56,17 @@ BLUEPRINT_FIXES = {
 }
 
 
+def normalize_locale(locale):
+    return config.LEGACY_LOCALES.get(locale, locale)
+
+
+def translation_column(locale):
+    return getattr(Translation, config.TRANSLATION_COLUMNS.get(locale, locale))
+
+
 def get_locale():
     if 'locale' in session:
+        session['locale'] = normalize_locale(session['locale'])
         return session['locale']
     else:
         session['locale'] = request.accept_languages.best_match(config.SUPPORTED_LANGUAGES.keys(), default='en')
@@ -177,6 +186,7 @@ def set_session():
         session['locale'] = request.accept_languages.best_match(
             config.SUPPORTED_LANGUAGES.keys(), default='en'
         )
+    session['locale'] = normalize_locale(session['locale'])
 
     if 'navtabs' not in session:
         session['navtabs'] = dict(navtabs_cache(session['locale']))
@@ -666,7 +676,7 @@ def usercount_cache():
 @cache.memoize(timeout=3600)
 def navtabs_cache(locale):
     return db_session.execute(
-        select(Translation.varname, getattr(Translation, locale))
+        select(Translation.varname, translation_column(locale))
     ).all()
 
 
@@ -741,7 +751,7 @@ def login_user_altcen(user):
     newSettings = dict(user.settings)
     autoplayg = user.settings.get("autoplay")
 
-    session['locale'] = newSettings['locale']
+    session['locale'] = normalize_locale(newSettings['locale'])
     session['theme'] = newSettings['theme']
     session['autoplay'] = autoplayg
     session['playnext'] = newSettings['playnext']

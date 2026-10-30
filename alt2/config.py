@@ -35,7 +35,11 @@ PROPAGATE_EXCEPTIONS=False
 ACIPROXYHUGE=os.getenv('ACIPROXYHUGE')
 ACIPROXY=os.getenv('ACIPROXY')
 
-SUPPORTED_LANGUAGES = {'en': 'English', 'de': 'Deutsch', 'es': 'Español', 'fr': 'Français', 'pt': 'Portuguese', 'nl': 'Nederlandse', 'it': 'Italiano', 'se': 'Sverige'}
+SUPPORTED_LANGUAGES = {'en': 'English', 'de': 'Deutsch', 'es': 'Español', 'fr': 'Français', 'pt': 'Portuguese', 'nl': 'Nederlandse', 'it': 'Italiano', 'sv': 'Sverige'}
+# Locales whose `translation` table column has a different name. Swedish is `sv`
+# (ISO 639-1) but the column, defined in altcen-models, is still called `se`.
+TRANSLATION_COLUMNS = {'sv': 'se'}
+LEGACY_LOCALES = {'se': 'sv'}
 SUPPORTED_THEMES = {'light', 'dark'}
 DEFAULT_THEME = 'light'
 DEFAULT_PLAYNEXT = 'True'

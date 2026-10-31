@@ -129,6 +129,28 @@ def test_update_user_email_change_unverifies_and_mails(
 
 
 @pytest.mark.writes
+def test_confirm_link_in_the_email_change_mail_verifies_the_new_address(
+        user_client, sql, monkeypatch):
+    # The autouse fixture replaces send_confirm_email; use the real one and capture
+    # one level lower (the AWS call), so the mailed link is what gets followed.
+    import re
+    import alt2.settings
+    import alt2.services.email as mail
+    mails = []
+    monkeypatch.setattr(mail, "send_all_mass_email",
+                        lambda *a, **k: mails.append((a, k)))
+    monkeypatch.setattr(alt2.settings, "send_confirm_email", mail.send_confirm_email)
+    user_client.post("/settings/update_user",
+                     data=user_form(email="alice.new@example.test"))
+    assert mails and mails[0][0][0] == "alice.new@example.test"
+    html = mails[0][0][3]
+    path = re.search(r"/auth/confirm_email/[^\"'\s<]+", html).group(0)
+    assert user_client.get(path).status_code == 302
+    assert sql("select email, email_verified from altcen_user where id=2") \
+        == [("alice.new@example.test", True)]
+
+
+@pytest.mark.writes
 def test_update_user_rejects_profanity(user_client, sql):
     user_client.post("/settings/update_user", data=user_form(description="fuck"))
     assert ("error", "Profanity forbidden") in flashes(user_client)

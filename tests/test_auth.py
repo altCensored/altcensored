@@ -162,6 +162,18 @@ def test_confirm_link_in_the_welcome_email_verifies_the_user(client, engine, out
 
 
 @pytest.mark.writes
+def test_reset_link_in_the_mail_resets_the_password(client, outbox):
+    # The test below builds its own token; this one follows the link as mailed.
+    import re
+    client.post("/auth/reset_password_request", data=dict(identity="alice"))
+    path = re.search(r"/auth/reset_password/\S+", outbox[0][1]["text_body"]).group(0)
+    r = client.post(path, data=dict(password="new-pass-123", password2="new-pass-123"))
+    assert r.status_code == 302
+    assert login(client, "alice", "new-pass-123").status_code == 302
+    assert session_user(client) is not None
+
+
+@pytest.mark.writes
 def test_reset_password_changes_password(client, engine):
     from alt2.models import User
     from alt2.database import db_session

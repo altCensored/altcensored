@@ -57,6 +57,7 @@ def setup(engine):
                 if not n.startswith("mv_")]
         Base.metadata.create_all(engine, tables=real)
         _match_prod_account_timestamps(engine)
+        _match_prod_playlist_cascade(engine)
         with engine.begin() as conn:
             conn.exec_driver_sql((FIXTURES / "matviews.sql").read_text())
         _load_legacy(engine)
@@ -87,6 +88,17 @@ def _match_prod_account_timestamps(engine):
                 conn.exec_driver_sql(
                     f'ALTER TABLE {table} ALTER COLUMN "{col}" '
                     f'TYPE timestamptz USING "{col}" AT TIME ZONE \'UTC\'')
+
+
+def _match_prod_playlist_cascade(engine):
+    """Prod's playlist.user_id is ON DELETE CASCADE (migrations/*_add_user_accounts.sql),
+    but altcen_models declares the FK without it. Without this the account-delete
+    test fails here and never in prod, where the bulk DELETE relies on the cascade."""
+    with engine.begin() as conn:
+        conn.exec_driver_sql(
+            "ALTER TABLE playlist DROP CONSTRAINT playlist_user_id_fkey, "
+            "ADD CONSTRAINT playlist_user_id_fkey FOREIGN KEY (user_id) "
+            "REFERENCES altcen_user(id) ON DELETE CASCADE")
 
 
 def wipe(engine):

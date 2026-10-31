@@ -1,10 +1,13 @@
 from flask import render_template, current_app
 from flask_babelplus import gettext as _
 from alt2.email import send_email
+from alt2.services.email import generate_confirmation_token
 
 
 def send_welcome_email(user):
-    token = user.get_reset_password_token()
+    # /auth/confirm_email decodes itsdangerous email tokens (confirm_token), not the
+    # JWT reset token this used to send, which made every welcome link invalid.
+    token = generate_confirmation_token(user.email)
     send_email(_('Welcome to altCensored.com! Confirm your Email for Full Access'),
                sender=current_app.config['ADMINS'][0],
                recipients=[user.email],

@@ -87,7 +87,9 @@ def violations(html, csp_header):
 
 
 @pytest.mark.parametrize("path", PAGES)
-def test_page_loads_only_what_its_csp_allows(client, path):
+def test_page_loads_only_what_its_csp_allows(client, monkeypatch, path):
+    import alt2.video
+    monkeypatch.setattr(alt2.video, "get_ia_item", lambda vid: "https://ia.test/x")
     r = client.get(path)
     assert r.status_code == 200
     found = violations(r.get_data(as_text=True), r.headers["Content-Security-Policy"])

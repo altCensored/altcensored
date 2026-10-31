@@ -1,7 +1,6 @@
 """Public user pages, history and watch-later management."""
 import pytest
 
-from tests import schema
 from tests.conftest import flashes, login
 
 
@@ -188,10 +187,7 @@ def test_delete_account_without_playlists(client, sql):
 # alice owns a playlist. Legacy used to fail here because the ORM tried to null
 # the foreign key on User.mv_playlist (a materialized view); /auth/delete now
 # issues a bulk DELETE and the database's ON DELETE CASCADE removes the
-# playlists. ytac's schema has no such rule until v28 (pin move pending), so
-# it stays a strict xfail there; drop the marker when the pin moves.
-@pytest.mark.xfail(schema.BACKEND != "legacy", strict=True,
-                   reason="ytac: no ON DELETE CASCADE until schema v28")
+# playlists. ytac has the same rule since schema v28 (pin v2026.10.31.7).
 @pytest.mark.writes
 def test_delete_account_removes_the_user_and_its_playlists(user_client, sql):
     r = user_client.post("/auth/delete", data=dict(submitvalue="yes"))

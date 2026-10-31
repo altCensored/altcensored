@@ -49,3 +49,9 @@ def test_watch_page_renders_for_archived_video(client, monkeypatch):
 ])
 def test_watch_404(client, path):
     assert client.get(path).status_code == 404
+
+
+@pytest.mark.parametrize("path", ["/test1", "/test2"])
+def test_removed_scratch_routes_stay_gone(client, path):
+    """/test1 and /test2 were hardcoded demo players, removed as dead code."""
+    assert client.get(path).status_code == 404

@@ -482,30 +482,3 @@ def play_next():
         return json.dumps({'playnext': session['playnext']})
     else:
         return json.dumps({'playnext': session['playnext']})
-
-
-@bp.route("/test1")
-def test1():
-    video_id = 'b9xIyw4dQZo'
-    video_id = '7-tUV0cnyv8'
-    video_id = 'c7BJ-VgSumw'
-    #    video_id = 'C4tT99haZXE'
-    #    video_id = 't25ptPWc1NI'
-    video_id = '0kX-1OOrU5M'  # orig ogv, mp4
-
-    ia_url = "https://archive.org/download/youtube-" + video_id + "/" + video_id
-    ac_url = "https://videos.altcensored.com/youtube-" + video_id + "/" + video_id
-
-    #    return render_template('video/test1.html',video_url=ac_url)
-    return render_template('video/video_embed_test.html', video_url=ac_url)
-
-
-@bp.route("/test2")
-def test2():
-    video_id = 'b9xIyw4dQZo'
-    video_id = '7-tUV0cnyv8'
-
-    ia_url = "https://archive.org/download/youtube-" + video_id + "/" + video_id
-    ia_url = "https://videos.altcensored.com/youtube-" + video_id + "/" + video_id
-
-    return render_template('video/test2.html', ia_url=ia_url)

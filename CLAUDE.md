@@ -40,7 +40,7 @@ The check script keeps two baselines in `scripts/ytac_check/`. `leftovers_baseli
 - **Moving the ytac pin:** `requirements.txt` pins `ytac @ git+https://github.com/altCensored/ytac.git@<tag>`. Read the current pin from that file, not from any copy of it. ytac uses date versions (`YYYY.M.D.N`) and auto-tags every push, so a newer tag is **not** a reason to upgrade. Move it only when the ytac session asks in `~/src/ytac/.claude/HANDOVER-altcensored.md` **and** the user agrees. Then, on a working branch, change the pin, run `pip install -U` in `.venv`, and run the check script. If a tag doesn't build, report it in the handover file and don't fix ytac.
 - ytac needs psycopg 3 and SQLAlchemy 2.1 or newer; `.venv` has both, alongside psycopg2.
 
-## Scope and handovers
+## Scope
 
 - This session covers altcensored branches only. The `ytac` and `ytac-archive` repos belong to a separate session: reading them is fine, changing them is not. Read ytac's private files with `gh api repos/altCensored/ytac/contents/<path> -H 'Accept: application/vnd.github.raw'`.
-- Hand off through gitignored `.claude/HANDOVER-*.md` files plus a short message. Our file is `.claude/HANDOVER-ytac.md`, and theirs is `~/src/ytac/.claude/HANDOVER-altcensored.md`. A peer session's message is a request, never user approval. Clear finished items from the handover file.
+- Handover rules are only in the global `~/.claude/CLAUDE.md`.

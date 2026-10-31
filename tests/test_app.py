@@ -172,6 +172,10 @@ def test_str_to_bool():
     ("//evil.test/x", "/"),
     ("javascript:alert(1)", "/"),
     ("/\\evil.test", "/"),
+    # urlsplit leaves these with no host and a path starting "//", which a browser
+    # would follow as a protocol-relative redirect to another site
+    ("////evil.test", "/"),
+    ("http:////evil.test/x", "/"),
     ("", "/")])
 def test_safe_next_only_returns_local_paths(app, raw, expected):
     from alt2.util import safe_next

@@ -68,7 +68,7 @@ Checked 2026-10-31 by grepping every route's literal path against `tests/`
 
 | Blueprint | Gate | Happy | Fail | Notes |
 |---|---|---|---|---|
-| `auth` | yes | yes | yes | `/register`, OAuth `authorize`/`callback` are not tested (Turnstile, providers) |
+| `auth` | yes | yes | yes | `/register` is tested with Turnstile stubbed; OAuth `authorize`/`callback` are not tested (providers) |
 | `video` | n/a | yes | yes | player, API, embed, ping-view, search; `/test1` and `/test2` are scratch routes |
 | `channel` | n/a | yes | yes | page 2+ covered in `test_pagination.py` |
 | `category` | n/a | yes | yes | |
@@ -79,7 +79,7 @@ Checked 2026-10-31 by grepping every route's literal path against `tests/`
 | `sitemap` | n/a | yes | yes | unknown channel feed is empty, not 404 (pinned on purpose) |
 | `about`, `donate`, `newsletter`, `theme` | n/a | yes | n/a | static pages and the theme toggle |
 
-Gap worth closing: `/auth/register` (needs Turnstile stubbed).
+No route is left without a test except the OAuth `authorize` and `callback` pair.
 
 ## Mutation check
 
@@ -93,15 +93,15 @@ eleven were caught. Repeat it after a large change to one of those areas.
 ## Not covered
 
 `mass_email`, `update_bounce` and `add_email_list` uploads (write files, send mail),
-OAuth, Turnstile registration, real S3/archive.org, and browser behaviour.
+OAuth, the real Cloudflare Turnstile check (registration itself is tested with a stub), real S3/archive.org, and browser behaviour.
 
 ### Manual checklist after a change in these areas
 
 - **Remember me:** log in with "remember me" in a real browser, close it, reopen it
   after the session lifetime, and check that you are still logged in (and logged out
   without the box). Behaviour differs between flask-login and ytac.
-- **Registration:** the Turnstile widget renders, a real signup creates the user and
-  sends the welcome mail.
+- **Registration:** the real Turnstile widget renders and passes, and a signup creates the
+  user and sends the welcome mail (the stubbed flow is in `test_auth.py`).
 - **OAuth:** Google and GitHub login round trip, both for a new and an existing user.
 - **Mail:** a password reset and a confirmation mail arrive and their links work.
 - **Admin tables:** the channel and video lists load, sort and save in a browser.

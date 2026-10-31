@@ -55,6 +55,37 @@ def test_login_is_limited_to_five_a_minute(strict):
     assert codes[5] == 429
 
 
+def login_from(client, forwarded):
+    return client.post("/auth/login", data=dict(username="alice", password="no"),
+                       headers={"X-Forwarded-For": forwarded})
+
+
+def test_each_visitor_has_their_own_login_budget(strict):
+    # behind nginx remote_addr is the same for everyone; the key is the address
+    # nginx appended to X-Forwarded-For
+    for _ in range(6):
+        login_from(strict, "203.0.113.1")
+    assert login_from(strict, "203.0.113.1").status_code == 429
+    assert login_from(strict, "203.0.113.2").status_code == 302
+
+
+def test_a_forged_first_forwarded_entry_does_not_buy_a_new_budget(strict):
+    # the client controls the first entries; only the last one is nginx's
+    codes = [login_from(strict, f"198.51.100.{i}, 203.0.113.9").status_code
+             for i in range(6)]
+    assert codes[:5] == [302] * 5 and codes[5] == 429
+
+
+def test_the_limit_page_is_our_error_page_not_bare_text(strict):
+    for _ in range(5):
+        bad_login(strict)
+    r = bad_login(strict)
+    assert r.status_code == 429
+    body = r.get_data(as_text=True)
+    assert "<h1>Too many requests" in body and "Too Many Requests -" not in body
+    assert r.headers["Retry-After"] == "60"
+
+
 def test_limit_applies_per_route(strict):
     for _ in range(6):
         bad_login(strict)

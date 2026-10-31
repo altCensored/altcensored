@@ -3,7 +3,7 @@ import urllib3
 from minio import Minio
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from flask import Flask, request, session, url_for, render_template, g, has_request_context
+from flask import Flask, request, session, url_for, render_template, g, has_request_context, make_response
 from jinja2 import Undefined, pass_eval_context
 from flask_babelplus import Babel, lazy_gettext as _l
 from flask_mail import Mail
@@ -84,7 +84,18 @@ csp = {
 }
 
 mail = Mail()
-limiter = Limiter(key_func=get_remote_address, default_limits=[])
+def client_ip():
+    """Rate-limit key: the visitor's address, not the proxy's. gunicorn listens on a
+    unix socket behind nginx, so remote_addr is the same for everyone and a plain
+    get_remote_address made 5/min a limit for the whole site. nginx sets
+    X-Forwarded-For with $proxy_add_x_forwarded_for, which appends the address it
+    saw to whatever the client sent: only the LAST entry can be trusted."""
+    forwarded = request.headers.get('X-Forwarded-For', '')
+    last = forwarded.split(',')[-1].strip()
+    return last or get_remote_address()
+
+
+limiter = Limiter(key_func=client_ip, default_limits=[])
 
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
@@ -324,6 +335,13 @@ def create_app(test_config=None):
             app.logger.error(e)
         return render_template('video/404.html'), 404
 
+    def too_many_requests(e):
+        if has_request_context():
+            app.logger.warning('429 Too Many Requests: %s %s', request.path, e.description)
+        response = make_response(render_template('video/429.html'), 429)
+        response.headers['Retry-After'] = '60'
+        return response
+
     def internal_server_error(e):
         if has_request_context():
             app.logger.error('500 Internal Error: %s', request.url)
@@ -339,6 +357,7 @@ def create_app(test_config=None):
         return render_template('video/503.html'), 503
 
     app.register_error_handler(400, bad_request)
+    app.register_error_handler(429, too_many_requests)
     app.register_error_handler(404, page_not_found)
     app.register_error_handler(500, internal_server_error)
     app.register_error_handler(503, service_unavailable)

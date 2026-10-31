@@ -74,6 +74,9 @@ csp = {
         '*.altcensored.com',
         'archive.org',
         '*.archive.org',
+        # Turnstile draws its widget in an iframe from this host; without it the
+        # browser blocks the frame, no token is produced and registration fails.
+        'challenges.cloudflare.com',
     ],
     'frame-ancestors': [
         '\'self\'',

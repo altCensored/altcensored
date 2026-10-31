@@ -101,6 +101,16 @@ def test_csp_nonce_matches_inline_scripts(client):
     assert f'nonce="{nonce}"' in r.get_data(as_text=True)
 
 
+def test_csp_lets_turnstile_frame_load_on_register(client):
+    # The Turnstile widget is an iframe from challenges.cloudflare.com; with
+    # frame-src narrowed to our own hosts it was blocked and signup failed.
+    csp = client.get("/auth/register").headers["Content-Security-Policy"]
+    frame_src = next(d for d in csp.split(";") if d.strip().startswith("frame-src"))
+    assert "challenges.cloudflare.com" in frame_src
+    assert "challenges.cloudflare.com" in csp.split("script-src")[1].split(";")[0] \
+        or "*.cloudflare.com" in csp.split("script-src")[1].split(";")[0]
+
+
 def test_session_cookie_flags(client):
     r = client.get("/")
     cookie = next(c for c in r.headers.getlist("Set-Cookie")

@@ -69,7 +69,7 @@ Checked 2026-10-31 by grepping every route's literal path against `tests/`
 | Blueprint | Gate | Happy | Fail | Notes |
 |---|---|---|---|---|
 | `auth` | yes | yes | yes | `/register` is tested with Turnstile stubbed; OAuth `authorize`/`callback` are not tested (providers) |
-| `video` | n/a | yes | yes | player, API, embed, ping-view, search; `/test1` and `/test2` are scratch routes |
+| `video` | n/a | yes | yes | player, API, embed, ping-view, search |
 | `channel` | n/a | yes | yes | page 2+ covered in `test_pagination.py` |
 | `category` | n/a | yes | yes | |
 | `playlist` | yes | yes | yes | list-full, duplicates, featured-video repair |

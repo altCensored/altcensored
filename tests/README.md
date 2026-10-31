@@ -83,12 +83,22 @@ No route is left without a test except the OAuth `authorize` and `callback` pair
 
 ## Mutation check
 
-Deliberately breaking the code should make a test fail. On 2026-10-31, 13 breaks were
-tried on a scratch copy on www2: the admin and login gates, the `loggedin` cookie
-signature, expiry, path skip and mimetype check, `safe_next` host and `//` checks,
-list cap and duplicates, the Swedish column and `valid_video_id`. Two survived and got
-tests (`safe_next` with `////host`, the cookie path skip on an HTML response); the other
-eleven were caught. Repeat it after a large change to one of those areas.
+Deliberately breaking the code should make a test fail. `scripts/mutation_check.py`
+does it: each of its 17 breaks (the admin and login gates, the `loggedin` cookie
+signature, expiry, path skip and mimetype check, `safe_next` host and `//` checks, list
+cap and duplicates, the Swedish column, `valid_video_id`, page offsets in history and
+search, and the registration Turnstile and welcome mail) is applied to a throwaway copy
+on www2, and the suite runs on the legacy stack. `CAUGHT` is good; `MISSED` means a
+test is missing. Nothing in this clone or the www2 checkouts is changed.
+
+    scripts/mutation_check.py --list
+    scripts/mutation_check.py --baseline   # the unchanged tree must pass first
+    scripts/mutation_check.py [N ...]      # all, or by number; 30-100 s each
+
+Do not run it at the same time as `run_both.sh` (both use the www2 test database). Run
+it after a large change to one of those areas, and add a break to `MUTATIONS` when you
+add a guard worth protecting. The first run on 2026-10-31 found two gaps (`safe_next`
+with `////host`, the cookie path skip on an HTML response); both now have tests.
 
 ## Not covered
 

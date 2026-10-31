@@ -145,6 +145,23 @@ def test_confirm_email_verifies_user(client, engine):
 
 
 @pytest.mark.writes
+def test_confirm_link_in_the_welcome_email_verifies_the_user(client, engine, outbox):
+    # Follow the link exactly as it is mailed (an unverified login re-sends it), so a
+    # mismatch between the token the mail carries and the one /confirm_email decodes
+    # is caught; the test above builds its own token and could not see it.
+    import re
+    from sqlalchemy import text
+    login(client, "newbie")
+    body = outbox[0][1]["text_body"]
+    path = re.search(r"/auth/confirm_email/\S+", body).group(0)
+    assert client.get(path).status_code == 302
+    with engine.connect() as c:
+        ok = c.execute(text("select email_verified from altcen_user "
+                            "where username='newbie'")).scalar()
+    assert ok is True
+
+
+@pytest.mark.writes
 def test_reset_password_changes_password(client, engine):
     from alt2.models import User
     from alt2.database import db_session

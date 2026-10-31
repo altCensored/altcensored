@@ -35,7 +35,7 @@ sys.path.insert(0, os.getcwd())
 from alt2 import create_app, util
 from alt2.cache import cache
 from alt2.database import db_session
-from alt2.models import MvVideo, MvChannel
+from alt2.models import MvVideo, MvChannel, MvCategory, Playlist
 
 app = create_app({'TESTING': True, 'RATELIMIT_ENABLED': False, 'RATELIMIT_STORAGE_URI': 'memory://'})
 cache.init_app(app, config={'CACHE_TYPE': 'SimpleCache'})
@@ -45,12 +45,22 @@ if backend != 'SimpleCache':
 
 v = db_session.query(MvVideo).first()
 c = db_session.query(MvChannel).first()
+cat = db_session.query(MvCategory).first()
+pl = db_session.query(Playlist).first()
 pages = ['/', '/channel', '/channel/deleted', '/channel/deleted/feed', '/sitemap.xml', '/feed',
          '/auth/login', '/auth/logout', '/search?q=test', '/playlist/']
 if v is not None:
     pages.append(f"/watch?v={getattr(v, 'extractor_data', None) or getattr(v, 'id')}")
 if c is not None:
-    pages.append(f"/channel/{getattr(c, 'extractor_data', None) or getattr(c, 'id')}")
+    cid = getattr(c, 'extractor_data', None) or getattr(c, 'id')
+    pages += [f"/channel/{cid}", f"/channel/{cid}/popular", f"/channel/{cid}/feed"]
+# Pages that render an old column name as an empty string instead of failing: categories (all three
+# orderings), the category and playlist indexes, and a playlist's own page.
+pages += ['/category/', '/playlist/popular', '/channel/popular']
+if cat is not None:
+    pages += [f"/category/{cat.id}", f"/category/{cat.id}/new", f"/category/{cat.id}/popular"]
+if pl is not None and getattr(pl, 'hashid', None):
+    pages.append(f"/playlist/{pl.hashid}")
 
 known = {l.split('#')[0].strip() for l in open('scripts/ytac_check/known_bad_pages.txt') if l.split('#')[0].strip()}
 bad = 0

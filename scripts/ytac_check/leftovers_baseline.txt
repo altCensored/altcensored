@@ -1,9 +1,0 @@
-alt2/templates/category/category_item.html: <meta name="altcen_meta_description" content="{% block description %}Limited Censored YouTube Video Channel {{ channel['ytc_title'] }}: {{ channel['ytc_description'] }} (Created on {{ channel['ytc_publishedat'].strftime('%b %e, %G') }}){% endblock %}">
-alt2/templates/category/category_item.html: <meta name="altcen_title" content="{% block title %}{{ channel['ytc_title'] | striptags | truncate(length=56,killwords=False,end='',leeway=0) }}{% endblock %}">
-alt2/templates/category/category_item.html: <meta name="twitter:description" content="{{ channel['ytc_description'] | safe | nl2br | truncate (140) }}">
-alt2/templates/category/category_item.html: <meta name="twitter:title" content="{{ channel['ytc_title'] ~ ' Channel ' ~ '(' ~ channel['limited'] ~' Limited Videos' ~ ')' }}">
-alt2/templates/category/category_item.html: <meta property="og:image" content="{{ channel['ytc_thumbnailurl'] | replace('88','176')  }}">
-alt2/templates/category/category_item.html: <meta property="og:title" content="{{ channel['ytc_title'] }}">
-alt2/templates/category/category_item.html: <meta property="og:url" content="https://{{ config['MYSERVER_NAME'] }}/channel/{{ channel['ytc_id'] }}">
-alt2/templates/channel/channel_index.html: src="{{ channel['ytc_thumbnailurl'] | reverse | replace('88','671', 1) | reverse  }}"
-alt2/templates/channel/channel_item.html: <img class="thumbnail" src="{{ channel['ytc_thumbnailurl'] | reverse | replace('88','671', 1) | reverse  }}"

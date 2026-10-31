@@ -29,7 +29,8 @@ regression.
 | `test_settings.py` | site and user settings |
 | `test_admin.py` | admin gate, channel/video updates, recorded shell dispatch |
 | `test_video_api.py`, `test_player.py`, `test_archive.py` | player endpoints, view counter, source choice, archive.org |
-| `test_sitemap_feeds.py`, `test_listings.py`, `test_pages.py` | sitemaps, feeds, listings, pagination |
+| `test_sitemap_feeds.py`, `test_listings.py`, `test_pages.py` | sitemaps, feeds, listings, pagination helper |
+| `test_pagination.py` | page 2+ of search, channel, history and watch-later routes (page size set to 1) |
 | `test_app.py` | locale, error pages, headers, loggedin cookie hook, template filters |
 | `test_cache_limits.py` | real cache and rate limiter (a second app, see its docstring) |
 | `test_i18n.py` | translation catalogs vs. the strings in the code |
@@ -69,17 +70,16 @@ Checked 2026-10-31 by grepping every route's literal path against `tests/`
 |---|---|---|---|---|
 | `auth` | yes | yes | yes | `/register`, OAuth `authorize`/`callback` are not tested (Turnstile, providers) |
 | `video` | n/a | yes | yes | player, API, embed, ping-view, search; `/test1` and `/test2` are scratch routes |
-| `channel` | n/a | yes | yes | `/deleted`, `/limited`, `/archived` page 2+ not hit |
+| `channel` | n/a | yes | yes | page 2+ covered in `test_pagination.py` |
 | `category` | n/a | yes | yes | |
 | `playlist` | yes | yes | yes | list-full, duplicates, featured-video repair |
-| `user` | yes | yes | yes | history and watch-later page 2+ not hit; account delete with playlists is `xfail` |
+| `user` | yes | yes | yes | history and watch-later page 2+ covered in `test_pagination.py`; account delete with playlists is `xfail` |
 | `settings` | yes | yes | yes | |
 | `admin` | yes | yes | yes | shell-outs recorded, never run; `mass_email` and uploads excluded |
 | `sitemap` | n/a | yes | yes | unknown channel feed is empty, not 404 (pinned on purpose) |
 | `about`, `donate`, `newsletter`, `theme` | n/a | yes | n/a | static pages and the theme toggle |
 
-Gaps worth closing: `/auth/register`, `/search/*/page/N`, the channel and user page 2+
-routes.
+Gap worth closing: `/auth/register` (needs Turnstile stubbed).
 
 ## Mutation check
 

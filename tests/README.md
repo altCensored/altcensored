@@ -9,10 +9,15 @@ database whose name ends in `_test`; the suite drops and recreates everything in
 On www2 the service entry avoids handling a password. Never point this at www or orcl.
 `pip install -r requirements-test.txt` adds pytest.
 
-`tests/run_both.sh [pytest args]` rsyncs `tests/` to www2 and runs them in both
-checkouts: `/opt/altcen/altcensored-master` (legacy schema) and
-`/opt/altcen/altcensored` (`ytac-cutover`). One run covers one schema, chosen by
-which package the venv has. A failure on one stack only is a cutover regression.
+`tests/run_both.sh [--local] [pytest args]` runs the suite in both www2 checkouts:
+`/opt/altcen/altcensored-master` (`master`, legacy schema) and `/opt/altcen/altcensored`
+(`ytac-cutover`). Both are git clones, so by default it does `git pull --ff-only` in each
+and prints the commit it tested. That means the code must be pushed first. To test
+uncommitted work, use `--local`: it rsyncs this clone's `tests/`, `pytest.ini` and
+`scripts/parity_*.py` over the checkouts and restores them afterwards. The script
+refuses to run if a www2 checkout has uncommitted changes. One run covers one schema,
+chosen by which package the venv has. A failure on one stack only is a cutover
+regression.
 
 ## Layout
 

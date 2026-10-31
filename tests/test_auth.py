@@ -156,3 +156,98 @@ def test_reset_password_changes_password(client, engine):
     assert r.status_code == 302
     assert login(client, "alice", "new-pass-123").status_code == 302
     assert session_user(client) is not None
+
+
+# --- registration ------------------------------------------------------------------
+# Cloudflare Turnstile is stubbed where routes.py looks it up; the real check is a
+# network call and stays on the manual checklist in README.md.
+
+# example.com, not .test: the Email() validator rejects reserved test TLDs
+NEW = dict(username="carol", email="carol@example.com",
+           password="correct horse", password2="correct horse")
+
+
+@pytest.fixture()
+def turnstile(monkeypatch):
+    """Stub verify_turnstile_token; .result is what Cloudflare 'answers', .calls records
+    the (token, secret) pairs it was asked about."""
+    class Stub:
+        result = {"success": True}
+        calls = []
+    stub = Stub()
+    stub.calls = []
+
+    def fake(token, secret):
+        stub.calls.append((token, secret))
+        return stub.result
+    monkeypatch.setattr("alt2.auth.routes.verify_turnstile_token", fake)
+    return stub
+
+
+def register(client, **overrides):
+    client.get("/auth/register")   # renders a page, which fills session['navtabs']
+    data = {**NEW, "cf-turnstile-response": "tok123", **overrides}
+    return client.post("/auth/register", data=data)
+
+
+def users_named(sql, name):
+    return sql("select username, email, email_verified from altcen_user where username=:n", n=name)
+
+
+def test_register_page_renders(client):
+    assert client.get("/auth/register").status_code == 200
+
+
+@pytest.mark.writes
+def test_register_creates_unverified_user_and_sends_welcome_mail(client, turnstile, sql, outbox):
+    r = register(client)
+    assert r.status_code == 302 and r.headers["Location"].endswith("/auth/login")
+    assert users_named(sql, "carol") == [("carol", "carol@example.com", False)]
+    assert len(outbox) == 1 and outbox[0][1]["recipients"] == ["carol@example.com"]
+    # Cloudflare was asked about the token the browser posted
+    assert turnstile.calls and turnstile.calls[0][0] == "tok123"
+
+
+@pytest.mark.writes
+def test_registered_password_works_for_login(client, turnstile):
+    register(client)
+    login(client, "carol", password="correct horse")
+    assert session_user(client)["username"] == "carol"
+
+
+@pytest.mark.writes
+def test_register_fails_when_turnstile_fails(client, turnstile, sql, outbox):
+    turnstile.result = {"success": False}
+    r = register(client)
+    assert r.status_code == 302 and r.headers["Location"].endswith("/")
+    assert users_named(sql, "carol") == []
+    assert outbox == []
+
+
+@pytest.mark.writes
+@pytest.mark.parametrize("override", [
+    dict(username="alice"),                      # taken
+    dict(password2="something else"),            # passwords differ
+    dict(email="not-an-email"),
+    dict(username="")])
+def test_register_rejects_bad_input(client, turnstile, sql, outbox, override):
+    before = sql("select count(*) from altcen_user")
+    r = register(client, **override)
+    assert r.status_code == 200            # the form is shown again
+    assert sql("select count(*) from altcen_user") == before
+    assert outbox == []
+    assert turnstile.calls == []           # no Cloudflare call for an invalid form
+
+
+@pytest.mark.writes
+def test_register_rejects_an_email_that_is_taken(client, turnstile, sql, outbox):
+    register(client)
+    r = register(client, username="dave")
+    assert r.status_code == 200
+    assert users_named(sql, "dave") == []
+    assert len(outbox) == 1                # only carol's welcome mail
+
+
+def test_logged_in_user_is_redirected_from_register(user_client):
+    r = user_client.get("/auth/register")
+    assert r.status_code == 302 and not r.headers["Location"].endswith("/auth/register")

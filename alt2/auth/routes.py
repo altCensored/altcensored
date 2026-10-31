@@ -184,8 +184,11 @@ def delete():
     if request.method == 'POST':
         submitvalue = request.form['submitvalue']
         if submitvalue == 'yes':
-            user = db_session.query(User).filter(User.id == user_id).first()
-            db_session.delete(user)
+            # Bulk DELETE, not db_session.delete(user): the ORM would first try to
+            # null the foreign key on the User.mv_playlist backref (a materialized
+            # view, which Postgres refuses to change). The database's own
+            # ON DELETE CASCADE removes the user's playlists.
+            db_session.execute(sa.delete(User).where(User.id == user_id))
             db_session.commit()
             flash(item_quoted + ' deleted', 'success')
             session['user'] = None

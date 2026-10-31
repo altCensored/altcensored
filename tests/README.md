@@ -52,8 +52,54 @@ which package the venv has. A failure on one stack only is a cutover regression.
 account tables' timestamps to `timestamptz`, as in prod, because `altcen_models`
 declares them naive.
 
+## Coverage by blueprint
+
+Gate = an anonymous (or non-admin) request is refused. Happy = the normal case is
+asserted on content or database state, not only on the status code. Fail = a bad input,
+unknown id or refused action is asserted. "n/a" = the blueprint has no gate.
+Checked 2026-10-31 by grepping every route's literal path against `tests/`
+(everything is referenced except the rows under "Gaps") and by mutation (below).
+
+| Blueprint | Gate | Happy | Fail | Notes |
+|---|---|---|---|---|
+| `auth` | yes | yes | yes | `/register`, OAuth `authorize`/`callback` are not tested (Turnstile, providers) |
+| `video` | n/a | yes | yes | player, API, embed, ping-view, search; `/test1` and `/test2` are scratch routes |
+| `channel` | n/a | yes | yes | `/deleted`, `/limited`, `/archived` page 2+ not hit |
+| `category` | n/a | yes | yes | |
+| `playlist` | yes | yes | yes | list-full, duplicates, featured-video repair |
+| `user` | yes | yes | yes | history and watch-later page 2+ not hit; account delete with playlists is `xfail` |
+| `settings` | yes | yes | yes | |
+| `admin` | yes | yes | yes | shell-outs recorded, never run; `mass_email` and uploads excluded |
+| `sitemap` | n/a | yes | yes | unknown channel feed is empty, not 404 (pinned on purpose) |
+| `about`, `donate`, `newsletter`, `theme` | n/a | yes | n/a | static pages and the theme toggle |
+
+Gaps worth closing: `/auth/register`, `/search/*/page/N`, the channel and user page 2+
+routes.
+
+## Mutation check
+
+Deliberately breaking the code should make a test fail. On 2026-10-31, 13 breaks were
+tried on a scratch copy on www2: the admin and login gates, the `loggedin` cookie
+signature, expiry, path skip and mimetype check, `safe_next` host and `//` checks,
+list cap and duplicates, the Swedish column and `valid_video_id`. Two survived and got
+tests (`safe_next` with `////host`, the cookie path skip on an HTML response); the other
+eleven were caught. Repeat it after a large change to one of those areas.
+
 ## Not covered
 
 `mass_email`, `update_bounce` and `add_email_list` uploads (write files, send mail),
-OAuth, Turnstile registration, real S3/archive.org, and browser behaviour. Check those by
-hand after a change.
+OAuth, Turnstile registration, real S3/archive.org, and browser behaviour.
+
+### Manual checklist after a change in these areas
+
+- **Remember me:** log in with "remember me" in a real browser, close it, reopen it
+  after the session lifetime, and check that you are still logged in (and logged out
+  without the box). Behaviour differs between flask-login and ytac.
+- **Registration:** the Turnstile widget renders, a real signup creates the user and
+  sends the welcome mail.
+- **OAuth:** Google and GitHub login round trip, both for a new and an existing user.
+- **Mail:** a password reset and a confirmation mail arrive and their links work.
+- **Admin tables:** the channel and video lists load, sort and save in a browser.
+- **Uploads:** `mass_email`, bounce and email-list uploads on a copy, never on prod data.
+- **Playback:** one IA video and one archived (non-IA) video play in a browser, with
+  thumbnails through the proxy.

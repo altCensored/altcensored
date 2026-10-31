@@ -1,8 +1,12 @@
 #!/bin/bash
 # Check the ytac-cutover worktree after a master merge: static leftovers + test-client smoke run.
-# Read-only: DB is orcl ytac as claude_ro, cache/limiter are in-memory, Redis host is unreachable.
+# Read-only: DB is orcl ytac as claude_ro (or $YTAC_CHECK_SERVICE), cache/limiter are in-memory, Redis host is unreachable.
 set -uo pipefail
 cd "$(dirname "$0")/.."
+# The libpq service the smoke run reads (read-only claude_ro). Default: orcl's ytac DB. For the
+# www2 rehearsal (R9) use the rehearsal copy: YTAC_CHECK_SERVICE=ytac-www2 scripts/check_ytac.sh
+SERVICE="${YTAC_CHECK_SERVICE:-ytac-orcl}"
+echo "== database service: $SERVICE"
 fail=0
 
 echo "== compile"
@@ -22,7 +26,7 @@ if [ -n "$new" ]; then echo "$new"; fail=1; fi
 echo "  known leftovers: $(wc -l < scripts/ytac_check/leftovers_baseline.txt)"
 
 echo "== test client"
-ALTC_DATABASE_URL='postgresql+psycopg2:///ytac?service=ytac-orcl' \
+ALTC_DATABASE_URL="postgresql+psycopg2:///ytac?service=$SERVICE" \
 ALTC_SECRET_KEY=check ALTC_LOGGEDIN_SECRET=check RANDOM_VALUE=check \
 CACHE_REDIS_HOST=127.0.0.2 \
 .venv/bin/python -I - <<'EOF' || fail=1
@@ -77,7 +81,7 @@ sys.exit(1 if bad else 0)
 EOF
 
 echo "== Model.attribute references exist on the ytac models"
-ALTC_DATABASE_URL='postgresql+psycopg2:///ytac?service=ytac-orcl' CACHE_REDIS_HOST=127.0.0.2 \
+ALTC_DATABASE_URL="postgresql+psycopg2:///ytac?service=$SERVICE" CACHE_REDIS_HOST=127.0.0.2 \
 .venv/bin/python -I - <<'EOF' || fail=1
 import sys, os, re, glob
 sys.path.insert(0, os.getcwd())
@@ -97,7 +101,7 @@ sys.exit(1 if bad else 0)
 EOF
 
 echo "== email helpers set real columns (EmailList renamed email_*; AltcenUser didn't)"
-ALTC_DATABASE_URL='postgresql+psycopg2:///ytac?service=ytac-orcl' \
+ALTC_DATABASE_URL="postgresql+psycopg2:///ytac?service=$SERVICE" \
 ALTC_SECRET_KEY=check ALTC_LOGGEDIN_SECRET=check RANDOM_VALUE=check \
 CACHE_REDIS_HOST=127.0.0.2 \
 .venv/bin/python -I - <<'EOF' || fail=1

@@ -56,6 +56,7 @@ def setup(engine):
         real = [t for n, t in Base.metadata.tables.items()
                 if not n.startswith("mv_")]
         Base.metadata.create_all(engine, tables=real)
+        _match_prod_account_timestamps(engine)
         with engine.begin() as conn:
             conn.exec_driver_sql((FIXTURES / "matviews.sql").read_text())
         _load_legacy(engine)
@@ -66,8 +67,26 @@ def setup(engine):
         with Session(engine) as s:
             views.create_all(s)
         _load_ytac(engine)
+    _load_accounts(engine)
     _load_ui_text(engine)
     refresh_matviews(engine)
+
+
+def _match_prod_account_timestamps(engine):
+    """altcen_models declares naive DATETIME, but prod's account tables are
+    timestamptz (migrations/*_add_user_accounts.sql). Without this the playlist
+    page 500s on a naive/aware subtraction here and never in prod."""
+    with engine.begin() as conn:
+        for table in ("altcen_user", "playlist", "email_list"):
+            cols = conn.exec_driver_sql(
+                "SELECT column_name FROM information_schema.columns "
+                "WHERE table_schema='public' AND table_name=%s "
+                "AND data_type='timestamp without time zone'", (table,)
+            ).scalars().all()
+            for col in cols:
+                conn.exec_driver_sql(
+                    f'ALTER TABLE {table} ALTER COLUMN "{col}" '
+                    f'TYPE timestamptz USING "{col}" AT TIME ZONE \'UTC\'')
 
 
 def wipe(engine):
@@ -118,7 +137,7 @@ def _load_legacy(engine):
             v = Video(
                 extractor_key="Youtube", extractor_data=vid, title=title,
                 prev=NOW, published=NOW - timedelta(days=30 - n),
-                yt_deleted=deleted,
+                yt_deleted=deleted, category=VIDEO_CATEGORY.get(vid),
                 yt_deleted_date=NOW if deleted else None,
                 exists_ia=ia, exists_ac=ac, duration=120 + n,
                 yt_views=100 * (n + 1),
@@ -151,11 +170,58 @@ def _load_ytac(engine):
                 extractor_data=vid, title=title,
                 published=(NOW - timedelta(days=30 - n)).date(),
                 deleted=deleted, deleted_date=NOW.date() if deleted else None,
+                category=VIDEO_CATEGORY.get(vid),
                 ia_exists=bool(ia), ac_exists=bool(ac), duration=120 + n,
                 view_count=100 * (n + 1),
             )
             v.sources.append(sources[ch])
             s.add(v)
+        s.commit()
+
+
+PASSWORD = "test-password"
+# username, email, verified, public. "admin" is special: admin_login_required checks it.
+USERS = [
+    ("admin", "admin@example.test", True, False),
+    ("alice", "alice@example.test", True, True),    # only public users are listed
+    ("newbie", "newbie@example.test", False, False),
+]
+# mv_category only lists categories that have archived videos
+VIDEO_CATEGORY = {"vid_ia_00002": "Music"}
+CATEGORIES = ["Music", "News"]
+PLAYLIST = dict(hashid="plAliceOne01", title="Alice list",
+                videos=["vid_ia_00002", "vid_ac_00003"])
+
+
+def _load_accounts(engine):
+    """Users (all share PASSWORD), two categories and one public playlist owned
+    by alice. User and Playlist have the same columns on both schemas;
+    Category was renamed by ytac, hence the branch."""
+    from alt2.models import Category, Playlist, User
+    with Session(engine) as s:
+        users = {}
+        for name, email, verified, public in USERS:
+            u = User(username=name, email=email, email_verified=verified,
+                     public=public,
+                     description="", view_counter=0, watched=[], watchlater=[],
+                     created_date=NOW, updated=NOW,
+                     email_lastsent_date=NOW - timedelta(days=30),
+                     settings=dict(theme="light", locale="en", autoplay="True",
+                                   playnext="True", looplist="True"),
+                     navtabs=["video", "channel", "playlist"],
+                     navtabs_index=["video", "channel", "playlist"])
+            u.set_password(PASSWORD)
+            s.add(u)
+            users[name] = u
+        s.flush()
+        for n, name in enumerate(CATEGORIES, start=1):
+            if BACKEND == "legacy":
+                s.add(Category(cat_id=n, cat_name=name, cat_image=f"{name}.png"))
+            else:
+                s.add(Category(id=n, name=name, icon=f"{name}.png"))
+        s.add(Playlist(user_id=users["alice"].id, public=True, view_counter=0,
+                       video_count=len(PLAYLIST["videos"]), created=NOW,
+                       updated=NOW, **PLAYLIST))
         s.commit()
 
 

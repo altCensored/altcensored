@@ -16,3 +16,11 @@ def test_seed_counts(engine):
 def test_home_page_renders(client):
     r = client.get("/")
     assert r.status_code == 200
+
+
+def test_seed_accounts(engine):
+    with engine.connect() as c:
+        n = lambda t: c.execute(text(f"select count(*) from {t}")).scalar()
+        assert n("altcen_user") == 3
+        assert n("category") == 2
+        assert n("playlist") == 1

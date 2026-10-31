@@ -33,6 +33,16 @@ def pytest_configure(config):
     os.environ["VIDEOSERVER_URL"] = "https://videos.test/"
 
 
+def pytest_collection_modifyitems(config, items):
+    """One run covers one schema: skip tests marked for the other backend."""
+    from tests.seed import BACKEND
+    other = "ytac" if BACKEND == "legacy" else "legacy"
+    skip = pytest.mark.skip(reason=f"{other}-only test, backend is {BACKEND}")
+    for item in items:
+        if other in item.keywords:
+            item.add_marker(skip)
+
+
 @pytest.fixture(scope="session")
 def engine():
     from alt2 import models  # noqa: F401  registers every table on Base
@@ -75,3 +85,81 @@ def no_network(monkeypatch):
     import alt2.video
     monkeypatch.setattr(alt2.video, "check_ac_object_exists", boom)
     monkeypatch.setattr(alt2.video, "get_ia_item", boom)
+
+
+@pytest.fixture(autouse=True)
+def outbox(monkeypatch):
+    """Capture outgoing mail instead of sending it. Tests read it as a list of
+    (args, kwargs) calls to send_email."""
+    sent = []
+    import alt2.auth.email
+    monkeypatch.setattr(alt2.auth.email, "send_email",
+                        lambda *a, **k: sent.append((a, k)))
+    return sent
+
+
+@pytest.fixture(autouse=True)
+def _reseed_after_writes(request):
+    """Tests marked ``writes`` get a pristine database again afterwards. A
+    re-seed costs about a second, which is cheaper than being clever."""
+    yield
+    if request.node.get_closest_marker("writes"):
+        from tests import seed
+        seed.setup(request.getfixturevalue("engine"))
+
+
+def login(client, username="alice", password=None, **extra):
+    """Log in through the real /auth/login form, so the session is built by the
+    app's own code on either schema. The GET comes first because
+    login_user_altcen needs the session['navtabs'] a rendered page creates; a
+    cold POST raises KeyError (browsers never send one)."""
+    from tests.seed import PASSWORD
+    client.get("/auth/login")
+    return client.post("/auth/login",
+                       data=dict(username=username,
+                                 password=password or PASSWORD, **extra))
+
+
+@pytest.fixture()
+def user_client(client):
+    assert login(client, "alice").status_code == 302
+    return client
+
+
+@pytest.fixture()
+def admin_client(client):
+    assert login(client, "admin").status_code == 302
+    return client
+
+
+@pytest.fixture(autouse=True)
+def shell(monkeypatch):
+    """The admin views shell out (local_command, ssh_command). Record the
+    commands instead of running them, on every test, so nothing here can touch
+    the host."""
+    ran = []
+    import alt2.admin
+    import alt2.util
+    for mod in (alt2.admin, alt2.util):
+        monkeypatch.setattr(mod, "local_command",
+                            lambda cmds, timeout=30: ran.extend(cmds))
+        monkeypatch.setattr(mod, "ssh_command",
+                            lambda host, cmds, user="root": ran.extend(cmds))
+    return ran
+
+
+@pytest.fixture()
+def sql(engine):
+    """sql("select ...", k=v) -> list of row tuples, for asserting DB state."""
+    from sqlalchemy import text
+
+    def run(query, **params):
+        with engine.connect() as c:
+            return [tuple(r) for r in c.execute(text(query), params)]
+    return run
+
+
+def flashes(client):
+    """Flash messages queued in the session as (category, message) pairs."""
+    with client.session_transaction() as s:
+        return [tuple(f) for f in s.get("_flashes", [])]

@@ -142,6 +142,21 @@ def test_non_html_responses_never_get_the_cookie(user_client):
     assert not loggedin_set(r)
 
 
+@pytest.mark.parametrize("path,expect_cookie", [
+    ("/feed", False), ("/sitemap.xml", False), ("/sitemap/channels", False),
+    ("/ip/abc", False), ("/acip/abc", False),
+    ("/about/", True)])  # control: the same setup does set it on an ordinary page
+def test_cookie_skips_cached_paths_even_for_html(app, path, expect_cookie):
+    """nginx caches these paths, so a Set-Cookie there would reach every visitor. The
+    mimetype check normally keeps them clean already; this pins the path skip itself
+    by handing the hook an HTML response on each path."""
+    from flask import Response, session
+    with app.test_request_context(path):
+        session["user"] = {"username": "alice"}
+        resp = app.process_response(Response("<html></html>", mimetype="text/html"))
+    assert loggedin_set(resp) is expect_cookie
+
+
 def test_anonymous_visitors_never_get_the_cookie(client):
     assert not loggedin_set(client.get("/about/"))
 
@@ -172,6 +187,10 @@ def test_str_to_bool():
     ("//evil.test/x", "/"),
     ("javascript:alert(1)", "/"),
     ("/\\evil.test", "/"),
+    # urlsplit leaves these with no host and a path starting "//", which a browser
+    # would follow as a protocol-relative redirect to another site
+    ("////evil.test", "/"),
+    ("http:////evil.test/x", "/"),
     ("", "/")])
 def test_safe_next_only_returns_local_paths(app, raw, expected):
     from alt2.util import safe_next

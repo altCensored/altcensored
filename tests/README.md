@@ -9,15 +9,12 @@ database whose name ends in `_test`; the suite drops and recreates everything in
 On www2 the service entry avoids handling a password. Never point this at www or orcl.
 `pip install -r requirements-test.txt` adds pytest.
 
-`tests/run_both.sh [--local] [pytest args]` runs the suite in both www2 checkouts:
-`/opt/altcen/altcensored-master` (`master`, legacy schema) and `/opt/altcen/altcensored`
-(`ytac-cutover`). Both are git clones, so by default it does `git pull --ff-only` in each
-and prints the commit it tested. That means the code must be pushed first. To test
-uncommitted work, use `--local`: it rsyncs this clone's `tests/`, `pytest.ini` and
-`scripts/parity_*.py` over the checkouts and restores them afterwards. The script
-refuses to run if a www2 checkout has uncommitted changes. One run covers one schema,
-chosen by which package the venv has. A failure on one stack only is a cutover
-regression.
+`[BRANCH=<name>] tests/run_www2.sh [--local] [pytest args]` runs the suite in the www2 checkout
+`/opt/altcen/altcensored`. By default it fetches the branch (`master` unless `BRANCH` is set) and checks
+it out fast-forward only, then prints the commit it tested. That means the code must be pushed first.
+To test uncommitted tests, use `--local`: it rsyncs this clone's `tests/`, `pytest.ini` and
+`scripts/parity_*.py` over the checkout and restores them afterwards (it cannot test `alt2/` changes).
+The script refuses to run if the www2 checkout has uncommitted changes.
 
 ## Layout
 
@@ -95,7 +92,7 @@ test is missing. Nothing in this clone or the www2 checkouts is changed.
     scripts/mutation_check.py --baseline   # the unchanged tree must pass first
     scripts/mutation_check.py [N ...]      # all, or by number; 30-100 s each
 
-Do not run it at the same time as `run_both.sh` (both use the www2 test database). Run
+Do not run it at the same time as `run_www2.sh` (both use the www2 test database). Run
 it after a large change to one of those areas, and add a break to `MUTATIONS` when you
 add a guard worth protecting. The first run on 2026-10-31 found two gaps (`safe_next`
 with `////host`, the cookie path skip on an HTML response); both now have tests.

@@ -6,7 +6,7 @@ copies alt2/, tests/, scripts/ and pytest.ini to a throwaway directory on www2
 (~/mut/m<N>), applies the replacement there, runs the whole suite with -x on the
 legacy stack, and deletes the directory. Neither this clone nor the www2 checkouts
 are touched. The suite drops every table in the www2 test database, so never run two
-at once (including run_both.sh).
+at once (including run_www2.sh).
 
   CAUGHT   a test failed: the suite guards this behaviour.
   MISSED   the whole suite passed with the code broken: a gap, add a test.
@@ -21,7 +21,7 @@ Usage (from this clone, any time after a large change to one of these areas):
 Exit status is 0 only if every mutation run was CAUGHT.
 
 Only the legacy (master) code is mutated: the same alt2/ text exists on ytac-cutover
-apart from the ytac renames, and the suite is checked there by tests/run_both.sh.
+apart from the ytac renames, and the suite is checked there by tests/run_www2.sh.
 """
 import argparse
 import subprocess

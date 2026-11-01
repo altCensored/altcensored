@@ -1,5 +1,5 @@
 #!/bin/bash
-# Check the ytac-cutover worktree after a master merge: static leftovers + test-client smoke run.
+# Check the app after a change: static leftovers + test-client smoke run.
 # Read-only: DB is orcl ytac as claude_ro (or $YTAC_CHECK_SERVICE), cache/limiter are in-memory, Redis host is unreachable.
 set -uo pipefail
 cd "$(dirname "$0")/.."

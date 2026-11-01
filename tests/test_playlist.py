@@ -207,3 +207,29 @@ def test_remove_video_not_owner(client):
     r = client.post("/playlist/remove_video_playlist",
                     data=dict(playlist=HASH, v="vid_ia_00002"))
     assert r.status_code == 403
+
+
+# --- add-to-playlist mode on search (?playlist=): Done button, Done bar, pagination ----
+
+def test_search_add_mode_shows_done_button_and_bar_for_owner(user_client):
+    html = user_client.get(f"/search?q=deleted&playlist={HASH}").get_data(as_text=True)
+    assert 'id="ac-added-count"' in html                  # the fixed Done bar
+    assert html.count(f"/playlist/{HASH}") >= 2           # header Done button + bar link
+    assert "js-add-playlist" in html                      # the add buttons themselves
+
+
+def test_search_add_mode_has_no_done_ui_for_non_owner(client):
+    from tests.conftest import login
+    login(client, "admin")
+    html = client.get(f"/search?q=deleted&playlist={HASH}").get_data(as_text=True)
+    assert 'id="ac-added-count"' not in html
+
+
+def test_search_without_playlist_has_no_done_bar(user_client):
+    assert 'id="ac-added-count"' not in user_client.get("/search?q=deleted").get_data(as_text=True)
+
+
+def test_search_pagination_keeps_the_playlist(user_client, monkeypatch):
+    monkeypatch.setattr("alt2.video.PER_PAGE", 1)
+    html = user_client.get(f"/search?q=deleted&playlist={HASH}").get_data(as_text=True)
+    assert f"/search/page/2?q=deleted&amp;playlist={HASH}" in html

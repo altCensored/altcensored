@@ -205,6 +205,9 @@
                         <i class='ion-logo-youtube'  style="font-size: 24px"></i>
                         <i class='ion-md-search' style="font-size: 21px"></i>
                         <b>({{ videocount | commafy }})</b>
+                        {% if playlist and session.user and session.user.id == playlist.user_id %}
+                        &nbsp;&nbsp;<a class="pure-button pure-button-primary" href="{{ url_for('playlist.item', playlist=playlist.hashid) }}">{{ gettext('Done') }}</a>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="pure-u-4-24" style="text-align:center;">
@@ -269,14 +272,14 @@
 <div class=pagination>
   <center><h3>
     {% if pagination.has_prev %}
-      <strong><a href="{{ url_for_other_page(pagination.page - 1)}}?q={{rawsearch}}">&lt;&lt;</a></strong>&nbsp;&nbsp;&nbsp;
+      <strong><a href="{{ url_for_other_page(pagination.page - 1)}}?q={{rawsearch}}{% if playlist %}&amp;playlist={{ playlist.hashid }}{% endif %}">&lt;&lt;</a></strong>&nbsp;&nbsp;&nbsp;
     {% endif %}
 
     {% for page in pagination.iter_pages() %}
       {% if page %}
 
         {% if page != pagination.page %}
-          <a href="{{ url_for_other_page(page) }}?q={{rawsearch}}">{{ page }}</a>
+          <a href="{{ url_for_other_page(page) }}?q={{rawsearch}}{% if playlist %}&amp;playlist={{ playlist.hashid }}{% endif %}">{{ page }}</a>
         {% elif page == 1 and not pagination.has_next %}
         {% else %}
           <strong>{{ page }}</strong>
@@ -289,10 +292,11 @@
     {% endfor %}
 
     {% if pagination.has_next %}
-      <strong>&nbsp;&nbsp;&nbsp;<a href="{{ url_for_other_page(pagination.page + 1)}}?q={{rawsearch}}">&gt;&gt;</a></strong>
+      <strong>&nbsp;&nbsp;&nbsp;<a href="{{ url_for_other_page(pagination.page + 1)}}?q={{rawsearch}}{% if playlist %}&amp;playlist={{ playlist.hashid }}{% endif %}">&gt;&gt;</a></strong>
     {% endif %}
 
   </center>
 </div>
 
+{% include "widgets/playlist_done_bar.html" %}
 {% endblock %}

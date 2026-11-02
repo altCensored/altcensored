@@ -37,7 +37,6 @@ alt2/static/captcha_tmp.png
 .DS_Store
 
 # Claude / local notes
-.claude/
 notes/
 DEEP_CODE_REVIEW*.md
 altcensored_review.md

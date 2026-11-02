@@ -75,7 +75,7 @@ def setup(engine):
 
 def _match_prod_account_timestamps(engine):
     """altcen_models declares naive DATETIME, but prod's account tables are
-    timestamptz (migrations/*_add_user_accounts.sql). Without this the playlist
+    timestamptz (the old migrations/*_add_user_accounts.sql, in git history). Without this the playlist
     page 500s on a naive/aware subtraction here and never in prod."""
     with engine.begin() as conn:
         for table in ("altcen_user", "playlist", "email_list"):
@@ -91,7 +91,8 @@ def _match_prod_account_timestamps(engine):
 
 
 def _match_prod_playlist_cascade(engine):
-    """Prod's playlist.user_id is ON DELETE CASCADE (migrations/*_add_user_accounts.sql),
+    """Prod's playlist.user_id is ON DELETE CASCADE (the old migrations/*_add_user_accounts.sql, in git
+    history; ytac's v27 -> v28 migration restores it in ytac),
     but altcen_models declares the FK without it. Without this the account-delete
     test fails here and never in prod, where the bulk DELETE relies on the cascade."""
     with engine.begin() as conn:

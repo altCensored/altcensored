@@ -62,7 +62,6 @@ alt2/                 the Flask application package
   translations/       Babel catalogs (de es fr it nl pt sv); messages.pot is the template
 tests/                pytest suite against a real app and seeded PostgreSQL
 scripts/              check_ytac.sh (offline check), parity scripts, mutation check
-migrations/           old altcen-models SQL, kept as history; schema changes now live in ytac
 altcen_sample_database_pg_dump.sql   sample data for local development
 ```
 
@@ -175,7 +174,7 @@ Thumbnails and channel images are never hotlinked from YouTube. They go through 
 
 ## Known rough edges
 
-- `migrations/` and the old-schema helpers in `tests/seed.py` and `tests/schema.py` are history. The README still describes the pre-ytac `altcen` database and `altcen-models`.
+- The old-schema helpers in `tests/seed.py` and `tests/schema.py` are history (the old `migrations/` SQL was removed; see git history). The README still describes the pre-ytac `altcen` database and `altcen-models`.
 - `EmailList` uses new column names (`subscribed`, `last_sent`, ...) while `User` keeps its `email_*` names, so code touching both must branch on the model.
 - `scripts/mutation_check.py` points at the retired legacy venv.
 - `alt2/templates/auth_old/` is not referenced by any Python module and looks like a leftover. Two email helpers coexist: `alt2/email.py` (used by `auth/email.py`) and `alt2/services/email.py`.

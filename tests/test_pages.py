@@ -6,7 +6,7 @@ BETA = "UCbbbbbbbbbbbbbbbbbbbbbb"
 
 
 @pytest.mark.parametrize("path", [
-    "/", "/new", "/popular", "/latest", "/feed",
+    "/", "/new", "/popular", "/newest", "/feed",
     "/channel/", "/channel/deleted", f"/channel/{ALPHA}", f"/channel/{BETA}",
     "/category/", "/about/", "/search?q=deleted",
 ])
@@ -55,3 +55,16 @@ def test_watch_404(client, path):
 def test_removed_scratch_routes_stay_gone(client, path):
     """/test1 and /test2 were hardcoded demo players, removed as dead code."""
     assert client.get(path).status_code == 404
+
+
+def test_old_latest_urls_redirect_to_default(client):
+    r = client.get("/latest")
+    assert r.status_code == 301 and r.headers["Location"].endswith("/")
+    r = client.get("/latest/page/2")
+    assert r.status_code == 301 and r.headers["Location"].endswith("/page/2")
+
+
+def test_sort_nav_order_and_urls(client):
+    html = client.get("/").get_data(as_text=True)
+    nav = html[html.index("sort-nav-item"):]
+    assert nav.index('href="/"') < nav.index('href="/newest"') < nav.index('href="/popular"')

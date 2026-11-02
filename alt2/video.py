@@ -2,7 +2,7 @@ import logging
 import os
 import json
 from flask import (
-    Blueprint, render_template, request, make_response, session, current_app, abort, flash, jsonify)
+    Blueprint, render_template, request, make_response, session, current_app, abort, flash, jsonify, redirect, url_for)
 from markupsafe import Markup
 from sqlalchemy import func, text, case, select
 from sqlalchemy.orm.attributes import flag_modified
@@ -66,8 +66,8 @@ def _resolve_video_url(video: MvVideo, video_id: str) -> str:
 @bp.route('/page/<int:page>')
 def index(page):
     offset = ((int(page) - 1) * PER_PAGE)
-    order = 'newest'
-    videos = videos_newest(PER_PAGE, offset)
+    order = 'latest'
+    videos = videos_latest(PER_PAGE, offset)
     if not videos and page != 1:
         abort(404)
     session['videocount'] = get_videocount()
@@ -118,10 +118,17 @@ def popular(page):
 
 @bp.route('/latest', defaults={'page': 1})
 @bp.route('/latest/page/<int:page>')
-def latest(page):
+def latest_redirect(page):
+    # 'latest' is now the default listing at '/'; keep old links working
+    return redirect(url_for('video.index', page=page) if page != 1 else url_for('video.index'), 301)
+
+
+@bp.route('/newest', defaults={'page': 1})
+@bp.route('/newest/page/<int:page>')
+def newest(page):
     offset = ((int(page) - 1) * PER_PAGE)
-    order = 'latest'
-    videos = videos_latest(PER_PAGE, offset)
+    order = 'newest'
+    videos = videos_newest(PER_PAGE, offset)
     if not videos and page != 1:
         abort(404)
     get_videocount()

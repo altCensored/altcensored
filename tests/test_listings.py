@@ -99,7 +99,7 @@ def test_category_404s(client, path):
 # --- listings with a second page ----------------------------------------------------
 
 @pytest.mark.parametrize("path", [
-    "/new/page/2", "/popular/page/2", "/latest/page/2", "/feed/page/2",
+    "/new/page/2", "/popular/page/2", "/newest/page/2", "/page/2", "/feed/page/2",
     "/channel/page/2", "/playlist/page/2"])
 def test_empty_second_pages_do_not_crash(client, path):
     assert client.get(path).status_code in (200, 404)

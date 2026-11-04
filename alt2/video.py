@@ -413,13 +413,13 @@ def _search_impl(rawsearch, video_order, order_label, page):
     rank_p = text("ts_rank(mv_playlist.document, websearch_to_tsquery(:search)) DESC")
     rank_u = text("ts_rank(mv_altcen_user.document, websearch_to_tsquery(:search)) DESC")
 
-    videos = db_session.query(MvVideo).filter(tsv).order_by(video_order) \
+    videos = db_session.query(MvVideo).filter(tsv).order_by(video_order, MvVideo.id.desc()) \
         .limit(PER_PAGE).offset(offset).params(search=term).all()
-    channels = db_session.query(MvChannel).filter(tsc).order_by(rank_c).params(search=term).all()
+    channels = db_session.query(MvChannel).filter(tsc).order_by(rank_c, MvChannel.id.desc()).params(search=term).all()
     searchplaylists = db_session.query(MvPlaylist).filter(MvPlaylist.public, tsp) \
-        .order_by(rank_p).params(search=term).all()
+        .order_by(rank_p, MvPlaylist.id.desc()).params(search=term).all()
     altcen_users = db_session.query(MvAltcenUser).filter(MvAltcenUser.public, tsu) \
-        .order_by(rank_u).limit(PER_PAGE).offset(offset).params(search=term).all()
+        .order_by(rank_u, MvAltcenUser.id.desc()).limit(PER_PAGE).offset(offset).params(search=term).all()
 
     videocount = db_session.query(func.count(MvVideo.extractor_data)).filter(tsv).params(search=term).scalar()
     channcount = db_session.query(func.count(MvChannel.extractor_data)).filter(tsc).params(search=term).scalar()

@@ -289,7 +289,7 @@ def channel_table_new_data():
                 col = col.desc()
             order.append(col)
         if order:
-            query = query.order_by(*order)
+            query = query.order_by(*order, MvChannel.id)
 
     # pagination
     start = request.args.get('start', type=int, default=-1)

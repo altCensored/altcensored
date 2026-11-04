@@ -35,7 +35,7 @@ def index(page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'newest'
     playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video_id.isnot(None)) \
-        .order_by(Playlist.updated.desc()).limit(PER_PAGE).offset(offset).all()
+        .order_by(Playlist.updated.desc(), Playlist.id.desc()).limit(PER_PAGE).offset(offset).all()
     if not playlists and page != 1:
         abort(404)
     playlistcount = get_playlistcount()
@@ -58,7 +58,7 @@ def popular(page):
     offset = ((int(page)-1) * PER_PAGE)
     order = 'popular'
     playlists = Playlist.query.filter(Playlist.public).filter(Playlist.featured_video_id.isnot(None)) \
-        .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset).all()
+        .order_by(Playlist.view_counter.desc(), Playlist.id.desc()).limit(PER_PAGE).offset(offset).all()
     if not playlists and page != 1:
         abort(404)
     playlistcount = get_playlistcount()

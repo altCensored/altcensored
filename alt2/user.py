@@ -309,7 +309,7 @@ def playlist(page):
 
     if order =='popular':
         playlists = Playlist.query.filter(Playlist.user_id == session['user']['id']) \
-            .order_by(Playlist.view_counter.desc()).limit(PER_PAGE).offset(offset)
+            .order_by(Playlist.view_counter.desc(), Playlist.id.desc()).limit(PER_PAGE).offset(offset)
     else:
         playlists = Playlist.query.filter(Playlist.user_id == session['user']['id']) \
             .order_by(Playlist.id.desc()).limit(PER_PAGE).offset(offset)

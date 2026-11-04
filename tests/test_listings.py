@@ -23,16 +23,26 @@ def test_pagination_iter_pages_marks_gaps():
     assert None in pages and 10 in pages
 
 
-def test_video_sorts_have_unique_tiebreaker(monkeypatch):
+_UNIQUE_LAST = ("id DESC", "extractor_data DESC")
+
+
+@pytest.mark.parametrize("name,args", [
+    ("videos_latest", ()), ("videos_popular", ()), ("videos_trending", ()), ("videos_newest", ()),
+    ("channels_latest", ()), ("channels_newest", ()), ("channels_popular", ()),
+    ("channels_deleted", ()), ("channels_limited", ()), ("channels_archived", ()),
+    ("channeli_videos_newest", ("UCx",)), ("channeli_videos_popular", ("UCx",)),
+    ("users_newest", ()), ("users_popular", ()),
+])
+def test_listing_sorts_end_in_unique_column(monkeypatch, name, args):
     """Sorts on low-cardinality keys (deleted_date, view counts) must end in a unique column,
     or OFFSET paging repeats videos across /, /page/2, ..."""
     from alt2 import util
     seen = {}
     monkeypatch.setattr(util, "_exec_listing", lambda stmt, n, off: seen.setdefault("sql", str(stmt)))
-    for fn in (util.videos_latest, util.videos_popular, util.videos_trending, util.videos_newest):
-        fn.uncached(24, 0)
-        order = seen.pop("sql").split("ORDER BY", 1)[1]
-        assert "id DESC" in order or "extractor_data DESC" in order, (fn.__name__, order)
+    getattr(util, name).uncached(*args, 24, 0)
+    assert "ORDER BY" in seen["sql"], name
+    last = seen["sql"].split("ORDER BY", 1)[1].split(",")[-1].strip()
+    assert last.endswith(_UNIQUE_LAST), (name, last)
 
 
 # --- channels ----------------------------------------------------------------------

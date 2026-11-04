@@ -556,7 +556,7 @@ def channels_limited(PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def channels_archived(PER_PAGE, offset):
     return _exec_listing(
-        select(MvChannel).filter(MvChannel.archive_full),
+        select(MvChannel).filter(MvChannel.archive_full).order_by(MvChannel.id.desc()),
         PER_PAGE, offset,
     )
 
@@ -631,7 +631,7 @@ def users_newest(PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def users_popular(PER_PAGE, offset):
     return _exec_listing(
-        select(User).filter(User.public).order_by(User.view_counter.desc()),
+        select(User).filter(User.public).order_by(User.view_counter.desc(), User.id.desc()),
         PER_PAGE, offset,
     )
 

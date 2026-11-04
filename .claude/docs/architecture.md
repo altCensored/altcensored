@@ -2,7 +2,7 @@
 
 altCensored.com is a Flask site that indexes and plays censored or deleted YouTube videos. Video files come from the Internet Archive (IA) or from altCensored's own S3 store. The app is read-mostly: it displays data that other systems collect and does not scrape or download anything itself.
 
-This document describes how the pieces fit together. Operational rules (deploying, safety, branch workflow) are in `CLAUDE.md`.
+This document describes how the pieces fit together. Operational rules (deploying, push targets) are in `CLAUDE.md`.
 
 ## System overview
 

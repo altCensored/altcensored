@@ -483,7 +483,7 @@ def _exec_listing(stmt, per_page, offset):
 @cache.memoize(timeout=3600)
 def videos_trending(PER_PAGE, offset):
     return _exec_listing(
-        select(MvVideo).order_by(nullslast(MvVideo.view_count_ac.desc())),
+        select(MvVideo).order_by(nullslast(MvVideo.view_count_ac.desc()), MvVideo.id.desc()),
         PER_PAGE, offset,
     )
 
@@ -491,7 +491,7 @@ def videos_trending(PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def videos_latest(PER_PAGE, offset):
     return _exec_listing(
-        select(MvVideo).order_by(nullslast(MvVideo.deleted_date.desc())),
+        select(MvVideo).order_by(nullslast(MvVideo.deleted_date.desc()), MvVideo.id.desc()),
         PER_PAGE, offset,
     )
 
@@ -507,7 +507,7 @@ def videos_newest(PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def videos_popular(PER_PAGE, offset):
     return _exec_listing(
-        select(MvVideo).order_by(MvVideo.view_count.desc()),
+        select(MvVideo).order_by(MvVideo.view_count.desc(), MvVideo.id.desc()),
         PER_PAGE, offset,
     )
 
@@ -531,7 +531,7 @@ def channels_newest(PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def channels_popular(PER_PAGE, offset):
     return _exec_listing(
-        select(MvChannel).order_by(MvChannel.view_count.desc()),
+        select(MvChannel).order_by(MvChannel.view_count.desc(), MvChannel.id.desc()),
         PER_PAGE, offset,
     )
 
@@ -583,7 +583,7 @@ def channeli_videocount(ytc_id):
 @cache.memoize(timeout=3600)
 def channeli_videos_newest(ytc_id, PER_PAGE, offset):
     return _exec_listing(
-        select(MvVideo).filter(MvVideo.source_extractor_data == ytc_id).order_by(MvVideo.published.desc()),
+        select(MvVideo).filter(MvVideo.source_extractor_data == ytc_id).order_by(MvVideo.published.desc(), MvVideo.id.desc()),
         PER_PAGE, offset,
     )
 
@@ -591,7 +591,7 @@ def channeli_videos_newest(ytc_id, PER_PAGE, offset):
 @cache.memoize(timeout=3600)
 def channeli_videos_popular(ytc_id, PER_PAGE, offset):
     return _exec_listing(
-        select(MvVideo).filter(MvVideo.source_extractor_data == ytc_id).order_by(MvVideo.view_count.desc()),
+        select(MvVideo).filter(MvVideo.source_extractor_data == ytc_id).order_by(MvVideo.view_count.desc(), MvVideo.id.desc()),
         PER_PAGE, offset,
     )
 

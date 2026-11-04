@@ -62,7 +62,7 @@ def item_new(cat_id,page):
         abort(404)
     cat_name = category.name
     videocount = db_session.query(func.count(MvVideo.extractor_data)).filter_by(category=cat_name).scalar()
-    videos = MvVideo.query.filter_by(category=cat_name).order_by(MvVideo.published.desc()).limit(PER_PAGE).offset(offset)
+    videos = MvVideo.query.filter_by(category=cat_name).order_by(MvVideo.published.desc(), MvVideo.id.desc()).limit(PER_PAGE).offset(offset)
     if not videos and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)
@@ -88,7 +88,7 @@ def item_popular(cat_id,page):
         abort(404)
     cat_name = category.name
     videocount = db_session.query(func.count(MvVideo.extractor_data)).filter_by(category=cat_name).scalar()
-    videos = MvVideo.query.filter_by(category=cat_name).order_by(MvVideo.view_count.desc()).limit(PER_PAGE).offset(offset)
+    videos = MvVideo.query.filter_by(category=cat_name).order_by(MvVideo.view_count.desc(), MvVideo.id.desc()).limit(PER_PAGE).offset(offset)
     if not videos and page != 1:
         abort(404)
     pagination = Pagination(page, PER_PAGE, videocount)

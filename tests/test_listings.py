@@ -23,6 +23,18 @@ def test_pagination_iter_pages_marks_gaps():
     assert None in pages and 10 in pages
 
 
+def test_video_sorts_have_unique_tiebreaker(monkeypatch):
+    """Sorts on low-cardinality keys (deleted_date, view counts) must end in a unique column,
+    or OFFSET paging repeats videos across /, /page/2, ..."""
+    from alt2 import util
+    seen = {}
+    monkeypatch.setattr(util, "_exec_listing", lambda stmt, n, off: seen.setdefault("sql", str(stmt)))
+    for fn in (util.videos_latest, util.videos_popular, util.videos_trending, util.videos_newest):
+        fn.uncached(24, 0)
+        order = seen.pop("sql").split("ORDER BY", 1)[1]
+        assert "id DESC" in order or "extractor_data DESC" in order, (fn.__name__, order)
+
+
 # --- channels ----------------------------------------------------------------------
 
 @pytest.mark.parametrize("path", [

@@ -14,17 +14,17 @@ and the gaps. Production rules and safety are in `CLAUDE.md`.
 | Mutation check | `scripts/mutation_check.py` | www2 over ssh | that the suite fails when the code is broken (17 mutations) |
 
 There is no CI (`.github/` and pre-commit config are absent). Tests run by hand through
-`tests/run_www2.sh`.
+`tests/run.sh`.
 
 ## Pytest harness
 
 - **Real app, real PostgreSQL, no mocks of the database.** `conftest.py` builds the app
   with `create_app({TESTING, no CSRF, no rate limit})`. The cache is a `NullCache` and the
   limiter is in memory, so Redis is never touched.
-- **Database guard.** `ALTC_TEST_DATABASE_URL` is required and the DB name must end in
-  `_test`, or `pytest_configure` raises `UsageError`. The suite drops and recreates every
+- **Database guard.** `ALTC_TEST_DATABASE_URL` is required and the DB name must contain
+  `test`, or `pytest_configure` raises `UsageError`. The suite drops and recreates every
   table, so the guard is the only thing between a typo and data loss. Use
-  `altc-www2-test-rw` on www2; never www, orcl or the `ytac`/`altcen` rehearsal copies.
+  `ytactestac-www2` (database `ytac_test_ac` on www2); never www, orcl or the `ytac`/`altcen` rehearsal copies.
 - **Env is set before `alt2` is imported** (`config.py` reads it at import time), which is
   why the setup lives in `pytest_configure` and the app import is inside fixtures.
 - **Session-scoped `engine` seeds once** (`seed.setup`: wipe, create tables and views,
@@ -101,7 +101,7 @@ An xfail that starts passing fails as XPASS, the cue to delete the marker.
 `mutation_check.py` copies the tree to `~/mut/m<N>` on www2, applies one exact-text
 replacement, runs the suite with `-x` on the legacy stack and deletes the copy. Results:
 `CAUGHT`, `MISSED` (a missing test), `SKIPPED` (the text no longer occurs once; update
-`MUTATIONS`), `UNKNOWN`. It uses the same www2 test DB as `run_www2.sh`, so never run
+`MUTATIONS`), `UNKNOWN`. It uses the same www2 test DB as `run.sh`, so never run
 both at once. Add a mutation when you add a guard worth protecting.
 
 ## Strengths
@@ -113,10 +113,10 @@ both at once. Add a mutation when you add a guard worth protecting.
 
 ## Gaps and risks
 
-- **No CI or pre-commit.** Nothing runs the suite on push; `run_www2.sh` needs the branch
-  pushed first (or `--local` for tests only; `alt2/` changes cannot be tested that way).
-- **Single shared test DB.** `run_www2.sh`, the mutation check and any other session on
-  `altcen_test` collide. Runs must be serial.
+- **No CI or pre-commit.** Nothing runs the suite on push; `run.sh` tests the working tree
+  of this clone, so nothing needs pushing first.
+- **Single shared test DB.** `run.sh`, the mutation check and any other session on
+  `ytac_test_ac` collide. Runs must be serial.
 - **Re-seed per write test** costs about a second each (~66 s of seeding per run).
 - **Only the legacy stack is mutated;** ytac is checked by running the suite on it.
 - **Not covered:** OAuth `authorize`/`callback`, `mass_email` / bounce / email-list

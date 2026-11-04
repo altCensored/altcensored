@@ -1,7 +1,7 @@
 """Test harness: real app, real PostgreSQL, small seeded dataset.
 
-Set ALTC_TEST_DATABASE_URL to a *dedicated* database whose name ends in
-``_test``. The suite drops and recreates every table in it, so it refuses
+Set ALTC_TEST_DATABASE_URL to a *dedicated* database whose name contains
+``test``. The suite drops and recreates every table in it, so it refuses
 anything else. Use the explicit ``postgresql+psycopg2://`` form.
 
 Redis is not used: the cache is a NullCache and the limiter is in memory,
@@ -21,9 +21,9 @@ def pytest_configure(config):
     if not TEST_URL:
         raise pytest.UsageError("ALTC_TEST_DATABASE_URL is not set")
     name = make_url(TEST_URL).database or ""
-    if not name.endswith("_test"):
+    if "test" not in name:
         raise pytest.UsageError(
-            f"refusing to run: database {name!r} does not end in '_test'")
+            f"refusing to run: database {name!r} does not contain 'test'")
     # config.py reads these at import time, so set them before alt2 loads
     os.environ["ALTC_DATABASE_URL"] = TEST_URL
     os.environ["ALTC_SECRET_KEY"] = "test-secret-key"

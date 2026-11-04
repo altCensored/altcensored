@@ -104,7 +104,7 @@ def _match_prod_playlist_cascade(engine):
 
 def wipe(engine):
     """Drop every view and table, whichever schema left them behind. The DB is
-    dedicated to tests (conftest enforces the _test name)."""
+    dedicated to tests (conftest requires "test" in the name)."""
     with engine.begin() as conn:
         conn.exec_driver_sql("""
             DO $$ DECLARE r record; BEGIN

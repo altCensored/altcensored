@@ -1,20 +1,16 @@
 # Tests
 
 Real app, real PostgreSQL, small seeded dataset (`seed.py`). Needs a dedicated
-database whose name ends in `_test`; the suite drops and recreates everything in it.
+database whose name contains `test`; the suite drops and recreates everything in it.
 
-    ALTC_TEST_DATABASE_URL='postgresql+psycopg2://@/altcen_test?service=altc-www2-test-rw' \
-      venv/bin/python -m pytest tests
+    tests/run.sh [pytest args]
 
-On www2 the service entry avoids handling a password. Never point this at www or orcl.
-`pip install -r requirements-test.txt` adds pytest.
-
-`[BRANCH=<name>] tests/run_www2.sh [--local] [pytest args]` runs the suite in the www2 checkout
-`/opt/altcen/altcensored`. By default it fetches the branch (`master` unless `BRANCH` is set) and checks
-it out fast-forward only, then prints the commit it tested. That means the code must be pushed first.
-To test uncommitted tests, use `--local`: it rsyncs this clone's `tests/`, `pytest.ini` and
-`scripts/parity_*.py` over the checkout and restores them afterwards (it cannot test `alt2/` changes).
-The script refuses to run if the www2 checkout has uncommitted changes.
+runs the suite from this clone against `ytac_test_ac` on www2, through the libpq service
+`ytactestac-www2` (`~/.pg_service.conf` + `~/.pgpass` on the dev machine only; www2 and orcl hold
+no credentials). It needs `venv/` with `pip install -r requirements.txt -r requirements-test.txt`
+and the `ytac` package (`pip install ~/src/ytac-suite/ytac`). Never point it at www or orcl.
+The raw form is `ALTC_TEST_DATABASE_URL='postgresql+psycopg2:///ytac_test_ac?service=ytactestac-www2'
+venv/bin/python -m pytest tests`.
 
 ## Layout
 
@@ -92,7 +88,7 @@ test is missing. Nothing in this clone or the www2 checkouts is changed.
     scripts/mutation_check.py --baseline   # the unchanged tree must pass first
     scripts/mutation_check.py [N ...]      # all, or by number; 30-100 s each
 
-Do not run it at the same time as `run_www2.sh` (both use the www2 test database). Run
+Do not run it at the same time as `run.sh` (both use the www2 test database). Run
 it after a large change to one of those areas, and add a break to `MUTATIONS` when you
 add a guard worth protecting. The first run on 2026-10-31 found two gaps (`safe_next`
 with `////host`, the cookie path skip on an HTML response); both now have tests.

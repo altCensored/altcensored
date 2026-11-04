@@ -5,11 +5,11 @@ database whose name contains `test`; the suite drops and recreates everything in
 
     tests/run.sh [pytest args]
 
-runs the suite from this clone against `ytac_test_ac` on www2, through the libpq service
-`ytactestac-www2` (`~/.pg_service.conf` + `~/.pgpass` on the dev machine only; www2 and orcl hold
-no credentials). It needs `venv/` with `pip install -r requirements.txt -r requirements-test.txt`
-and the `ytac` package (`pip install ~/src/ytac-suite/ytac`). Never point it at www or orcl.
-The raw form is `ALTC_TEST_DATABASE_URL='postgresql+psycopg2:///ytac_test_ac?service=ytactestac-www2'
+runs the suite from this clone against `ytac_ac_test` on www, through the libpq service
+`ytac_ac_test-www2` (`~/.pg_service.conf` + `~/.pgpass` on www only; no other node holds
+any). It needs `venv/` with `pip install -r requirements.txt -r requirements-test.txt`
+and the `ytac` package (`pip install ~/src/ytac-suite/ytac`). Never point it at the production databases or orcl.
+The raw form is `ALTC_TEST_DATABASE_URL='postgresql+psycopg2:///ytac_ac_test?service=ytac_ac_test-www2'
 venv/bin/python -m pytest tests`.
 
 ## Layout

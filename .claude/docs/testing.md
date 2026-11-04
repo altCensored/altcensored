@@ -8,7 +8,7 @@ and the gaps. Production rules and safety are in `CLAUDE.md`.
 
 | Layer | Where | Needs | Checks |
 |---|---|---|---|
-| Pytest suite | `tests/` (21 `test_*.py`, ~330 test functions, 51 `parametrize`) | scratch PostgreSQL DB on www2 | app behaviour through the Flask test client |
+| Pytest suite | `tests/` (21 `test_*.py`, ~330 test functions, 51 `parametrize`) | scratch PostgreSQL DB `ytac_ac_test` on www | app behaviour through the Flask test client |
 | Parity scripts | `scripts/parity_player.py`, `scripts/parity_views.py` | two libpq services, read-only | legacy vs ytac data, row by row |
 | Smoke check | `scripts/check_ytac.sh` | read-only ytac service (`YTAC_CHECK_SERVICE`) | compile, conflict markers, new legacy leftovers, every page renders, model attributes exist, email helpers |
 | Mutation check | `scripts/mutation_check.py` | www2 over ssh | that the suite fails when the code is broken (17 mutations) |
@@ -24,7 +24,7 @@ There is no CI (`.github/` and pre-commit config are absent). Tests run by hand 
 - **Database guard.** `ALTC_TEST_DATABASE_URL` is required and the DB name must contain
   `test`, or `pytest_configure` raises `UsageError`. The suite drops and recreates every
   table, so the guard is the only thing between a typo and data loss. Use
-  `ytactestac-www2` (database `ytac_test_ac` on www2); never www, orcl or the `ytac`/`altcen` rehearsal copies.
+  `ytac_ac_test-www2` (database `ytac_ac_test` on www); never the production `ytac` or `altcen` databases or orcl.
 - **Env is set before `alt2` is imported** (`config.py` reads it at import time), which is
   why the setup lives in `pytest_configure` and the app import is inside fixtures.
 - **Session-scoped `engine` seeds once** (`seed.setup`: wipe, create tables and views,
@@ -116,7 +116,7 @@ both at once. Add a mutation when you add a guard worth protecting.
 - **No CI or pre-commit.** Nothing runs the suite on push; `run.sh` tests the working tree
   of this clone, so nothing needs pushing first.
 - **Single shared test DB.** `run.sh`, the mutation check and any other session on
-  `ytac_test_ac` collide. Runs must be serial.
+  `ytac_ac_test` collide. Runs must be serial.
 - **Re-seed per write test** costs about a second each (~66 s of seeding per run).
 - **Only the legacy stack is mutated;** ytac is checked by running the suite on it.
 - **Not covered:** OAuth `authorize`/`callback`, `mass_email` / bounce / email-list

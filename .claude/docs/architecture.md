@@ -108,7 +108,7 @@ Flask-Login is not used. Authentication is a plain `session['user']` check.
 - **Two registries.** `Base` holds tables and `MvBase` holds materialized views. `database.py` gives both a `.query` property bound to the same session. ytac guards the `Mv*` models against writes.
 - **Engine and session.** `database.py` builds a plain SQLAlchemy engine (pool 3 + 9 overflow, pre-ping, 1800 s recycle) and a `scoped_session` keyed by the current gevent greenlet. There is no Flask-SQLAlchemy. psycopg is made gevent-friendly with `psycogreen`. Database URLs must use the explicit `postgresql+psycopg2://` form.
 - **Reads vs writes.** Listing, search and watch pages read the materialized views. These are refreshed by ytac on a timer, so new or changed rows show up only after the next refresh. Writes go to base tables: users, playlists, watch history and watch-later lists (stored on the user row), email lists, view counters, and the per-video fields filled by `get_ia_item()`.
-- **Search** uses GIN indexes on each view's `document` column, created by ytac.
+- **Search** is built in `alt2/search.py` as pg_search BM25 queries on `mv_video`, `mv_channel`, `mv_playlist` and `mv_altcen_user` (the indexes are ytac's). Exact search runs first; with fewer than 500 videos, misspelt words are corrected from `mv_search_words` (read with plain SQL, not a ytac model); with no match and no correction, a typo-tolerant fallback runs. IDs never get typo tolerance.
 - **Schema changes** are made in ytac, not in this repo.
 
 ## Request lifecycle

@@ -9,6 +9,7 @@ runs the suite from this clone against `ytac_ac_test` on www, through the libpq 
 `ytac_ac_test-www2` (`~/.pg_service.conf` + `~/.pgpass` on www only; no other node holds
 any). It needs `venv/` with `pip install -r requirements.txt -r requirements-test.txt`
 and the `ytac` package (`pip install ~/src/ytac-suite/ytac`). Never point it at the production databases or orcl.
+The seed also loads `fixtures/bm25.sql` and `fixtures/search_words.sql`, so the test database needs the `pg_search` and `pg_trgm` extensions.
 The raw form is `ALTC_TEST_DATABASE_URL='postgresql+psycopg2:///ytac_ac_test?service=ytac_ac_test-www2'
 venv/bin/python -m pytest tests`.
 
@@ -23,6 +24,7 @@ venv/bin/python -m pytest tests`.
 | `test_admin.py` | admin gate, channel/video updates, recorded shell dispatch |
 | `test_video_api.py`, `test_player.py`, `test_archive.py` | player endpoints, view counter, source choice, archive.org |
 | `test_sitemap_feeds.py`, `test_listings.py`, `test_pages.py` | sitemaps, feeds, listings, pagination helper |
+| `test_search.py` | search parser, BM25 search, typo fallback, spelling correction, `spell=0` |
 | `test_pagination.py` | page 2+ of search, channel, history and watch-later routes (page size set to 1) |
 | `test_app.py` | locale, error pages, headers, loggedin cookie hook, template filters |
 | `test_cache_limits.py` | real cache and rate limiter (a second app, see its docstring) |

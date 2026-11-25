@@ -205,8 +205,10 @@
                         <i class='ion-logo-youtube'  style="font-size: 24px"></i>
                         <i class='ion-md-search' style="font-size: 21px"></i>
                         <b>({{ videocount | commafy }})</b>
-                        {% if similar %}
+                        {% if similar == 'none' %}
                         <br><i>{{ gettext('No exact matches. Showing results with similar spelling.') }}</i>
+                        {% elif similar == 'few' %}
+                        <br><i>{{ gettext('Few exact matches. Also showing results with similar spelling.') }}</i>
                         {% endif %}
                         {% if playlist and session.user and session.user.id == playlist.user_id %}
                         &nbsp;&nbsp;<a class="pure-button pure-button-primary" href="{{ url_for('playlist.item', playlist=playlist.hashid) }}">{{ gettext('Done') }}</a>

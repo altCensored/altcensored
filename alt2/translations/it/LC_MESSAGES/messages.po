@@ -1400,3 +1400,7 @@ msgstr "No"
 #: alt2/templates/video/video_search.html
 msgid "No exact matches. Showing results with similar spelling."
 msgstr "Nessuna corrispondenza esatta. Risultati con ortografia simile."
+
+#: alt2/templates/video/video_search.html
+msgid "Few exact matches. Also showing results with similar spelling."
+msgstr "Poche corrispondenze esatte. Inclusi risultati con ortografia simile."

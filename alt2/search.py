@@ -3,7 +3,8 @@
 The user's input is parsed here, as websearch_to_tsquery did before: words are ANDed, "quoted
 phrases" match in order, -word excludes and `or` between two items makes either one enough. Each
 word may match any of the view's text fields. Typo tolerance (pdb.fuzzy) is only used when the
-caller asks for it (the fallback when the exact search finds no videos), and never on an ID field:
+caller asks for it (the fallback when the exact search finds no or few videos, use_fallback), and
+never on an ID field:
 the literal tokenizer does not stop pdb.fuzzy, so a fuzzy ID query would match other IDs.
 """
 import re
@@ -90,6 +91,21 @@ def typo_distance(word):
     """Edits allowed for a word: none up to 4 letters, 1 up to 8, else 2 (pg_search's maximum)."""
     n = len(word)
     return 0 if n <= 4 else 1 if n <= 8 else 2
+
+
+# The typo results replace the exact ones when the exact ones are few and typo tolerance finds many
+# times more. Measured on production videos (2026-11-25): typos that also occur in the data gain 70x
+# or more (vacine 40 -> 12,271, isreal 284 -> 19,921, goverment 76 -> 154,270); correctly spelt
+# words gain at most 31x (plandemic 443 -> 13,739 via "pandemic"), most of them under 2x.
+FALLBACK_MAX_EXACT = 500
+FALLBACK_MIN_GAIN = 50
+
+
+def use_fallback(exact, fuzzy):
+    """Whether fuzzy (the typo-tolerant video count) should replace exact (the exact one)."""
+    if exact == 0:
+        return fuzzy > 0
+    return exact < FALLBACK_MAX_EXACT and fuzzy >= FALLBACK_MIN_GAIN * exact
 
 
 def has_fuzzy_words(q):

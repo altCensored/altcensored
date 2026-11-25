@@ -444,12 +444,14 @@ def _search_impl(rawsearch, video_order, order_label, page):
     q = bm25.drop_stopwords(db_session, bm25.parse(term))
 
     found = _search_sections(q, video_order, offset, fuzzy=False)
-    similar = False
-    if found['videocount'] == 0 and bm25.has_fuzzy_words(q):
-        # nothing exact: try again with typo tolerance and say so on the page
-        fuzzy = _search_sections(q, video_order, offset, fuzzy=True)
-        if fuzzy['videocount']:
-            found, similar = fuzzy, True
+    similar = None  # 'none' or 'few' exact matches when the page shows the typo-tolerant results
+    exact = found['videocount']
+    if exact < bm25.FALLBACK_MAX_EXACT and bm25.has_fuzzy_words(q):
+        fuzzycount = db_session.query(func.count(MvVideo.extractor_data)) \
+            .filter(bm25.where(q, bm25.VIDEO_FIELDS, bm25.VIDEO_IDS, fuzzy=True)).scalar()
+        if bm25.use_fallback(exact, fuzzycount):
+            found = _search_sections(q, video_order, offset, fuzzy=True)
+            similar = 'few' if exact else 'none'
     videos, channels = found['videos'], found['channels']
     searchplaylists, altcen_users = found['searchplaylists'], found['altcen_users']
     videocount, channcount = found['videocount'], found['channcount']

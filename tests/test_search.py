@@ -82,7 +82,7 @@ def test_exact_match_has_no_similar_note(search):
 
 def test_typo_falls_back_to_similar_spelling(search):
     ctx = search("storrage")
-    assert ctx["ids"] == ["vid_ac_00003"] and ctx["similar"]
+    assert ctx["ids"] == ["vid_ac_00003"] and ctx["similar"] == "none"
     assert ctx["videocount"] == 1
     assert "Showing results with similar spelling" in ctx["body"]
 
@@ -147,3 +147,28 @@ def test_channel_by_name_and_by_id(search):
     ctx = search("https://www.youtube.com/channel/UCaaaaaaaaaaaaaaaaaaaaaa/videos")
     assert [c.extractor_data for c in ctx["channels"]] == ["UCaaaaaaaaaaaaaaaaaaaaaa"]
     assert sorted(ctx["ids"]) == ["vid_ac_00003", "vid_ia_00002"]   # source_extractor_data
+
+
+# --- when the typo results replace the exact ones (production counts, 2026-11-25) --------
+
+@pytest.mark.parametrize("exact, fuzzy, used", [
+    (0, 11201, True),        # vaccnie: nothing exact
+    (0, 0, False),           # nothing either way
+    (40, 12271, True),       # vacine: 40 videos really spell it so
+    (284, 19921, True),      # isreal
+    (443, 13739, False),     # plandemic: a real word, 2 edits from "pandemic"
+    (136, 165, False),       # navalny
+    (53, 106, False),        # tartaria
+    (4295, 52353, False),    # gates: too many exact matches to second-guess
+])
+def test_use_fallback(exact, fuzzy, used):
+    assert bm25.use_fallback(exact, fuzzy) is used
+
+
+def test_few_exact_matches_say_so(search, monkeypatch):
+    # the seed is too small for a 50x gain; a gain of 1 makes "storage" (1 exact, 1 fuzzy) qualify
+    monkeypatch.setattr(bm25, "FALLBACK_MIN_GAIN", 1)
+    ctx = search("storage")
+    assert ctx["ids"] == ["vid_ac_00003"] and ctx["similar"] == "few"
+    assert "Few exact matches. Also showing results with similar spelling." in ctx["body"]
+    assert "No exact matches" not in ctx["body"]

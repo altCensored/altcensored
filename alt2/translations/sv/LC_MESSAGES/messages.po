@@ -1351,3 +1351,7 @@ msgstr "Nej"
 #: alt2/templates/video/video_search.html
 msgid "No exact matches. Showing results with similar spelling."
 msgstr "Inga exakta träffar. Visar resultat med liknande stavning."
+
+#: alt2/templates/video/video_search.html
+msgid "Few exact matches. Also showing results with similar spelling."
+msgstr "Få exakta träffar. Visar även resultat med liknande stavning."

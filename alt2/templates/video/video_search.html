@@ -15,7 +15,7 @@
 
 {% block searchnote %}
 {% if corrected or similar %}
-<div style="font-size:0.85em;">
+<div class="search-note">
             {% if corrected %}
             {{ gettext('Showing results for') }} <a href="{{ url_for(request.endpoint, q=corrected, playlist=playlist.hashid if playlist else None) }}"><b><u>{{ corrected }}</u></b></a>.
             {{ gettext('Search instead for') }} <a href="{{ url_for(request.endpoint, q=rawsearch, spell=0, playlist=playlist.hashid if playlist else None) }}"><b><u>{{ rawsearch }}</u></b></a>

@@ -44,7 +44,7 @@ VIDEOS = [
 
 # legacy view creation order matters: mv_category reads mv_video
 MATVIEWS = ("mv_video", "mv_altcen_user", "mv_category", "mv_channel",
-            "mv_playlist")
+            "mv_playlist", "mv_search_words")  # mv_search_words reads mv_video
 
 
 def setup(engine):
@@ -69,6 +69,7 @@ def setup(engine):
             views.create_all(s)
         with engine.begin() as conn:
             conn.exec_driver_sql((FIXTURES / "bm25.sql").read_text())
+            conn.exec_driver_sql((FIXTURES / "search_words.sql").read_text())
         _load_ytac(engine)
     _load_accounts(engine)
     _load_ui_text(engine)

@@ -1396,3 +1396,11 @@ msgstr "Nein"
 #: alt2/templates/video/video_search.html
 msgid "No exact matches. Showing results with similar spelling."
 msgstr "Keine exakten Treffer. Ergebnisse mit ähnlicher Schreibweise."
+
+#: alt2/templates/video/video_search.html
+msgid "Showing results for"
+msgstr "Ergebnisse für"
+
+#: alt2/templates/video/video_search.html
+msgid "Search instead for"
+msgstr "Stattdessen suchen nach"

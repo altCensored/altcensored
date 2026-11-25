@@ -1426,3 +1426,11 @@ msgstr "No"
 #: alt2/templates/video/video_search.html
 msgid "No exact matches. Showing results with similar spelling."
 msgstr "No hay coincidencias exactas. Mostrando resultados con ortografía similar."
+
+#: alt2/templates/video/video_search.html
+msgid "Showing results for"
+msgstr "Mostrando resultados de"
+
+#: alt2/templates/video/video_search.html
+msgid "Search instead for"
+msgstr "Buscar en su lugar"

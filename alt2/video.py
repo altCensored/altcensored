@@ -445,8 +445,16 @@ def _search_impl(rawsearch, video_order, order_label, page):
 
     found = _search_sections(q, video_order, offset, fuzzy=False)
     similar = False
-    if found['videocount'] == 0 and bm25.has_fuzzy_words(q):
-        # nothing exact: try again with typo tolerance and say so on the page
+    corrected = None  # the input with misspelt words corrected, when the page shows its results
+    spell = request.args.get('spell') != '0'  # "Search instead for ..." turns both corrections off
+    if spell and found['videocount'] < bm25.CORRECT_MAX_EXACT:
+        fixes = bm25.correct(db_session, q)
+        if fixes:
+            better = _search_sections(bm25.apply_corrections(q, fixes), video_order, offset, fuzzy=False)
+            if better['videocount'] > found['videocount']:
+                found, corrected = better, bm25.corrected_text(term, fixes)
+    if spell and corrected is None and found['videocount'] == 0 and bm25.has_fuzzy_words(q):
+        # nothing exact and no correction: try again with typo tolerance and say so on the page
         fuzzy = _search_sections(q, video_order, offset, fuzzy=True)
         if fuzzy['videocount']:
             found, similar = fuzzy, True
@@ -479,7 +487,8 @@ def _search_impl(rawsearch, video_order, order_label, page):
                            searchplaylists=searchplaylists, altcen_users=altcen_users,
                            order=order_label, channels=channels, videocount=videocount,
                            watchlater=watchlater, playlist=playlist,
-                           featured_search_videos=featured_search_videos, similar=similar)
+                           featured_search_videos=featured_search_videos, similar=similar,
+                           corrected=corrected, spell=spell)
 
 
 @bp.route("/search", defaults={'page': 1})

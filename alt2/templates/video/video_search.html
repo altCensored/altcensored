@@ -205,6 +205,10 @@
                         <i class='ion-logo-youtube'  style="font-size: 24px"></i>
                         <i class='ion-md-search' style="font-size: 21px"></i>
                         <b>({{ videocount | commafy }})</b>
+                        {% if corrected %}
+                        <br>{{ gettext('Showing results for') }} <b>{{ corrected }}</b>.
+                        <a href="{{ url_for(request.endpoint, q=rawsearch, spell=0, playlist=playlist.hashid if playlist else None) }}">{{ gettext('Search instead for') }} {{ rawsearch }}</a>
+                        {% endif %}
                         {% if similar %}
                         <br><i>{{ gettext('No exact matches. Showing results with similar spelling.') }}</i>
                         {% endif %}
@@ -225,30 +229,30 @@
                     {% if playlist %}
 
                         <div class="pure-u-1 pure-md-1-3">
-                            <a href="{{ url_for('video.search_latest',q=rawsearch, playlist=playlist.hashid) }}" class="pure-menu-item {{'selected' if order == 'latest' }}">
+                            <a href="{{ url_for('video.search_latest',q=rawsearch, playlist=playlist.hashid, spell=None if spell else 0) }}" class="pure-menu-item {{'selected' if order == 'latest' }}">
                                 {{ gettext('latest') }}</a>
                         </div>
                         <div class="pure-u-1 pure-md-1-3">
-                            <a href="{{ url_for('video.search_new',q=rawsearch, playlist=playlist.hashid) }}" class="pure-menu-item {{'selected' if order == 'newest' }}">
+                            <a href="{{ url_for('video.search_new',q=rawsearch, playlist=playlist.hashid, spell=None if spell else 0) }}" class="pure-menu-item {{'selected' if order == 'newest' }}">
                                 {{ gettext('newest') }}</a>
                         </div>
                         <div class="pure-u-1 pure-md-1-3">
-                            <a href="{{ url_for('video.search_popular',q=rawsearch, playlist=playlist.hashid) }}" class="pure-menu-item {{'selected' if order == 'popular' }}">
+                            <a href="{{ url_for('video.search_popular',q=rawsearch, playlist=playlist.hashid, spell=None if spell else 0) }}" class="pure-menu-item {{'selected' if order == 'popular' }}">
                                 {{ gettext('popular') }}</a>
                         </div>
 
                     {% else %}
 
                         <div class="pure-u-1 pure-md-1-3">
-                            <a href="{{ url_for('video.search_latest',q=rawsearch) }}" class="pure-menu-item {{'selected' if order == 'latest' }}">
+                            <a href="{{ url_for('video.search_latest',q=rawsearch, spell=None if spell else 0) }}" class="pure-menu-item {{'selected' if order == 'latest' }}">
                                 {{ gettext('latest') }}</a>
                         </div>
                         <div class="pure-u-1 pure-md-1-3">
-                            <a href="{{ url_for('video.search_new',q=rawsearch) }}" class="pure-menu-item {{'selected' if order == 'newest' }}">
+                            <a href="{{ url_for('video.search_new',q=rawsearch, spell=None if spell else 0) }}" class="pure-menu-item {{'selected' if order == 'newest' }}">
                                 {{ gettext('newest') }}</a>
                         </div>
                         <div class="pure-u-1 pure-md-1-3">
-                            <a href="{{ url_for('video.search_popular',q=rawsearch) }}" class="pure-menu-item {{'selected' if order == 'popular' }}">
+                            <a href="{{ url_for('video.search_popular',q=rawsearch, spell=None if spell else 0) }}" class="pure-menu-item {{'selected' if order == 'popular' }}">
                                 {{ gettext('popular') }}</a>
                         </div>
                     {% endif %}
@@ -275,14 +279,14 @@
 <div class=pagination>
   <center><h3>
     {% if pagination.has_prev %}
-      <strong><a href="{{ url_for_other_page(pagination.page - 1)}}?q={{rawsearch}}{% if playlist %}&amp;playlist={{ playlist.hashid }}{% endif %}">&lt;&lt;</a></strong>&nbsp;&nbsp;&nbsp;
+      <strong><a href="{{ url_for_other_page(pagination.page - 1)}}?q={{rawsearch}}{% if playlist %}&amp;playlist={{ playlist.hashid }}{% endif %}{% if not spell %}&amp;spell=0{% endif %}">&lt;&lt;</a></strong>&nbsp;&nbsp;&nbsp;
     {% endif %}
 
     {% for page in pagination.iter_pages() %}
       {% if page %}
 
         {% if page != pagination.page %}
-          <a href="{{ url_for_other_page(page) }}?q={{rawsearch}}{% if playlist %}&amp;playlist={{ playlist.hashid }}{% endif %}">{{ page }}</a>
+          <a href="{{ url_for_other_page(page) }}?q={{rawsearch}}{% if playlist %}&amp;playlist={{ playlist.hashid }}{% endif %}{% if not spell %}&amp;spell=0{% endif %}">{{ page }}</a>
         {% elif page == 1 and not pagination.has_next %}
         {% else %}
           <strong>{{ page }}</strong>
@@ -295,7 +299,7 @@
     {% endfor %}
 
     {% if pagination.has_next %}
-      <strong>&nbsp;&nbsp;&nbsp;<a href="{{ url_for_other_page(pagination.page + 1)}}?q={{rawsearch}}{% if playlist %}&amp;playlist={{ playlist.hashid }}{% endif %}">&gt;&gt;</a></strong>
+      <strong>&nbsp;&nbsp;&nbsp;<a href="{{ url_for_other_page(pagination.page + 1)}}?q={{rawsearch}}{% if playlist %}&amp;playlist={{ playlist.hashid }}{% endif %}{% if not spell %}&amp;spell=0{% endif %}">&gt;&gt;</a></strong>
     {% endif %}
 
   </center>

@@ -1351,3 +1351,11 @@ msgstr "Nee"
 #: alt2/templates/video/video_search.html
 msgid "No exact matches. Showing results with similar spelling."
 msgstr "Geen exacte overeenkomsten. Resultaten met vergelijkbare spelling."
+
+#: alt2/templates/video/video_search.html
+msgid "Showing results for"
+msgstr "Resultaten voor"
+
+#: alt2/templates/video/video_search.html
+msgid "Search instead for"
+msgstr "In plaats daarvan zoeken naar"

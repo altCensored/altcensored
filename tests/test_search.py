@@ -206,6 +206,7 @@ def test_misspelt_word_is_corrected(search, small_vocabulary):
     assert "Showing results for" in ctx["body"] and "<b><u>storage</u></b>" in ctx["body"]
     assert "q=storage" in ctx["body"]                   # the correction is a link to its own search
     assert "Search instead for" in ctx["body"] and "spell=0" in ctx["body"]
+    assert "<b><u>storrage</u></b>" in ctx["body"]       # only the word as typed is the link
 
 
 def test_search_instead_turns_corrections_off(search, small_vocabulary):

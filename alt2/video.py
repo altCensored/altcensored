@@ -1,6 +1,7 @@
 import logging
 import os
 import json
+import re
 from flask import (
     Blueprint, render_template, request, make_response, session, current_app, abort, flash, jsonify, redirect, url_for)
 from markupsafe import Markup
@@ -15,6 +16,7 @@ from .util import (videos_newest, videos_popular, videos_latest, get_videocount,
                    videos_trending, get_ia_item, increment_video_counter, check_ac_object_exists,
                    get_current_user)
 from . import config
+from . import search as bm25
 
 logger = logging.getLogger(__name__)
 
@@ -394,39 +396,64 @@ def video_sources_api(video_id):
     return jsonify({'video_url': video_url, 'next_watch_url': next_watch_url})
 
 
+def _search_term(rawsearch):
+    """The search input, or the ID from a pasted YouTube watch or channel URL. IDs match exactly
+    and case-sensitively, so the original case is kept and anything after the ID is cut."""
+    term = rawsearch.strip()
+    low = term.lower()
+    for marker in ("youtube.com/watch?v=", "youtube.com/channel/"):
+        i = low.find(marker)
+        found = re.split(r'[&?#/\s]', term[i + len(marker):], maxsplit=1)[0] if i != -1 else ''
+        if found:
+            return found
+    return term
+
+
+def _search_sections(q, video_order, offset, fuzzy):
+    """Videos (one page), channels, public playlists and public users matching q, with counts."""
+    tsv = bm25.where(q, bm25.VIDEO_FIELDS, bm25.VIDEO_IDS, fuzzy)
+    tsc = bm25.where(q, bm25.CHANNEL_FIELDS, bm25.CHANNEL_IDS, fuzzy)
+    tsp = bm25.where(q, bm25.PLAYLIST_FIELDS, bm25.PLAYLIST_IDS, fuzzy)
+    tsu = bm25.where(q, bm25.USER_FIELDS, (), fuzzy)
+    if video_order is None:
+        # relevance; equal scores (every fuzzy match scores the same) go to the most viewed
+        video_order = (bm25.score('mv_video'), MvVideo.view_count.desc())
+    else:
+        video_order = (video_order,)
+    return dict(
+        videos=db_session.query(MvVideo).filter(tsv).order_by(*video_order, MvVideo.id.desc())
+        .limit(PER_PAGE).offset(offset).all(),
+        channels=db_session.query(MvChannel).filter(tsc)
+        .order_by(bm25.score('mv_channel'), MvChannel.id.desc()).all(),
+        searchplaylists=db_session.query(MvPlaylist).filter(MvPlaylist.public, tsp)
+        .order_by(bm25.score('mv_playlist'), MvPlaylist.id.desc()).all(),
+        altcen_users=db_session.query(MvAltcenUser).filter(MvAltcenUser.public, tsu)
+        .order_by(bm25.score('mv_altcen_user'), MvAltcenUser.id.desc()).limit(PER_PAGE).offset(offset).all(),
+        videocount=db_session.query(func.count(MvVideo.extractor_data)).filter(tsv).scalar(),
+        channcount=db_session.query(func.count(MvChannel.extractor_data)).filter(tsc).scalar(),
+        searchplaylistcount=db_session.query(func.count(MvPlaylist.id)).filter(MvPlaylist.public, tsp).scalar(),
+        usercount=db_session.query(func.count(MvAltcenUser.id)).filter(MvAltcenUser.public, tsu).scalar(),
+    )
+
+
 def _search_impl(rawsearch, video_order, order_label, page):
     offset = ((int(page) - 1) * PER_PAGE)
     if rawsearch is None:
         abort(404)
-    term = rawsearch.strip()
+    term = _search_term(rawsearch)
+    q = bm25.drop_stopwords(db_session, bm25.parse(term))
 
-    if term.lower().partition("youtube.com/watch?v=")[2]:
-        term = term.lower().partition("youtube.com/watch?v=")[2]
-    elif term.lower().partition("youtube.com/channel/")[2]:
-        term = term.lower().partition("youtube.com/channel/")[2]
-
-    tsv = text("mv_video.document @@ websearch_to_tsquery(:search)")
-    tsc = text("mv_channel.document @@ websearch_to_tsquery(:search)")
-    tsp = text("mv_playlist.document @@ websearch_to_tsquery(:search)")
-    tsu = text("mv_altcen_user.document @@ websearch_to_tsquery(:search)")
-    rank_c = text("ts_rank(mv_channel.document, websearch_to_tsquery(:search)) DESC")
-    rank_p = text("ts_rank(mv_playlist.document, websearch_to_tsquery(:search)) DESC")
-    rank_u = text("ts_rank(mv_altcen_user.document, websearch_to_tsquery(:search)) DESC")
-
-    videos = db_session.query(MvVideo).filter(tsv).order_by(video_order, MvVideo.id.desc()) \
-        .limit(PER_PAGE).offset(offset).params(search=term).all()
-    channels = db_session.query(MvChannel).filter(tsc).order_by(rank_c, MvChannel.id.desc()).params(search=term).all()
-    searchplaylists = db_session.query(MvPlaylist).filter(MvPlaylist.public, tsp) \
-        .order_by(rank_p, MvPlaylist.id.desc()).params(search=term).all()
-    altcen_users = db_session.query(MvAltcenUser).filter(MvAltcenUser.public, tsu) \
-        .order_by(rank_u, MvAltcenUser.id.desc()).limit(PER_PAGE).offset(offset).params(search=term).all()
-
-    videocount = db_session.query(func.count(MvVideo.extractor_data)).filter(tsv).params(search=term).scalar()
-    channcount = db_session.query(func.count(MvChannel.extractor_data)).filter(tsc).params(search=term).scalar()
-    searchplaylistcount = db_session.query(func.count(MvPlaylist.id)).filter(MvPlaylist.public, tsp) \
-        .params(search=term).scalar()
-    usercount = db_session.query(func.count(MvAltcenUser.id)).filter(MvAltcenUser.public, tsu) \
-        .params(search=term).scalar()
+    found = _search_sections(q, video_order, offset, fuzzy=False)
+    similar = False
+    if found['videocount'] == 0 and bm25.has_fuzzy_words(q):
+        # nothing exact: try again with typo tolerance and say so on the page
+        fuzzy = _search_sections(q, video_order, offset, fuzzy=True)
+        if fuzzy['videocount']:
+            found, similar = fuzzy, True
+    videos, channels = found['videos'], found['channels']
+    searchplaylists, altcen_users = found['searchplaylists'], found['altcen_users']
+    videocount, channcount = found['videocount'], found['channcount']
+    searchplaylistcount, usercount = found['searchplaylistcount'], found['usercount']
 
     pagination = Pagination(page, PER_PAGE, videocount)
 
@@ -452,15 +479,13 @@ def _search_impl(rawsearch, video_order, order_label, page):
                            searchplaylists=searchplaylists, altcen_users=altcen_users,
                            order=order_label, channels=channels, videocount=videocount,
                            watchlater=watchlater, playlist=playlist,
-                           featured_search_videos=featured_search_videos)
+                           featured_search_videos=featured_search_videos, similar=similar)
 
 
 @bp.route("/search", defaults={'page': 1})
 @bp.route('/search/page/<int:page>')
 def search(page):
-    return _search_impl(request.args.get('q'),
-                        text("ts_rank(mv_video.document, websearch_to_tsquery(:search)) DESC"),
-                        'default', page)
+    return _search_impl(request.args.get('q'), None, 'default', page)
 
 
 @bp.route("/search/latest", defaults={'page': 1})

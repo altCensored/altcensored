@@ -67,6 +67,8 @@ def setup(engine):
         Base.metadata.create_all(engine)
         with Session(engine) as s:
             views.create_all(s)
+        with engine.begin() as conn:
+            conn.exec_driver_sql((FIXTURES / "bm25.sql").read_text())
         _load_ytac(engine)
     _load_accounts(engine)
     _load_ui_text(engine)

@@ -304,17 +304,14 @@ details.settings-about p {
 
 .navbar > .searchbar {
   flex-grow: 2; /* take double the space of the other items */
-  position: relative; /* anchors .search-note */
 }
 
-/* "Showing results for ..." under the search box. Out of the flow, in the navbar's
-   bottom margin, so the page's spacing never changes. */
+/* "Showing results for ..." between the search box and the navtabs; only search pages
+   with a spelling notice have it, so no other page's spacing changes. */
 .search-note {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  font-size: 0.85em;
-  white-space: nowrap;
+  text-align: center;
+  padding: 0 1em;
+  margin-bottom: 1.5em;
 }
 
 .navbar a {
@@ -456,12 +453,6 @@ input[type="search"]::-webkit-search-cancel-button {
 
   .navbar > .searchbar > form {
     width: 100%;
-  }
-
-  .search-note {
-    right: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .autoplay-row {

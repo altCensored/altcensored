@@ -13,7 +13,7 @@
 
 {% endblock %}
 
-{% block searchnote %}
+{% block content %}
 {% if corrected or similar %}
 <div class="search-note">
             {% if corrected %}
@@ -25,9 +25,6 @@
             {% endif %}
 </div>
 {% endif %}
-{% endblock %}
-
-{% block content %}
 {% with active_nav='search' %}
     {% include "widgets/navtabs.html" %}
 {% endwith %}

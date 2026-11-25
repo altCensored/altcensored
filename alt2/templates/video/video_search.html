@@ -206,8 +206,8 @@
                         <i class='ion-md-search' style="font-size: 21px"></i>
                         <b>({{ videocount | commafy }})</b>
                         {% if corrected %}
-                        <br>{{ gettext('Showing results for') }} <b>{{ corrected }}</b>.
-                        <a href="{{ url_for(request.endpoint, q=rawsearch, spell=0, playlist=playlist.hashid if playlist else None) }}">{{ gettext('Search instead for') }} {{ rawsearch }}</a>
+                        <br>{{ gettext('Showing results for') }} <a href="{{ url_for(request.endpoint, q=corrected, playlist=playlist.hashid if playlist else None) }}"><b><u>{{ corrected }}</u></b></a>.
+                        <a href="{{ url_for(request.endpoint, q=rawsearch, spell=0, playlist=playlist.hashid if playlist else None) }}"><b><u>{{ gettext('Search instead for') }} {{ rawsearch }}</u></b></a>
                         {% endif %}
                         {% if similar %}
                         <br><i>{{ gettext('No exact matches. Showing results with similar spelling.') }}</i>

@@ -1396,3 +1396,7 @@ msgstr "No"
 #~ msgid "Reset"
 #~ msgstr "Reimposta"
 
+
+#: alt2/templates/video/video_search.html
+msgid "No exact matches. Showing results with similar spelling."
+msgstr "Nessuna corrispondenza esatta. Risultati con ortografia simile."

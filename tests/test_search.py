@@ -204,6 +204,7 @@ def test_misspelt_word_is_corrected(search, small_vocabulary):
     assert ctx["ids"] == ["vid_ac_00003"]
     assert ctx["corrected"] == "storage" and not ctx["similar"]
     assert "Showing results for" in ctx["body"] and "<b>storage</b>" in ctx["body"]
+    assert "q=storage" in ctx["body"]                   # the correction is a link to its own search
     assert "Search instead for" in ctx["body"] and "spell=0" in ctx["body"]
 
 

@@ -10,7 +10,7 @@ before the altcensored change, or every search that tries a correction fails.**
 ```sql
 CREATE MATERIALIZED VIEW mv_search_words AS
 SELECT word, ndoc
-FROM ts_stat($$SELECT to_tsvector('simple', COALESCE(title, '')) FROM mv_video$$)
+FROM ts_stat($$SELECT to_tsvector('simple', COALESCE(title, '')) FROM public.mv_video$$)
 WHERE length(word) BETWEEN 3 AND 30
   AND word !~ '^[0-9]+$';
 
@@ -19,6 +19,10 @@ CREATE INDEX ix_mv_search_words_trgm ON mv_search_words USING gin (word gin_trgm
 ```
 
 - `word`: lowercase, unstemmed ('simple' config). `ndoc`: number of `mv_video` titles containing it.
+- **Keep `public.mv_video` schema-qualified inside the `ts_stat` string.** Since PG 17, CREATE and REFRESH
+  MATERIALIZED VIEW run with `search_path = pg_catalog, pg_temp`, and the string is only resolved at run
+  time: unqualified, it fails with `relation "mv_video" does not exist` (found in altcensored's tests;
+  corrected here 2026-11-25).
 - It reads `mv_video`, so it must be created and refreshed **after** `mv_video` (last in `_VIEWS`).
 - The unique index is required for `REFRESH MATERIALIZED VIEW CONCURRENTLY`.
 - Needs `pg_trgm`, already installed in production `ytac` and available in `ytac_ac_test`.

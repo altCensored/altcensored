@@ -233,3 +233,26 @@ def test_search_pagination_keeps_the_playlist(user_client, monkeypatch):
     monkeypatch.setattr("alt2.video.PER_PAGE", 1)
     html = user_client.get(f"/search?q=deleted&playlist={HASH}").get_data(as_text=True)
     assert f"/search/page/2?q=deleted&amp;playlist={HASH}" in html
+
+
+# --- playlists in search results ----------------------------------------------
+
+@pytest.mark.writes
+def test_search_playlist_count_skips_private_playlists(client, engine):
+    # the list shows public playlists only, so the count next to it must too
+    from flask import template_rendered
+    from sqlalchemy import text
+    from tests import seed
+    with engine.begin() as c:
+        c.execute(text(
+            "insert into playlist (user_id, public, view_counter, video_count, created, updated,"
+            " hashid, title, videos) select user_id, false, 0, 0, created, updated,"
+            " 'plAlicePriv1', 'Alice private list', '{}' from playlist where hashid = :h"), {"h": HASH})
+    seed.refresh_matviews(engine)
+    seen = []
+    with template_rendered.connected_to(lambda app, template, context, **k: seen.append(context),
+                                        client.application):
+        assert client.get("/search?q=list").status_code == 200
+    ctx = seen[0]
+    assert [p.hashid for p in ctx["searchplaylists"]] == [HASH]
+    assert ctx["searchplaylistcount"] == 1

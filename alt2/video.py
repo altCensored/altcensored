@@ -423,7 +423,8 @@ def _search_impl(rawsearch, video_order, order_label, page):
 
     videocount = db_session.query(func.count(MvVideo.extractor_data)).filter(tsv).params(search=term).scalar()
     channcount = db_session.query(func.count(MvChannel.extractor_data)).filter(tsc).params(search=term).scalar()
-    searchplaylistcount = db_session.query(func.count(MvPlaylist.id)).filter(tsp).params(search=term).scalar()
+    searchplaylistcount = db_session.query(func.count(MvPlaylist.id)).filter(MvPlaylist.public, tsp) \
+        .params(search=term).scalar()
     usercount = db_session.query(func.count(MvAltcenUser.id)).filter(MvAltcenUser.public, tsu) \
         .params(search=term).scalar()
 

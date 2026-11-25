@@ -61,11 +61,11 @@ def test_no_words_matches_nothing():
 
 @pytest.fixture()
 def search(client):
-    def run(q, path="/search"):
+    def run(q, path="/search", **args):
         seen = []
         with template_rendered.connected_to(lambda app, template, context, **k: seen.append(context),
                                             client.application):
-            r = client.get(path, query_string={"q": q})
+            r = client.get(path, query_string={"q": q, **args})
         assert r.status_code == 200
         ctx = seen[0]
         ctx["body"] = r.get_data(as_text=True)
@@ -147,3 +147,85 @@ def test_channel_by_name_and_by_id(search):
     ctx = search("https://www.youtube.com/channel/UCaaaaaaaaaaaaaaaaaaaaaa/videos")
     assert [c.extractor_data for c in ctx["channels"]] == ["UCaaaaaaaaaaaaaaaaaaaaaa"]
     assert sorted(ctx["ids"]) == ["vid_ac_00003", "vid_ia_00002"]   # source_extractor_data
+
+
+# --- spelling correction (mv_search_words) ----------------------------------------------
+
+@pytest.mark.parametrize("a, b, d", [
+    ("isreal", "israel", 1),         # a swap is one edit
+    ("holocost", "holocaust", 2),
+    ("stroage", "storage", 1),
+    ("stroage", "stage", 2),
+    ("navalny", "navalny", 0),
+])
+def test_edit_distance(a, b, d):
+    assert bm25.edit_distance(a, b) == d
+
+
+@pytest.mark.parametrize("word, own, candidates, fix", [
+    # trigram candidates and title counts from production, 2026-11-25
+    ("isreal", 20, [("real", 2538), ("israel", 4786)], "israel"),
+    ("stroage", 0, [("strange", 317), ("storage", 24), ("stage", 269)], "storage"),
+    ("holocost", 4, [("holocaust", 969), ("host", 205)], "holocaust"),
+    ("vacine", 0, [("vacina", 63), ("vaccin", 134), ("vaccine", 2348)], "vaccine"),
+    ("obmaa", 0, [("obama", 1801)], "obama"),
+    ("navalny", 46, [], None),
+    ("tartaria", 17, [("tartary", 30)], None),        # nearby, but not 20x as common
+    ("bidne", 0, [("bide", 25), ("biden", 5274)], "biden"),
+    ("gates", 1055, [("dates", 900), ("games", 3000)], None),
+])
+def test_best_correction(word, own, candidates, fix):
+    assert bm25.best_correction(word, own, candidates) == fix
+
+
+@pytest.mark.parametrize("term, out", [
+    ("isreal war", "israel war"),
+    ("Isreal, isreal.", "israel, israel."),
+    ('"isreal" -isreal isreal-war', '"isreal" -isreal isreal-war'),   # quoted, excluded, hyphenated: kept
+])
+def test_corrected_text(term, out):
+    assert bm25.corrected_text(term, {"isreal": "israel"}) == out
+
+
+def test_quoted_and_excluded_words_are_not_corrected():
+    q = bm25.apply_corrections(bm25.parse('isreal "isreal" -isreal'), {"isreal": "israel"})
+    assert [t.text for g in q.groups for t in g] == ["israel", "isreal"]
+    assert [t.text for t in q.excluded] == ["isreal"]
+
+
+@pytest.fixture()
+def small_vocabulary(monkeypatch):
+    # the seed's titles give "storage" 1 title; any gain lets it correct "storrage"
+    monkeypatch.setattr(bm25, "CORRECTION_MIN_GAIN", 1)
+
+
+def test_misspelt_word_is_corrected(search, small_vocabulary):
+    ctx = search("storrage")
+    assert ctx["ids"] == ["vid_ac_00003"]
+    assert ctx["corrected"] == "storage" and not ctx["similar"]
+    assert "Showing results for" in ctx["body"] and "<b>storage</b>" in ctx["body"]
+    assert "Search instead for" in ctx["body"] and "spell=0" in ctx["body"]
+
+
+def test_search_instead_turns_corrections_off(search, small_vocabulary):
+    ctx = search("storrage", spell="0")
+    assert ctx["ids"] == [] and not ctx["corrected"] and not ctx["similar"]
+    # the sort tabs keep it off
+    assert "/search/latest?q=storrage&amp;spell=0" in ctx["body"]
+
+
+def test_correction_keeps_the_ordering(search, small_vocabulary):
+    ctx = search("storrage", "/search/popular")
+    assert ctx["ids"] == ["vid_ac_00003"] and ctx["corrected"] == "storage"
+
+
+def test_common_searches_are_not_corrected(search, small_vocabulary, monkeypatch):
+    monkeypatch.setattr(bm25, "CORRECT_MAX_EXACT", 0)
+    ctx = search("storrage")
+    assert not ctx["corrected"] and ctx["similar"]        # the typo fallback still runs
+
+
+def test_without_a_correction_the_typo_fallback_runs(search):
+    # at the real 20x gain, 1 title for "storage" is not enough to correct to
+    ctx = search("storrage")
+    assert not ctx["corrected"] and ctx["similar"]

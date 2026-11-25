@@ -1359,3 +1359,11 @@ msgstr "Não"
 #: alt2/templates/video/video_search.html
 msgid "No exact matches. Showing results with similar spelling."
 msgstr "Nenhuma correspondência exata. Resultados com grafia semelhante."
+
+#: alt2/templates/video/video_search.html
+msgid "Showing results for"
+msgstr "Mostrando resultados para"
+
+#: alt2/templates/video/video_search.html
+msgid "Search instead for"
+msgstr "Pesquisar em vez disso por"

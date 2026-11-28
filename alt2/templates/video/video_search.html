@@ -124,6 +124,7 @@
                             <i class='ion-md-search' style="font-size: 21px"></i>
                             <b>({{ searchplaylistcount | commafy }})</b>
                         </summary><p></p>
+                <div class="pure-g">
                 {% for searchplaylist in searchplaylists %}
                     <div class="pure-u-1 pure-u-md-1-4">
                         <div class="h-box">
@@ -157,6 +158,7 @@
                         </div>
                     </div>
                 {% endfor %}
+                </div>
                 {% endif %}
                 </details></div></div>
             </div>
@@ -175,6 +177,7 @@
                             <i class='ion-md-search' style="font-size: 21px"></i>
                             <b>({{ usercount | commafy }})</b>
                         </summary><p></p>
+                <div class="pure-g">
                 {% for altcen_user in altcen_users %}
                     <div class="pure-u-1 pure-u-md-1-4">
                         <div class="h-box">
@@ -201,6 +204,7 @@
                         </div>
                     </div>
                 {% endfor %}
+                </div>
                 {% endif %}
                 </details></div></div>
             </div>

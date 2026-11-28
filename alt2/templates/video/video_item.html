@@ -193,8 +193,7 @@
                 <h3 style="display:inline"><a href="{{ url_for('channel.item', ytc_id=video['source_extractor_data']) }}">{{ video['source_title'] }}
               </a></h3>&nbsp;
               {% if channel['deleted'] %}
-              <img class="thumbnail deleted-x" src="https://{{ config['MYSERVER_NAME'] }}/x.gif">
-              </style>
+              <img class="deleted-x" src="{{ url_for('static', filename='x.gif') }}">
               {% else %}
               {% endif %}
               {% if video['published'] %}<h4>{{ gettext('Published on') }} {{ video['published'].strftime('%b %e, %G') }}</h4>{% endif %}

@@ -10,3 +10,5 @@ After pushing to `origin` (GitHub), also push to `codeberg` and `bbucket_key` (B
 - When ytac changes the schema, upgrade ytac in `/opt/altcen/altcensored/venv` in the same step (check `sudo venv/bin/pip show ytac`), or pages 500: the app's models come from that package.
 - Verify through the socket, since the public host answers curl with an Anubis 307: `curl --unix-socket /run/gunicorn.sock -H 'Host: altcensored.com' -H 'X-Forwarded-Proto: https' http://localhost/<path>`.
 
+
+Push to `codeberg` and `bbucket_key` without `-u`: keep the branch's upstream on `origin`, or `gh pr create` fails with `could not resolve remote "bbucket_key"`.
